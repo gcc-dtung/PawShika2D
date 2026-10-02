@@ -42,6 +42,6 @@ Bảng các đợt thay đổi trong lần push này.
 | [02](02_TaiLieu-ToChucScript.md) | Đã push | 2026-10-02 16:31 · `08ce8ec` | Tài liệu Docs, tổ chức thư mục Script, quyết định giữ CatFaceAnimator |
 | [03](03_ToiUu-PrefabPool.md) | Đã push | 2026-10-02 19:39 · `7f9a805` | SelectionBox, ClueCell C# thuần, prefab + ObjectPool, sửa lỗi pool |
 | [04](04_TaiMeo-LevelTest.md) | Đã push | 2026-10-02 20:52 · `67574be` | Tai mèo nhỏ lại; level test mọi cơ chế (level 206); kiểm tra level; hướng Square + ô nền điều hướng |
-| [05](05_TachLogicView-FeelKeo.md) | Chưa push | – | Tách logic (`…Model`) / view (`…View`); khung chọn giãn mượt; mèo xem trước khi đủ value; mèo rung đỏ khi sai |
+| [05](05_TachLogicView-FeelKeo.md) | Đã push | 2026-10-03 00:31 · `aaf54da` | Tách logic (`…Model`) / view (`…View`); khung trượt mượt, không phủ khối / Void, mép kẹt khi bị chặn; mèo xem trước + viền màu khi đủ value; màu khối = màu khung; đặt sai: mèo xám (chọn kiểu trong Inspector) |
 
 Giờ push lấy từ `git reflog origin/Day-1`; giờ từng đợt lấy từ thời gian sửa file và ảnh chụp thử.

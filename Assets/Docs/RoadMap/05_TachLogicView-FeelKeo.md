@@ -2,12 +2,14 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-03 00:40 |
+| Trạng thái | Đã push |
+| Commit | `aaf54da` "Tách logic/view, feel kéo, mèo xem trước, khung bị chặn, phản hồi sai" (nhánh `Day-1`) |
+| Thời gian push | 2026-10-03 00:31 |
+| Cập nhật lần cuối | 2026-10-03 00:33 |
 
 ## Tóm tắt
+
+Giờ từng đợt lấy từ thời gian sửa file (đợt cách A bị ghi đè nên chỉ ước lượng).
 
 | Giờ | Đợt | Kết quả |
 | --- | --- | --- |
@@ -16,9 +18,9 @@
 | 22:05 | Khung chọn không phủ khối / Void (theo `refdrag`) | Bị chặn thì giữ vùng hợp lệ trước đó, mép nảy nhẹ; ngón tay ngoài lưới vẫn kéo được |
 | 22:30 | Thử giãn dây thun khi bị chặn | Không đúng ý, đã quay lại như 22:05 |
 | 23:00 | Bị chặn: mép lấp khe rồi kẹt (theo hình vẽ, thử nghiệm) | Khung ôm sát ô; mép bị chặn trượt sang dừng trước khối; bỏ nảy |
-| 23:30 | Feel đủ value 1: viền màu thu bên trong | Mèo xem trước đặc ngay (bỏ trong / thở / bật); viền màu mèo nở từ trong ra mép rồi tắt |
-| 00:10 (03/10) | Đặt sai: viền đỏ bên ngoài thay cho nhuộm đỏ (thử cách A) | Màu mèo giữ nguyên; viền đỏ nháy khi rung; co nhỏ + mờ – chưa ưng |
-| 00:40 (03/10) | Đặt sai: thử cách B – mèo chuyển xám | `rejectStyle` chọn được A / B / A+B trong Inspector, mặc định B |
+| 23:40 | Feel đủ value 1: viền màu thu bên trong | Mèo xem trước đặc ngay (bỏ trong / thở / bật); viền màu mèo nở từ trong ra mép rồi tắt |
+| ~00:00 (03/10) | Đặt sai: viền đỏ bên ngoài thay cho nhuộm đỏ (thử cách A) | Màu mèo giữ nguyên; viền đỏ nháy khi rung; co nhỏ + mờ – chưa ưng |
+| 00:12 (03/10) | Đặt sai: thử cách B – mèo chuyển xám | `rejectStyle` chọn được A / B / A+B trong Inspector, mặc định B |
 
 ---
 
@@ -184,7 +186,7 @@ Khung cũ phủ tới giữa khe giữa các ô, khối mèo chiếm 96 % ô →
 
 ---
 
-## 23:30 – Feel lúc đủ value: viền màu thu bên trong (thử feel 1)
+## 23:40 – Feel lúc đủ value: viền màu thu bên trong (thử feel 1)
 
 ### Phân tích 2 video ref
 
@@ -216,7 +218,7 @@ Chốt: thử feel 1 trước; viền dùng màu mèo; bỏ cú bật nhẹ củ
 
 ---
 
-## 00:10 (2026-10-03) – Đặt sai: viền đỏ bên ngoài thay cho nhuộm đỏ (thử cách A)
+## ~00:00 (2026-10-03) – Đặt sai: viền đỏ bên ngoài thay cho nhuộm đỏ (thử cách A)
 
 ### Vấn đề
 
@@ -246,7 +248,7 @@ Ghi chú: Play mode bị thoát giữa chừng 1 lần khi chụp (ảnh chụp 
 
 ---
 
-## 00:40 (2026-10-03) – Đặt sai: thử cách B (mèo chuyển xám)
+## 00:12 (2026-10-03) – Đặt sai: thử cách B (mèo chuyển xám)
 
 ### Mục tiêu
 
