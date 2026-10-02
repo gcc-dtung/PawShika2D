@@ -14,7 +14,7 @@ Assets/
     ├── Prefabs/
     │   ├── Cell.prefab                 Ô lưới: Visual (CellBG), Text (TMP), Arrow, Lock (Shackle, Body, LockText), BoxCollider2D
     │   └── Gameplay/                   Prefab dùng với ObjectPool (không tạo GameObject lúc chơi)
-    │       ├── PlacedBlock.prefab      Thân, Number, Face, Ears
+    │       ├── PlacedBlock.prefab      Thân, Number, Face, Ears, Ring (viền đủ value, tắt sẵn)
     │       ├── Praise.prefab           Chữ khen
     │       ├── MistakeFlash.prefab     Vùng chớp đỏ khi sai (WhiteBlock 9-slice)
     │       └── DragCountBubble.prefab  Bong bóng số ô (1 instance đặt sẵn trong scene)
@@ -39,11 +39,11 @@ Assets/
 ```text
 Script/
 ├── Gameplay/
-│   ├── Core/       GridManager, GridSpawner, Cell, ClueCell
+│   ├── Core/       GridManager, GridSpawner, GridGeometry, BoardModel, CellModel, CellView, ClueCell
 │   ├── Level/      LevelManager, LevelDefinition, LevelDatabase
 │   ├── Lives/      LivesManager
-│   ├── Block/      PlacedBlock, CatFaceAnimator, ColorType
-│   ├── Input/      InputManager, DragAndDropController, SelectionBox, DragCountBubble
+│   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, ColorType
+│   ├── Input/      InputManager, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
 │   ├── Feedback/   GameplayFeedback
 │   ├── Visuals/    GameplayVisuals, BackgroundFitter
@@ -60,15 +60,19 @@ Quy tắc đặt file mới:
 - Code điều khiển Canvas / popup → `UI/<nhóm>/`, ví dụ `UI/Popups/` cho WinUI, LoseUI, ReviveLivesPopup ở Giai đoạn 3.
 - Công cụ Editor → `Editor/<tính năng>/`.
 - Dự án chưa dùng `.asmdef`, mọi script nằm chung `Assembly-CSharp`; di chuyển file không cần sửa `using`.
+- **Tách logic và view:** dữ liệu và luật là class C# thuần tên `…Model` (không biết gì về SpriteRenderer / transform); phần hiển thị là MonoBehaviour tên `…View` (chỉ đọc model để vẽ, không tự quyết định luật). `GridManager` nối hai bên. Polish chỉ cần sửa file `…View`.
 
 ### Gameplay/Core
 
 | File | Vai trò |
 | --- | --- |
-| `GridSpawner` | Sinh `Cell` từ `LevelDefinition`, bỏ ô Void, phát `gridCellEvent` |
-| `GridManager` | Nhận vùng kéo, kiểm tra hợp lệ, gọi solver, tạo khối, giảm khóa, kiểm tra thắng |
-| `Cell` | Một ô lưới: vị trí, khối đang chiếm; sở hữu `ClueCell` và bật/tắt các object con có sẵn trong prefab (số, ổ khóa, mũi tên) |
-| `ClueCell` | Class C# thuần (không phải MonoBehaviour): giá trị, số bước khóa, ẩn/hiện, hướng mũi tên |
+| `GridSpawner` | Sinh `CellView` + `CellModel` từ `LevelDefinition`, bỏ ô Void, phát `gridCellEvent` |
+| `GridManager` | Điều phối: nhận vùng kéo → hỏi `BoardModel` → điều khiển `SelectionBoxView` / `PlacedBlockView`, trừ mạng, phát event |
+| `GridGeometry` | Struct C# thuần: tọa độ ô / vùng → world; `WorldToCell` (kẹp trong lưới) |
+| `BoardModel` | **Logic** C# thuần: các ô, các khối đã đặt, `Check(rect)` → `PlacementResult`, gọi solver, đặt khối, giảm khóa, kiểm tra kín lưới |
+| `CellModel` | **Logic** C# thuần: vị trí, `ClueCell`, khối đang chiếm; event `Changed` khi ô số đổi |
+| `CellView` | **View**: bật/tắt object con có sẵn trong prefab (số, ổ khóa, ô nền điều hướng); là đích raycast khi kéo |
+| `ClueCell` | **Logic** C# thuần: giá trị, số bước khóa, ẩn/hiện, hướng |
 
 ### Gameplay/Level, Lives, Solver
 
@@ -84,7 +88,8 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `PlacedBlock` | Khối mèo: thân 9-slice, tai, số, mặt, hiệu ứng bật |
+| `BlockModel` | **Logic** C# thuần: vùng, các ô chiếm, ô số, màu (= màu khung chọn của lượt kéo tạo ra khối) |
+| `PlacedBlockView` | **View** khối mèo: thân 9-slice, tai, số, mặt, viền `Ring`. Trạng thái: xem trước (đặc ngay, viền màu mèo thu bên trong 0.2 s) → `Confirm` (bật) hoặc `PlayReject` (rung, co nhỏ + mờ; `rejectStyle`: `GrayOut` mèo xám – mặc định / `RedRing` viền đỏ ngoài mép / `GrayAndRedRing`) |
 | `CatFaceAnimator` | Chạy chuỗi khung hình mặt mèo trên SpriteRenderer |
 | `ColorType` | Enum 10 màu + bảng màu RGB |
 
@@ -93,10 +98,11 @@ Quy tắc đặt file mới:
 | File | Vai trò |
 | --- | --- |
 | `InputManager` | Đọc chuột/chạm, chuyển cho `DragAndDropController` |
-| `DragAndDropController` | Raycast tìm ô, quản lý kéo, cập nhật bong bóng |
-| `SelectionBox` | Khung màu mờ phủ vùng đang kéo |
+| `DragAndDropController` | Raycast tìm ô lúc bắt đầu kéo; khi kéo đổi vị trí ngón tay sang world rồi chuyển cho `GridManager`; cập nhật bong bóng |
+| `DragSelection` | **Logic** C# thuần của vùng đang kéo: không bao giờ phủ lên khối đã đặt / ô Void (bị chặn thì giữ vùng hợp lệ trước đó), vuốt nhanh thì đi qua từng ô ở giữa; `BlockDir` = mép nào đang bị ngón tay đẩy vào vật cản |
+| `SelectionBoxView` | Khung màu mờ phủ vùng đang kéo, random 1 `ColorType` mỗi lượt kéo (mèo xem trước và khối đặt ra dùng đúng màu này); mép trượt mượt khi đổi ô, mờ đi khi đang hiện mèo xem trước. Bình thường ôm sát ô (`inset` 0.1); bị chặn (khối, Void, mép lưới) thì mép phía đó trượt sang lấp khe, dừng ngay trước vật cản (`blockedExtend` 0.1) |
 | `DragCountBubble` | Bong bóng số ô bám ngón tay |
-| `GameplayFeedback` | Chữ khen khi đúng; chớp đỏ, rung camera, rung máy khi sai |
+| `GameplayFeedback` | Chữ khen khi đúng; rung camera, rung máy khi sai |
 
 ### Gameplay/Visuals, Util
 
@@ -130,7 +136,7 @@ Global Light 2D
 SpawnGrid              GridSpawner
 Manager                GridManager, InputManager, DragAndDropController,
                        LivesManager, LevelManager, GameplayFeedback
-SelectionBox           SelectionBox + SpriteRenderer
+SelectionBox           SelectionBoxView + SpriteRenderer
 bg                     SpriteRenderer + BackgroundFitter
 Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920
 ├── DownPanel/Booster  3 nút booster (chưa có logic)
@@ -143,24 +149,27 @@ EventSystem
 DragCountBubble        Instance của prefab, để tắt sẵn; DragAndDropController bật khi kéo
 ```
 
-Khối mèo, chữ khen, vùng chớp đỏ không đặt sẵn trong scene: `GridManager` và `GameplayFeedback` tạo chúng từ prefab qua `ObjectPool` ở lần dùng đầu, sau đó tái sử dụng. Ô lưới cũng được `GridSpawner` tái sử dụng giữa các level.
+Khối mèo, chữ khen không đặt sẵn trong scene: `GridManager` và `GameplayFeedback` tạo chúng từ prefab qua `ObjectPool` ở lần dùng đầu, sau đó tái sử dụng. Ô lưới cũng được `GridSpawner` tái sử dụng giữa các level.
 
 ---
 
 ## Luồng một nước đi
 
 ```text
-InputManager ─► DragAndDropController ─► GridManager.OnDrawGrid ─► SelectionBox
-                       │                          (kéo)
-                       └► GridManager.OnSelect (thả tay)
+InputManager ─► DragAndDropController ─► GridManager.BeginSelection (chạm 1 ô trống)
+                       │
+                       ├► GridManager.UpdateSelection (kéo) ─► DragSelection.MoveTo (kẹp, không phủ khối / Void)
+                       │                    ├► SelectionBoxView.Show (mép trượt mượt) / SetBlocked (mép bị chặn lấp khe)
+                       │                    └► BoardModel.Check == Ready ? PlacedBlockView.ShowPreview (mèo xem trước)
+                       └► GridManager.EndSelection (thả tay) ─► BoardModel.Check
                               │
               ┌───────────────┼──────────────────────────────┐
               ▼               ▼                              ▼
-     Không hợp lệ        ShikakuSolver: còn lời giải?    Hợp lệ + còn lời giải
+     Chưa Ready          Ready, BoardModel.IsSolvableWith?  Ready + còn lời giải
      onInvalidMove            │ không                        │
-                              ▼                              ▼
-                     onMistake + LivesManager.LoseLife   CreatePlacedBlock
-                              │                          StepLocks, onBlockPlaced
+     (PlacementResult)        ▼                              ▼
+                     PlacedBlockView.PlayReject          BoardModel.Place (giảm khóa)
+                     onMistake + LivesManager.LoseLife   PlacedBlockView.Confirm, onBlockPlaced
                               ▼                              │ phủ kín lưới?
                      LivesUI, GameplayFeedback               ▼
                               │ hết mạng                  onGameWin
@@ -173,11 +182,11 @@ InputManager ─► DragAndDropController ─► GridManager.OnDrawGrid ─► S
 
 | Nguồn | Event | Người nghe |
 | --- | --- | --- |
-| `GridSpawner` | `gridCellEvent(List<Cell>)` | `GridManager`, `LivesManager` |
-| `GridManager` | `onBlockPlaced(PlacedBlock)` | `GameplayFeedback` |
+| `GridSpawner` | `gridCellEvent(List<CellView>)` | `GridManager`, `LivesManager` |
+| `GridManager` | `onBlockPlaced(BlockModel)` | `GameplayFeedback` |
 | `GridManager` | `onMistake(center, size)` | `GameplayFeedback` |
-| `GridManager` | `onInvalidMove(center, size)` | (chưa dùng) |
-| `GridManager` | `onClueUnlocked(Cell)` | (chưa dùng, dành cho âm thanh/hiệu ứng mở khóa) |
+| `GridManager` | `onInvalidMove(PlacementResult, center, size)` | (chưa dùng, dành cho phản hồi khi thả sai luật) |
+| `GridManager` | `onClueUnlocked(CellModel)` | (chưa dùng, dành cho âm thanh/hiệu ứng mở khóa) |
 | `GridManager` | `onGameWin` | `LevelManager` |
 | `LivesManager` | `onLivesChanged(current, max)`, `onLifeLost(current)` | `LivesUI` |
 | `LivesManager` | `onOutOfLives` | `LevelManager` |
@@ -203,9 +212,9 @@ InputManager ─► DragAndDropController ─► GridManager.OnDrawGrid ─► S
 | 20 | Thân khối |
 | 21 | Mặt mèo |
 | 22 | Số trên khối |
-| 30 | SelectionBox (khung đang kéo) |
+| 24 | Viền đủ value (`Ring`) |
+| 30 | SelectionBoxView (khung đang kéo) |
 | 40–41 | Bong bóng số ô |
-| 50 | Vùng chớp đỏ khi sai |
 | 60 | Chữ khen |
 
 ### Dữ liệu level (`LevelDefinition`)

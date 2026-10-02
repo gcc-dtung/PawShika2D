@@ -1,36 +1,39 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Pool;
 
+/// <summary>
+/// Nối input kéo thả với luật chơi (BoardModel) và các view (SelectionBoxView, PlacedBlockView).
+/// Luật nằm ở BoardModel; script này chỉ điều phối và phát event.
+/// </summary>
 public class GridManager : Singleton<GridManager>
 {
     [SerializeField] private GridSpawner gridSpawner;
-    [SerializeField] private SelectionBox selectionBox;
-    [SerializeField] private float cellSize = GridSpawner.CellSpacing;
+    [SerializeField] private SelectionBoxView selectionBox;
 
     [Header("Khối mèo (lấy từ pool, không tạo mới mỗi lần đặt)")]
-    [SerializeField] private PlacedBlock blockPrefab;
+    [SerializeField] private PlacedBlockView blockPrefab;
     [SerializeField] private Transform blockRoot;
     [SerializeField] private int blockPoolCapacity = 64;
 
     [Header("Events")]
     public UnityEvent onGameWin = new UnityEvent();
-    public UnityEvent<PlacedBlock> onBlockPlaced = new UnityEvent<PlacedBlock>();
+    public UnityEvent<BlockModel> onBlockPlaced = new UnityEvent<BlockModel>();
     public UnityEvent<Vector3, Vector2> onMistake = new UnityEvent<Vector3, Vector2>();     // (tâm, kích thước) vùng sai
-    public UnityEvent<Vector3, Vector2> onInvalidMove = new UnityEvent<Vector3, Vector2>(); // thao tác bị hủy, không trừ mạng
-    public UnityEvent<Cell> onClueUnlocked = new UnityEvent<Cell>();
+    public UnityEvent<PlacementResult, Vector3, Vector2> onInvalidMove = new UnityEvent<PlacementResult, Vector3, Vector2>(); // thao tác bị hủy, không trừ mạng
+    public UnityEvent<CellModel> onClueUnlocked = new UnityEvent<CellModel>();
 
-    private List<Cell> _currentGrid;
-    private readonly Dictionary<Vector2Int, Cell> _cellMap = new Dictionary<Vector2Int, Cell>();
-    private static readonly int ColorTypeCount = Enum.GetValues(typeof(ColorType)).Length;
-
-    private List<PlacedBlock> _placedBlocks = new List<PlacedBlock>();
-    private ObjectPool<PlacedBlock> _blockPool;
+    private BoardModel _board;
+    private readonly Dictionary<BlockModel, PlacedBlockView> _blockViews = new Dictionary<BlockModel, PlacedBlockView>();
+    private readonly List<CellModel> _unlockedBuffer = new List<CellModel>();
+    private ObjectPool<PlacedBlockView> _blockPool;
+    private PlacedBlockView _preview; // mèo xem trước của lượt kéo hiện tại
+    private ColorType _dragColor;     // màu khung chọn của lượt kéo -> màu khối mèo
+    private readonly DragSelection _drag = new DragSelection();
     private bool _isGameWon = false;
 
-    public IReadOnlyList<PlacedBlock> PlacedBlocks => _placedBlocks;
+    public BoardModel Board => _board;
     public bool IsGameWon => _isGameWon;
     public bool IsGameOver => LivesManager.Instance != null && LivesManager.Instance.IsOutOfLives;
     public bool IsInputLocked => _isGameWon || IsGameOver;
@@ -39,16 +42,16 @@ public class GridManager : Singleton<GridManager>
     protected override void Awake()
     {
         base.Awake();
-        if (selectionBox == null) Debug.LogError("[GridManager] Chưa gán SelectionBox");
+        if (selectionBox == null) Debug.LogError("[GridManager] Chưa gán SelectionBoxView");
         if (blockPrefab == null) Debug.LogError("[GridManager] Chưa gán PlacedBlock prefab");
         if (blockRoot == null) blockRoot = transform;
 
-        _blockPool = new ObjectPool<PlacedBlock>(
+        _blockPool = new ObjectPool<PlacedBlockView>(
             createFunc: () => Instantiate(blockPrefab, blockRoot),
             actionOnGet: b => b.gameObject.SetActive(true),
             actionOnRelease: b =>
             {
-                b.ReleaseCells();
+                b.ResetView();
                 b.gameObject.SetActive(false);
             },
             // Thoát Play mode: scene hủy object trước, rồi Editor mới Clear() pool -> object có thể đã null
@@ -74,134 +77,159 @@ public class GridManager : Singleton<GridManager>
         }
     }
 
-    public void OnDrawGrid(Cell prev, Cell curr)
-    {
-        if (IsInputLocked) return;
+    // ---------- Input ----------
 
-        // Hiển thị khung SelectionBox đè lên trên toàn bộ vùng đang kéo (không đổi màu cell bên dưới)
+    /// <summary>Bắt đầu kéo tại 1 ô. Ô Void / ô đã có khối thì không kéo được.</summary>
+    public bool BeginSelection(Vector2Int anchor)
+    {
+        if (IsInputLocked || _board == null) return false;
+
+        CellModel cell = _board.GetCell(anchor);
+        if (cell == null || cell.IsOccupied) return false;
+
+        _drag.Begin(anchor);
+        RefreshSelection();
+        return true;
+    }
+
+    /// <summary>Ngón tay ở điểm world này. Vùng chọn giãn theo nhưng không phủ lên khối đã đặt / ô Void.</summary>
+    public void UpdateSelection(Vector3 fingerWorld)
+    {
+        if (!_drag.IsActive || _board == null) return;
+
+        GridGeometry geometry = _board.Geometry;
+        if (_drag.MoveTo(geometry.WorldToCell(fingerWorld), _board)) RefreshSelection();
+
+        // Hướng bị chặn: đẩy vào khối đã đặt / ô Void, hoặc ngón tay ra ngoài lưới ở mép vùng chọn
+        Vector2Int dir = _drag.BlockDir;
+        Vector2Int raw = geometry.WorldToCellUnclamped(fingerWorld);
+        RectInt rect = _drag.Rect;
+        if (dir.x == 0 && (raw.x < 0 && rect.xMin == 0 || raw.x >= geometry.Width && rect.xMax == geometry.Width)) dir.x = raw.x < 0 ? -1 : 1;
+        if (dir.y == 0 && (raw.y < 0 && rect.yMin == 0 || raw.y >= geometry.Height && rect.yMax == geometry.Height)) dir.y = raw.y < 0 ? -1 : 1;
+        if (selectionBox != null) selectionBox.SetBlocked(dir);
+    }
+
+    /// <summary>Số ô của vùng đang kéo, dùng cho bong bóng đếm ô.</summary>
+    public int SelectionCellCount => _drag.IsActive ? _drag.CellCount : 0;
+
+    /// <summary>Khung chọn bám vùng; vùng đủ điều kiện thì hiện mèo xem trước.</summary>
+    private void RefreshSelection()
+    {
+        RectInt rect = _drag.Rect;
+        GridGeometry geometry = _board.Geometry;
         if (selectionBox != null)
         {
-            selectionBox.Show(prev, curr, isFinalSelect: false);
+            selectionBox.Show(geometry.RectCenter(rect), geometry.RectSize(rect));
+            _dragColor = selectionBox.ColorType;
         }
+
+        PlacementCheck check = _board.Check(rect);
+        if (check.IsReady)
+        {
+            if (_preview == null) _preview = _blockPool.Get();
+            if (!_preview.IsPreview || !_preview.Rect.Equals(rect)) _preview.ShowPreview(rect, check.ClueCell, _dragColor, geometry);
+        }
+        else
+        {
+            ReleasePreview();
+        }
+
+        if (selectionBox != null) selectionBox.SetFilled(!check.IsReady);
     }
 
-    /// <summary>Số ô thực sự nằm trong vùng kéo (bỏ ô Void), dùng cho bong bóng đếm ô.</summary>
-    public int CountCellsInRange(Cell a, Cell b)
+    /// <summary>Thả tay: đặt khối nếu đúng, mèo rung đỏ + trừ mạng nếu sai lời giải, hủy nếu chưa đủ điều kiện.</summary>
+    public void EndSelection()
     {
-        return GetGridInRange(a, b).Count;
-    }
-
-    public void OnSelect(Cell prev, Cell curr)
-    {
-        // Luôn tắt SelectionBox khi thả tay
-        HideSelectionBox();
+        if (!_drag.IsActive) return;
+        RectInt rect = _drag.Rect;
+        _drag.End();
+        if (selectionBox != null) selectionBox.Hide();
 
         // Khi đã win hoặc hết mạng -> Khóa toàn bộ thao tác
-        if (IsInputLocked) return;
-        if (prev == null || curr == null) return;
-
-        RectInt rect = GetRect(prev, curr);
-        List<Cell> cellsInRange = GetGridInRange(prev, curr);
-
-        // TAP 1 ô trống không phải số -> bỏ qua. (Không có xóa khối: mọi khối đã đặt luôn đúng.)
-        if (rect.width * rect.height == 1 && !prev.HasClue) return;
-
-        // 1. Vùng chứa ô Void hoặc ô đã có khối -> hủy
-        if (cellsInRange.Count != rect.width * rect.height || cellsInRange.Exists(c => c.IsOccupied))
+        if (IsInputLocked || _board == null)
         {
-            Reject(rect, "Vùng chứa ô trống hoặc khối đã đặt");
+            ReleasePreview();
             return;
         }
 
-        // 2. Phải có ĐÚNG 1 ô số
-        List<Cell> clueCells = cellsInRange.FindAll(c => c.HasClue);
-        if (clueCells.Count != 1)
+        PlacementCheck check = _board.Check(rect);
+
+        if (check.Result == PlacementResult.Ignored)
         {
-            Reject(rect, $"Vùng có {clueCells.Count} ô số");
+            ReleasePreview();
             return;
         }
 
-        Cell clueCell = clueCells[0];
-        ClueCell clue = clueCell.Clue;
-
-        // 3. Ô số còn khóa -> chưa chọn được
-        if (clue.IsLocked)
+        if (!check.IsReady)
         {
-            Reject(rect, "Ô số đang bị khóa");
+            ReleasePreview();
+            Reject(check);
             return;
         }
 
-        // 4. Mũi tên ngang / dọc
-        if (!ShikakuSolver.MatchesConstraint(clue.Constraint, rect.width, rect.height))
+        // Thả tay mà chưa kịp hiện mèo xem trước -> tạo luôn
+        if (_preview == null)
         {
-            Reject(rect, "Sai hướng mũi tên");
-            return;
+            _preview = _blockPool.Get();
+            _preview.ShowPreview(rect, check.ClueCell, _dragColor, _board.Geometry);
         }
 
-        // 5. Sai số ô (ô ẩn "?" thì người chơi không biết số -> để solver quyết định)
-        if (!clue.IsHidden && clue.Value != cellsInRange.Count)
-        {
-            Reject(rect, $"Cần {clue.Value} ô, đang chọn {cellsInRange.Count}");
-            return;
-        }
+        PlacedBlockView view = _preview;
+        _preview = null;
 
-        // 6. Đặt xong mà lưới không còn lời giải -> NƯỚC ĐI SAI, trừ mạng
-        if (!IsPlacementSolvable(rect))
+        // Đặt xong mà lưới không còn lời giải -> NƯỚC ĐI SAI, trừ mạng
+        if (!_board.IsSolvableWith(rect))
         {
+            view.PlayReject(() => _blockPool.Release(view));
             DeductLife(rect);
             return;
         }
 
-        // Debug.Log($"<color=green>[GridManager] Đặt hộp hợp lệ</color> ({rect.x}, {rect.y}) {rect.width}x{rect.height}");
-        CreatePlacedBlock(rect, cellsInRange, clueCell);
+        PlaceBlock(check, view);
     }
 
-    private bool IsPlacementSolvable(RectInt rect)
+    /// <summary>Hủy lượt kéo (bị khóa input, đổi level...).</summary>
+    public void CancelSelection()
     {
-        LevelDefinition level = CurrentLevel;
-        if (level == null || level.clues == null || level.clues.Length == 0) return true;
-
-        List<RectInt> rects = new List<RectInt>(_placedBlocks.Count + 1);
-        foreach (PlacedBlock b in _placedBlocks)
-        {
-            if (b != null) rects.Add(b.Rect);
-        }
-        rects.Add(rect);
-        return ShikakuSolver.IsSolvable(level, rects);
+        _drag.End();
+        if (selectionBox != null) selectionBox.Hide();
+        ReleasePreview();
     }
 
-    private void Reject(RectInt rect, string reason)
+    // ---------- Kết quả ----------
+
+    private void PlaceBlock(PlacementCheck check, PlacedBlockView view)
     {
-        Debug.Log($"[GridManager] Hủy thao tác: {reason}");
-        GetRectWorld(rect, out Vector3 center, out Vector2 size);
-        onInvalidMove?.Invoke(center, size);
+        _unlockedBuffer.Clear();
+        BlockModel block = _board.Place(check, _dragColor, _unlockedBuffer);
+
+        view.Confirm(block.ClueCell);
+        _blockViews[block] = view;
+
+        foreach (CellModel cell in _unlockedBuffer) onClueUnlocked?.Invoke(cell);
+        onBlockPlaced?.Invoke(block);
+
+        // Kiểm tra sau khi đặt khối xem đã phủ kín toàn bộ grid chưa
+        if (_board.IsFull()) HandleGameWin();
+    }
+
+    private void Reject(PlacementCheck check)
+    {
+        Debug.Log($"[GridManager] Hủy thao tác: {check.Result}");
+        GridGeometry geometry = _board.Geometry;
+        onInvalidMove?.Invoke(check.Result, geometry.RectCenter(check.Rect), geometry.RectSize(check.Rect));
     }
 
     private void DeductLife(RectInt rect)
     {
         Debug.LogWarning("<color=red>[GridManager] Nước đi SAI! Đặt khối này thì lưới không còn lời giải -> TRỪ 1 MẠNG</color>");
-        GetRectWorld(rect, out Vector3 center, out Vector2 size);
-        onMistake?.Invoke(center, size);
+        GridGeometry geometry = _board.Geometry;
+        onMistake?.Invoke(geometry.RectCenter(rect), geometry.RectSize(rect));
 
         if (LivesManager.Instance != null)
         {
             LivesManager.Instance.LoseLife();
         }
-    }
-
-    public bool CheckWinCondition()
-    {
-        if (_currentGrid == null || _currentGrid.Count == 0) return false;
-
-        foreach (Cell cell in _currentGrid)
-        {
-            if (cell != null && !cell.IsOccupied)
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void HandleGameWin()
@@ -213,112 +241,36 @@ public class GridManager : Singleton<GridManager>
         onGameWin?.Invoke();
     }
 
-    private void CreatePlacedBlock(RectInt rect, List<Cell> cells, Cell clueCell)
+    // ---------- Quản lý view ----------
+
+    private void ReleasePreview()
     {
-        clueCell.RevealClue();
-
-        PlacedBlock newBlock = _blockPool.Get();
-
-        ColorType color = (ColorType)(Mathf.Abs(clueCell.Clue.ColorIndex) % ColorTypeCount);
-        newBlock.Init(rect, cells, clueCell, color, cellSize);
-        _placedBlocks.Add(newBlock);
-
-        StepLocks();
-        onBlockPlaced?.Invoke(newBlock);
-
-        // Kiểm tra sau khi đặt khối xem đã phủ kín toàn bộ grid chưa
-        if (CheckWinCondition())
-        {
-            HandleGameWin();
-        }
-    }
-
-    /// <summary>Mỗi khối đặt đúng làm mọi ổ khóa giảm 1.</summary>
-    private void StepLocks()
-    {
-        if (_currentGrid == null) return;
-        foreach (Cell cell in _currentGrid)
-        {
-            if (cell != null && cell.StepLock())
-            {
-                onClueUnlocked?.Invoke(cell);
-            }
-        }
+        if (_preview == null) return;
+        _blockPool.Release(_preview);
+        _preview = null;
     }
 
     public void ClearAllPlacedBlocks()
     {
-        for (int i = _placedBlocks.Count - 1; i >= 0; i--)
+        CancelSelection();
+        foreach (PlacedBlockView view in _blockViews.Values)
         {
-            if (_placedBlocks[i] != null)
-            {
-                _blockPool.Release(_placedBlocks[i]);
-            }
+            if (view != null) _blockPool.Release(view);
         }
-        _placedBlocks.Clear();
+        _blockViews.Clear();
+        if (_board != null) _board.ClearBlocks();
         _isGameWon = false;
     }
 
-    public void HideSelectionBox()
+    private void SetGrid(List<CellView> grid)
     {
-        if (selectionBox != null)
-        {
-            selectionBox.Hide();
-        }
-    }
-
-    public List<Cell> GetGridInRange(Cell a, Cell b)
-    {
-        List<Cell> res = new List<Cell>();
-        if (a == null || b == null || _currentGrid == null) return res;
-
-        RectInt rect = GetRect(a, b);
-        for (int x = rect.xMin; x < rect.xMax; x++)
-        {
-            for (int y = rect.yMin; y < rect.yMax; y++)
-            {
-                if (_cellMap.TryGetValue(new Vector2Int(x, y), out Cell cell) && cell != null)
-                {
-                    res.Add(cell);
-                }
-            }
-        }
-
-        return res;
-    }
-
-    private static RectInt GetRect(Cell a, Cell b)
-    {
-        Vector2Int pa = a.GetPositionInCell();
-        Vector2Int pb = b.GetPositionInCell();
-        int xMin = Mathf.Min(pa.x, pb.x);
-        int yMin = Mathf.Min(pa.y, pb.y);
-        return new RectInt(xMin, yMin, Mathf.Abs(pa.x - pb.x) + 1, Mathf.Abs(pa.y - pb.y) + 1);
-    }
-
-    /// <summary>Tâm và kích thước (world) của vùng, kể cả khi vùng chứa ô Void.</summary>
-    private void GetRectWorld(RectInt rect, out Vector3 center, out Vector2 size)
-    {
-        LevelDefinition level = CurrentLevel;
-        int width = level != null ? level.size : 0;
-        int height = level != null ? level.Height : 0;
-        float cx = (rect.x + (rect.width - 1) / 2f - (width - 1) / 2f) * cellSize;
-        float cy = (rect.y + (rect.height - 1) / 2f - (height - 1) / 2f) * cellSize;
-        // GridSpawner đặt cell theo tọa độ world quanh gốc (0, 0)
-        center = new Vector3(cx, cy, -0.2f);
-        size = new Vector2(rect.width * cellSize, rect.height * cellSize);
-    }
-
-    private void SetGrid(List<Cell> grid)
-    {
-        _isGameWon = false;
         ClearAllPlacedBlocks();
-        _currentGrid = grid;
 
-        _cellMap.Clear();
-        foreach (Cell cell in grid)
+        List<CellModel> cells = new List<CellModel>(grid.Count);
+        foreach (CellView cell in grid)
         {
-            if (cell != null) _cellMap[cell.GetPositionInCell()] = cell;
+            if (cell != null && cell.Model != null) cells.Add(cell.Model);
         }
+        _board = new BoardModel(CurrentLevel, gridSpawner.Geometry, cells);
     }
 }

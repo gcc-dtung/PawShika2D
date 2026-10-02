@@ -26,6 +26,12 @@ public class CatFaceAnimator : MonoBehaviour
         ShowFrame(0);
     }
 
+    public void SetColor(Color color)
+    {
+        if (_renderer == null) _renderer = GetComponent<SpriteRenderer>();
+        _renderer.color = color;
+    }
+
     private void Update()
     {
         if (_animation == null || _animation.frames.Count == 0) return;

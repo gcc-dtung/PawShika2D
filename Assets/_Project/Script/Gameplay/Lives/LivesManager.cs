@@ -48,7 +48,7 @@ public class LivesManager : Singleton<LivesManager>
         }
     }
 
-    private void OnGridSpawned(List<Cell> grid)
+    private void OnGridSpawned(List<CellView> grid)
     {
         ResetLives();
     }

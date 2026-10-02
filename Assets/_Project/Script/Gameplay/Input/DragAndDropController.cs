@@ -8,8 +8,6 @@ public class DragAndDropController : MonoBehaviour
     [SerializeField] private LayerMask cellLayer;
     [SerializeField] private DragCountBubble countBubble;
 
-    private Cell _currentCell;
-    private Cell _targetCell;
     private bool _isDragging = false;
 
     private void Awake()
@@ -32,7 +30,7 @@ public class DragAndDropController : MonoBehaviour
         }
     }
 
-    private Cell GetCellAtPosition(Vector2 screenPos)
+    private CellView GetCellAtPosition(Vector2 screenPos)
     {
         if (cam == null) cam = Camera.main;
         if (cam == null) return null;
@@ -41,16 +39,16 @@ public class DragAndDropController : MonoBehaviour
 
         // 1. Thử Physics2D (nếu dùng BoxCollider2D)
         Collider2D hit2D = Physics2D.OverlapPoint(worldPos, cellLayer);
-        if (hit2D != null && hit2D.TryGetComponent(out Cell cell2D))
+        if (hit2D != null && hit2D.TryGetComponent(out CellView cell2D))
         {
             return cell2D;
         }
 
-        // 2. Thử Physics 3D (nếu Cell đang gắn BoxCollider 3D)
+        // 2. Thử Physics 3D (nếu CellView đang gắn BoxCollider 3D)
         Ray ray = cam.ScreenPointToRay(screenPos);
         if (Physics.Raycast(ray, out RaycastHit hit3D, Mathf.Infinity, cellLayer))
         {
-            if (hit3D.collider.TryGetComponent(out Cell cell3D))
+            if (hit3D.collider.TryGetComponent(out CellView cell3D))
             {
                 return cell3D;
             }
@@ -62,77 +60,67 @@ public class DragAndDropController : MonoBehaviour
     public void StartDrag(Vector2 pos)
     {
         if (_isDragging) return;
-        if (GridManager.Instance != null && GridManager.Instance.IsInputLocked) return;
+        GridManager gm = GridManager.Instance;
+        if (gm == null || gm.IsInputLocked) return;
 
-        Cell cell = GetCellAtPosition(pos);
-        if (cell == null) return;
+        // Bắt đầu phải chạm trúng 1 ô; ô đã có khối thì GridManager từ chối
+        CellView cell = GetCellAtPosition(pos);
+        if (cell == null || !gm.BeginSelection(cell.Position)) return;
 
-        _currentCell = cell;
-        _targetCell = cell;
         _isDragging = true;
-
-        GridManager.Instance.OnDrawGrid(_currentCell, _targetCell);
         UpdateBubble(pos);
     }
 
     public void Drag(Vector2 pos)
     {
-        if (!_currentCell || !_isDragging) return;
-        if (GridManager.Instance != null && GridManager.Instance.IsInputLocked)
+        if (!_isDragging) return;
+        GridManager gm = GridManager.Instance;
+        if (gm == null || gm.IsInputLocked)
         {
             CancelDrag();
             return;
         }
 
-        Cell cell = GetCellAtPosition(pos);
-        if (cell != null && cell != _targetCell)
-        {
-            _targetCell = cell;
-            GridManager.Instance.OnDrawGrid(_currentCell, _targetCell);
-        }
+        // Không cần trúng ô: ngón tay trên ô Void, trên khối hay ra ngoài lưới vẫn được quy về ô gần nhất
+        gm.UpdateSelection(ScreenToWorld(pos));
         UpdateBubble(pos);
     }
 
     public void EndDrag()
     {
-        if (!_currentCell || !_isDragging) return;
-
-        if (GridManager.Instance != null && GridManager.Instance.IsInputLocked)
+        if (!_isDragging) return;
+        GridManager gm = GridManager.Instance;
+        if (gm == null || gm.IsInputLocked)
         {
             CancelDrag();
             return;
         }
 
-        if (_targetCell != null)
-        {
-            GridManager.Instance.OnSelect(_currentCell, _targetCell);
-        }
-        else
-        {
-            GridManager.Instance.HideSelectionBox();
-        }
-
+        gm.EndSelection();
         ResetDrag();
     }
 
     private void CancelDrag()
     {
-        if (GridManager.Instance != null) GridManager.Instance.HideSelectionBox();
+        if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
         ResetDrag();
     }
 
     private void ResetDrag()
     {
-        _currentCell = null;
-        _targetCell = null;
         _isDragging = false;
         if (countBubble != null) countBubble.Hide();
     }
 
+    private Vector3 ScreenToWorld(Vector2 screenPos)
+    {
+        if (cam == null) cam = Camera.main;
+        return cam != null ? cam.ScreenToWorldPoint(screenPos) : Vector3.zero;
+    }
+
     private void UpdateBubble(Vector2 screenPos)
     {
-        if (countBubble == null || cam == null || GridManager.Instance == null) return;
-        int count = GridManager.Instance.CountCellsInRange(_currentCell, _targetCell);
-        countBubble.Show(cam.ScreenToWorldPoint(screenPos), count);
+        if (countBubble == null || GridManager.Instance == null) return;
+        countBubble.Show(ScreenToWorld(screenPos), GridManager.Instance.SelectionCellCount);
     }
 }

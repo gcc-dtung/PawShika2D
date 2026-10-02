@@ -5,14 +5,13 @@ using UnityEngine.Pool;
 /// <summary>
 /// Phản hồi trong màn chơi:
 /// - Đặt đúng: chữ khen (NICE / AMAZING...) bật lên ở giữa khối.
-/// - Đặt sai: vùng chớp đỏ, camera rung, điện thoại rung.
-/// Chữ khen và vùng chớp đỏ lấy từ pool (prefab), không tạo GameObject mới.
+/// - Đặt sai: camera rung, điện thoại rung (mèo rung đỏ do PlacedBlockView tự chạy).
+/// Chữ khen lấy từ pool (prefab), không tạo GameObject mới.
 /// </summary>
 public class GameplayFeedback : MonoBehaviour
 {
     [Header("Prefab")]
     [SerializeField] private SpriteRenderer praisePrefab;
-    [SerializeField] private SpriteRenderer mistakeFlashPrefab; // drawMode Sliced
 
     [Header("Khen")]
     [SerializeField, Range(0f, 1f)] private float praiseChance = 0.6f;
@@ -21,8 +20,6 @@ public class GameplayFeedback : MonoBehaviour
     [SerializeField] private float praiseDuration = 0.9f;
 
     [Header("Sai")]
-    [SerializeField] private Color mistakeColor = new Color(1f, 0.2f, 0.25f, 0.55f);
-    [SerializeField] private float mistakeFlashDuration = 0.45f;
     [SerializeField] private float shakeDuration = 0.25f;
     [SerializeField] private float shakeStrength = 0.15f;
     [SerializeField] private bool vibrate = true;
@@ -30,13 +27,11 @@ public class GameplayFeedback : MonoBehaviour
     private Camera _cam;
     private Coroutine _shake;
     private ObjectPool<SpriteRenderer> _praisePool;
-    private ObjectPool<SpriteRenderer> _flashPool;
 
     private void Awake()
     {
         _cam = Camera.main;
         _praisePool = CreatePool(praisePrefab, 4);
-        _flashPool = CreatePool(mistakeFlashPrefab, 2);
     }
 
     private ObjectPool<SpriteRenderer> CreatePool(SpriteRenderer prefab, int capacity)
@@ -66,9 +61,9 @@ public class GameplayFeedback : MonoBehaviour
         GridManager.Instance.onMistake.RemoveListener(OnMistake);
     }
 
-    private void OnBlockPlaced(PlacedBlock block)
+    private void OnBlockPlaced(BlockModel block)
     {
-        if (block == null || block.Rect.width * block.Rect.height < praiseMinCells) return;
+        if (block == null || block.Area < praiseMinCells) return;
         if (Random.value > praiseChance) return;
 
         GameplayVisuals visuals = GameplayVisuals.Instance;
@@ -78,7 +73,7 @@ public class GameplayFeedback : MonoBehaviour
         SpriteRenderer sr = _praisePool.Get();
         sr.sprite = praise;
         sr.color = Color.white;
-        sr.transform.position = block.transform.position + new Vector3(0f, 0f, -1f);
+        sr.transform.position = GridManager.Instance.Board.Geometry.RectCenter(block.Rect) + new Vector3(0f, 0f, -1f);
         StartCoroutine(PraiseRoutine(sr));
     }
 
@@ -105,12 +100,6 @@ public class GameplayFeedback : MonoBehaviour
 
     private void OnMistake(Vector3 center, Vector2 size)
     {
-        SpriteRenderer flash = _flashPool.Get();
-        flash.transform.position = center;
-        flash.size = size;
-        flash.color = mistakeColor;
-        StartCoroutine(FlashRoutine(flash));
-
         if (_shake != null) StopCoroutine(_shake);
         _shake = StartCoroutine(ShakeCamera());
 
@@ -122,23 +111,6 @@ public class GameplayFeedback : MonoBehaviour
 #if UNITY_ANDROID || UNITY_IOS
         Handheld.Vibrate();
 #endif
-    }
-
-    private IEnumerator FlashRoutine(SpriteRenderer sr)
-    {
-        Color c = mistakeColor;
-        float t = 0f;
-        while (t < mistakeFlashDuration)
-        {
-            t += Time.deltaTime;
-            float p = Mathf.Clamp01(t / mistakeFlashDuration);
-            // 2 nhịp chớp rồi tắt
-            float blink = Mathf.Abs(Mathf.Sin(p * Mathf.PI * 2f));
-            c.a = mistakeColor.a * blink * (1f - p * 0.5f);
-            sr.color = c;
-            yield return null;
-        }
-        _flashPool.Release(sr);
     }
 
     private IEnumerator ShakeCamera()

@@ -7,29 +7,31 @@ public class GridSpawner : MonoBehaviour
 {
     public const float CellSpacing = 1.2f; // cellGap + cellSize
 
-    [SerializeField] private Cell cellPrefab;
+    [SerializeField] private CellView cellPrefab;
     [SerializeField] private LevelDefinition levelData;
     [SerializeField] private int cellPoolCapacity = 144; // lưới lớn nhất 12x12
-    public UnityEvent<List<Cell>> gridCellEvent = new UnityEvent<List<Cell>>();
+    public UnityEvent<List<CellView>> gridCellEvent = new UnityEvent<List<CellView>>();
 
-    private readonly List<Cell> gridCells = new List<Cell>();
+    private readonly List<CellView> gridCells = new List<CellView>();
     private readonly Dictionary<Vector2Int, ClueData> _clueLookup = new Dictionary<Vector2Int, ClueData>();
     private readonly HashSet<Vector2Int> _voidLookup = new HashSet<Vector2Int>();
-    private ObjectPool<Cell> _cellPool;
+    private ObjectPool<CellView> _cellPool;
 
     public LevelDefinition LevelData => levelData;
-    public List<Cell> GetGrid => gridCells;
+    public List<CellView> GetGrid => gridCells;
+    public GridGeometry Geometry => levelData != null
+        ? new GridGeometry(levelData.size, levelData.Height, CellSpacing)
+        : new GridGeometry(0, 0, CellSpacing);
 
     private void Awake()
     {
         // Ô được tái sử dụng giữa các level thay vì Instantiate / Destroy mỗi lần
-        _cellPool = new ObjectPool<Cell>(
+        _cellPool = new ObjectPool<CellView>(
             createFunc: () => Instantiate(cellPrefab, transform),
             actionOnGet: c => c.gameObject.SetActive(true),
             actionOnRelease: c =>
             {
-                c.ClearClue();
-                c.ClearPlacedBlock();
+                c.Unbind();
                 c.gameObject.SetActive(false);
             },
             // Thoát Play mode: scene hủy object trước, rồi Editor mới Clear() pool -> object có thể đã null
@@ -61,25 +63,21 @@ public class GridSpawner : MonoBehaviour
         DeleteGrid();
         BuildLookups(data);
 
-        int height = data.Height;
-        int width = data.size;
-
-        for (int i = 0; i < height; i++)
+        GridGeometry geometry = Geometry;
+        for (int i = 0; i < data.Height; i++)
         {
-            for (int j = 0; j < width; j++)
+            for (int j = 0; j < data.size; j++)
             {
                 Vector2Int pos = new Vector2Int(j, i);
                 if (_voidLookup.Contains(pos)) continue;
 
-                float xPos = (j - (float)(width - 1) / 2) * CellSpacing;
-                float yPos = (i - (float)(height - 1) / 2) * CellSpacing;
+                CellModel model = _clueLookup.TryGetValue(pos, out ClueData clue)
+                    ? new CellModel(pos, clue)
+                    : new CellModel(pos);
 
-                Cell cell = _cellPool.Get();
-                cell.transform.position = new Vector3(xPos, yPos, 0f);
-                cell.SetPositionInCell(j, i);
-
-                if (_clueLookup.TryGetValue(pos, out ClueData clue)) cell.SetClue(clue);
-                else cell.ClearClue();
+                CellView cell = _cellPool.Get();
+                cell.transform.position = geometry.CellToWorld(pos);
+                cell.Bind(model);
 
                 gridCells.Add(cell);
             }
@@ -107,7 +105,7 @@ public class GridSpawner : MonoBehaviour
 
     public void DeleteGrid()
     {
-        foreach (Cell cell in gridCells)
+        foreach (CellView cell in gridCells)
         {
             if (cell != null) _cellPool.Release(cell);
         }

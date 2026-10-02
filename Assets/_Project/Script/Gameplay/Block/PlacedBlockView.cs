@@ -1,0 +1,378 @@
+using System;
+using System.Collections;
+using TMPro;
+using UnityEngine;
+
+/// <summary>
+/// Hình khối "mèo": thân màu (9-slice), tai, mặt hoạt hình và số của clue.
+/// Chỉ lo phần hiển thị; dữ liệu khối nằm ở BlockModel. Mọi object con có sẵn trong PlacedBlock.prefab,
+/// khối được GridManager lấy ra / trả về pool.
+///
+/// Vòng đời 1 khối:
+///   ShowPreview  -> đang kéo, vùng đủ value: mèo hiện ra đặc ngay, viền màu mèo thu bên trong khối
+///   Confirm      -> thả tay, nước đi đúng: mèo đặc lại và bật nhẹ
+///   PlayReject   -> thả tay, sai lời giải: rung rồi mờ đi; kiểu báo sai chọn bằng rejectStyle (mèo xám / viền đỏ / cả hai)
+/// </summary>
+public class PlacedBlockView : MonoBehaviour
+{
+    public enum RejectStyle
+    {
+        GrayOut,        // B: thân + tai đổi sang mèo xám
+        RedRing,        // A: giữ màu mèo, viền đỏ ngoài mép nháy
+        GrayAndRedRing  // D: cả hai
+    }
+
+    private const float BodyFill = 0.96f; // thân khối chiếm 96% ô, phần còn lại là khe hở
+    private const float BlockZ = -0.05f;
+
+    [Header("Object con trong prefab")]
+    [SerializeField] private SpriteRenderer body;
+    [SerializeField] private TextMeshPro numberText;
+    [SerializeField] private CatFaceAnimator face;
+    [SerializeField] private SpriteRenderer ears;
+    [SerializeField] private SpriteRenderer ring;  // viền 9-slice (RingBlock) cho hiệu ứng đủ value
+
+    [Header("Tai mèo (tính theo tỉ lệ ô)")]
+    [SerializeField] private float earWidth = 0.36f;   // bề rộng cặp tai
+    [SerializeField] private float earOverlap = 0f;    // đỉnh tai đè lên khối bên trên thêm bao nhiêu
+
+    [Header("Bật lên")]
+    [SerializeField] private float popDuration = 0.18f;
+    [SerializeField] private float popScale = 0.08f;
+
+    [Header("Đủ value: viền màu thu bên trong (ref reffullvalue)")]
+    [SerializeField] private float ringDuration = 0.2f;
+    [SerializeField] private float ringStartInset = 0.12f;      // viền bắt đầu thụt vào bao nhiêu so với mép khối (world)
+    [SerializeField] private float ringStartThickness = 1f;     // độ dày nét lúc đầu (1 = 0.14 world)
+    [SerializeField] private float ringEndThickness = 0.35f;    // độ dày nét lúc chạm mép
+    [SerializeField, Range(0f, 1f)] private float ringWhiten = 0.45f; // màu mèo pha trắng để nổi trên thân cùng màu
+
+    [Header("Đặt sai")]
+    [SerializeField] private RejectStyle rejectStyle = RejectStyle.GrayOut;
+    [SerializeField] private Color rejectRingColor = new Color(1f, 0.25f, 0.3f, 1f);
+    [SerializeField] private float rejectRingOutset = 0.05f;    // viền đỏ nằm ngoài mép khối bao nhiêu (world)
+    [SerializeField] private float rejectRingThickness = 0.6f;  // độ dày nét (1 = 0.14 world)
+    [SerializeField] private int rejectRingBlinks = 2;          // số nhịp nháy trong lúc rung
+    [SerializeField, Range(0.3f, 1f)] private float rejectShrinkTo = 0.75f; // co còn bao nhiêu khi mờ đi
+    [SerializeField] private float rejectShakeDuration = 0.45f;
+    [SerializeField] private float rejectShakeStrength = 0.12f;
+    [SerializeField] private float rejectShakeFrequency = 45f;
+    [SerializeField] private float rejectFadeDuration = 0.15f;
+
+    private float _cellSize = GridSpawner.CellSpacing;
+    private Color _bodyBaseColor = Color.white;
+    private Color _numberBaseColor = Color.white;
+    private Vector3 _basePosition;
+    private Vector2 _bodySize;
+    private Coroutine _anim;
+    private Coroutine _ringAnim;
+    private ColorType _color;
+
+    public bool IsPreview { get; private set; }
+    public RectInt Rect { get; private set; }
+
+    /// <summary>Hiện mèo xem trước cho vùng đang kéo (chưa đặt), cùng màu với khung chọn.</summary>
+    public void ShowPreview(RectInt rect, CellModel clueCell, ColorType color, GridGeometry geometry)
+    {
+        Layout(rect, clueCell, color, geometry);
+        IsPreview = true;
+        SetTint(Color.white, 1f);
+
+        if (_ringAnim != null) StopCoroutine(_ringAnim);
+        _ringAnim = StartCoroutine(RingIn());
+    }
+
+    /// <summary>Hiện khối đã đặt (không qua xem trước).</summary>
+    public void Show(BlockModel block, GridGeometry geometry)
+    {
+        Layout(block.Rect, block.ClueCell, block.Color, geometry);
+        Confirm();
+    }
+
+    /// <summary>Thả tay, nước đi đúng: mèo xem trước thành khối thật.</summary>
+    public void Confirm(CellModel clueCell = null)
+    {
+        IsPreview = false;
+        if (clueCell != null) SetNumber(clueCell); // ô ẩn "?" vừa lộ số
+        SetTint(Color.white, 1f);
+        PlayAnim(PopIn());
+    }
+
+    /// <summary>Thả tay, sai lời giải: ngả đỏ, rung rồi mờ đi. Xong thì gọi onDone (trả về pool).</summary>
+    public void PlayReject(Action onDone)
+    {
+        IsPreview = false;
+        PlayAnim(RejectRoutine(onDone));
+    }
+
+    /// <summary>Đưa về trạng thái gốc trước khi trả về pool.</summary>
+    public void ResetView()
+    {
+        if (_anim != null)
+        {
+            StopCoroutine(_anim);
+            _anim = null;
+        }
+        if (_ringAnim != null)
+        {
+            StopCoroutine(_ringAnim);
+            _ringAnim = null;
+        }
+        if (ring != null) ring.gameObject.SetActive(false);
+        IsPreview = false;
+        transform.localScale = Vector3.one;
+        SetTint(Color.white, 1f);
+    }
+
+    // ---------- Dựng hình ----------
+
+    private void Layout(RectInt rect, CellModel clueCell, ColorType color, GridGeometry geometry)
+    {
+        ResetView();
+        Rect = rect;
+        _color = color;
+        _cellSize = geometry.Spacing;
+
+        _basePosition = geometry.RectCenter(rect);
+        _basePosition.z = BlockZ;
+        transform.position = _basePosition;
+
+        float width = (rect.width - 1) * _cellSize + _cellSize * BodyFill;
+        float height = (rect.height - 1) * _cellSize + _cellSize * BodyFill;
+        _bodySize = new Vector2(width, height);
+
+        GameplayVisuals visuals = GameplayVisuals.Instance;
+        Vector3 clueWorld = geometry.CellToWorld(clueCell.Position);
+        Vector3 faceWorld = geometry.CellToWorld(PickFaceCell(rect, clueCell.Position));
+
+        SetupBody(visuals, color, width, height);
+        numberText.transform.position = clueWorld + new Vector3(0f, 0f, -0.06f);
+        SetNumber(clueCell);
+        SetupFace(visuals, faceWorld, rect);
+        SetupEars(visuals, color, faceWorld, height);
+    }
+
+    private void SetupBody(GameplayVisuals visuals, ColorType color, float width, float height)
+    {
+        SetBodyColor(visuals, color);
+        body.size = new Vector2(width, height);
+    }
+
+    private void SetBodyColor(GameplayVisuals visuals, ColorType color)
+    {
+        Sprite sprite = visuals != null ? visuals.GetBlockSprite(color) : null;
+        if (sprite != null)
+        {
+            body.sprite = sprite;
+            _bodyBaseColor = Color.white;
+        }
+        else
+        {
+            // Chưa cấu hình sprite màu: giữ sprite trắng của prefab và tô màu
+            _bodyBaseColor = color.ToColor();
+        }
+        _numberBaseColor = Color.Lerp(color.ToColor(), new Color(0.12f, 0.1f, 0.3f), 0.6f);
+    }
+
+    /// <summary>Đổi thân, tai, số sang bộ sprite màu khác (giữ nguyên kích thước). Dùng cho mèo xám khi sai.</summary>
+    private void Recolor(ColorType color)
+    {
+        GameplayVisuals visuals = GameplayVisuals.Instance;
+        SetBodyColor(visuals, color);
+        Sprite ear = visuals != null ? visuals.GetEarSprite(color) : null;
+        if (ear != null) ears.sprite = ear;
+    }
+
+    private void SetNumber(CellModel clueCell)
+    {
+        ClueCell clue = clueCell.Clue;
+        bool show = clue != null;
+        numberText.gameObject.SetActive(show);
+        if (!show) return;
+
+        if (clue.IsHidden) numberText.SetText("?");
+        else numberText.SetText("{0}", clue.Value);
+    }
+
+    /// <summary>Mặt ở ô trên-phải; nếu trùng ô số thì chuyển xuống ô dưới-trái.</summary>
+    private static Vector2Int PickFaceCell(RectInt rect, Vector2Int cluePos)
+    {
+        if (rect.width * rect.height == 1) return cluePos;
+        Vector2Int topRight = new Vector2Int(rect.xMax - 1, rect.yMax - 1);
+        return topRight != cluePos ? topRight : new Vector2Int(rect.xMin, rect.yMin);
+    }
+
+    private void SetupFace(GameplayVisuals visuals, Vector3 faceWorld, RectInt rect)
+    {
+        CatFaceAnimation anim = visuals != null ? visuals.GetRandomFace() : null;
+        bool show = anim != null && anim.frames.Count > 0;
+        face.gameObject.SetActive(show);
+        if (!show) return;
+
+        bool single = rect.width * rect.height == 1;
+        float faceWidth = _cellSize * (single ? 0.5f : 0.72f);
+        Vector3 pos = faceWorld;
+        if (single) pos += new Vector3(0f, -_cellSize * 0.28f, 0f); // khối 1 ô: mặt nhỏ dưới số
+
+        face.transform.position = new Vector3(pos.x, pos.y, BlockZ - 0.06f);
+        face.Play(anim, visuals.faceFps, faceWidth);
+    }
+
+    private void SetupEars(GameplayVisuals visuals, ColorType color, Vector3 faceWorld, float blockHeight)
+    {
+        Sprite sprite = visuals != null ? visuals.GetEarSprite(color) : null;
+        bool show = sprite != null;
+        ears.gameObject.SetActive(show);
+        if (!show) return;
+
+        ears.sprite = sprite;
+        float k = _cellSize * earWidth / sprite.bounds.size.x;
+        ears.transform.localScale = new Vector3(k, k, 1f);
+
+        // Đỉnh tai chạm đáy khối bên trên (qua khe hở), phần còn lại lún vào thân khối này
+        float earHeight = sprite.bounds.size.y * k;
+        float gap = _cellSize * (1f - BodyFill);
+        float tipY = _basePosition.y + blockHeight / 2f + gap + _cellSize * earOverlap;
+        ears.transform.position = new Vector3(faceWorld.x, tipY - earHeight / 2f, BlockZ - 0.01f);
+    }
+
+    /// <summary>Nhân màu cho mọi phần của mèo (thân, tai, mặt, số).</summary>
+    private void SetTint(Color tint, float alpha)
+    {
+        tint.a = alpha;
+        body.color = _bodyBaseColor * tint;
+        ears.color = tint;
+        face.SetColor(tint);
+        Color n = _numberBaseColor;
+        n.a = alpha;
+        numberText.color = n;
+    }
+
+    // ---------- Animation ----------
+
+    private void PlayAnim(IEnumerator routine)
+    {
+        if (_anim != null) StopCoroutine(_anim);
+        transform.position = _basePosition;
+        _anim = StartCoroutine(routine);
+    }
+
+    private IEnumerator PopIn()
+    {
+        float t = 0f;
+        while (t < popDuration)
+        {
+            t += Time.deltaTime;
+            float p = Mathf.Clamp01(t / popDuration);
+            // Phóng to nhẹ rồi về kích thước chuẩn
+            transform.localScale = Vector3.one * (1f + Mathf.Sin(p * Mathf.PI) * popScale);
+            yield return null;
+        }
+        transform.localScale = Vector3.one;
+        _anim = null;
+    }
+
+    /// <summary>
+    /// Viền màu mèo hiện thụt vào trong mép khối, nở ra đúng mép, mỏng dần và mờ đi.
+    /// Nét viền là 9-slice nên độ dày chỉnh bằng scale, kích thước bằng size / scale.
+    /// </summary>
+    private IEnumerator RingIn()
+    {
+        if (ring == null) yield break;
+
+        Color c = Color.Lerp(_color.ToColor(), Color.white, ringWhiten);
+        ring.gameObject.SetActive(true);
+        ring.transform.localPosition = new Vector3(0f, 0f, -0.08f);
+
+        float t = 0f;
+        while (t < ringDuration)
+        {
+            float p = Mathf.Clamp01(t / ringDuration);
+            float ease = 1f - (1f - p) * (1f - p); // nhanh lúc đầu, chậm dần khi chạm mép
+
+            float inset = Mathf.Lerp(ringStartInset, 0f, ease);
+            float k = Mathf.Lerp(ringStartThickness, ringEndThickness, ease);
+            Vector2 size = _bodySize - Vector2.one * (inset * 2f);
+            ring.transform.localScale = new Vector3(k, k, 1f);
+            ring.size = size / k;
+
+            c.a = 1f - p * p; // giữ rõ rồi tắt nhanh ở cuối
+            ring.color = c;
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        ring.gameObject.SetActive(false);
+        _ringAnim = null;
+    }
+
+    /// <summary>
+    /// Sai lời giải: thân mèo giữ nguyên màu (đỏ nhân lên màu đậm bị đục), báo sai bằng viền đỏ
+    /// nằm ngoài mép khối – trên nền tối của lưới nên màu mèo nào cũng sạch. Viền là con của khối nên rung theo.
+    /// </summary>
+    private IEnumerator RejectRoutine(Action onDone)
+    {
+        bool gray = rejectStyle != RejectStyle.RedRing;
+        bool useRing = rejectStyle != RejectStyle.GrayOut && ring != null;
+
+        transform.localScale = Vector3.one;
+        if (gray) Recolor(ColorType.Gray);
+        SetTint(Color.white, 1f);
+
+        if (_ringAnim != null)
+        {
+            StopCoroutine(_ringAnim);
+            _ringAnim = null;
+        }
+        if (ring != null) ring.gameObject.SetActive(false);
+
+        Color ringColor = rejectRingColor;
+        if (useRing)
+        {
+            ring.gameObject.SetActive(true);
+            ring.transform.localPosition = new Vector3(0f, 0f, -0.08f);
+            float k = rejectRingThickness;
+            ring.transform.localScale = new Vector3(k, k, 1f);
+            ring.size = (_bodySize + Vector2.one * (rejectRingOutset * 2f)) / k;
+        }
+
+        // Rung ngang (biên độ giảm dần), viền đỏ nháy rejectRingBlinks nhịp
+        float t = 0f;
+        while (t < rejectShakeDuration)
+        {
+            t += Time.deltaTime;
+            float p = Mathf.Clamp01(t / rejectShakeDuration);
+            float offset = Mathf.Sin(t * rejectShakeFrequency) * rejectShakeStrength * (1f - p);
+            transform.position = _basePosition + new Vector3(offset, 0f, 0f);
+
+            if (useRing)
+            {
+                ringColor.a = 0.35f + 0.65f * Mathf.Abs(Mathf.Cos(p * Mathf.PI * rejectRingBlinks));
+                ring.color = ringColor;
+            }
+            yield return null;
+        }
+        transform.position = _basePosition;
+
+        // Co nhỏ và mờ dần rồi biến mất
+        t = 0f;
+        while (t < rejectFadeDuration)
+        {
+            t += Time.deltaTime;
+            float p = Mathf.Clamp01(t / rejectFadeDuration);
+            float ease = p * p;
+            transform.localScale = Vector3.one * Mathf.Lerp(1f, rejectShrinkTo, ease);
+            SetTint(Color.white, 1f - p);
+            if (useRing)
+            {
+                ringColor.a = 1f - p;
+                ring.color = ringColor;
+            }
+            yield return null;
+        }
+
+        _anim = null;
+        onDone?.Invoke();
+    }
+}

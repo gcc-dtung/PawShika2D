@@ -21,7 +21,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 | Tình huống | Kết quả | Mạng |
 | --- | --- | --- |
 | Khối hợp lệ và lưới vẫn còn lời giải | Đặt khối mèo, hiện chữ khen, mọi ổ khóa giảm 1 | Giữ nguyên |
-| Khối đúng số ô nhưng đặt xong thì lưới **không còn lời giải** | Vùng chớp đỏ, camera rung, điện thoại rung | **−1** |
+| Khối đúng số ô nhưng đặt xong thì lưới **không còn lời giải** | Mèo chuyển xám, rung rồi co lại biến mất, camera rung, điện thoại rung | **−1** |
 | Sai số ô, 0 hoặc nhiều ô số, đè khối khác, chứa ô còn khóa, sai hướng mũi tên | Chỉ hủy thao tác | Giữ nguyên |
 | Hết mạng | Khóa lưới (tạm thời: tự chơi lại sau 1.5 giây) | 0 |
 

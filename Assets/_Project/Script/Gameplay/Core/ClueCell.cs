@@ -1,6 +1,6 @@
 /// <summary>
 /// Dữ liệu và luật của 1 ô số (class C# thuần, không phải MonoBehaviour).
-/// Cell sở hữu instance này và lo phần hiển thị.
+/// CellModel sở hữu instance này; CellView lo phần hiển thị.
 /// </summary>
 public class ClueCell
 {
