@@ -36,7 +36,7 @@ public class GridManager : Singleton<GridManager>
     public BoardModel Board => _board;
     public bool IsGameWon => _isGameWon;
     public bool IsGameOver => LivesManager.Instance != null && LivesManager.Instance.IsOutOfLives;
-    public bool IsInputLocked => _isGameWon || IsGameOver;
+    public bool IsInputLocked => _isGameWon || IsGameOver || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying);
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
 
     protected override void Awake()

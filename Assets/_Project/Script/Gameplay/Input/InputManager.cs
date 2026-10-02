@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager : MonoBehaviour
 {
@@ -22,10 +23,21 @@ public class InputManager : MonoBehaviour
         if (dragAndDropController == null) return;
 
         if (Input.GetMouseButtonDown(0))
-            dragAndDropController.StartDrag(Input.mousePosition);
+        {
+            // Bấm trúng nút / popup trên Canvas thì không bắt đầu kéo trên lưới
+            if (!IsPointerOverUI()) dragAndDropController.StartDrag(Input.mousePosition);
+        }
         else if (Input.GetMouseButton(0))
             dragAndDropController.Drag(Input.mousePosition);
         else if (Input.GetMouseButtonUp(0))
             dragAndDropController.EndDrag();
+    }
+
+    private static bool IsPointerOverUI()
+    {
+        EventSystem es = EventSystem.current;
+        if (es == null) return false;
+        if (Input.touchCount > 0) return es.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
+        return es.IsPointerOverGameObject();
     }
 }

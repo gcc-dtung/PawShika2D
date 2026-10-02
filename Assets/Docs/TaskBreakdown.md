@@ -56,7 +56,7 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - [ ] Gắn ô khóa / ẩn / mũi tên vào level thật (chờ trả lời câu hỏi mở)
 - [ ] Âm thanh: `block_true.ogg`, `unlock_obs2.ogg`, âm sai, nhạc nền
 
-## Giai đoạn 3 — Thay các thành phần dính tới thời gian
+## Giai đoạn 3 — Thay các thành phần dính tới thời gian (gần xong)
 
 **Kết quả:** vòng chơi hoàn chỉnh vào level → chơi → thắng/thua → level kế.
 
@@ -67,15 +67,17 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 | `MoreTimePopup` | `ReviveLivesPopup` (+1 ads, +3 coin), cùng layout |
 | `WinUI` sao theo thời gian | `WinUI` không sao, thưởng coin |
 | Banner HARD LEVEL | Giữ, thêm số mạng nếu cần |
-| `hardLayer` viền đỏ | Cảnh báo khi còn 1 mạng |
+| `hardLayer` viền đỏ | Bỏ (thử viền đỏ khi còn 1 mạng: khó chơi) |
 | `TimingManager`, `EstimateDuration` | Bỏ |
 
-- [ ] `GameState` rõ ràng: Playing → Won / OutOfLives → Reviving → Lost
-- [ ] `ReviveLivesPopup`: thay chỗ `LevelManager.OnOutOfLives` tự chơi lại
-- [ ] `WinUI`: thay chỗ `LevelManager.OnWin` tự sang level
-- [ ] `LoseUI`: nút Retry
-- [ ] Popup xác nhận chơi lại cho nút Replay
-- [ ] Viền đỏ nhấp nháy khi còn 1 mạng
+- [x] `GameState` trong `LevelManager`: Playing / Paused → Won / OutOfLives → (hồi mạng) Playing hoặc Lost
+- [x] `ReviveLivesPopup`: ads +1 mạng, 900 coin +3 mạng, nút X = thua; hồi mạng chơi tiếp lưới đang dở
+- [x] `WinPopup`: không sao, +10 coin, x2 bằng ads, Next → level kế
+- [x] `LosePopup`: nút Retry
+- [x] `ConfirmReplayPopup` cho nút Replay (tạm dừng ván khi mở)
+- [x] ~~Viền đỏ nhấp nháy khi còn 1 mạng~~ – đã làm rồi bỏ: che lưới, khó chơi
+- [x] `CoinWallet` (PlayerPrefs) + `RewardedAds` giả lập (chờ SDK ở Giai đoạn 6)
+- [~] Giao diện popup dựng bằng menu `Build Popups` từ sprite gốc; chưa có hiệu ứng pháo hoa / mèo trên Win
 - [ ] Banner độ khó (cần thêm trường độ khó vào `LevelDefinition`)
 - [ ] Làm đẹp HUD: khung LEVEL dùng sprite gốc thay cho ô màu
 

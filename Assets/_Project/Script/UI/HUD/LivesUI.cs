@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +17,7 @@ public class LivesUI : MonoBehaviour
     [SerializeField] private float punchDuration = 0.3f;
 
     private readonly List<Image> _hearts = new List<Image>();
+    private readonly Dictionary<RectTransform, Tween> _punches = new Dictionary<RectTransform, Tween>();
 
     private void OnEnable()
     {
@@ -28,10 +29,13 @@ public class LivesUI : MonoBehaviour
 
     private void OnDisable()
     {
+        KillPunches(); // hủy tween, tim về dáng gốc
         if (LivesManager.Instance == null) return;
         LivesManager.Instance.onLivesChanged.RemoveListener(Refresh);
         LivesManager.Instance.onLifeLost.RemoveListener(PlayLoseFX);
     }
+
+
 
     private void Refresh(int current, int max)
     {
@@ -75,21 +79,37 @@ public class LivesUI : MonoBehaviour
     {
         int index = currentAfterLose; // tim vừa vỡ
         if (index < 0 || index >= _hearts.Count) return;
-        StartCoroutine(Punch(_hearts[index].rectTransform));
+        Punch(_hearts[index].rectTransform);
     }
 
-    private IEnumerator Punch(RectTransform t)
+    /// <summary>Phồng to rồi về, lắc trái phải tắt dần.</summary>
+    private void Punch(RectTransform t)
     {
-        float elapsed = 0f;
-        while (elapsed < punchDuration)
-        {
-            elapsed += Time.deltaTime;
-            float p = Mathf.Clamp01(elapsed / punchDuration);
-            t.localScale = Vector3.one * Mathf.Lerp(1f, punchScale, Mathf.Sin(p * Mathf.PI));
-            t.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(p * Mathf.PI * 4f) * 12f * (1f - p));
-            yield return null;
-        }
-        t.localScale = Vector3.one;
-        t.localRotation = Quaternion.identity;
+        if (_punches.TryGetValue(t, out Tween old)) old.Kill();
+
+        Tween tween = null;
+        tween = DOVirtual.Float(0f, 1f, punchDuration, p =>
+            {
+                t.localScale = Vector3.one * Mathf.Lerp(1f, punchScale, Mathf.Sin(p * Mathf.PI));
+                t.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(p * Mathf.PI * 4f) * 12f * (1f - p));
+            })
+            .SetEase(Ease.Linear)
+            .SetLink(t.gameObject)
+            .OnKill(() =>
+            {
+                if (t != null)
+                {
+                    t.localScale = Vector3.one;
+                    t.localRotation = Quaternion.identity;
+                }
+                if (_punches.TryGetValue(t, out Tween cur) && cur == tween) _punches.Remove(t);
+            });
+        _punches[t] = tween;
+    }
+
+    private void KillPunches()
+    {
+        foreach (Tween tween in new List<Tween>(_punches.Values)) tween.Kill();
+        _punches.Clear();
     }
 }

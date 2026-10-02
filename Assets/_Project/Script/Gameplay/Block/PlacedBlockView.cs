@@ -1,5 +1,5 @@
 using System;
-using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
@@ -64,8 +64,8 @@ public class PlacedBlockView : MonoBehaviour
     private Color _numberBaseColor = Color.white;
     private Vector3 _basePosition;
     private Vector2 _bodySize;
-    private Coroutine _anim;
-    private Coroutine _ringAnim;
+    private Tween _anim;     // bật / báo sai
+    private Tween _ringAnim; // viền đủ value
     private ColorType _color;
 
     public bool IsPreview { get; private set; }
@@ -78,8 +78,8 @@ public class PlacedBlockView : MonoBehaviour
         IsPreview = true;
         SetTint(Color.white, 1f);
 
-        if (_ringAnim != null) StopCoroutine(_ringAnim);
-        _ringAnim = StartCoroutine(RingIn());
+        KillRing();
+        _ringAnim = RingIn();
     }
 
     /// <summary>Hiện khối đã đặt (không qua xem trước).</summary>
@@ -108,17 +108,8 @@ public class PlacedBlockView : MonoBehaviour
     /// <summary>Đưa về trạng thái gốc trước khi trả về pool.</summary>
     public void ResetView()
     {
-        if (_anim != null)
-        {
-            StopCoroutine(_anim);
-            _anim = null;
-        }
-        if (_ringAnim != null)
-        {
-            StopCoroutine(_ringAnim);
-            _ringAnim = null;
-        }
-        if (ring != null) ring.gameObject.SetActive(false);
+        KillAnim();
+        KillRing();
         IsPreview = false;
         transform.localScale = Vector3.one;
         SetTint(Color.white, 1f);
@@ -248,70 +239,83 @@ public class PlacedBlockView : MonoBehaviour
         numberText.color = n;
     }
 
-    // ---------- Animation ----------
+    // ---------- Animation (DOTween) ----------
 
-    private void PlayAnim(IEnumerator routine)
+    // Khối tắt (trả về pool, đổi level, thoát Play) thì hủy tween; callback onDone của PlayReject không chạy nữa
+    private void OnDisable()
     {
-        if (_anim != null) StopCoroutine(_anim);
-        transform.position = _basePosition;
-        _anim = StartCoroutine(routine);
+        KillAnim();
+        KillRing();
     }
 
-    private IEnumerator PopIn()
+    private void KillAnim()
     {
-        float t = 0f;
-        while (t < popDuration)
-        {
-            t += Time.deltaTime;
-            float p = Mathf.Clamp01(t / popDuration);
-            // Phóng to nhẹ rồi về kích thước chuẩn
-            transform.localScale = Vector3.one * (1f + Mathf.Sin(p * Mathf.PI) * popScale);
-            yield return null;
-        }
-        transform.localScale = Vector3.one;
+        _anim?.Kill();
         _anim = null;
+    }
+
+    private void KillRing()
+    {
+        _ringAnim?.Kill();
+        _ringAnim = null;
+        if (ring != null) ring.gameObject.SetActive(false);
+    }
+
+    private void PlayAnim(Tween tween)
+    {
+        KillAnim();
+        transform.position = _basePosition;
+        Tween t = tween.SetLink(gameObject);
+        t.OnKill(() => { if (_anim == t) _anim = null; }); // Kill trong callback có thể bị hoãn: chỉ xóa nếu vẫn là tween này
+        _anim = t;
+    }
+
+    /// <summary>Phóng to nhẹ rồi về kích thước chuẩn.</summary>
+    private Tween PopIn()
+    {
+        transform.localScale = Vector3.one;
+        return transform.DOScale(1f + popScale, popDuration * 0.5f)
+            .SetEase(Ease.OutSine)
+            .SetLoops(2, LoopType.Yoyo);
     }
 
     /// <summary>
     /// Viền màu mèo hiện thụt vào trong mép khối, nở ra đúng mép, mỏng dần và mờ đi.
     /// Nét viền là 9-slice nên độ dày chỉnh bằng scale, kích thước bằng size / scale.
     /// </summary>
-    private IEnumerator RingIn()
+    private Tween RingIn()
     {
-        if (ring == null) yield break;
+        if (ring == null) return null;
 
         Color c = Color.Lerp(_color.ToColor(), Color.white, ringWhiten);
         ring.gameObject.SetActive(true);
         ring.transform.localPosition = new Vector3(0f, 0f, -0.08f);
 
-        float t = 0f;
-        while (t < ringDuration)
-        {
-            float p = Mathf.Clamp01(t / ringDuration);
-            float ease = 1f - (1f - p) * (1f - p); // nhanh lúc đầu, chậm dần khi chạm mép
+        Tween tween = null;
+        tween = DOVirtual.Float(0f, 1f, ringDuration, p =>
+            {
+                float ease = 1f - (1f - p) * (1f - p); // nhanh lúc đầu, chậm dần khi chạm mép
+                float inset = Mathf.Lerp(ringStartInset, 0f, ease);
+                float k = Mathf.Lerp(ringStartThickness, ringEndThickness, ease);
+                Vector2 size = _bodySize - Vector2.one * (inset * 2f);
+                ring.transform.localScale = new Vector3(k, k, 1f);
+                ring.size = size / k;
 
-            float inset = Mathf.Lerp(ringStartInset, 0f, ease);
-            float k = Mathf.Lerp(ringStartThickness, ringEndThickness, ease);
-            Vector2 size = _bodySize - Vector2.one * (inset * 2f);
-            ring.transform.localScale = new Vector3(k, k, 1f);
-            ring.size = size / k;
-
-            c.a = 1f - p * p; // giữ rõ rồi tắt nhanh ở cuối
-            ring.color = c;
-
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        ring.gameObject.SetActive(false);
-        _ringAnim = null;
+                c.a = 1f - p * p; // giữ rõ rồi tắt nhanh ở cuối
+                ring.color = c;
+            })
+            .SetEase(Ease.Linear)
+            .SetLink(gameObject)
+            .OnComplete(() => ring.gameObject.SetActive(false))
+            .OnKill(() => { if (_ringAnim == tween) _ringAnim = null; });
+        return tween;
     }
 
     /// <summary>
-    /// Sai lời giải: thân mèo giữ nguyên màu (đỏ nhân lên màu đậm bị đục), báo sai bằng viền đỏ
-    /// nằm ngoài mép khối – trên nền tối của lưới nên màu mèo nào cũng sạch. Viền là con của khối nên rung theo.
+    /// Sai lời giải: rung ngang (biên độ giảm dần) rồi co nhỏ + mờ đi. rejectStyle quyết định mèo xám và/hoặc
+    /// viền đỏ ngoài mép khối (viền là con của khối nên rung theo).
     /// </summary>
-    private IEnumerator RejectRoutine(Action onDone)
+    private Tween RejectRoutine(Action onDone)
     {
         bool gray = rejectStyle != RejectStyle.RedRing;
         bool useRing = rejectStyle != RejectStyle.GrayOut && ring != null;
@@ -319,13 +323,7 @@ public class PlacedBlockView : MonoBehaviour
         transform.localScale = Vector3.one;
         if (gray) Recolor(ColorType.Gray);
         SetTint(Color.white, 1f);
-
-        if (_ringAnim != null)
-        {
-            StopCoroutine(_ringAnim);
-            _ringAnim = null;
-        }
-        if (ring != null) ring.gameObject.SetActive(false);
+        KillRing();
 
         Color ringColor = rejectRingColor;
         if (useRing)
@@ -337,42 +335,35 @@ public class PlacedBlockView : MonoBehaviour
             ring.size = (_bodySize + Vector2.one * (rejectRingOutset * 2f)) / k;
         }
 
-        // Rung ngang (biên độ giảm dần), viền đỏ nháy rejectRingBlinks nhịp
-        float t = 0f;
-        while (t < rejectShakeDuration)
+        Sequence seq = DOTween.Sequence();
+
+        // Rung ngang, viền đỏ nháy rejectRingBlinks nhịp
+        seq.Append(DOVirtual.Float(0f, 1f, rejectShakeDuration, p =>
         {
-            t += Time.deltaTime;
-            float p = Mathf.Clamp01(t / rejectShakeDuration);
+            float t = p * rejectShakeDuration;
             float offset = Mathf.Sin(t * rejectShakeFrequency) * rejectShakeStrength * (1f - p);
             transform.position = _basePosition + new Vector3(offset, 0f, 0f);
-
             if (useRing)
             {
                 ringColor.a = 0.35f + 0.65f * Mathf.Abs(Mathf.Cos(p * Mathf.PI * rejectRingBlinks));
                 ring.color = ringColor;
             }
-            yield return null;
-        }
-        transform.position = _basePosition;
+        }).SetEase(Ease.Linear));
+        seq.AppendCallback(() => transform.position = _basePosition);
 
         // Co nhỏ và mờ dần rồi biến mất
-        t = 0f;
-        while (t < rejectFadeDuration)
+        seq.Append(DOVirtual.Float(0f, 1f, rejectFadeDuration, p =>
         {
-            t += Time.deltaTime;
-            float p = Mathf.Clamp01(t / rejectFadeDuration);
-            float ease = p * p;
-            transform.localScale = Vector3.one * Mathf.Lerp(1f, rejectShrinkTo, ease);
+            transform.localScale = Vector3.one * Mathf.Lerp(1f, rejectShrinkTo, p * p);
             SetTint(Color.white, 1f - p);
             if (useRing)
             {
                 ringColor.a = 1f - p;
                 ring.color = ringColor;
             }
-            yield return null;
-        }
+        }).SetEase(Ease.Linear));
 
-        _anim = null;
-        onDone?.Invoke();
+        seq.OnComplete(() => onDone?.Invoke());
+        return seq;
     }
 }

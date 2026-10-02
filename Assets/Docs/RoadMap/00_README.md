@@ -43,5 +43,6 @@ Bảng các đợt thay đổi trong lần push này.
 | [03](03_ToiUu-PrefabPool.md) | Đã push | 2026-10-02 19:39 · `7f9a805` | SelectionBox, ClueCell C# thuần, prefab + ObjectPool, sửa lỗi pool |
 | [04](04_TaiMeo-LevelTest.md) | Đã push | 2026-10-02 20:52 · `67574be` | Tai mèo nhỏ lại; level test mọi cơ chế (level 206); kiểm tra level; hướng Square + ô nền điều hướng |
 | [05](05_TachLogicView-FeelKeo.md) | Đã push | 2026-10-03 00:31 · `aaf54da` | Tách logic (`…Model`) / view (`…View`); khung trượt mượt, không phủ khối / Void, mép kẹt khi bị chặn; mèo xem trước + viền màu khi đủ value; màu khối = màu khung; đặt sai: mèo xám (chọn kiểu trong Inspector) |
+| [06](06_Popup-GameState.md) | Chưa push | | Giai đoạn 3: `GameState`, popup Thắng / Hồi mạng / Thua / Xác nhận chơi lại, coin + ads giả lập; animation chuyển sang DOTween (bỏ viền đỏ còn 1 mạng) |
 
 Giờ push lấy từ `git reflog origin/Day-1`; giờ từng đợt lấy từ thời gian sửa file và ảnh chụp thử.

@@ -1,10 +1,12 @@
-using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Luồng 1 level: nạp level, thắng -> level kế, hết mạng -> chơi lại.
-/// Giai đoạn 3 sẽ chèn WinUI / popup Hồi mạng / LoseUI vào giữa thay cho việc tự chuyển.
+/// Luồng 1 level và trạng thái ván chơi:
+/// Playing -> Won (WinPopup) -> level kế
+/// Playing -> OutOfLives (ReviveLivesPopup) -> hồi mạng: Playing / bỏ cuộc: Lost (LosePopup) -> chơi lại.
+/// Popup nghe onStateChanged; scene không có popup (GameFlowUI) thì tự chuyển như cũ sau autoAdvanceDelay.
 /// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
@@ -14,7 +16,9 @@ public class LevelManager : Singleton<LevelManager>
     
     [SerializeField] private LevelDatabase database;
     [SerializeField] private GridSpawner gridSpawner;
-    [SerializeField] private float autoAdvanceDelay = 1.5f;
+    [SerializeField] private float autoAdvanceDelay = 1.5f; // chỉ dùng khi không có GameFlowUI
+    [Tooltip("Chờ hiệu ứng đặt khối / mèo rung xong rồi mới đổi trạng thái (popup hiện sau khoảng này)")]
+    [SerializeField] private float stateChangeDelay = 0.8f;
 
     [Header("Camera fit (tỉ lệ màn hình dành cho lưới)")]
     [SerializeField] private Camera targetCamera;
@@ -25,9 +29,16 @@ public class LevelManager : Singleton<LevelManager>
 
     [Header("Events")]
     public UnityEvent<int> onLevelLoaded = new UnityEvent<int>(); // số level hiển thị (bắt đầu từ 1)
+    public UnityEvent<GameState> onStateChanged = new UnityEvent<GameState>();
 
     private int _currentIndex;
-    private Coroutine _pending;
+    private Tween _pending; // hẹn giờ đổi trạng thái / tự chuyển level
+    private GameState _state = GameState.Playing;
+    private bool _hasRevived; // đã hồi mạng trong lượt chơi này (lượt sau hết mạng có thể giới hạn)
+
+    public GameState State => _state;
+    public bool IsPlaying => _state == GameState.Playing;
+    public bool HasRevived => _hasRevived;
 
     public int CurrentIndex => _currentIndex;
     public int CurrentLevelNumber => _currentIndex + 1;
@@ -47,6 +58,8 @@ public class LevelManager : Singleton<LevelManager>
         if (LivesManager.Instance != null) LivesManager.Instance.onOutOfLives.AddListener(OnOutOfLives);
         LoadLevel(_currentIndex);
     }
+
+    private void OnDisable() => CancelPending();
 
     private void OnDestroy()
     {
@@ -70,6 +83,8 @@ public class LevelManager : Singleton<LevelManager>
         LevelDefinition level = database.Get(_currentIndex);
         gridSpawner.Spawn(level);
         FitCamera(level);
+        _hasRevived = false;
+        SetState(GameState.Playing);
         onLevelLoaded?.Invoke(CurrentLevelNumber);
         Debug.Log($"[LevelManager] Level {CurrentLevelNumber}/{database.Count}: {level.name} ({level.size}x{level.Height})");
     }
@@ -85,32 +100,82 @@ public class LevelManager : Singleton<LevelManager>
 
     public void PreviousLevel() => LoadLevel(Mathf.Max(0, _currentIndex - 1));
 
+    // ---------- Trạng thái ----------
+
+    /// <summary>Popup mở giữa ván (xác nhận chơi lại...): khóa thao tác trên lưới.</summary>
+    public void Pause()
+    {
+        if (_state == GameState.Playing) SetState(GameState.Paused);
+    }
+
+    public void Resume()
+    {
+        if (_state == GameState.Paused) SetState(GameState.Playing);
+    }
+
+    /// <summary>Popup Hồi mạng: cộng mạng rồi chơi tiếp đúng lưới đang dở.</summary>
+    public void Revive(int lives)
+    {
+        if (_state != GameState.OutOfLives) return;
+        _hasRevived = true;
+        if (LivesManager.Instance != null) LivesManager.Instance.AddLives(lives);
+        SetState(GameState.Playing);
+    }
+
+    /// <summary>Đóng popup Hồi mạng -> thua.</summary>
+    public void GiveUp()
+    {
+        if (_state == GameState.OutOfLives) SetState(GameState.Lost);
+    }
+
     private void OnWin()
     {
         CancelPending();
-        _pending = StartCoroutine(After(autoAdvanceDelay, NextLevel));
+        After(stateChangeDelay, () =>
+        {
+            SetState(GameState.Won);
+            if (!HasFlowUI) After(autoAdvanceDelay, NextLevel);
+        });
     }
 
     private void OnOutOfLives()
     {
         CancelPending();
-        _pending = StartCoroutine(After(autoAdvanceDelay, Retry));
+        After(stateChangeDelay, () =>
+        {
+            SetState(GameState.OutOfLives);
+            if (!HasFlowUI) After(autoAdvanceDelay, Retry);
+        });
     }
 
-    private IEnumerator After(float delay, System.Action action)
+    private void SetState(GameState state)
     {
-        yield return new WaitForSeconds(delay);
-        _pending = null;
-        action();
+        if (_state == state) return;
+        _state = state;
+        Debug.Log($"[LevelManager] State -> {state}");
+        onStateChanged?.Invoke(state);
+    }
+
+    private static bool HasFlowUI => FindFirstObjectByType<GameFlowUI>() != null;
+
+    /// <summary>Hẹn gọi action sau delay giây (thay hẹn cũ nếu có). Manager tắt thì hủy, action không chạy.</summary>
+    private void After(float delay, System.Action action)
+    {
+        CancelPending();
+        Tween tween = null;
+        tween = DOVirtual.DelayedCall(delay, () =>
+            {
+                if (_pending == tween) _pending = null;
+                action();
+            })
+            .SetLink(gameObject);
+        _pending = tween;
     }
 
     private void CancelPending()
     {
-        if (_pending != null)
-        {
-            StopCoroutine(_pending);
-            _pending = null;
-        }
+        _pending?.Kill();
+        _pending = null;
     }
 
     /// <summary>Phóng camera cho lưới vừa vùng giữa HUD trên và thanh booster dưới.</summary>

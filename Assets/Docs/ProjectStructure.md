@@ -40,8 +40,9 @@ Assets/
 Script/
 ├── Gameplay/
 │   ├── Core/       GridManager, GridSpawner, GridGeometry, BoardModel, CellModel, CellView, ClueCell
-│   ├── Level/      LevelManager, LevelDefinition, LevelDatabase
+│   ├── Level/      LevelManager, GameState, LevelDefinition, LevelDatabase
 │   ├── Lives/      LivesManager
+│   ├── Economy/    CoinWallet, RewardedAds
 │   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, ColorType
 │   ├── Input/      InputManager, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
@@ -49,9 +50,11 @@ Script/
 │   ├── Visuals/    GameplayVisuals, BackgroundFitter
 │   └── Util/       Singleton
 ├── UI/
-│   └── HUD/        LevelHUD, LivesUI
+│   ├── HUD/        LevelHUD, LivesUI
+│   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, ConfirmReplayPopup
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
     ├── Level/      ShikaCatLevelImporter
+    ├── UI/         PopupBuilder
     └── Visuals/    GameplayVisualsSetup
 ```
 
@@ -60,6 +63,7 @@ Quy tắc đặt file mới:
 - Code điều khiển Canvas / popup → `UI/<nhóm>/`, ví dụ `UI/Popups/` cho WinUI, LoseUI, ReviveLivesPopup ở Giai đoạn 3.
 - Công cụ Editor → `Editor/<tính năng>/`.
 - Dự án chưa dùng `.asmdef`, mọi script nằm chung `Assembly-CSharp`; di chuyển file không cần sửa `using`.
+- **Animation dùng DOTween, không dùng coroutine.** Mỗi tween được giữ trong field (`Tween` / `Sequence`), gắn `SetLink(gameObject)`, và bị `Kill()` trong `OnDisable` (kèm khi phát lại / trả về pool). Callback `OnKill` chỉ xóa field nếu field vẫn trỏ đúng tween đó (Kill gọi trong callback có thể bị DOTween hoãn). Cái gì cần trả về trạng thái gốc khi bị hủy (camera, tim, chữ khen về pool) thì làm trong `OnKill`. Popup dùng `SetUpdate(true)` để chạy theo thời gian thực.
 - **Tách logic và view:** dữ liệu và luật là class C# thuần tên `…Model` (không biết gì về SpriteRenderer / transform); phần hiển thị là MonoBehaviour tên `…View` (chỉ đọc model để vẽ, không tự quyết định luật). `GridManager` nối hai bên. Polish chỉ cần sửa file `…View`.
 
 ### Gameplay/Core
@@ -78,11 +82,19 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `LevelManager` | Nạp level từ `LevelDatabase`, lưu tiến độ, chuyển level, zoom camera |
+| `LevelManager` | Nạp level từ `LevelDatabase`, lưu tiến độ, chuyển level, zoom camera; giữ `GameState` (`Pause`/`Resume`, `Revive`, `GiveUp`), phát `onStateChanged` sau `stateChangeDelay` 0.8 s. Scene không có `GameFlowUI` thì tự chuyển như cũ |
+| `GameState` | Enum: Playing, Paused, Won, OutOfLives, Lost. Chỉ Playing nhận thao tác kéo |
 | `LevelDefinition` | ScriptableObject level: kích thước, ô Void, clue, lời giải, luật |
 | `LevelDatabase` | ScriptableObject chứa danh sách level |
 | `LivesManager` | 3 mạng, trừ / hồi mạng, báo hết mạng |
 | `ShikakuSolver` | Backtracking (MRV). `IsSolvable` để phát hiện nước sai; `TrySolve` cho Hint/Reveal |
+
+### Gameplay/Economy
+
+| File | Vai trò |
+| --- | --- |
+| `CoinWallet` | Static, coin lưu PlayerPrefs `PawBlock_Coins`: `Add`, `TrySpend`, event `Changed` |
+| `RewardedAds` | Quảng cáo có thưởng, đặt trên `Manager`. Hiện giả lập: chờ 0.5 s rồi trả thành công. Thay thân `ShowRoutine` khi gắn SDK |
 
 ### Gameplay/Block
 
@@ -119,12 +131,24 @@ Quy tắc đặt file mới:
 | `LevelHUD` | Chữ `LEVEL n`, nút chơi lại |
 | `LivesUI` | Hàng tim trên Canvas |
 
+### UI/Popups
+
+| File | Vai trò |
+| --- | --- |
+| `PopupView` | Base: CanvasGroup, nền tối `Dim` chắn bấm, `Panel` bật lên (scale 0.6 → 1), dùng thời gian thực |
+| `GameFlowUI` | Nghe `onStateChanged`: Won → Win, OutOfLives → Hồi mạng, Lost → Thua; `RequestReplay` cho nút chơi lại |
+| `WinPopup` | `LEVEL n` / COMPLETED!, +10 coin; x2 (ads) hoặc Next → `NextLevel` |
+| `ReviveLivesPopup` | Ads +1 mạng, 900 coin +3 mạng (mờ khi thiếu coin), X → `GiveUp` |
+| `LosePopup` | FAILED, Retry → `Retry` |
+| `ConfirmReplayPopup` | Mở thì `Pause`; YES → `Retry`, NO → `Resume` |
+
 ### Editor
 
 | File | Menu | Việc làm |
 | --- | --- | --- |
 | `Level/ShikaCatLevelImporter` | Tools → PawBlock → Import ShikaCat Levels | JSON → `LevelDefinition` + `LevelDatabase` |
 | `Visuals/GameplayVisualsSetup` | Tools → PawBlock → Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, tạo `GameplayVisuals.asset` |
+| `UI/PopupBuilder` | Tools → PawBlock → Build Popups | Xóa rồi dựng lại `Canvas_HUD/Popups` từ sprite gốc, nối reference, thêm `RewardedAds` vào `Manager` |
 
 ---
 
@@ -135,16 +159,19 @@ Main Camera            Camera orthographic, LevelManager chỉnh size/vị trí
 Global Light 2D
 SpawnGrid              GridSpawner
 Manager                GridManager, InputManager, DragAndDropController,
-                       LivesManager, LevelManager, GameplayFeedback
+                       LivesManager, LevelManager, GameplayFeedback, RewardedAds
 SelectionBox           SelectionBoxView + SpriteRenderer
 bg                     SpriteRenderer + BackgroundFitter
 Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920
 ├── DownPanel/Booster  3 nút booster (chưa có logic)
 └── TopPanel           LevelHUD
     ├── ReplayButton
-    └── LevelFrame
-        ├── LevelText
-        └── Hearts     LivesUI
+│   └── LevelFrame
+│       ├── LevelText
+│       └── Hearts     LivesUI
+└── Popups             GameFlowUI (dựng bằng Build Popups)
+    ├── WinPopup  ReviveLivesPopup  LosePopup  ConfirmReplayPopup   (tắt sẵn)
+    └── mỗi popup: Dim, Panel (popup_1 x1.6) / Title, nội dung, nút
 EventSystem
 DragCountBubble        Instance của prefab, để tắt sẵn; DragAndDropController bật khi kéo
 ```
@@ -173,9 +200,10 @@ InputManager ─► DragAndDropController ─► GridManager.BeginSelection (ch�
                               ▼                              │ phủ kín lưới?
                      LivesUI, GameplayFeedback               ▼
                               │ hết mạng                  onGameWin
-                              ▼                              │
-                     onOutOfLives ─► LevelManager.Retry      ▼
-                                                     LevelManager.NextLevel
+                              ▼                              ▼ (0.8 s)
+                     onOutOfLives ─(0.8 s)► OutOfLives   Won ─► WinPopup ─► NextLevel
+                                 ReviveLivesPopup ─► Revive (Playing, giữ lưới)
+                                                 └─► GiveUp ─► Lost ─► LosePopup ─► Retry
 ```
 
 ## Event chính
@@ -190,7 +218,8 @@ InputManager ─► DragAndDropController ─► GridManager.BeginSelection (ch�
 | `GridManager` | `onGameWin` | `LevelManager` |
 | `LivesManager` | `onLivesChanged(current, max)`, `onLifeLost(current)` | `LivesUI` |
 | `LivesManager` | `onOutOfLives` | `LevelManager` |
-| `LevelManager` | `onLevelLoaded(number)` | `LevelHUD` |
+| `LevelManager` | `onLevelLoaded(number)` | `LevelHUD`, `GameFlowUI` |
+| `LevelManager` | `onStateChanged(GameState)` | `GameFlowUI` |
 
 ---
 

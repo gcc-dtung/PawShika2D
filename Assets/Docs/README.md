@@ -2,7 +2,7 @@
 
 Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com/store/apps/details?id=com.phoenix.pawblock.puzzle). Thay đổi chính so với bản gốc: **bỏ đồng hồ đếm ngược, thay bằng 3 mạng mỗi level**.
 
-- Unity **2022.3.62f3**, URP 2D, TextMeshPro, uGUI
+- Unity **2022.3.62f3**, URP 2D, TextMeshPro, uGUI, DOTween (`Assets/Plugins/Demigiant`)
 - Scene chính: `Assets/Scenes/SampleScene.unity`
 - Kế hoạch chi tiết và các quyết định: [TaskBreakdown.md](TaskBreakdown.md)
 - Cấu trúc thư mục, script, luồng dữ liệu: [ProjectStructure.md](ProjectStructure.md)
@@ -23,7 +23,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 | Khối hợp lệ và lưới vẫn còn lời giải | Đặt khối mèo, hiện chữ khen, mọi ổ khóa giảm 1 | Giữ nguyên |
 | Khối đúng số ô nhưng đặt xong thì lưới **không còn lời giải** | Mèo chuyển xám, rung rồi co lại biến mất, camera rung, điện thoại rung | **−1** |
 | Sai số ô, 0 hoặc nhiều ô số, đè khối khác, chứa ô còn khóa, sai hướng mũi tên | Chỉ hủy thao tác | Giữ nguyên |
-| Hết mạng | Khóa lưới (tạm thời: tự chơi lại sau 1.5 giây) | 0 |
+| Hết mạng | Khóa lưới, popup Hồi mạng: xem ads +1, trả 900 coin +3, đóng thì thua (popup Retry) | 0 |
 
 - Mọi level đều có **3 mạng**. Không có sao, không có Undo.
 - Không so với lời giải lưu sẵn vì 17/205 level có nhiều hơn một lời giải. `ShikakuSolver` kiểm tra xem lưới còn giải được hay không.
@@ -48,9 +48,10 @@ Dữ liệu level ShikaCat hiện **chưa có** ô đặc biệt nào; code đã
 2. Lần đầu (hoặc khi đổi asset), chạy 2 menu Editor:
    - **Tools → PawBlock → Import ShikaCat Levels**: tạo 205 `LevelDefinition` trong `Assets/_Project/Levels/ShikaCat/` và `LevelDatabase.asset`.
    - **Tools → PawBlock → Setup Gameplay Visuals**: đặt 9-slice cho khối, cắt atlas mặt mèo, tạo `Assets/_Project/Resources/GameplayVisuals.asset`.
+   - **Tools → PawBlock → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Xác nhận chơi lại trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
 3. Bấm Play. Kéo chuột trên lưới để tạo khối.
 
-Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`. Xóa key này (hoặc Edit → Clear All PlayerPrefs) để quay về level 1.
+Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`, coin ở `PawBlock_Coins`. Xóa key (hoặc Edit → Clear All PlayerPrefs) để quay về level 1 / 0 coin.
 
 ---
 
@@ -70,7 +71,7 @@ Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`. Xó
 | --- | --- | --- |
 | 1 | Mạng trong màn | Xong |
 | 2 | Gameplay một level đầy đủ | Xong (còn 3 việc tồn đọng) |
-| 3 | Popup Thắng / Hồi mạng / Thua, HUD | Chưa làm |
+| 3 | Popup Thắng / Hồi mạng / Thua, HUD | Gần xong (còn banner độ khó, làm đẹp HUD) |
 | 4 | Booster Hint, Khiên, Reveal | Chưa làm |
 | 5 | Năng lượng ngoài sảnh (giữ, đổi icon) | Chưa làm |
 | 6 | Meta, Shop, Ads, Firebase | Chưa làm |
@@ -80,4 +81,4 @@ Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`. Xó
 - Font `Fredoka-Bold SDF` lấy từ game gốc bị hỏng; tạo lại bằng code cũng lỗi. Đang dùng LiberationSans SDF. Cách sửa: Window → TextMeshPro → Font Asset Creator, nguồn `GameAssets/06_Fonts/Fredoka-Bold.ttf`.
 - Sprite mũi tên đang là ảnh debug (`arrow-right@2x.png`).
 - Bộ mặt mèo `boltie_01` bị bỏ vì khung hình bị xoay khi đóng gói atlas; còn 10 bộ.
-- Thắng / hết mạng đang tự chuyển level sau 1.5 giây, chờ popup ở Giai đoạn 3.
+- Quảng cáo có thưởng đang giả lập (luôn thành công sau 0.5 giây); chưa có Shop nên nút trả coin bị mờ khi thiếu coin.

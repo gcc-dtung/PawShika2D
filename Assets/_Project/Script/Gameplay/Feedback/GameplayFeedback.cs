@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Pool;
 
@@ -25,7 +26,9 @@ public class GameplayFeedback : MonoBehaviour
     [SerializeField] private bool vibrate = true;
 
     private Camera _cam;
-    private Coroutine _shake;
+    private Tween _shake;
+    private Vector3 _shakeOrigin;
+    private readonly List<Tween> _praiseTweens = new List<Tween>();
     private ObjectPool<SpriteRenderer> _praisePool;
 
     private void Awake()
@@ -54,6 +57,15 @@ public class GameplayFeedback : MonoBehaviour
         GridManager.Instance.onMistake.AddListener(OnMistake);
     }
 
+    // Tắt component: hủy mọi tween. Chữ khen chạy nốt tới cuối (complete) để trả về pool; camera về vị trí gốc.
+    private void OnDisable()
+    {
+        for (int i = _praiseTweens.Count - 1; i >= 0; i--) _praiseTweens[i]?.Kill(true);
+        _praiseTweens.Clear();
+        _shake?.Kill();
+        _shake = null;
+    }
+
     private void OnDestroy()
     {
         if (GridManager.Instance == null) return;
@@ -74,35 +86,36 @@ public class GameplayFeedback : MonoBehaviour
         sr.sprite = praise;
         sr.color = Color.white;
         sr.transform.position = GridManager.Instance.Board.Geometry.RectCenter(block.Rect) + new Vector3(0f, 0f, -1f);
-        StartCoroutine(PraiseRoutine(sr));
+        PlayPraise(sr);
     }
 
-    private IEnumerator PraiseRoutine(SpriteRenderer sr)
+    /// <summary>Bật to nhanh (0.3 → 1.15 → 1), giữ, rồi bay lên và mờ dần; xong trả về pool.</summary>
+    private void PlayPraise(SpriteRenderer sr)
     {
+        Transform t = sr.transform;
         float baseScale = praiseWidth / sr.sprite.bounds.size.x;
-        Vector3 start = sr.transform.position;
-        Color c = sr.color;
-        float t = 0f;
-        while (t < praiseDuration)
+        Vector3 start = t.position;
+        float d = praiseDuration;
+        t.localScale = Vector3.one * baseScale * 0.3f;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(t.DOScale(baseScale * 1.15f, d * 0.2f).SetEase(Ease.Linear));
+        seq.Append(t.DOScale(baseScale, d * 0.1f).SetEase(Ease.Linear));
+        seq.Insert(d * 0.5f, t.DOMove(start + Vector3.up * 0.6f, d * 0.5f).SetEase(Ease.Linear));
+        seq.Insert(d * 0.6f, sr.DOFade(0f, d * 0.4f).SetEase(Ease.Linear));
+        seq.SetLink(sr.gameObject);
+        seq.OnKill(() =>
         {
-            t += Time.deltaTime;
-            float p = Mathf.Clamp01(t / praiseDuration);
-            // Bật to nhanh, giữ, rồi bay lên và mờ dần
-            float pop = p < 0.2f ? Mathf.Lerp(0.3f, 1.15f, p / 0.2f) : (p < 0.3f ? Mathf.Lerp(1.15f, 1f, (p - 0.2f) / 0.1f) : 1f);
-            sr.transform.localScale = Vector3.one * baseScale * pop;
-            sr.transform.position = start + Vector3.up * Mathf.Max(0f, p - 0.5f) * 1.2f;
-            c.a = p < 0.6f ? 1f : 1f - (p - 0.6f) / 0.4f;
-            sr.color = c;
-            yield return null;
-        }
-        _praisePool.Release(sr);
+            // Complete hay bị Kill(true) đều qua đây đúng 1 lần -> trả về pool
+            _praiseTweens.Remove(seq);
+            if (sr != null) _praisePool.Release(sr);
+        });
+        _praiseTweens.Add(seq);
     }
 
     private void OnMistake(Vector3 center, Vector2 size)
     {
-        if (_shake != null) StopCoroutine(_shake);
-        _shake = StartCoroutine(ShakeCamera());
-
+        ShakeCamera();
         if (vibrate) Vibrate();
     }
 
@@ -113,19 +126,27 @@ public class GameplayFeedback : MonoBehaviour
 #endif
     }
 
-    private IEnumerator ShakeCamera()
+    /// <summary>Rung ngang, biên độ giảm dần; bị hủy giữa chừng thì camera vẫn về đúng vị trí gốc.</summary>
+    private void ShakeCamera()
     {
-        if (_cam == null) yield break;
-        Vector3 origin = _cam.transform.position;
-        float t = 0f;
-        while (t < shakeDuration)
-        {
-            t += Time.deltaTime;
-            float damper = 1f - Mathf.Clamp01(t / shakeDuration);
-            _cam.transform.position = origin + new Vector3(Mathf.Sin(t * 90f) * shakeStrength * damper, 0f, 0f);
-            yield return null;
-        }
-        _cam.transform.position = origin;
-        _shake = null;
+        if (_cam == null) return;
+        if (_shake == null) _shakeOrigin = _cam.transform.position; // đang rung dở thì giữ gốc cũ
+        _shake?.Kill();
+
+        Transform cam = _cam.transform;
+        Tween tween = null;
+        tween = DOVirtual.Float(0f, 1f, shakeDuration, p =>
+            {
+                float t = p * shakeDuration;
+                cam.position = _shakeOrigin + new Vector3(Mathf.Sin(t * 90f) * shakeStrength * (1f - p), 0f, 0f);
+            })
+            .SetEase(Ease.Linear)
+            .SetLink(gameObject)
+            .OnKill(() =>
+            {
+                if (cam != null) cam.position = _shakeOrigin;
+                if (_shake == tween) _shake = null;
+            });
+        _shake = tween;
     }
 }

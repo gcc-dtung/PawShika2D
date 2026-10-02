@@ -7,6 +7,7 @@ public class LevelHUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text levelText;
     [SerializeField] private Button replayButton;
+    [SerializeField] private GameFlowUI gameFlow; // có thì hỏi xác nhận trước khi chơi lại
 
     private void Start()
     {
@@ -31,7 +32,7 @@ public class LevelHUD : MonoBehaviour
 
     private void OnReplayClicked()
     {
-        // Popup xác nhận chơi lại sẽ thêm ở giai đoạn 3
-        if (LevelManager.Instance != null) LevelManager.Instance.Retry();
+        if (gameFlow != null) gameFlow.RequestReplay();
+        else if (LevelManager.Instance != null) LevelManager.Instance.Retry();
     }
 }
