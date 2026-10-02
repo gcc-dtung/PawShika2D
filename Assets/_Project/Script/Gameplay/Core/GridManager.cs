@@ -141,7 +141,7 @@ public class GridManager : Singleton<GridManager>
             return;
         }
 
-        Debug.Log($"<color=green>[GridManager] Đặt hộp hợp lệ</color> ({rect.x}, {rect.y}) {rect.width}x{rect.height}");
+        // Debug.Log($"<color=green>[GridManager] Đặt hộp hợp lệ</color> ({rect.x}, {rect.y}) {rect.width}x{rect.height}");
         CreatePlacedBlock(rect, cellsInRange, clueCell);
     }
 

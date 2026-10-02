@@ -189,7 +189,7 @@ public class PlacedBlock : MonoBehaviour
             if (cell != null)
             {
                 cell.ClearPlacedBlock();
-                cell.OnDeselect();
+                // cell.OnDeselect();
             }
         }
         OccupiedCells.Clear();

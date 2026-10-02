@@ -1,6 +1,3 @@
-
-
-
 using UnityEngine;
 
 public class Cell : MonoBehaviour
@@ -72,8 +69,8 @@ public class Cell : MonoBehaviour
         }
     }
 
-    public void OnDeselect()
-    {
-        // Giữ nguyên màu gốc của Cell
-    }
+    // public void OnDeselect()
+    // {
+    //     // Giữ nguyên màu gốc của Cell
+    // }
 }
