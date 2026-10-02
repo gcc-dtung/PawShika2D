@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f4371ee0918728df3cf20f732a3f5b2, type: 3}
+  m_Name: InformationProjectDataBase
+  m_EditorClassIdentifier:
+  showDebugLog: 0
+  dontUseIAP: 0
+  hasPushEvent: 1
+  showAds: 1
+  isAdsTest: 0
+  setDataMKT: 0
+  ignoreVideoAds: 0
+  versionCodeAndroid: 6
+  bundleVersionAndroid: 0.0.6
+  buildNumberIOS: 1
+  bundleVersionIOS: 0.0.1
+  emailFeedback:
+  linkPrivacy:
+  adjust: {fileID: 114724804207875695, guid: 06bf747b3b43c3545a11f9bf94281086, type: 2}
+  adjustEventIAPKey: g9z78p
+  id_Android_AppOpen:
+  id_IOS_AppOpen:
+  idAndroidBannerMrecAdmob:
+  idIOSBannerMrecAdmob:
+  idAndroidNativeAds: []
+  idIOSNativeAds: []
+  idAndroidBannerCollabs: []
+  idIosBannerCollabs: []
+  interstitialAdUnitIdAndroid: 0a512311c6318c9b
+  rewardedAdUnitIdAndroid: 1e9ce1bb73b606f1
+  bannerAdUnitIdAndroid: c27d47d9ab741cbc
+  interstitialAdUnitIdIOS:
+  rewardedAdUnitIdIOS:
+  bannerAdUnitIdIOS:
+  hightBannerAdUnitIdAndroid:
+  mediumBannerAdUnitIdAndroid:
+  mainBannerAdUnitIdAndroid:
+  hightInterAdUnitIdAndroid:
+  mediumInterAdUnitIdAndroid:
+  mainInterAdUnitIdAndroid:
+  hightRewardAdUnitIdAndroid:
+  mediumRewardAdUnitIdAndroid:
+  mainRewardAdUnitIdAndroid:
+  apiKeyDB:
+  dateBuildSave: 8/4/2026 11:54:15 AM

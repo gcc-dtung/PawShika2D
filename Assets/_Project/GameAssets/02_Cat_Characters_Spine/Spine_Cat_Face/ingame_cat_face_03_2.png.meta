@@ -1,0 +1,5671 @@
+fileFormatVersion: 2
+guid: 35dbde5ddae04834dadbd0e7f624a25c
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_005
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc216b4cbcaed94c0800000000000000
+      internalID: -4279005910032575797
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_006
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed6555f9cd21a5710800000000000000
+      internalID: 1682678149551576798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_007
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ebc427396e7944a0800000000000000
+      internalID: -6608611987827667992
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_008
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0364f47186f526cb0800000000000000
+      internalID: -4872226946189146576
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_009
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 708f16829edeb09f0800000000000000
+      internalID: -501045347861006329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_010
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab067c7fe2624f8a0800000000000000
+      internalID: -6272346397852868422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_011
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7acd38c479cee23e0800000000000000
+      internalID: -2076462243603293017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_012
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89c80d044bf13c540800000000000000
+      internalID: 5026896468117589144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_013
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a83f089dde231c80800000000000000
+      internalID: -8353281354568353630
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_014
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62ce589ec9cf5ff70800000000000000
+      internalID: 9220553562973924390
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_015
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8b458bb16644e9b0800000000000000
+      internalID: -5051835496431006837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_016
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1575948a7a47f9bf0800000000000000
+      internalID: -315405185460906159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_017
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89c7180e574696480800000000000000
+      internalID: -8905476330707911528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_018
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 734e6c6b20dcd9eb0800000000000000
+      internalID: -4711384223619554249
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_019
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 837566866d58de750800000000000000
+      internalID: 6335867406701188920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_020
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17a8a147dea107ba0800000000000000
+      internalID: -6093340688674813327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_021
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a1fc7e1b08888490800000000000000
+      internalID: -7743789977926045279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_022
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5dc51fd7ce4e4d1b0800000000000000
+      internalID: -5632625529557263147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_023
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e56a194b1958bbb00800000000000000
+      internalID: 845416215908296286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_024
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e188f245958040e70800000000000000
+      internalID: 9080391928443275294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_025
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 735dd647bd36959c0800000000000000
+      internalID: -3938006604956445385
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_026
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc5dacae6285c4f70800000000000000
+      internalID: 9172803465218020812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_027
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c615119cf6dbaa350800000000000000
+      internalID: 6028839339001205100
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_028
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7a77608574f0eb30800000000000000
+      internalID: 4314717228523551355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_029
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c518e06b5d1f51870800000000000000
+      internalID: 8653088159247008092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_030
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e35393b7a2b91e990800000000000000
+      internalID: -7358429709388401346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_031
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30b089d363b24d940800000000000000
+      internalID: 5319924571793001219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_032
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d8cb5e6876a6db40800000000000000
+      internalID: 5464738234038470867
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_033
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4200f7c6b32b7cf40800000000000000
+      internalID: 5748759417654804516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_034
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d251f0e2daa9615a0800000000000000
+      internalID: -6550878539371047635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_035
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2751a19c63a32a0e0800000000000000
+      internalID: -2260180056009992846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_036
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 974ba28cfd3d41bf0800000000000000
+      internalID: -354425512566016903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_037
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b16f7c033bda3100800000000000000
+      internalID: 88624154986635701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_038
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cef7ab2b30f19a710800000000000000
+      internalID: 1704928034680373228
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_039
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb5b08db5d4d22470800000000000000
+      internalID: 8368485072080254395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_040
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9656b49efee19d300800000000000000
+      internalID: 277286867820045673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_041
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f77416925c948ed0800000000000000
+      internalID: -2412631621844568075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_042
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8223414ea72dbb7a0800000000000000
+      internalID: -6360258623476321752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_043
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36be88011064b78b0800000000000000
+      internalID: -5153448378209080477
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_044
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0364119a01bcc2a0800000000000000
+      internalID: -6715798285374430451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_045
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3448e079ff1f6310800000000000000
+      internalID: 1400373165337101371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_046
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc90b31666305be80800000000000000
+      internalID: -8163615011286349364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_047
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdd738db36b92c030800000000000000
+      internalID: 3513541511985987035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_048
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74bf7c476fc0ea130800000000000000
+      internalID: 3579813006466874183
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_049
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 629c211c1c2a219d0800000000000000
+      internalID: -2805000664846776026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_050
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ae5bbda6daa263d0800000000000000
+      internalID: -3214819344974651735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_051
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d47f0dabcdbe34a0800000000000000
+      internalID: -6611638520453827372
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_052
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e75632cfb27c0160800000000000000
+      internalID: 6993090489322199010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_053
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ed5226f799ac56c0800000000000000
+      internalID: -4153258286207836703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_054
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c823bac21cbb436b0800000000000000
+      internalID: -5317418821665213812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_055
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c8ac1c455567c8e0800000000000000
+      internalID: -1673257319521277759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_056
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 05474c3e9ab4feb10800000000000000
+      internalID: 2012910751500760144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_057
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbb9c8c39ed6a2350800000000000000
+      internalID: 5992723102680521659
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_058
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 77cccf83e575febf0800000000000000
+      internalID: -292919388561159049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_059
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 847a33f3af5e99780800000000000000
+      internalID: -8675650344187615416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_060
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7b3aa66d1776e750800000000000000
+      internalID: 6333880894103370619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_061
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23ba4d1e971804b40800000000000000
+      internalID: 5422476311833914162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_062
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08ed9b68df607b670800000000000000
+      internalID: 8554313703170367104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_063
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7145f7418dd111250800000000000000
+      internalID: 5913540599608202263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_064
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c39468cdaed15e20800000000000000
+      internalID: 3337693636830991300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_065
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b1878ac0c1731cc0800000000000000
+      internalID: -3741521792569212490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_066
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2c1061bfb2261b870800000000000000
+      internalID: 8696840296464777666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_067
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a28a8a0cfa0fec70800000000000000
+      internalID: 9002426257761796774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_068
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8366fd0c653c9f40800000000000000
+      internalID: 5736518763570160523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_069
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd8c10a642a40e870800000000000000
+      internalID: 8710043199592319197
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_070
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60e1b2dba91de7f40800000000000000
+      internalID: 5728246238590737926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_071
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e5b4672247f17030800000000000000
+      internalID: 3490843049689658857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_072
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dde4416afc3b464e0800000000000000
+      internalID: -1989267430964965667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_073
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc9e5affc3111fbb0800000000000000
+      internalID: -4904119565544986164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mochi_01_mochi_01_074
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a24fe9c1f696560f0800000000000000
+      internalID: -1124376606016605142
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko000
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c657f43583d8f7140800000000000000
+      internalID: 4719646207562970476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko001
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a86fbccbfaf3b330800000000000000
+      internalID: 3725597276144363682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko002
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bac7b02bba542edb0800000000000000
+      internalID: -4764168852075742037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko003
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f04a37882fe5c6260800000000000000
+      internalID: 7092147908966065167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko004
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd58c9927cf9a7cb0800000000000000
+      internalID: -4865400769674967587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko005
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c459f1170cb1fbb60800000000000000
+      internalID: 7763954795955590476
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko006
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1680f0f4b67490580800000000000000
+      internalID: -8860472265661282207
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko007
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec2ed819bb8224580800000000000000
+      internalID: -8844461932136242482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko008
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f05f1c69328a4c060800000000000000
+      internalID: 6972882993882985743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko009
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa3d990f7674ff930800000000000000
+      internalID: 4179137490966926250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko010
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db72f4e45556d0a80800000000000000
+      internalID: -8499025504717822019
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko011
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29bfd75cdc82f21a0800000000000000
+      internalID: -6832197245450978414
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko012
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06d8e5070ae0cbfa0800000000000000
+      internalID: -5783731739207758496
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko013
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c8604ec76f62a790800000000000000
+      internalID: -7520325936122664760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko014
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6145defda8570fc0800000000000000
+      internalID: -3528754278693518993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko015
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc42f4628cd7aabf0800000000000000
+      internalID: -312298925559175985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko016
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be6b92a8f33e8cfa0800000000000000
+      internalID: -5780120259689597205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko017
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b9a65b47ac013f90800000000000000
+      internalID: -6975780435157145167
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko018
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6b9af17fc51e8910800000000000000
+      internalID: 1841433278355774314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko019
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 293370ee50547b5d0800000000000000
+      internalID: -3046890731122248814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko020
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d539f9053ac6c6df0800000000000000
+      internalID: -185654035940928675
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko021
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc4bc43ee7f73ee80800000000000000
+      internalID: -8150530717654403891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko022
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79aa6649388fe8690800000000000000
+      internalID: -7597862277313287529
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko023
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 665d4c9abf7a0a1b0800000000000000
+      internalID: -5647329233395722906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko024
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1f8a4e732b6867d0800000000000000
+      internalID: -2924970157790294244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko025
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea5b68d442789cb10800000000000000
+      internalID: 2002280099332142510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko026
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d122d63b8e10c0370800000000000000
+      internalID: 8290003113036554781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko027
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06555f6ce6a070190800000000000000
+      internalID: -7996411142472379040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko028
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fa5a0aeeb63e47c0800000000000000
+      internalID: -4085267618380227848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko029
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e92e5d38664cf6b0800000000000000
+      internalID: -5261252851155457562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko030
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b84779cc8b4a0d70800000000000000
+      internalID: 9010097072555641013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko031
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f930ea0dbb1dd1ba0800000000000000
+      internalID: -6116502114309110881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko032
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6b49d95cf4dada40800000000000000
+      internalID: 5393857684033850219
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko033
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7b2c76fec5aceb7a0800000000000000
+      internalID: -6359423123298205001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko034
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7705880b561122ea0800000000000000
+      internalID: -5899133433450835849
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko035
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a226e6d6f60102c0800000000000000
+      internalID: -4467281698137693534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko036
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28e8da89236747150800000000000000
+      internalID: 5869446174052552322
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko037
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d2cfc0ebc7558200800000000000000
+      internalID: 181647893140062931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko038
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e273090b04abeb820800000000000000
+      internalID: 2935988794095056686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko039
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 80f9a445581069870800000000000000
+      internalID: 8689134203214405384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko040
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fdbbaf1fae7ce330800000000000000
+      internalID: 3741504681053765113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko041
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f4a1863a56cbf150800000000000000
+      internalID: 5907533426990359796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko042
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8e3389dcc8c34400800000000000000
+      internalID: 307309981739466380
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko043
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73f75f7afa0529ba0800000000000000
+      internalID: -6083711431256735945
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko044
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5fd4265a7d25c9ec0800000000000000
+      internalID: -3558878519383405067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko045
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b84e503258c3c1610800000000000000
+      internalID: 1593214910698218635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko046
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 854b85fa6cf2ad8b0800000000000000
+      internalID: -5126732695416032168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko047
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e5e4cf3c367ed350800000000000000
+      internalID: 6043397751117768161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko048
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a56550ea9efc32c0800000000000000
+      internalID: -4450402390606781020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko049
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d632aa4d589882b50800000000000000
+      internalID: 6568651264411444077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko050
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dfa807f6c74cbcd0800000000000000
+      internalID: -2541077169870164013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko051
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e13a2b37835eeb30800000000000000
+      internalID: 4318480932973195749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko052
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 86539a0296671c7f0800000000000000
+      internalID: -594063481944591000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko053
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f463b23dbc064810800000000000000
+      internalID: 1749099512018986226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko054
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 594a68a87ebeb51b0800000000000000
+      internalID: -5666676326421584747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko055
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d623c4aea5c36a8f0800000000000000
+      internalID: -529669544993869203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko056
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5782b5d476d56b160800000000000000
+      internalID: 7040917765701183605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko057
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c855cddc7d3893c0800000000000000
+      internalID: -4352661433347647292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko058
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba56d3979e18beef0800000000000000
+      internalID: -77825728787421781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko059
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6dfae0feaf1976f90800000000000000
+      internalID: -6960434192139243562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko060
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd53e8177a6481720800000000000000
+      internalID: 2817079251898873308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko061
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdc1b9f1a2e7d2d20800000000000000
+      internalID: 3255396825042722011
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko062
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f611de5194e16c310800000000000000
+      internalID: 1424859631358644591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko063
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55983d9efd9db81a0800000000000000
+      internalID: -6806106856116483755
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko064
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f8317d9d8dc54f90800000000000000
+      internalID: -6969938840170448647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko065
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7657942ac27f454b0800000000000000
+      internalID: -5452461477765483161
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko066
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9074e0ae21d7c3100800000000000000
+      internalID: 89083612830254857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko067
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5334024935fb92db0800000000000000
+      internalID: -4816107960807701707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko068
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45b944a4846869440800000000000000
+      internalID: 4942285286127475540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko069
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed50fff4d12fa40c0800000000000000
+      internalID: -4590590662440712738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko070
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 063e9ec93cfbb24f0800000000000000
+      internalID: -852376857584475296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko071
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e157a3258f6760e10800000000000000
+      internalID: 2163547479901631774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko072
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb0a9e2ff4f38ee90800000000000000
+      internalID: -6996272408509701953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko073
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a871a624290b0e6c0800000000000000
+      internalID: -4116095917190670454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko074
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e410bb4bc4a8c220800000000000000
+      internalID: 2506434385686828260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko075
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3725584a2163afcf0800000000000000
+      internalID: -217802178276535693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko076
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ce67be1166175cd0800000000000000
+      internalID: -2569560456008601920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko077
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dc869be99ab9483f0800000000000000
+      internalID: -899422872752527155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko078
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b80fe4603ad94a80800000000000000
+      internalID: -8482008521788946252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko079
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8fb4955623c5ae30800000000000000
+      internalID: 4514228770920775562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko080
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 062adc78c96de9e00800000000000000
+      internalID: 1053515330632917600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko081
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d7a276bfc91719b0800000000000000
+      internalID: -5109586872318646314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko082
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c39f6eea92043f40800000000000000
+      internalID: 5707189492233769925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko083
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e444932cfce63330800000000000000
+      internalID: 3690397512349533411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko084
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe9b04566d3809d30800000000000000
+      internalID: 4436190589804919279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko085
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4c0c8fea58ce9970800000000000000
+      internalID: 8763662217801108559
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko086
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 053969add231e12b0800000000000000
+      internalID: -5612026997995302064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko087
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f6b469abd71f4420800000000000000
+      internalID: 2616336140732774131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko088
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baa749ade945f2a80800000000000000
+      internalID: -8489473731321365845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: peeko_01_peeko089
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55067e9728daca3f0800000000000000
+      internalID: -888144250596269995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_000
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c9176e163167c090800000000000000
+      internalID: -8014330126816306749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_001
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 411a54a8046fd7610800000000000000
+      internalID: 1620722197981405460
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_002
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2b8149c67ab4feb0800000000000000
+      internalID: -4686916292840420566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_003
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b302d8a844306b70800000000000000
+      internalID: 8890163151103984568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_004
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 840bdece08abc8850800000000000000
+      internalID: 6380679834970730568
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_005
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 173471e64e30dd570800000000000000
+      internalID: 8492948751925068657
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_006
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa38f3c26d9f3a050800000000000000
+      internalID: 5810762642498749354
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_007
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ffb5d3df028b98350800000000000000
+      internalID: 6019544828784499711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_008
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cd755aa43a931d40800000000000000
+      internalID: 5553952316464659904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_009
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23ab4146c657d05a0800000000000000
+      internalID: -6553452774358205902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_010
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29c80724c4a7551d0800000000000000
+      internalID: -3362647078811431790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_011
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a685046160e6da50800000000000000
+      internalID: 6545665817324127912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_012
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65bbb9fdbd42488d0800000000000000
+      internalID: -2845108537823347882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_013
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b97eaf9f73c0a6210800000000000000
+      internalID: 1326886474770737051
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_014
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33ea3aae9ece057d0800000000000000
+      internalID: -2931582868010062285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_015
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6f238ea1fa3941a0800000000000000
+      internalID: -6824858950613913745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_016
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d26566a736574050800000000000000
+      internalID: 5784687043395543763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_017
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d909d3dab5b740360800000000000000
+      internalID: 7134963343340441757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_018
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de6c01ab278d78c60800000000000000
+      internalID: 7820457265211688685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_019
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4d9bc71361a39590800000000000000
+      internalID: -7668608293508768435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_020
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21f7b6e889fde8800800000000000000
+      internalID: 616676045313769234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_021
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c81935b0c6e5b5320800000000000000
+      internalID: 2547733832347652492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_022
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4208e2de47666f40800000000000000
+      internalID: 5721373964864324172
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_023
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d10eb8b1ae7640d0800000000000000
+      internalID: -3438922032396500523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_024
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e08e82735736be60800000000000000
+      internalID: 7977624621477167333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_025
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f49d91f05dd12780800000000000000
+      internalID: -8709436864637070088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_026
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96bf5a47da6c82200800000000000000
+      internalID: 155592635432958825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_027
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64983331e0eff43b0800000000000000
+      internalID: -5525918881355167418
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_028
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d871fd59f1a7c360800000000000000
+      internalID: 7189893422515321046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_029
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6aef376214dd3e830800000000000000
+      internalID: 4099363357725032102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_030
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6c4eece39c39ff90800000000000000
+      internalID: -6919432746445157266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_031
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39f02861b75d27520800000000000000
+      internalID: 2698453851383664531
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_032
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea40f17453eef2010800000000000000
+      internalID: 1166412741106140334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_033
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ccb1bd3598f4eef0800000000000000
+      internalID: -79665573516952384
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_034
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 950af06149fd492e0800000000000000
+      internalID: -2119823697466384295
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_035
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51b921766a2b43000800000000000000
+      internalID: 14833126552541973
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_036
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a193795acfd04f760800000000000000
+      internalID: 7490627458985048346
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_037
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01d0870da5ee7c910800000000000000
+      internalID: 1857715445125614864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_038
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34639c74ae742ecc0800000000000000
+      internalID: -3683302473683356093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_039
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c327d56454acc5c0800000000000000
+      internalID: -4193796470595968059
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_040
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbee1171cb457aa50800000000000000
+      internalID: 6532282951341829820
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_041
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 508721eb60a0d7ad0800000000000000
+      internalID: -2702993177277466619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_042
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07713ca9010df6080800000000000000
+      internalID: -9191899544705362064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_043
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ec7b9e912e5b0b60800000000000000
+      internalID: 7713362285290028257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_044
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 09b977e56a2623400800000000000000
+      internalID: 302412591676234640
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_045
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83ba7688ce9a64210800000000000000
+      internalID: 1316926774418320184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_046
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a82f788ddff119ee0800000000000000
+      internalID: -1256187645939682678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_047
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e43d2f9735a88180800000000000000
+      internalID: -9112852187671874333
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_048
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0974dcaffabc14c0800000000000000
+      internalID: -4315368735648745205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_049
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dc115e63a988f5d0800000000000000
+      internalID: -3028519414383174445
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_050
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b317f55eb4174ce40800000000000000
+      internalID: 5675786001178390843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_051
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c1993bbf886ff940800000000000000
+      internalID: 5332095450360680903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_052
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc3fc12321a64f080800000000000000
+      internalID: -9154575516154661940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_053
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 67fdf7325126aad60800000000000000
+      internalID: 7902236339104374646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_054
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a08b9f1237d53d10800000000000000
+      internalID: 2104825011144196257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_055
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a2beb3bde624cc80800000000000000
+      internalID: -8303469010599628124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_056
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7600a371bab9a0b30800000000000000
+      internalID: 4254383957136244839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_057
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a691b46d568ea570800000000000000
+      internalID: 8479862884064663200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_058
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01882b5e9b141f3a0800000000000000
+      internalID: -6633448509461592048
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_059
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fc3ab30753fee680800000000000000
+      internalID: -8723767873119830793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_060
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b7e577cad76892b0800000000000000
+      internalID: -5577593949151434828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_061
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d1960162453d888c0800000000000000
+      internalID: -3996712310921991907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_062
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a20e8ae33f5d3700800000000000000
+      internalID: 521677808427991720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_063
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fb4dcb2ac48ba580800000000000000
+      internalID: -8814805841794479111
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_064
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72cb33f5088a8f720800000000000000
+      internalID: 2880237231009938471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_065
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25a83a02a4ae95780800000000000000
+      internalID: -8693660001565963694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_066
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30456e0c102bbc4f0800000000000000
+      internalID: -807355987581840381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_067
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b513189e0b42822d0800000000000000
+      internalID: -3303349984425856677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_068
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd1fff01f8f5a6db0800000000000000
+      internalID: -4797917384939671075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_069
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1eef544d30a18f520800000000000000
+      internalID: 2735965377376157409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_070
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 238ca2c89c339d160800000000000000
+      internalID: 7050723632358279218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_071
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d74abc046d780f830800000000000000
+      internalID: 4102928614814360701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_072
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c581680da91edbc0800000000000000
+      internalID: -3756536808219769402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_073
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd85e966f367eb6e0800000000000000
+      internalID: -1819887184734431009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_074
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be578e80715f96630800000000000000
+      internalID: 3920934429885232619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_075
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16823852f27a85540800000000000000
+      internalID: 4996927607502219361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_076
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60d2c5dc38a7801d0800000000000000
+      internalID: -3384320413464253178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_077
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b8e7e19185bdc520800000000000000
+      internalID: 2724032917732321457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_078
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae440a40c58fe3c70800000000000000
+      internalID: 8952866183357416682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_079
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6af8272eab80365b0800000000000000
+      internalID: -5376443931394142298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_080
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8d388a4d108e1b00800000000000000
+      internalID: 801218647011376526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_081
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a31900c190bef9fe0800000000000000
+      internalID: -1179966152990748358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_082
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4163ed08ada77be90800000000000000
+      internalID: -7009999216095381996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_083
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73c1065f6b7eeb8f0800000000000000
+      internalID: -522725733741618121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_084
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3db7655d9da280a0800000000000000
+      internalID: -6880746389414363846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_085
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac2eff69d04f1dcb0800000000000000
+      internalID: -4840819785241468214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_086
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79c93b4969ff4bb10800000000000000
+      internalID: 1996501557036948631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_087
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0041bd93ff9cb8600800000000000000
+      internalID: 471692684014851072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_088
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92dd8d71c143969b0800000000000000
+      internalID: -5086477008874447575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: pinkyboo_01_pinkyboo_01_089
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 352640c3354d15bb0800000000000000
+      internalID: -4948941061549170093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_000
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d63f3a86a8111c040800000000000000
+      internalID: 4666029975091278701
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_001
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b9d3dd2ad2dd5450800000000000000
+      internalID: 6079246906533599672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      mochi_01_mochi_01_005: -4279005910032575797
+      mochi_01_mochi_01_006: 1682678149551576798
+      mochi_01_mochi_01_007: -6608611987827667992
+      mochi_01_mochi_01_008: -4872226946189146576
+      mochi_01_mochi_01_009: -501045347861006329
+      mochi_01_mochi_01_010: -6272346397852868422
+      mochi_01_mochi_01_011: -2076462243603293017
+      mochi_01_mochi_01_012: 5026896468117589144
+      mochi_01_mochi_01_013: -8353281354568353630
+      mochi_01_mochi_01_014: 9220553562973924390
+      mochi_01_mochi_01_015: -5051835496431006837
+      mochi_01_mochi_01_016: -315405185460906159
+      mochi_01_mochi_01_017: -8905476330707911528
+      mochi_01_mochi_01_018: -4711384223619554249
+      mochi_01_mochi_01_019: 6335867406701188920
+      mochi_01_mochi_01_020: -6093340688674813327
+      mochi_01_mochi_01_021: -7743789977926045279
+      mochi_01_mochi_01_022: -5632625529557263147
+      mochi_01_mochi_01_023: 845416215908296286
+      mochi_01_mochi_01_024: 9080391928443275294
+      mochi_01_mochi_01_025: -3938006604956445385
+      mochi_01_mochi_01_026: 9172803465218020812
+      mochi_01_mochi_01_027: 6028839339001205100
+      mochi_01_mochi_01_028: 4314717228523551355
+      mochi_01_mochi_01_029: 8653088159247008092
+      mochi_01_mochi_01_030: -7358429709388401346
+      mochi_01_mochi_01_031: 5319924571793001219
+      mochi_01_mochi_01_032: 5464738234038470867
+      mochi_01_mochi_01_033: 5748759417654804516
+      mochi_01_mochi_01_034: -6550878539371047635
+      mochi_01_mochi_01_035: -2260180056009992846
+      mochi_01_mochi_01_036: -354425512566016903
+      mochi_01_mochi_01_037: 88624154986635701
+      mochi_01_mochi_01_038: 1704928034680373228
+      mochi_01_mochi_01_039: 8368485072080254395
+      mochi_01_mochi_01_040: 277286867820045673
+      mochi_01_mochi_01_041: -2412631621844568075
+      mochi_01_mochi_01_042: -6360258623476321752
+      mochi_01_mochi_01_043: -5153448378209080477
+      mochi_01_mochi_01_044: -6715798285374430451
+      mochi_01_mochi_01_045: 1400373165337101371
+      mochi_01_mochi_01_046: -8163615011286349364
+      mochi_01_mochi_01_047: 3513541511985987035
+      mochi_01_mochi_01_048: 3579813006466874183
+      mochi_01_mochi_01_049: -2805000664846776026
+      mochi_01_mochi_01_050: -3214819344974651735
+      mochi_01_mochi_01_051: -6611638520453827372
+      mochi_01_mochi_01_052: 6993090489322199010
+      mochi_01_mochi_01_053: -4153258286207836703
+      mochi_01_mochi_01_054: -5317418821665213812
+      mochi_01_mochi_01_055: -1673257319521277759
+      mochi_01_mochi_01_056: 2012910751500760144
+      mochi_01_mochi_01_057: 5992723102680521659
+      mochi_01_mochi_01_058: -292919388561159049
+      mochi_01_mochi_01_059: -8675650344187615416
+      mochi_01_mochi_01_060: 6333880894103370619
+      mochi_01_mochi_01_061: 5422476311833914162
+      mochi_01_mochi_01_062: 8554313703170367104
+      mochi_01_mochi_01_063: 5913540599608202263
+      mochi_01_mochi_01_064: 3337693636830991300
+      mochi_01_mochi_01_065: -3741521792569212490
+      mochi_01_mochi_01_066: 8696840296464777666
+      mochi_01_mochi_01_067: 9002426257761796774
+      mochi_01_mochi_01_068: 5736518763570160523
+      mochi_01_mochi_01_069: 8710043199592319197
+      mochi_01_mochi_01_070: 5728246238590737926
+      mochi_01_mochi_01_071: 3490843049689658857
+      mochi_01_mochi_01_072: -1989267430964965667
+      mochi_01_mochi_01_073: -4904119565544986164
+      mochi_01_mochi_01_074: -1124376606016605142
+      peeko_01_peeko000: 4719646207562970476
+      peeko_01_peeko001: 3725597276144363682
+      peeko_01_peeko002: -4764168852075742037
+      peeko_01_peeko003: 7092147908966065167
+      peeko_01_peeko004: -4865400769674967587
+      peeko_01_peeko005: 7763954795955590476
+      peeko_01_peeko006: -8860472265661282207
+      peeko_01_peeko007: -8844461932136242482
+      peeko_01_peeko008: 6972882993882985743
+      peeko_01_peeko009: 4179137490966926250
+      peeko_01_peeko010: -8499025504717822019
+      peeko_01_peeko011: -6832197245450978414
+      peeko_01_peeko012: -5783731739207758496
+      peeko_01_peeko013: -7520325936122664760
+      peeko_01_peeko014: -3528754278693518993
+      peeko_01_peeko015: -312298925559175985
+      peeko_01_peeko016: -5780120259689597205
+      peeko_01_peeko017: -6975780435157145167
+      peeko_01_peeko018: 1841433278355774314
+      peeko_01_peeko019: -3046890731122248814
+      peeko_01_peeko020: -185654035940928675
+      peeko_01_peeko021: -8150530717654403891
+      peeko_01_peeko022: -7597862277313287529
+      peeko_01_peeko023: -5647329233395722906
+      peeko_01_peeko024: -2924970157790294244
+      peeko_01_peeko025: 2002280099332142510
+      peeko_01_peeko026: 8290003113036554781
+      peeko_01_peeko027: -7996411142472379040
+      peeko_01_peeko028: -4085267618380227848
+      peeko_01_peeko029: -5261252851155457562
+      peeko_01_peeko030: 9010097072555641013
+      peeko_01_peeko031: -6116502114309110881
+      peeko_01_peeko032: 5393857684033850219
+      peeko_01_peeko033: -6359423123298205001
+      peeko_01_peeko034: -5899133433450835849
+      peeko_01_peeko035: -4467281698137693534
+      peeko_01_peeko036: 5869446174052552322
+      peeko_01_peeko037: 181647893140062931
+      peeko_01_peeko038: 2935988794095056686
+      peeko_01_peeko039: 8689134203214405384
+      peeko_01_peeko040: 3741504681053765113
+      peeko_01_peeko041: 5907533426990359796
+      peeko_01_peeko042: 307309981739466380
+      peeko_01_peeko043: -6083711431256735945
+      peeko_01_peeko044: -3558878519383405067
+      peeko_01_peeko045: 1593214910698218635
+      peeko_01_peeko046: -5126732695416032168
+      peeko_01_peeko047: 6043397751117768161
+      peeko_01_peeko048: -4450402390606781020
+      peeko_01_peeko049: 6568651264411444077
+      peeko_01_peeko050: -2541077169870164013
+      peeko_01_peeko051: 4318480932973195749
+      peeko_01_peeko052: -594063481944591000
+      peeko_01_peeko053: 1749099512018986226
+      peeko_01_peeko054: -5666676326421584747
+      peeko_01_peeko055: -529669544993869203
+      peeko_01_peeko056: 7040917765701183605
+      peeko_01_peeko057: -4352661433347647292
+      peeko_01_peeko058: -77825728787421781
+      peeko_01_peeko059: -6960434192139243562
+      peeko_01_peeko060: 2817079251898873308
+      peeko_01_peeko061: 3255396825042722011
+      peeko_01_peeko062: 1424859631358644591
+      peeko_01_peeko063: -6806106856116483755
+      peeko_01_peeko064: -6969938840170448647
+      peeko_01_peeko065: -5452461477765483161
+      peeko_01_peeko066: 89083612830254857
+      peeko_01_peeko067: -4816107960807701707
+      peeko_01_peeko068: 4942285286127475540
+      peeko_01_peeko069: -4590590662440712738
+      peeko_01_peeko070: -852376857584475296
+      peeko_01_peeko071: 2163547479901631774
+      peeko_01_peeko072: -6996272408509701953
+      peeko_01_peeko073: -4116095917190670454
+      peeko_01_peeko074: 2506434385686828260
+      peeko_01_peeko075: -217802178276535693
+      peeko_01_peeko076: -2569560456008601920
+      peeko_01_peeko077: -899422872752527155
+      peeko_01_peeko078: -8482008521788946252
+      peeko_01_peeko079: 4514228770920775562
+      peeko_01_peeko080: 1053515330632917600
+      peeko_01_peeko081: -5109586872318646314
+      peeko_01_peeko082: 5707189492233769925
+      peeko_01_peeko083: 3690397512349533411
+      peeko_01_peeko084: 4436190589804919279
+      peeko_01_peeko085: 8763662217801108559
+      peeko_01_peeko086: -5612026997995302064
+      peeko_01_peeko087: 2616336140732774131
+      peeko_01_peeko088: -8489473731321365845
+      peeko_01_peeko089: -888144250596269995
+      pinkyboo_01_pinkyboo_01_000: -8014330126816306749
+      pinkyboo_01_pinkyboo_01_001: 1620722197981405460
+      pinkyboo_01_pinkyboo_01_002: -4686916292840420566
+      pinkyboo_01_pinkyboo_01_003: 8890163151103984568
+      pinkyboo_01_pinkyboo_01_004: 6380679834970730568
+      pinkyboo_01_pinkyboo_01_005: 8492948751925068657
+      pinkyboo_01_pinkyboo_01_006: 5810762642498749354
+      pinkyboo_01_pinkyboo_01_007: 6019544828784499711
+      pinkyboo_01_pinkyboo_01_008: 5553952316464659904
+      pinkyboo_01_pinkyboo_01_009: -6553452774358205902
+      pinkyboo_01_pinkyboo_01_010: -3362647078811431790
+      pinkyboo_01_pinkyboo_01_011: 6545665817324127912
+      pinkyboo_01_pinkyboo_01_012: -2845108537823347882
+      pinkyboo_01_pinkyboo_01_013: 1326886474770737051
+      pinkyboo_01_pinkyboo_01_014: -2931582868010062285
+      pinkyboo_01_pinkyboo_01_015: -6824858950613913745
+      pinkyboo_01_pinkyboo_01_016: 5784687043395543763
+      pinkyboo_01_pinkyboo_01_017: 7134963343340441757
+      pinkyboo_01_pinkyboo_01_018: 7820457265211688685
+      pinkyboo_01_pinkyboo_01_019: -7668608293508768435
+      pinkyboo_01_pinkyboo_01_020: 616676045313769234
+      pinkyboo_01_pinkyboo_01_021: 2547733832347652492
+      pinkyboo_01_pinkyboo_01_022: 5721373964864324172
+      pinkyboo_01_pinkyboo_01_023: -3438922032396500523
+      pinkyboo_01_pinkyboo_01_024: 7977624621477167333
+      pinkyboo_01_pinkyboo_01_025: -8709436864637070088
+      pinkyboo_01_pinkyboo_01_026: 155592635432958825
+      pinkyboo_01_pinkyboo_01_027: -5525918881355167418
+      pinkyboo_01_pinkyboo_01_028: 7189893422515321046
+      pinkyboo_01_pinkyboo_01_029: 4099363357725032102
+      pinkyboo_01_pinkyboo_01_030: -6919432746445157266
+      pinkyboo_01_pinkyboo_01_031: 2698453851383664531
+      pinkyboo_01_pinkyboo_01_032: 1166412741106140334
+      pinkyboo_01_pinkyboo_01_033: -79665573516952384
+      pinkyboo_01_pinkyboo_01_034: -2119823697466384295
+      pinkyboo_01_pinkyboo_01_035: 14833126552541973
+      pinkyboo_01_pinkyboo_01_036: 7490627458985048346
+      pinkyboo_01_pinkyboo_01_037: 1857715445125614864
+      pinkyboo_01_pinkyboo_01_038: -3683302473683356093
+      pinkyboo_01_pinkyboo_01_039: -4193796470595968059
+      pinkyboo_01_pinkyboo_01_040: 6532282951341829820
+      pinkyboo_01_pinkyboo_01_041: -2702993177277466619
+      pinkyboo_01_pinkyboo_01_042: -9191899544705362064
+      pinkyboo_01_pinkyboo_01_043: 7713362285290028257
+      pinkyboo_01_pinkyboo_01_044: 302412591676234640
+      pinkyboo_01_pinkyboo_01_045: 1316926774418320184
+      pinkyboo_01_pinkyboo_01_046: -1256187645939682678
+      pinkyboo_01_pinkyboo_01_047: -9112852187671874333
+      pinkyboo_01_pinkyboo_01_048: -4315368735648745205
+      pinkyboo_01_pinkyboo_01_049: -3028519414383174445
+      pinkyboo_01_pinkyboo_01_050: 5675786001178390843
+      pinkyboo_01_pinkyboo_01_051: 5332095450360680903
+      pinkyboo_01_pinkyboo_01_052: -9154575516154661940
+      pinkyboo_01_pinkyboo_01_053: 7902236339104374646
+      pinkyboo_01_pinkyboo_01_054: 2104825011144196257
+      pinkyboo_01_pinkyboo_01_055: -8303469010599628124
+      pinkyboo_01_pinkyboo_01_056: 4254383957136244839
+      pinkyboo_01_pinkyboo_01_057: 8479862884064663200
+      pinkyboo_01_pinkyboo_01_058: -6633448509461592048
+      pinkyboo_01_pinkyboo_01_059: -8723767873119830793
+      pinkyboo_01_pinkyboo_01_060: -5577593949151434828
+      pinkyboo_01_pinkyboo_01_061: -3996712310921991907
+      pinkyboo_01_pinkyboo_01_062: 521677808427991720
+      pinkyboo_01_pinkyboo_01_063: -8814805841794479111
+      pinkyboo_01_pinkyboo_01_064: 2880237231009938471
+      pinkyboo_01_pinkyboo_01_065: -8693660001565963694
+      pinkyboo_01_pinkyboo_01_066: -807355987581840381
+      pinkyboo_01_pinkyboo_01_067: -3303349984425856677
+      pinkyboo_01_pinkyboo_01_068: -4797917384939671075
+      pinkyboo_01_pinkyboo_01_069: 2735965377376157409
+      pinkyboo_01_pinkyboo_01_070: 7050723632358279218
+      pinkyboo_01_pinkyboo_01_071: 4102928614814360701
+      pinkyboo_01_pinkyboo_01_072: -3756536808219769402
+      pinkyboo_01_pinkyboo_01_073: -1819887184734431009
+      pinkyboo_01_pinkyboo_01_074: 3920934429885232619
+      pinkyboo_01_pinkyboo_01_075: 4996927607502219361
+      pinkyboo_01_pinkyboo_01_076: -3384320413464253178
+      pinkyboo_01_pinkyboo_01_077: 2724032917732321457
+      pinkyboo_01_pinkyboo_01_078: 8952866183357416682
+      pinkyboo_01_pinkyboo_01_079: -5376443931394142298
+      pinkyboo_01_pinkyboo_01_080: 801218647011376526
+      pinkyboo_01_pinkyboo_01_081: -1179966152990748358
+      pinkyboo_01_pinkyboo_01_082: -7009999216095381996
+      pinkyboo_01_pinkyboo_01_083: -522725733741618121
+      pinkyboo_01_pinkyboo_01_084: -6880746389414363846
+      pinkyboo_01_pinkyboo_01_085: -4840819785241468214
+      pinkyboo_01_pinkyboo_01_086: 1996501557036948631
+      pinkyboo_01_pinkyboo_01_087: 471692684014851072
+      pinkyboo_01_pinkyboo_01_088: -5086477008874447575
+      pinkyboo_01_pinkyboo_01_089: -4948941061549170093
+      squeaky_01_squeaky_01_000: 4666029975091278701
+      squeaky_01_squeaky_01_001: 6079246906533599672
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

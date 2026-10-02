@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031622102961f885694abcc4a00001e4, type: 3}
+  m_Name: PurchaseDatas
+  m_EditorClassIdentifier:
+  billDataList:
+  - id: com.phoenix.pawblock.puzzle.coin1
+    productType: 0
+    priceDollaAndroid: 1.99
+    priceDollaIOS: 1.99
+  - id: com.phoenix.pawblock.puzzle.coin2
+    productType: 0
+    priceDollaAndroid: 8.99
+    priceDollaIOS: 8.99
+  - id: com.phoenix.pawblock.puzzle.coin3
+    productType: 0
+    priceDollaAndroid: 15.99
+    priceDollaIOS: 15.99
+  - id: com.phoenix.pawblock.puzzle.coin4
+    productType: 0
+    priceDollaAndroid: 30.99
+    priceDollaIOS: 30.99
+  - id: com.phoenix.pawblock.puzzle.coin5
+    productType: 0
+    priceDollaAndroid: 59.99
+    priceDollaIOS: 59.99
+  - id: com.phoenix.pawblock.puzzle.coin6
+    productType: 0
+    priceDollaAndroid: 100.99
+    priceDollaIOS: 100.99
+  - id: com.phoenix.pawblock.puzzle.noad
+    productType: 1
+    priceDollaAndroid: 7.99
+    priceDollaIOS: 7.99
+  - id: com.phoenix.pawblock.puzzle.noadbundle
+    productType: 1
+    priceDollaAndroid: 9.99
+    priceDollaIOS: 9.99
+  - id: com.phoenix.pawblock.puzzle.starterpack
+    productType: 0
+    priceDollaAndroid: 2.49
+    priceDollaIOS: 2.49
+  - id: com.phoenix.pawblock.puzzle.failoffer
+    productType: 0
+    priceDollaAndroid: 5.99
+    priceDollaIOS: 5.99
+  - id: com.phoenix.pawblock.puzzle.minibundle
+    productType: 0
+    priceDollaAndroid: 5.99
+    priceDollaIOS: 5.99
+  - id: com.phoenix.pawblock.puzzle.superbundle
+    productType: 0
+    priceDollaAndroid: 10.99
+    priceDollaIOS: 10.99
+  - id: com.phoenix.pawblock.puzzle.megabundle
+    productType: 0
+    priceDollaAndroid: 20.99
+    priceDollaIOS: 20.99
+  - id: com.phoenix.pawblock.puzzle.deluxebundle
+    productType: 0
+    priceDollaAndroid: 30.99
+    priceDollaIOS: 30.99

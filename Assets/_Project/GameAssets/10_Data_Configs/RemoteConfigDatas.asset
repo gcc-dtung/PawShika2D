@@ -1,0 +1,151 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c43e3634e52495a0859bad2bc5b610b1, type: 3}
+  m_Name: RemoteConfigDatas
+  m_EditorClassIdentifier:
+  remoteConfigDatasList:
+  - name: 30_Int_interAds_timeDelay_InterToInter
+    remoteConfigDataEnum: 1
+    typeRemoteConfig: 0
+    valueDefault: 30
+  - name: 10_Int_interAds_timeDelay_RewardToInter
+    remoteConfigDataEnum: 2
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 10_Int_interAds_timeDelay_OpenAdsToInter
+    remoteConfigDataEnum: 3
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 10_Int_interAds_timeDelay_StartGameToInter
+    remoteConfigDataEnum: 4
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 1_Int_interAds_isShowInter
+    remoteConfigDataEnum: 5
+    typeRemoteConfig: 0
+    valueDefault: 1
+  - name: 10_Int_interAds_levelStart_ShowInter
+    remoteConfigDataEnum: 9
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 1_Int_interAds_dayStart_ShowInter
+    remoteConfigDataEnum: 10
+    typeRemoteConfig: 0
+    valueDefault: 1
+  - name: 1_Int_interAds_isShowInter_WinLevel
+    remoteConfigDataEnum: 11
+    typeRemoteConfig: 0
+    valueDefault: 1
+  - name: 0_Int_interAds_isShowInter_FailLevel
+    remoteConfigDataEnum: 12
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 0_Int_interAds_isShowInter_RetryLevel
+    remoteConfigDataEnum: 13
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 0_Int_interAds_isShowInter_QuitLevel
+    remoteConfigDataEnum: 14
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 3_Int_interAds_levelWinStart_ShowInter_FromSession2
+    remoteConfigDataEnum: 15
+    typeRemoteConfig: 0
+    valueDefault: 3
+  - name: 3_Int_interAds_levelDelay_ShowInter
+    remoteConfigDataEnum: 16
+    typeRemoteConfig: 0
+    valueDefault: 3
+  - name: 0_Int_openAds_isShowOpenAds
+    remoteConfigDataEnum: 30
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 10_Int_openAds_timeDelay_OpenAdsToOpenAds
+    remoteConfigDataEnum: 31
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 10_Int_openAds_timeDelay_InterToOpenAds
+    remoteConfigDataEnum: 32
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 10_Int_openAds_timeDelay_RewardToOpenAds
+    remoteConfigDataEnum: 33
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 3_Int_openAds_turnStart_ShowOpenAds
+    remoteConfigDataEnum: 34
+    typeRemoteConfig: 0
+    valueDefault: 3
+  - name: 0_Int_openAds_isShowOpenAds_SplashScene
+    remoteConfigDataEnum: 35
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 1_Int_bannerAds_isShowBanner
+    remoteConfigDataEnum: 60
+    typeRemoteConfig: 0
+    valueDefault: 1
+  - name: 9_Int_bannerAds_levelStartShowBanner
+    remoteConfigDataEnum: 61
+    typeRemoteConfig: 0
+    valueDefault: 9
+  - name: 1_Int_bannerAds_dayStartShowBanner
+    remoteConfigDataEnum: 62
+    typeRemoteConfig: 0
+    valueDefault: 1
+  - name: 10_Int_rewardAds_levelStart_ShowReward
+    remoteConfigDataEnum: 80
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 8_Int_rate_levelFirstShowPopupRate
+    remoteConfigDataEnum: 100
+    typeRemoteConfig: 0
+    valueDefault: 8
+  - name: 10_Int_rate_levelDelayShowPopupRate
+    remoteConfigDataEnum: 101
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 12_Int_removeAds_levelDelayShowPopupRemoveAds
+    remoteConfigDataEnum: 110
+    typeRemoteConfig: 0
+    valueDefault: 12
+  - name: 0_Int_NoInternet_IsRequire
+    remoteConfigDataEnum: 150
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 1800_Int_gamePlay_TimeRefillHeart
+    remoteConfigDataEnum: 200
+    typeRemoteConfig: 0
+    valueDefault: 1800
+  - name: 0_Int_gamePlay_CoinStartGame
+    remoteConfigDataEnum: 201
+    typeRemoteConfig: 0
+    valueDefault: 0
+  - name: 10_Int_gamePlay_CoinWinLevelNormal
+    remoteConfigDataEnum: 202
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 20_Int_gamePlay_CoinWinLevelHard
+    remoteConfigDataEnum: 203
+    typeRemoteConfig: 0
+    valueDefault: 20
+  - name: 10_Int_gamePlay_LevelWin_BackToHome
+    remoteConfigDataEnum: 204
+    typeRemoteConfig: 0
+    valueDefault: 10
+  - name: 30_Int_gamePlay_CoinWinLevelExpert
+    remoteConfigDataEnum: 205
+    typeRemoteConfig: 0
+    valueDefault: 30
+  - name: 30_Int_gamePlay_CoinWinDailyChallenge
+    remoteConfigDataEnum: 206
+    typeRemoteConfig: 0
+    valueDefault: 30

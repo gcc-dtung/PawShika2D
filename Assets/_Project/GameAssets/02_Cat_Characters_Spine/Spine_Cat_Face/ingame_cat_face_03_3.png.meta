@@ -1,0 +1,5671 @@
+fileFormatVersion: 2
+guid: baaa9cdbd8226804f96353bb13e54a39
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_002
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 733fcc6db97904a00800000000000000
+      internalID: 738757034468242231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_003
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f55e2bb7203724c0800000000000000
+      internalID: -4312425170981726727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_004
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 380b5bea7e9289b90800000000000000
+      internalID: -7234986726325374845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_005
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6431acb66269a250800000000000000
+      internalID: 5956400175565059181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_006
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1407adf7fb0d59d0800000000000000
+      internalID: -2784055834904689637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_007
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b66a358df0a30e070800000000000000
+      internalID: 8133564766759396971
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_008
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b7f7b0c50a3506d0800000000000000
+      internalID: -3024947778326890575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_009
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d42bc7b706a2c0570800000000000000
+      internalID: 8434162796035093069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_010
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f8ac2207999a91f0800000000000000
+      internalID: -1037347890299885320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_011
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99056b1c70b024520800000000000000
+      internalID: 2684720455808864409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_012
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf18daafd2efeb050800000000000000
+      internalID: 5818367242041917948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_013
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df80ae9b351f92910800000000000000
+      internalID: 1813245666897037565
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_014
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ef22da3b370fcb40800000000000000
+      internalID: 5462592823995019241
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_015
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce7377cc1adbee4b0800000000000000
+      internalID: -5409177599807637524
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_016
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ee423c84d058bb60800000000000000
+      internalID: 7762042831588445928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_017
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d99f7acccbeab29b0800000000000000
+      internalID: -5103793626783680099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_018
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 951b4d57f7a6b1ff0800000000000000
+      internalID: -64340673996476071
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_019
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f86c115b410d00d20800000000000000
+      internalID: 3242820519062521487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_020
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ab28171db8428b90800000000000000
+      internalID: -7241145273884857433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_021
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f9ef43b072cbfeb00800000000000000
+      internalID: 860112929728822943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_022
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2761a5cfb974153c0800000000000000
+      internalID: -4372635027920775566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_023
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c54a3a2eca4153e20800000000000000
+      internalID: 3329590232279655516
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_024
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc07ee4099f9badf0800000000000000
+      internalID: -167865081534713649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_025
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0171136c346c9c680800000000000000
+      internalID: -8734232007918151920
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_026
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a884314a435c52780800000000000000
+      internalID: -8708337474569287542
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_027
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee0e1bbf3ef451190800000000000000
+      internalID: -7992394123100167954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_028
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecce5747d06026240800000000000000
+      internalID: 4783392409079114958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_029
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e8f283c9d3ab84490800000000000000
+      internalID: -7761749183996350578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_030
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56918d3f2ccb3ec20800000000000000
+      internalID: 3234636502882851173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_031
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00f7662d7c7ada200800000000000000
+      internalID: 192994835717062400
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_032
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29d827d22d5adaba0800000000000000
+      internalID: -6076018000128733806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_033
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73909c9b347e99950800000000000000
+      internalID: 6456445818878101815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_034
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35c5ec6c2877db720800000000000000
+      internalID: 2863576341642370131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_035
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f6fa93c0829b22040800000000000000
+      internalID: 4621459749290487663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_036
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5af7383bea0cb0870800000000000000
+      internalID: 8650219365863751589
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_037
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b77a60b93784bae90800000000000000
+      internalID: -7013432333340072069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_038
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98b8c4e5d56dee240800000000000000
+      internalID: 4823027947462757257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_039
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2b6020f3efb45a80800000000000000
+      internalID: -8478941212724663509
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_040
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1371ab3890abac4b0800000000000000
+      internalID: -5419314651559487695
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_041
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62ae187bea5778600800000000000000
+      internalID: 470474079347010086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_042
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1759d3be600a8410800000000000000
+      internalID: 1479995903008397082
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_043
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37567a78e8ae83e60800000000000000
+      internalID: 7942355840750019955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_044
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be4bbb8bc80395010800000000000000
+      internalID: 1178026158486959339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_045
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 953f56bbdf0a5ea00800000000000000
+      internalID: 785210721677210457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_046
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c954c96bb5ef44d10800000000000000
+      internalID: 2109090195375408540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_047
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a48870ddbe9c2e7e0800000000000000
+      internalID: -1737604491348834230
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_048
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8e9961519719fe520800000000000000
+      internalID: 2733563448068053480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_049
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2e04d4b7d5474930800000000000000
+      internalID: 4127344376262430252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_050
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d33d1b09487072170800000000000000
+      internalID: 8153493916322222909
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_051
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f999fc7435b9fdb50800000000000000
+      internalID: 6620180759247296927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_052
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f3b467bc34e8dac0800000000000000
+      internalID: -3830060533652605959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_053
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd2835b7753c341a0800000000000000
+      internalID: -6826397829664898339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_054
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f270e7551f8da9a0800000000000000
+      internalID: -6220158188497374478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_055
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e71cf4c1ee629580800000000000000
+      internalID: -8821866804113827868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_056
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fbb3fceef93f7f8b0800000000000000
+      internalID: -5118354583251371073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_057
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa959987a14001680800000000000000
+      internalID: -8786518361260861009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_058
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46cb6d0ded807bde0800000000000000
+      internalID: -1317574612903084956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_059
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c42aefaffa5e84c0800000000000000
+      internalID: -4283386141368245055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_060
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fa3bc53fda08230d0800000000000000
+      internalID: -3444549280384371793
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_061
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 618f1b731e83459a0800000000000000
+      internalID: -6245304243302828010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_062
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f1b5829a2461e6f40800000000000000
+      internalID: 5723536651996125983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_063
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a40a3b5ad8ed1f9c0800000000000000
+      internalID: -3895087502747000758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_064
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 48874999303f688d0800000000000000
+      internalID: -2844318917850793852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_065
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4aaa0f34f2fe23f00800000000000000
+      internalID: 1095200645686799012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_066
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: befb48b20cfbf15c0800000000000000
+      internalID: -4242461491874971669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_067
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01c3c37ff45bd0320800000000000000
+      internalID: 2525874321079680016
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_068
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a800b873515a1c6f0800000000000000
+      internalID: -666069759329369974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_069
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b4021393a4a2c230800000000000000
+      internalID: 3657666869832320180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_070
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 664e34ccfd4b9c5d0800000000000000
+      internalID: -3041701200014351258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_071
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 94eb40db4de22e670800000000000000
+      internalID: 8566460932451253833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_072
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf2421b2029f57bd0800000000000000
+      internalID: -2632924490571300101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_073
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81db34450ddb00950800000000000000
+      internalID: 6413334571840159000
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_074
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 29d5a9e281acd2fe0800000000000000
+      internalID: -1212090519482901102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_075
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 83a434292c950cb80800000000000000
+      internalID: -8376596614696711624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_076
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 097cf524d8e2d3740800000000000000
+      internalID: 5133310334511073168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_077
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 45d2f2f876caa7920800000000000000
+      internalID: 2988890863497588052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_078
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 796b7d458d1dbab60800000000000000
+      internalID: 7758525510142375575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_079
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4256b6f6eebb847b0800000000000000
+      internalID: -5239731533699652316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_080
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22213a25eb35cb5e0800000000000000
+      internalID: -1892545666507140574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_081
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6e7e57463b7c6870800000000000000
+      internalID: 8677446055091928684
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_082
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c153c8b3fbce6440800000000000000
+      internalID: 4931102889654571456
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_083
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ceb0e65bf657f8420800000000000000
+      internalID: 2634453429680737260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_084
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eca0f6857efe70ab0800000000000000
+      internalID: -5041797480917824818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_085
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b966deec397f7ef0800000000000000
+      internalID: -108234563421574732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_086
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4906efc06c0ef9690800000000000000
+      internalID: -7593103305497223020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_087
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 99589db7a11e2be90800000000000000
+      internalID: -7011294165999188583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_088
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75493ae3e70ec6a70800000000000000
+      internalID: 8821672602933367895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: squeaky_01_squeaky_01_089
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4541b706d07ebc130800000000000000
+      internalID: 3588215572770002004
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_001
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 379b07902aa2b7720800000000000000
+      internalID: 2844914465046051187
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_002
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f98c24bee84994700800000000000000
+      internalID: 525114173118662815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_003
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e66a060c3d0050660800000000000000
+      internalID: 7351282876217861742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_004
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 53ca3bfc1b9059360800000000000000
+      internalID: 7175652240583273525
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_005
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dba0fd1d90df97b30800000000000000
+      internalID: 4285734739037326013
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_006
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ee5a546c279f7190800000000000000
+      internalID: -7962479399249748251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_007
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c1667c63271f3cd0800000000000000
+      internalID: -2576315020921642560
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_008
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 923cb0a83a93806f0800000000000000
+      internalID: -718260766007114967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_009
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ba0807ed6e4c0740800000000000000
+      internalID: 5119553110347877042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_010
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 662
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57d0ae917a57278b0800000000000000
+      internalID: -5155929262831039115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_011
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75cb122abeda343c0800000000000000
+      internalID: -4376463185324950441
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_012
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e95f160e10d3df790800000000000000
+      internalID: -7494767126605859426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_013
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a2ae96ad1e8f51d0800000000000000
+      internalID: -3359810538994490716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_014
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7c7ced4808bc15ad0800000000000000
+      internalID: -2715165347482253369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_015
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 251dc7264be9c3d90800000000000000
+      internalID: -7116638813568577198
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_016
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8466a17002f89c290800000000000000
+      internalID: -7869601506132335032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_017
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 167af356b4f8e1690800000000000000
+      internalID: -7629503164735051935
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_018
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e89d41c85490208d0800000000000000
+      internalID: -2881730617256126066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_019
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c52c52e9e0869cd40800000000000000
+      internalID: 5605125623231398492
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_020
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df78fc0eee93458c0800000000000000
+      internalID: -4011517669943572483
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_021
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1e3dd97e9b7aa1d0800000000000000
+      internalID: -3338720253162209765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_022
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ba02852c70486460800000000000000
+      internalID: 7235103703320103600
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_023
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7530210a8ec03caf0800000000000000
+      internalID: -377443750511508649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_024
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 772
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbc0226fead1bb360800000000000000
+      internalID: 7186370267690699963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_025
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae5534e931ad9be60800000000000000
+      internalID: 7978647992657991146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_026
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ae67f0bf30502020800000000000000
+      internalID: 2314938442950602402
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_027
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa6866050b765aca0800000000000000
+      internalID: -6006280521067886934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_028
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ee316b4b9eb16af0800000000000000
+      internalID: -404832917292761375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_029
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39ea561d7d48c1d30800000000000000
+      internalID: 4403540598127439507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_030
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72d97c57732c34b00800000000000000
+      internalID: 811705901311827239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_031
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bfdcfe9f84d0d46f0800000000000000
+      internalID: -698887760090509829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_032
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87b3dc2937e324160800000000000000
+      internalID: 7008232636246997880
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_033
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e013b05f6439ed60800000000000000
+      internalID: 7919919072407654629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_034
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e0788d5e37d579d0800000000000000
+      internalID: -2777076932346875680
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_035
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e43ace65df4cb02c0800000000000000
+      internalID: -4464258013243595954
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_036
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3db1f748146ce13c0800000000000000
+      internalID: -4386851002314187821
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_037
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 47cd4418817d70a90800000000000000
+      internalID: -7347667766783714188
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_038
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 882
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 951aeb3f61223a7f0800000000000000
+      internalID: -602600443163532967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_039
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ee5b7a6b71d42a00800000000000000
+      internalID: 730939367538515686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_040
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb21b3c14f2e7b650800000000000000
+      internalID: 6248712546073383611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_041
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: baaaf1f15a12d4590800000000000000
+      internalID: -7688451995776079189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_042
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8185d2eee137a7c40800000000000000
+      internalID: 5510843670723385368
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_043
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6071b7f062dcff970800000000000000
+      internalID: 8790970561002673926
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_044
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2b687275a1067f00800000000000000
+      internalID: 1114079767922502444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_045
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 521344e19c81eb680800000000000000
+      internalID: -8737518974976904923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_046
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19d1e07bc4ec56c80800000000000000
+      internalID: -8330025106867872367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_047
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04687439c985210d0800000000000000
+      internalID: -3453600534730668480
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_048
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e28db329da3530690800000000000000
+      internalID: -7637168538142386130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_049
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac5b4180959c5a630800000000000000
+      internalID: 3937774833430214090
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_050
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 658756671a0f6dfd0800000000000000
+      internalID: -2317400381968779178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_051
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fc444c983c7ff7a0800000000000000
+      internalID: -6341213167732634381
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_052
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 992
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c958c76c3a56a8080800000000000000
+      internalID: -9184416735984581220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_053
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ddea5ef1e35404e40800000000000000
+      internalID: 5638582866593296093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_054
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb4c7db1c0a267f30800000000000000
+      internalID: 4572888703136416956
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_055
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d95b7e9d60dc1c770800000000000000
+      internalID: 8629403790327920029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_056
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b494dc63e340a510800000000000000
+      internalID: 1558320115132699829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_057
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74582208b5fda15a0800000000000000
+      internalID: -6549677123972201145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_058
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55c4e16042adf5250800000000000000
+      internalID: 5935702682153929813
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_059
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b4b980b00139f100800000000000000
+      internalID: 142198742270457010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_060
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3d71a2475402e6d90800000000000000
+      internalID: -7102704079642945581
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_061
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: db9b1d2b5987ed330800000000000000
+      internalID: 3737557325109639613
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_062
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 79266f8af5babfea0800000000000000
+      internalID: -5837884064610753897
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_063
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d56ffa249e0a5a6c0800000000000000
+      internalID: -4132720159335909795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_064
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbe430362ceb36df0800000000000000
+      internalID: -188097017325334852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_065
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bb6fdd3f24536560800000000000000
+      internalID: 7305775582403324848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_066
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1102
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 712d50e2bdacf9c70800000000000000
+      internalID: 8980119224718840343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_067
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e92920c9339c84070800000000000000
+      internalID: 8090937954069025438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_068
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f1a979698a6e0fb0800000000000000
+      internalID: -4679685824378723851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_069
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aa10aa64482f255c0800000000000000
+      internalID: -4228050450212322902
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_070
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f536743365917aa0800000000000000
+      internalID: -6164982161579035144
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_071
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 931d4693423e15af0800000000000000
+      internalID: -409296346392768199
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_072
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0927d2839f4988950800000000000000
+      internalID: 6451570264318505616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_073
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d5d89bbf63d13cc0800000000000000
+      internalID: -3732970139271244327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: winkie_01_winkie_074
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8998b90da4418b40800000000000000
+      internalID: 5440705334823393679
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_000
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 709ff5de4c85cc100800000000000000
+      internalID: 129576092106225927
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_001
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 34ce22454384b6f90800000000000000
+      internalID: -6959389409583895485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_002
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 357c89924e7247dd0800000000000000
+      internalID: -2489320833125136557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_003
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c14763c5065312e10800000000000000
+      internalID: 2171075183349494812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_004
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8658c9b7cb80c550800000000000000
+      internalID: 6179092378683987595
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_005
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1212
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c53cf8569a41b020800000000000000
+      internalID: 2355746089689953736
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_006
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ccac8f974538d1b0800000000000000
+      internalID: -5631692752291058495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_007
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c456404066ca14b0800000000000000
+      internalID: -5468840680790534970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_008
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5aaffa3cf76fd4f0800000000000000
+      internalID: -801807875629405606
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_009
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 456cc54cbf9373f70800000000000000
+      internalID: 9166859320029922900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_010
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac6377d124e5c44b0800000000000000
+      internalID: -5454881410597308726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_011
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2897933cc13ea67d0800000000000000
+      internalID: -2924275295349802622
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_012
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d3f798f60b2c8960800000000000000
+      internalID: 7605501179662431191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_013
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb249878b34856e10800000000000000
+      internalID: 2190302184997470907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_014
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a807b7b25679f5d0800000000000000
+      internalID: -3028259176788326231
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_015
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d9dfc2815db3e520800000000000000
+      internalID: 2730233956901312976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_016
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b98b7a669f8a5590800000000000000
+      internalID: -7684671937959982667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_017
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 737ede1aa212e8a30800000000000000
+      internalID: 4219346367881799479
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_018
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52aa4cc5e92a75a80800000000000000
+      internalID: -8478128972456744411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_019
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1322
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ca3f86c408c0b6c0800000000000000
+      internalID: -4129580935462044987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_020
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a3ea059292428eb0800000000000000
+      internalID: -4719136262197681248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_021
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a56fc887abc8570c0800000000000000
+      internalID: -4578598713637931430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_022
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fec5ba316fc8b4c50800000000000000
+      internalID: 6650564263262510319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_023
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 763ba94d58b76c3b0800000000000000
+      internalID: -5492566880803966105
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_024
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8bfb1a1257cf41b80800000000000000
+      internalID: -8424831422897733704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_025
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c74bb39a6f7f03ae0800000000000000
+      internalID: -1571483631179025284
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_026
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac1348810588a92a0800000000000000
+      internalID: -6729916815561707062
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_027
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a76690881fdd9650800000000000000
+      internalID: 6241389954934925217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_028
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a7596f40e0572e00800000000000000
+      internalID: 1019872764957906857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_029
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b8683ca3e8978c40800000000000000
+      internalID: 5514544372352837816
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_030
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b33e9194d278b27d0800000000000000
+      internalID: -2942109302986775749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_031
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19df2ebb8aa04f3f0800000000000000
+      internalID: -868057108352664175
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_032
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cfcd18e59885e1a90800000000000000
+      internalID: -7341332995547996932
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_033
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1432
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18827777968657840800000000000000
+      internalID: 5221194145191110785
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_034
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4c15c7856b18cdac0800000000000000
+      internalID: -3829042963003190844
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_035
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c54c68c912e5fce00800000000000000
+      internalID: 1067175135163106396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_036
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4da089c711d1d5d50800000000000000
+      internalID: 6727565379303377620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_037
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 966fdc27f23b251d0800000000000000
+      internalID: -3363428955321403799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_038
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f752f8d85df21bc40800000000000000
+      internalID: 5526250812009817471
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_039
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a56a00b40abe616b0800000000000000
+      internalID: -5325810435633404326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_040
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b9df83c24c6b8e60800000000000000
+      internalID: 7965579399939479986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_041
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be2ac1102a6643880800000000000000
+      internalID: -8632161739773009173
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_042
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76361182f00ffbde0800000000000000
+      internalID: -1315068618281491609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_043
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 936cecaa7a82198e0800000000000000
+      internalID: -1688523684696897991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_044
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 01ce94eb4b7254410800000000000000
+      internalID: 1460617311391706128
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_045
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c89cbacba02eca350800000000000000
+      internalID: 6029442536885176716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_046
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce08ead614e968bb0800000000000000
+      internalID: -4934082337887584020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_047
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1542
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6819d29a4089a43c0800000000000000
+      internalID: -4374516942251388538
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_048
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27039ed9075cb1e80800000000000000
+      internalID: -8206748808476282766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_049
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aceb5c7c15966dbf0800000000000000
+      internalID: -299936525208666422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_050
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 484c639459809da60800000000000000
+      internalID: 7699194475238048900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_051
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 472005a0cba0f3d80800000000000000
+      internalID: -8268878588085796236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_052
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a50cd2f852f27b00800000000000000
+      internalID: 824988145607771556
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_053
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd818593125100940800000000000000
+      internalID: 5260227597208918235
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_054
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e92927300c4df8c0800000000000000
+      internalID: -3963928533207012887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_055
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b1215d80beaefb790800000000000000
+      internalID: -7512027358244302309
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_056
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d30cc908a4fccea0800000000000000
+      internalID: -5851032813305068583
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_057
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60ec7f7b0b7854110800000000000000
+      internalID: 1244550065108274694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_058
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f8c294fe294ee1110800000000000000
+      internalID: 1233674667677002895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_059
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08099f08ffcc46910800000000000000
+      internalID: 1829812746371829888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_060
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 626e40a212c7ccdb0800000000000000
+      internalID: -4770301423411468762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_061
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1652
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 591bcd21e5bc1e600800000000000000
+      internalID: 495901038891282837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_062
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 508d9915fd07ee500800000000000000
+      internalID: 427403119095830533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_063
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3113e8d14e4c54a0800000000000000
+      internalID: -6603316908913389253
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_064
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d5716ddf1dbf68b0800000000000000
+      internalID: -5156695103760140840
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_065
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c0c0ecda97e2ea7b0800000000000000
+      internalID: -5211176618679202804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_066
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eef293296e5caff40800000000000000
+      internalID: 5763136267260342254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_067
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ea879abf6b46cb60800000000000000
+      internalID: 7765977550690945762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_068
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 70cf7880168513100800000000000000
+      internalID: 85947041674951687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_069
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef304af7d11b80a0800000000000000
+      internalID: -6878384386564145169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_070
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8380ee3f2c81db60800000000000000
+      internalID: 7769144966737068939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_071
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92e0f8763da0d0c70800000000000000
+      internalID: 8938812738492108329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_072
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e62e7990e17341670800000000000000
+      internalID: 8508486198159204974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_073
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dad1babeb2653e6b0800000000000000
+      internalID: -5268272392455905875
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_074
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4cf52236cdf901db0800000000000000
+      internalID: -4823179432008982588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_075
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1762
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c91c1affd2e069490800000000000000
+      internalID: -7739983318864510564
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_076
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e35ab541ed5b95650800000000000000
+      internalID: 6222204325617968446
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_077
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b73b1b347d9b063c0800000000000000
+      internalID: -4368287304344554629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_078
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e281549ca2f0d0220800000000000000
+      internalID: 2453634048426580014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_079
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 238bb4d5d81ae8600800000000000000
+      internalID: 472492639448184882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_080
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59a88e8814588abe0800000000000000
+      internalID: -1465775162192786795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_081
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 907e4b6317d915d90800000000000000
+      internalID: -7110729227066611959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_082
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2861d6bbe2fbe050800000000000000
+      internalID: 5831021236759652399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_083
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c89513026eb8f060800000000000000
+      internalID: 6987544150033144001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_084
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b75b020d869f2540800000000000000
+      internalID: 4985368844891281331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_085
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bce0b350ad39bbd90800000000000000
+      internalID: -7080903424510062901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_086
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58b960c6fefd41bc0800000000000000
+      internalID: -3813176765073417339
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_087
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e1117fccf412174b0800000000000000
+      internalID: -5444533847889342178
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_088
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e2b37a707b93d780800000000000000
+      internalID: -8659406751110286620
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: wobble_01_wobble_01_089
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 1872
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41cd9a6c25b9ea5c0800000000000000
+      internalID: -4202250622467449836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      squeaky_01_squeaky_01_002: 738757034468242231
+      squeaky_01_squeaky_01_003: -4312425170981726727
+      squeaky_01_squeaky_01_004: -7234986726325374845
+      squeaky_01_squeaky_01_005: 5956400175565059181
+      squeaky_01_squeaky_01_006: -2784055834904689637
+      squeaky_01_squeaky_01_007: 8133564766759396971
+      squeaky_01_squeaky_01_008: -3024947778326890575
+      squeaky_01_squeaky_01_009: 8434162796035093069
+      squeaky_01_squeaky_01_010: -1037347890299885320
+      squeaky_01_squeaky_01_011: 2684720455808864409
+      squeaky_01_squeaky_01_012: 5818367242041917948
+      squeaky_01_squeaky_01_013: 1813245666897037565
+      squeaky_01_squeaky_01_014: 5462592823995019241
+      squeaky_01_squeaky_01_015: -5409177599807637524
+      squeaky_01_squeaky_01_016: 7762042831588445928
+      squeaky_01_squeaky_01_017: -5103793626783680099
+      squeaky_01_squeaky_01_018: -64340673996476071
+      squeaky_01_squeaky_01_019: 3242820519062521487
+      squeaky_01_squeaky_01_020: -7241145273884857433
+      squeaky_01_squeaky_01_021: 860112929728822943
+      squeaky_01_squeaky_01_022: -4372635027920775566
+      squeaky_01_squeaky_01_023: 3329590232279655516
+      squeaky_01_squeaky_01_024: -167865081534713649
+      squeaky_01_squeaky_01_025: -8734232007918151920
+      squeaky_01_squeaky_01_026: -8708337474569287542
+      squeaky_01_squeaky_01_027: -7992394123100167954
+      squeaky_01_squeaky_01_028: 4783392409079114958
+      squeaky_01_squeaky_01_029: -7761749183996350578
+      squeaky_01_squeaky_01_030: 3234636502882851173
+      squeaky_01_squeaky_01_031: 192994835717062400
+      squeaky_01_squeaky_01_032: -6076018000128733806
+      squeaky_01_squeaky_01_033: 6456445818878101815
+      squeaky_01_squeaky_01_034: 2863576341642370131
+      squeaky_01_squeaky_01_035: 4621459749290487663
+      squeaky_01_squeaky_01_036: 8650219365863751589
+      squeaky_01_squeaky_01_037: -7013432333340072069
+      squeaky_01_squeaky_01_038: 4823027947462757257
+      squeaky_01_squeaky_01_039: -8478941212724663509
+      squeaky_01_squeaky_01_040: -5419314651559487695
+      squeaky_01_squeaky_01_041: 470474079347010086
+      squeaky_01_squeaky_01_042: 1479995903008397082
+      squeaky_01_squeaky_01_043: 7942355840750019955
+      squeaky_01_squeaky_01_044: 1178026158486959339
+      squeaky_01_squeaky_01_045: 785210721677210457
+      squeaky_01_squeaky_01_046: 2109090195375408540
+      squeaky_01_squeaky_01_047: -1737604491348834230
+      squeaky_01_squeaky_01_048: 2733563448068053480
+      squeaky_01_squeaky_01_049: 4127344376262430252
+      squeaky_01_squeaky_01_050: 8153493916322222909
+      squeaky_01_squeaky_01_051: 6620180759247296927
+      squeaky_01_squeaky_01_052: -3830060533652605959
+      squeaky_01_squeaky_01_053: -6826397829664898339
+      squeaky_01_squeaky_01_054: -6220158188497374478
+      squeaky_01_squeaky_01_055: -8821866804113827868
+      squeaky_01_squeaky_01_056: -5118354583251371073
+      squeaky_01_squeaky_01_057: -8786518361260861009
+      squeaky_01_squeaky_01_058: -1317574612903084956
+      squeaky_01_squeaky_01_059: -4283386141368245055
+      squeaky_01_squeaky_01_060: -3444549280384371793
+      squeaky_01_squeaky_01_061: -6245304243302828010
+      squeaky_01_squeaky_01_062: 5723536651996125983
+      squeaky_01_squeaky_01_063: -3895087502747000758
+      squeaky_01_squeaky_01_064: -2844318917850793852
+      squeaky_01_squeaky_01_065: 1095200645686799012
+      squeaky_01_squeaky_01_066: -4242461491874971669
+      squeaky_01_squeaky_01_067: 2525874321079680016
+      squeaky_01_squeaky_01_068: -666069759329369974
+      squeaky_01_squeaky_01_069: 3657666869832320180
+      squeaky_01_squeaky_01_070: -3041701200014351258
+      squeaky_01_squeaky_01_071: 8566460932451253833
+      squeaky_01_squeaky_01_072: -2632924490571300101
+      squeaky_01_squeaky_01_073: 6413334571840159000
+      squeaky_01_squeaky_01_074: -1212090519482901102
+      squeaky_01_squeaky_01_075: -8376596614696711624
+      squeaky_01_squeaky_01_076: 5133310334511073168
+      squeaky_01_squeaky_01_077: 2988890863497588052
+      squeaky_01_squeaky_01_078: 7758525510142375575
+      squeaky_01_squeaky_01_079: -5239731533699652316
+      squeaky_01_squeaky_01_080: -1892545666507140574
+      squeaky_01_squeaky_01_081: 8677446055091928684
+      squeaky_01_squeaky_01_082: 4931102889654571456
+      squeaky_01_squeaky_01_083: 2634453429680737260
+      squeaky_01_squeaky_01_084: -5041797480917824818
+      squeaky_01_squeaky_01_085: -108234563421574732
+      squeaky_01_squeaky_01_086: -7593103305497223020
+      squeaky_01_squeaky_01_087: -7011294165999188583
+      squeaky_01_squeaky_01_088: 8821672602933367895
+      squeaky_01_squeaky_01_089: 3588215572770002004
+      winkie_01_winkie_001: 2844914465046051187
+      winkie_01_winkie_002: 525114173118662815
+      winkie_01_winkie_003: 7351282876217861742
+      winkie_01_winkie_004: 7175652240583273525
+      winkie_01_winkie_005: 4285734739037326013
+      winkie_01_winkie_006: -7962479399249748251
+      winkie_01_winkie_007: -2576315020921642560
+      winkie_01_winkie_008: -718260766007114967
+      winkie_01_winkie_009: 5119553110347877042
+      winkie_01_winkie_010: -5155929262831039115
+      winkie_01_winkie_011: -4376463185324950441
+      winkie_01_winkie_012: -7494767126605859426
+      winkie_01_winkie_013: -3359810538994490716
+      winkie_01_winkie_014: -2715165347482253369
+      winkie_01_winkie_015: -7116638813568577198
+      winkie_01_winkie_016: -7869601506132335032
+      winkie_01_winkie_017: -7629503164735051935
+      winkie_01_winkie_018: -2881730617256126066
+      winkie_01_winkie_019: 5605125623231398492
+      winkie_01_winkie_020: -4011517669943572483
+      winkie_01_winkie_021: -3338720253162209765
+      winkie_01_winkie_022: 7235103703320103600
+      winkie_01_winkie_023: -377443750511508649
+      winkie_01_winkie_024: 7186370267690699963
+      winkie_01_winkie_025: 7978647992657991146
+      winkie_01_winkie_026: 2314938442950602402
+      winkie_01_winkie_027: -6006280521067886934
+      winkie_01_winkie_028: -404832917292761375
+      winkie_01_winkie_029: 4403540598127439507
+      winkie_01_winkie_030: 811705901311827239
+      winkie_01_winkie_031: -698887760090509829
+      winkie_01_winkie_032: 7008232636246997880
+      winkie_01_winkie_033: 7919919072407654629
+      winkie_01_winkie_034: -2777076932346875680
+      winkie_01_winkie_035: -4464258013243595954
+      winkie_01_winkie_036: -4386851002314187821
+      winkie_01_winkie_037: -7347667766783714188
+      winkie_01_winkie_038: -602600443163532967
+      winkie_01_winkie_039: 730939367538515686
+      winkie_01_winkie_040: 6248712546073383611
+      winkie_01_winkie_041: -7688451995776079189
+      winkie_01_winkie_042: 5510843670723385368
+      winkie_01_winkie_043: 8790970561002673926
+      winkie_01_winkie_044: 1114079767922502444
+      winkie_01_winkie_045: -8737518974976904923
+      winkie_01_winkie_046: -8330025106867872367
+      winkie_01_winkie_047: -3453600534730668480
+      winkie_01_winkie_048: -7637168538142386130
+      winkie_01_winkie_049: 3937774833430214090
+      winkie_01_winkie_050: -2317400381968779178
+      winkie_01_winkie_051: -6341213167732634381
+      winkie_01_winkie_052: -9184416735984581220
+      winkie_01_winkie_053: 5638582866593296093
+      winkie_01_winkie_054: 4572888703136416956
+      winkie_01_winkie_055: 8629403790327920029
+      winkie_01_winkie_056: 1558320115132699829
+      winkie_01_winkie_057: -6549677123972201145
+      winkie_01_winkie_058: 5935702682153929813
+      winkie_01_winkie_059: 142198742270457010
+      winkie_01_winkie_060: -7102704079642945581
+      winkie_01_winkie_061: 3737557325109639613
+      winkie_01_winkie_062: -5837884064610753897
+      winkie_01_winkie_063: -4132720159335909795
+      winkie_01_winkie_064: -188097017325334852
+      winkie_01_winkie_065: 7305775582403324848
+      winkie_01_winkie_066: 8980119224718840343
+      winkie_01_winkie_067: 8090937954069025438
+      winkie_01_winkie_068: -4679685824378723851
+      winkie_01_winkie_069: -4228050450212322902
+      winkie_01_winkie_070: -6164982161579035144
+      winkie_01_winkie_071: -409296346392768199
+      winkie_01_winkie_072: 6451570264318505616
+      winkie_01_winkie_073: -3732970139271244327
+      winkie_01_winkie_074: 5440705334823393679
+      wobble_01_wobble_01_000: 129576092106225927
+      wobble_01_wobble_01_001: -6959389409583895485
+      wobble_01_wobble_01_002: -2489320833125136557
+      wobble_01_wobble_01_003: 2171075183349494812
+      wobble_01_wobble_01_004: 6179092378683987595
+      wobble_01_wobble_01_005: 2355746089689953736
+      wobble_01_wobble_01_006: -5631692752291058495
+      wobble_01_wobble_01_007: -5468840680790534970
+      wobble_01_wobble_01_008: -801807875629405606
+      wobble_01_wobble_01_009: 9166859320029922900
+      wobble_01_wobble_01_010: -5454881410597308726
+      wobble_01_wobble_01_011: -2924275295349802622
+      wobble_01_wobble_01_012: 7605501179662431191
+      wobble_01_wobble_01_013: 2190302184997470907
+      wobble_01_wobble_01_014: -3028259176788326231
+      wobble_01_wobble_01_015: 2730233956901312976
+      wobble_01_wobble_01_016: -7684671937959982667
+      wobble_01_wobble_01_017: 4219346367881799479
+      wobble_01_wobble_01_018: -8478128972456744411
+      wobble_01_wobble_01_019: -4129580935462044987
+      wobble_01_wobble_01_020: -4719136262197681248
+      wobble_01_wobble_01_021: -4578598713637931430
+      wobble_01_wobble_01_022: 6650564263262510319
+      wobble_01_wobble_01_023: -5492566880803966105
+      wobble_01_wobble_01_024: -8424831422897733704
+      wobble_01_wobble_01_025: -1571483631179025284
+      wobble_01_wobble_01_026: -6729916815561707062
+      wobble_01_wobble_01_027: 6241389954934925217
+      wobble_01_wobble_01_028: 1019872764957906857
+      wobble_01_wobble_01_029: 5514544372352837816
+      wobble_01_wobble_01_030: -2942109302986775749
+      wobble_01_wobble_01_031: -868057108352664175
+      wobble_01_wobble_01_032: -7341332995547996932
+      wobble_01_wobble_01_033: 5221194145191110785
+      wobble_01_wobble_01_034: -3829042963003190844
+      wobble_01_wobble_01_035: 1067175135163106396
+      wobble_01_wobble_01_036: 6727565379303377620
+      wobble_01_wobble_01_037: -3363428955321403799
+      wobble_01_wobble_01_038: 5526250812009817471
+      wobble_01_wobble_01_039: -5325810435633404326
+      wobble_01_wobble_01_040: 7965579399939479986
+      wobble_01_wobble_01_041: -8632161739773009173
+      wobble_01_wobble_01_042: -1315068618281491609
+      wobble_01_wobble_01_043: -1688523684696897991
+      wobble_01_wobble_01_044: 1460617311391706128
+      wobble_01_wobble_01_045: 6029442536885176716
+      wobble_01_wobble_01_046: -4934082337887584020
+      wobble_01_wobble_01_047: -4374516942251388538
+      wobble_01_wobble_01_048: -8206748808476282766
+      wobble_01_wobble_01_049: -299936525208666422
+      wobble_01_wobble_01_050: 7699194475238048900
+      wobble_01_wobble_01_051: -8268878588085796236
+      wobble_01_wobble_01_052: 824988145607771556
+      wobble_01_wobble_01_053: 5260227597208918235
+      wobble_01_wobble_01_054: -3963928533207012887
+      wobble_01_wobble_01_055: -7512027358244302309
+      wobble_01_wobble_01_056: -5851032813305068583
+      wobble_01_wobble_01_057: 1244550065108274694
+      wobble_01_wobble_01_058: 1233674667677002895
+      wobble_01_wobble_01_059: 1829812746371829888
+      wobble_01_wobble_01_060: -4770301423411468762
+      wobble_01_wobble_01_061: 495901038891282837
+      wobble_01_wobble_01_062: 427403119095830533
+      wobble_01_wobble_01_063: -6603316908913389253
+      wobble_01_wobble_01_064: -5156695103760140840
+      wobble_01_wobble_01_065: -5211176618679202804
+      wobble_01_wobble_01_066: 5763136267260342254
+      wobble_01_wobble_01_067: 7765977550690945762
+      wobble_01_wobble_01_068: 85947041674951687
+      wobble_01_wobble_01_069: -6878384386564145169
+      wobble_01_wobble_01_070: 7769144966737068939
+      wobble_01_wobble_01_071: 8938812738492108329
+      wobble_01_wobble_01_072: 8508486198159204974
+      wobble_01_wobble_01_073: -5268272392455905875
+      wobble_01_wobble_01_074: -4823179432008982588
+      wobble_01_wobble_01_075: -7739983318864510564
+      wobble_01_wobble_01_076: 6222204325617968446
+      wobble_01_wobble_01_077: -4368287304344554629
+      wobble_01_wobble_01_078: 2453634048426580014
+      wobble_01_wobble_01_079: 472492639448184882
+      wobble_01_wobble_01_080: -1465775162192786795
+      wobble_01_wobble_01_081: -7110729227066611959
+      wobble_01_wobble_01_082: 5831021236759652399
+      wobble_01_wobble_01_083: 6987544150033144001
+      wobble_01_wobble_01_084: 4985368844891281331
+      wobble_01_wobble_01_085: -7080903424510062901
+      wobble_01_wobble_01_086: -3813176765073417339
+      wobble_01_wobble_01_087: -5444533847889342178
+      wobble_01_wobble_01_088: -8659406751110286620
+      wobble_01_wobble_01_089: -4202250622467449836
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

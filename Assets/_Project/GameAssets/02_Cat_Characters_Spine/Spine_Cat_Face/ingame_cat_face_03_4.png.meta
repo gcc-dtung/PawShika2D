@@ -1,0 +1,3471 @@
+fileFormatVersion: 2
+guid: e656cd948342bc84ab2e1d9e4823f6ec
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_025
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 552
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a3416132339d3820800000000000000
+      internalID: 2899635578882573222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_026
+      rect:
+        serializedVersion: 2
+        x: 984
+        y: 552
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60791445120944360800000000000000
+      internalID: 7153000580993095430
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_027
+      rect:
+        serializedVersion: 2
+        x: 1236
+        y: 552
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f5855ca5e6698800800000000000000
+      internalID: 615135960737613296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_028
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 552
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 844d75eeda2e4ddb0800000000000000
+      internalID: -4767936868822559672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_029
+      rect:
+        serializedVersion: 2
+        x: 1740
+        y: 552
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c04c765101d596e50800000000000000
+      internalID: 6803071035779826700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_030
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 662
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7eb10bdf6bd1ff6a0800000000000000
+      internalID: -6413374672574866457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_031
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 662
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 19ff0e43f5d64b610800000000000000
+      internalID: 1636052820318814097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_032
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 698
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da143281fbd6aa4c0800000000000000
+      internalID: -4275484228723719763
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_033
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 698
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a175d64594888e30800000000000000
+      internalID: 4505997203857568168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_034
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 698
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7f46bef3167ad300800000000000000
+      internalID: 277664155286523774
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_035
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 698
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 692fdf12c62c970b0800000000000000
+      internalID: -5730335281169698154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_036
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 698
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c60f8d8075c378d00800000000000000
+      internalID: 974814188857258092
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_037
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 698
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e654e4f758ea0fbd0800000000000000
+      internalID: -2598385096603056786
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_038
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 808
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ccb95b74f12267e0800000000000000
+      internalID: -1773817969305338687
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_039
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 808
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f12ca4cf2084ff40800000000000000
+      internalID: 5761370765965140470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_040
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 844
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2066384d86b53f950800000000000000
+      internalID: 6481624794516383234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_041
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 844
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be84d64528c6c59a0800000000000000
+      internalID: -6242995676424353557
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_042
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 844
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 392badfcc0c0bff70800000000000000
+      internalID: 9221977911137579667
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_043
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 844
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d6f65db07e10f5460800000000000000
+      internalID: 7232501618427916141
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_044
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 844
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e6c7a5e50825e520800000000000000
+      internalID: 2730632754862999270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_045
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 844
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f312e284dc49b8e70800000000000000
+      internalID: 9118545479941890367
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_046
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 954
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e539d3e18ece43b60800000000000000
+      internalID: 7725059742531162974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_047
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 954
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9161f154b3b40740800000000000000
+      internalID: 5117412663649984924
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_048
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 990
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb259eeb1cf3e51f0800000000000000
+      internalID: -1054335161393917252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_049
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 990
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a565d25fc419897e0800000000000000
+      internalID: -1758495894771247526
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_050
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 990
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca81a3dd343714fc0800000000000000
+      internalID: -3512399499060701012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_051
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 990
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 577d4be7b1f00bc60800000000000000
+      internalID: 7831776362761607029
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_052
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 990
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3da19db24be69be30800000000000000
+      internalID: 4519765421151820499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_053
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 990
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c1509c9b871eb6ad0800000000000000
+      internalID: -2707822842303937252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_054
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1100
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74317e6c5754735d0800000000000000
+      internalID: -3082919047761292473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_055
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 1100
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e147d864b500b3af0800000000000000
+      internalID: -415738148575939554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_056
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1136
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a69972b78a837ca0800000000000000
+      internalID: -6020315961444690268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_057
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1136
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9f88a76f7b7ee9f0800000000000000
+      internalID: -437276326678196323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_058
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1136
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69f39e961ab690400800000000000000
+      internalID: 290881991952908182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_059
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 1136
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c0ac8c3e703b1950800000000000000
+      internalID: 6420779012486635721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_060
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1136
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7d45b61502284e30800000000000000
+      internalID: 4487874433925860735
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_061
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 1136
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a21d50b4f07382050800000000000000
+      internalID: 5775927060925370666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_062
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1246
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3fdc844a41d5c9620800000000000000
+      internalID: 2782201013045087731
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_063
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 1246
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 478034d52a6037c10800000000000000
+      internalID: 2049989549802850420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_064
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1282
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d677473710229970800000000000000
+      internalID: 8760099509272803032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_065
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1282
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf142fd703a826640800000000000000
+      internalID: 5071768071248691708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_066
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1282
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d52c5efbed7b18f30800000000000000
+      internalID: 4576140863715263069
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_067
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 1282
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 397d874a270329a30800000000000000
+      internalID: 4220489069743363987
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_068
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1282
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f72e24a1fff7bcfc0800000000000000
+      internalID: -3473541953952226689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_069
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 1282
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35495dc6bbd675a00800000000000000
+      internalID: 745184915105354835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_070
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1392
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f3cf631095f080c0800000000000000
+      internalID: -4575387222258236426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_071
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 1392
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62b2b9a1070c1ee50800000000000000
+      internalID: 6836957297040370470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_072
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1428
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5b729ba94dfc4440800000000000000
+      internalID: 4921586985662053212
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_073
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1428
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3095689f5fe77e6e0800000000000000
+      internalID: -1808337130447546109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_074
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1428
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad6d3655d93754ed0800000000000000
+      internalID: -2430409304316848422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_075
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 1428
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cd492e3ab85685d0800000000000000
+      internalID: -3060661339821617723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_076
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1428
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 041754aacb6a87e20800000000000000
+      internalID: 3348609652190703936
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_077
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 1428
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07b7660f4ac65cfa0800000000000000
+      internalID: -5781095090996479120
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_078
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1538
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fce4bab7344299c0800000000000000
+      internalID: -3921997319339971337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_079
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 1538
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c05f1613cefe81390800000000000000
+      internalID: -7847258552973265652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_080
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1574
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e6243ffe2cf64db0800000000000000
+      internalID: -4807878273391122714
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_081
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1574
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: babe63d31bf8a7c90800000000000000
+      internalID: -7171261465235100757
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_082
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1574
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac45666b446431b90800000000000000
+      internalID: -7272391712341338934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_083
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 1574
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ef55515cd918c790800000000000000
+      internalID: -7509723944592252959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_084
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1574
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 958b4b9f881105590800000000000000
+      internalID: -7687625283918841767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_085
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 1574
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e41ec623c8d4797a0800000000000000
+      internalID: -6370537883355520690
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_086
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1684
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0cf7e45cf14330950800000000000000
+      internalID: 6414027605364604864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_087
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 1684
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8ea286b838ed72780800000000000000
+      internalID: -8707746697936622872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_088
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1720
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbf63e9339ceb5100800000000000000
+      internalID: 97931933994151869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_089
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1720
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac1fa407aa05b2770800000000000000
+      internalID: 8587045807470604746
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_090
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1720
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 978d5ecddbb9e96d0800000000000000
+      internalID: -2981774663515514759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_091
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 1720
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e25d193ef4a8e510800000000000000
+      internalID: 1578693081180230374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_092
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1720
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68eb604003e559e40800000000000000
+      internalID: 5662535666807258758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_093
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 1720
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13df4b6dd78aaa980800000000000000
+      internalID: -8526817686046048975
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_094
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1830
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2126581c81bbb9b20800000000000000
+      internalID: 3142310880021406226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_095
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 1830
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f03673be40375e60800000000000000
+      internalID: 7950876781722349812
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_096
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 1866
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af8d9adffe7cd9d40800000000000000
+      internalID: 5592846145830902010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_097
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 1866
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aca9a0602e7796c60800000000000000
+      internalID: 7811906841298508490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_098
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 1866
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de6139b8241e2eb40800000000000000
+      internalID: 5468180573506967277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_099
+      rect:
+        serializedVersion: 2
+        x: 1262
+        y: 1866
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71e0317e3fe7c27e0800000000000000
+      internalID: -1788915365953991145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_100
+      rect:
+        serializedVersion: 2
+        x: 1514
+        y: 1866
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a239255a954a121d0800000000000000
+      internalID: -3377237540618464470
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: boltie_01_boltie_01_101
+      rect:
+        serializedVersion: 2
+        x: 1766
+        y: 1866
+        width: 250
+        height: 144
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c48d79a35a85ac210800000000000000
+      internalID: 1353992104654133324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_000
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 461305a7adbb36300800000000000000
+      internalID: 244245351837479268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_001
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6c882ad846745fe0800000000000000
+      internalID: -1201205145331266454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_002
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0abf40adcc15c1020800000000000000
+      internalID: 2313814248834530208
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_003
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bc3bc14750ee8360800000000000000
+      internalID: 7173917921818393783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_004
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5ae108be41db774a0800000000000000
+      internalID: -6595595231712764251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_005
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23a2e24d080b7ffb0800000000000000
+      internalID: -4614025225855686094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_006
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 411e19054b6baa460800000000000000
+      internalID: 7253811035395711252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_007
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0833436a85f3c380800000000000000
+      internalID: -8952041659562772469
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_008
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89ebe4920ec665e90800000000000000
+      internalID: -7037317657698320744
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_009
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 812c2ab94af971b60800000000000000
+      internalID: 7716812015857222168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_010
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2d8334156f08b090800000000000000
+      internalID: -8018642209728131798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_011
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 266baf9ec714b1820800000000000000
+      internalID: 2889975590645577314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_012
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e3dfc3ca884c8af80800000000000000
+      internalID: -8095004238914192066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_013
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 2
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52bc67eca92b809b0800000000000000
+      internalID: -5113640998920598747
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_014
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c150e743531968c30800000000000000
+      internalID: 4361332946854872348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_015
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26642a964a5dfe090800000000000000
+      internalID: -8002943110690486686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_016
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7bce777d7094b5f0800000000000000
+      internalID: -741809170059179138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_017
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb40028b1c1b16800800000000000000
+      internalID: 603959270620267707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_018
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76c16118c3a4f0480800000000000000
+      internalID: -8930837912328201113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_019
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5be9845ff65063db0800000000000000
+      internalID: -4812653173384110411
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_020
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed25381afb5f04560800000000000000
+      internalID: 7296101599737500382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_021
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5cf1eb7e7632ec250800000000000000
+      internalID: 5966745485489086405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_022
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8f55a769dd732610800000000000000
+      internalID: 1595257065719553931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_023
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1dd071831d07c4c80800000000000000
+      internalID: -8337164766278119983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_024
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a2928eec9bdf63d50800000000000000
+      internalID: 6716834868751771946
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_025
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44240318f42330de0800000000000000
+      internalID: -1368194544739270076
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_026
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e19f3a63768b67e90800000000000000
+      internalID: -7028227415027222242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_027
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 112
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14d0fcd4a0f979d80800000000000000
+      internalID: -8243945726274499263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_028
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 566a238b115cded00800000000000000
+      internalID: 1003674971868931685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_029
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51530933f7dcdb140800000000000000
+      internalID: 4737168329273259285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_030
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 85ecedeecc8932bb0800000000000000
+      internalID: -4961954358483825064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_031
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31c4b1f136268ad20800000000000000
+      internalID: 3289987705657314323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_032
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da24a1693c53444c0800000000000000
+      internalID: -4304256229706153299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_033
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7340745f20327e5a0800000000000000
+      internalID: -6492181842219301833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_034
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd414e89f92340260800000000000000
+      internalID: 7062825776670053596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_035
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7368abaa88205a80800000000000000
+      internalID: -8480233522288106626
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_036
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f62b0dcd59dade850800000000000000
+      internalID: 6407968703984480879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_037
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd6c74822d3a06ab0800000000000000
+      internalID: -5016829861876480293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_038
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 897eff9bdfd009020800000000000000
+      internalID: 2346390789258471320
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_039
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02b75a2a67bd87320800000000000000
+      internalID: 2556034091114134304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_040
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5890bc73b38c86690800000000000000
+      internalID: -7608611413777774203
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_041
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 222
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3ebfca2c03714830800000000000000
+      internalID: 4053647635705216575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_042
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39333c8c02cf9ebd0800000000000000
+      internalID: -2600270092092361837
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_043
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a729a61218c21abd0800000000000000
+      internalID: -2620764575029882246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_044
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a153e001f0e58c230800000000000000
+      internalID: 3659278116025414938
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_045
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a5c985eaf47ab990800000000000000
+      internalID: -7369449219296737883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_046
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30e54c89d6a40d190800000000000000
+      internalID: -7939764308479287805
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_047
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 50a3ec03f7f9acae0800000000000000
+      internalID: -1528233754910377467
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_048
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d16814af452e92620800000000000000
+      internalID: 2749977902090126877
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_049
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dab4e834e0e6ffd0800000000000000
+      internalID: -2308410488169121064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_050
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65612f5f778209740800000000000000
+      internalID: 5156666069031720534
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_051
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: effb0770769bfd780800000000000000
+      internalID: -8655996106625204226
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_052
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a26fb9b0f8adc4cc0800000000000000
+      internalID: -3725362483832293846
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_053
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e23aa6d9944a18dc0800000000000000
+      internalID: -3638446387858070738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_054
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b0ceb04bf2e93060800000000000000
+      internalID: 6933822670064500912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_055
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 332
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3022eefaa84e8e630800000000000000
+      internalID: 3956663556953219587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_056
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e9d695d37e336e0800000000000000
+      internalID: -1858887970494505375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_057
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd1404b425a7f4fb0800000000000000
+      internalID: -4661372595436764707
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_058
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82414cc73341dc060800000000000000
+      internalID: 6975253609235878952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_059
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e29c37ac6c494400800000000000000
+      internalID: 308862078997533412
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_060
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dd3430d51a5e37630800000000000000
+      internalID: 3923732181582824413
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_061
+      rect:
+        serializedVersion: 2
+        x: 732
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e7ba56163ff041b0800000000000000
+      internalID: -5674254922718464032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_062
+      rect:
+        serializedVersion: 2
+        x: 878
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d26dde43051a70dc0800000000000000
+      internalID: -3672789605239892435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_063
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4fa046dafeeaca50800000000000000
+      internalID: 6542304169812864843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_064
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f86f7583771b87420800000000000000
+      internalID: 2628045508175197839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_065
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d8be30d7481910f0800000000000000
+      internalID: -1145857933473564464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_066
+      rect:
+        serializedVersion: 2
+        x: 1462
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c6b6045dce7bcfd00800000000000000
+      internalID: 1007882644442082156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_067
+      rect:
+        serializedVersion: 2
+        x: 1608
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e62088bb8620851d0800000000000000
+      internalID: -3361934472985968018
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_068
+      rect:
+        serializedVersion: 2
+        x: 1754
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 230ab0a6d2caa7f20800000000000000
+      internalID: 3421236177993965618
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_069
+      rect:
+        serializedVersion: 2
+        x: 1900
+        y: 442
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 10e1006b5f4f1daa0800000000000000
+      internalID: -6137855480971649535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_070
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcd08b46861229cc0800000000000000
+      internalID: -3705862811122397745
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_071
+      rect:
+        serializedVersion: 2
+        x: 148
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37a03ea6047534080800000000000000
+      internalID: -9204417279232374157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_072
+      rect:
+        serializedVersion: 2
+        x: 294
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3623d08655a4e59d0800000000000000
+      internalID: -2783705788990016925
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_073
+      rect:
+        serializedVersion: 2
+        x: 440
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 346e9daa1cdd9a9d0800000000000000
+      internalID: -2762433072550255037
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: zippy_zippy_01_074
+      rect:
+        serializedVersion: 2
+        x: 586
+        y: 552
+        width: 144
+        height: 108
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41f25b7b749861980800000000000000
+      internalID: -8568510299908002028
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      boltie_01_boltie_01_025: 2899635578882573222
+      boltie_01_boltie_01_026: 7153000580993095430
+      boltie_01_boltie_01_027: 615135960737613296
+      boltie_01_boltie_01_028: -4767936868822559672
+      boltie_01_boltie_01_029: 6803071035779826700
+      boltie_01_boltie_01_030: -6413374672574866457
+      boltie_01_boltie_01_031: 1636052820318814097
+      boltie_01_boltie_01_032: -4275484228723719763
+      boltie_01_boltie_01_033: 4505997203857568168
+      boltie_01_boltie_01_034: 277664155286523774
+      boltie_01_boltie_01_035: -5730335281169698154
+      boltie_01_boltie_01_036: 974814188857258092
+      boltie_01_boltie_01_037: -2598385096603056786
+      boltie_01_boltie_01_038: -1773817969305338687
+      boltie_01_boltie_01_039: 5761370765965140470
+      boltie_01_boltie_01_040: 6481624794516383234
+      boltie_01_boltie_01_041: -6242995676424353557
+      boltie_01_boltie_01_042: 9221977911137579667
+      boltie_01_boltie_01_043: 7232501618427916141
+      boltie_01_boltie_01_044: 2730632754862999270
+      boltie_01_boltie_01_045: 9118545479941890367
+      boltie_01_boltie_01_046: 7725059742531162974
+      boltie_01_boltie_01_047: 5117412663649984924
+      boltie_01_boltie_01_048: -1054335161393917252
+      boltie_01_boltie_01_049: -1758495894771247526
+      boltie_01_boltie_01_050: -3512399499060701012
+      boltie_01_boltie_01_051: 7831776362761607029
+      boltie_01_boltie_01_052: 4519765421151820499
+      boltie_01_boltie_01_053: -2707822842303937252
+      boltie_01_boltie_01_054: -3082919047761292473
+      boltie_01_boltie_01_055: -415738148575939554
+      boltie_01_boltie_01_056: -6020315961444690268
+      boltie_01_boltie_01_057: -437276326678196323
+      boltie_01_boltie_01_058: 290881991952908182
+      boltie_01_boltie_01_059: 6420779012486635721
+      boltie_01_boltie_01_060: 4487874433925860735
+      boltie_01_boltie_01_061: 5775927060925370666
+      boltie_01_boltie_01_062: 2782201013045087731
+      boltie_01_boltie_01_063: 2049989549802850420
+      boltie_01_boltie_01_064: 8760099509272803032
+      boltie_01_boltie_01_065: 5071768071248691708
+      boltie_01_boltie_01_066: 4576140863715263069
+      boltie_01_boltie_01_067: 4220489069743363987
+      boltie_01_boltie_01_068: -3473541953952226689
+      boltie_01_boltie_01_069: 745184915105354835
+      boltie_01_boltie_01_070: -4575387222258236426
+      boltie_01_boltie_01_071: 6836957297040370470
+      boltie_01_boltie_01_072: 4921586985662053212
+      boltie_01_boltie_01_073: -1808337130447546109
+      boltie_01_boltie_01_074: -2430409304316848422
+      boltie_01_boltie_01_075: -3060661339821617723
+      boltie_01_boltie_01_076: 3348609652190703936
+      boltie_01_boltie_01_077: -5781095090996479120
+      boltie_01_boltie_01_078: -3921997319339971337
+      boltie_01_boltie_01_079: -7847258552973265652
+      boltie_01_boltie_01_080: -4807878273391122714
+      boltie_01_boltie_01_081: -7171261465235100757
+      boltie_01_boltie_01_082: -7272391712341338934
+      boltie_01_boltie_01_083: -7509723944592252959
+      boltie_01_boltie_01_084: -7687625283918841767
+      boltie_01_boltie_01_085: -6370537883355520690
+      boltie_01_boltie_01_086: 6414027605364604864
+      boltie_01_boltie_01_087: -8707746697936622872
+      boltie_01_boltie_01_088: 97931933994151869
+      boltie_01_boltie_01_089: 8587045807470604746
+      boltie_01_boltie_01_090: -2981774663515514759
+      boltie_01_boltie_01_091: 1578693081180230374
+      boltie_01_boltie_01_092: 5662535666807258758
+      boltie_01_boltie_01_093: -8526817686046048975
+      boltie_01_boltie_01_094: 3142310880021406226
+      boltie_01_boltie_01_095: 7950876781722349812
+      boltie_01_boltie_01_096: 5592846145830902010
+      boltie_01_boltie_01_097: 7811906841298508490
+      boltie_01_boltie_01_098: 5468180573506967277
+      boltie_01_boltie_01_099: -1788915365953991145
+      boltie_01_boltie_01_100: -3377237540618464470
+      boltie_01_boltie_01_101: 1353992104654133324
+      zippy_zippy_01_000: 244245351837479268
+      zippy_zippy_01_001: -1201205145331266454
+      zippy_zippy_01_002: 2313814248834530208
+      zippy_zippy_01_003: 7173917921818393783
+      zippy_zippy_01_004: -6595595231712764251
+      zippy_zippy_01_005: -4614025225855686094
+      zippy_zippy_01_006: 7253811035395711252
+      zippy_zippy_01_007: -8952041659562772469
+      zippy_zippy_01_008: -7037317657698320744
+      zippy_zippy_01_009: 7716812015857222168
+      zippy_zippy_01_010: -8018642209728131798
+      zippy_zippy_01_011: 2889975590645577314
+      zippy_zippy_01_012: -8095004238914192066
+      zippy_zippy_01_013: -5113640998920598747
+      zippy_zippy_01_014: 4361332946854872348
+      zippy_zippy_01_015: -8002943110690486686
+      zippy_zippy_01_016: -741809170059179138
+      zippy_zippy_01_017: 603959270620267707
+      zippy_zippy_01_018: -8930837912328201113
+      zippy_zippy_01_019: -4812653173384110411
+      zippy_zippy_01_020: 7296101599737500382
+      zippy_zippy_01_021: 5966745485489086405
+      zippy_zippy_01_022: 1595257065719553931
+      zippy_zippy_01_023: -8337164766278119983
+      zippy_zippy_01_024: 6716834868751771946
+      zippy_zippy_01_025: -1368194544739270076
+      zippy_zippy_01_026: -7028227415027222242
+      zippy_zippy_01_027: -8243945726274499263
+      zippy_zippy_01_028: 1003674971868931685
+      zippy_zippy_01_029: 4737168329273259285
+      zippy_zippy_01_030: -4961954358483825064
+      zippy_zippy_01_031: 3289987705657314323
+      zippy_zippy_01_032: -4304256229706153299
+      zippy_zippy_01_033: -6492181842219301833
+      zippy_zippy_01_034: 7062825776670053596
+      zippy_zippy_01_035: -8480233522288106626
+      zippy_zippy_01_036: 6407968703984480879
+      zippy_zippy_01_037: -5016829861876480293
+      zippy_zippy_01_038: 2346390789258471320
+      zippy_zippy_01_039: 2556034091114134304
+      zippy_zippy_01_040: -7608611413777774203
+      zippy_zippy_01_041: 4053647635705216575
+      zippy_zippy_01_042: -2600270092092361837
+      zippy_zippy_01_043: -2620764575029882246
+      zippy_zippy_01_044: 3659278116025414938
+      zippy_zippy_01_045: -7369449219296737883
+      zippy_zippy_01_046: -7939764308479287805
+      zippy_zippy_01_047: -1528233754910377467
+      zippy_zippy_01_048: 2749977902090126877
+      zippy_zippy_01_049: -2308410488169121064
+      zippy_zippy_01_050: 5156666069031720534
+      zippy_zippy_01_051: -8655996106625204226
+      zippy_zippy_01_052: -3725362483832293846
+      zippy_zippy_01_053: -3638446387858070738
+      zippy_zippy_01_054: 6933822670064500912
+      zippy_zippy_01_055: 3956663556953219587
+      zippy_zippy_01_056: -1858887970494505375
+      zippy_zippy_01_057: -4661372595436764707
+      zippy_zippy_01_058: 6975253609235878952
+      zippy_zippy_01_059: 308862078997533412
+      zippy_zippy_01_060: 3923732181582824413
+      zippy_zippy_01_061: -5674254922718464032
+      zippy_zippy_01_062: -3672789605239892435
+      zippy_zippy_01_063: 6542304169812864843
+      zippy_zippy_01_064: 2628045508175197839
+      zippy_zippy_01_065: -1145857933473564464
+      zippy_zippy_01_066: 1007882644442082156
+      zippy_zippy_01_067: -3361934472985968018
+      zippy_zippy_01_068: 3421236177993965618
+      zippy_zippy_01_069: -6137855480971649535
+      zippy_zippy_01_070: -3705862811122397745
+      zippy_zippy_01_071: -9204417279232374157
+      zippy_zippy_01_072: -2783705788990016925
+      zippy_zippy_01_073: -2762433072550255037
+      zippy_zippy_01_074: -8568510299908002028
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

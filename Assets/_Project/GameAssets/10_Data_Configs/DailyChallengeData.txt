@@ -1,0 +1,4 @@
+#,Data,ILive(m),Hint,Ice,Reveal
+1,15m infinity heart + hint x1 + ice x1,15,1,1,0
+2,30m infinity heart + hint x2 + ice x2,30,2,2,0
+3,45m infinitu heart + hint x3 + ice x3 + reveal x1,45,3,3,1

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965f51b7bb50e75e63ea03b5fe1a3d55, type: 3}
+  m_Name: DailyChallengeGiftDatabase
+  m_EditorClassIdentifier:
+  csvFile: {fileID: 4900000, guid: 9975171a245b699418c8b865a1e6b97c, type: 3}
+  milestoneDaysByRow: 070000000e00000015000000
+  gifts:
+  - index: 1
+    milestoneDays: 7
+    infiniteLiveMinutes: 15
+    coin: 0
+    boosters:
+    - boosterType: 0
+      count: 1
+    - boosterType: 1
+      count: 1
+  - index: 2
+    milestoneDays: 14
+    infiniteLiveMinutes: 30
+    coin: 0
+    boosters:
+    - boosterType: 0
+      count: 2
+    - boosterType: 1
+      count: 2
+  - index: 3
+    milestoneDays: 21
+    infiniteLiveMinutes: 45
+    coin: 0
+    boosters:
+    - boosterType: 0
+      count: 3
+    - boosterType: 1
+      count: 3
+    - boosterType: 2
+      count: 1

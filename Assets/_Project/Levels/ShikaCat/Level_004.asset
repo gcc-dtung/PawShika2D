@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8d2cfe2e1459b44af0e932d1281a21, type: 3}
+  m_Name: Level_004
+  m_EditorClassIdentifier: 
+  id: shikacat_004
+  source:
+    game: ShikaCat
+    sourceIndex: 3
+  size: 1
+  height: 3
+  cellOverrides: []
+  clues:
+  - id: 0
+    x: 0
+    y: 1
+    value: 3
+    color: 5
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  solution:
+  - clueId: 0
+    x: 0
+    y: 0
+    width: 1
+    height: 3
+  rules:
+    mistakeLimit: 3

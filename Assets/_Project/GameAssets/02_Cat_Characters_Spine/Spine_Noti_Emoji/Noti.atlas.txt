@@ -1,0 +1,6 @@
+Noti.png
+size:56,56
+filter:Linear,Linear
+pma:true
+icon_noti
+bounds:2,2,52,52

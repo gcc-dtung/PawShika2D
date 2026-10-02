@@ -1,0 +1,207 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8d2cfe2e1459b44af0e932d1281a21, type: 3}
+  m_Name: Level_167
+  m_EditorClassIdentifier: 
+  id: shikacat_167
+  source:
+    game: ShikaCat
+    sourceIndex: 166
+  size: 8
+  height: 8
+  cellOverrides: []
+  clues:
+  - id: 0
+    x: 5
+    y: 6
+    value: 12
+    color: 6
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 1
+    x: 6
+    y: 7
+    value: 4
+    color: 3
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 2
+    x: 3
+    y: 5
+    value: 12
+    color: 1
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 3
+    x: 6
+    y: 5
+    value: 3
+    color: 0
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 4
+    x: 7
+    y: 2
+    value: 4
+    color: 4
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 5
+    x: 5
+    y: 2
+    value: 6
+    color: 6
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 6
+    x: 6
+    y: 3
+    value: 2
+    color: 3
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 7
+    x: 0
+    y: 2
+    value: 3
+    color: 4
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 8
+    x: 2
+    y: 2
+    value: 3
+    color: 3
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 9
+    x: 6
+    y: 0
+    value: 3
+    color: 5
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 10
+    x: 2
+    y: 0
+    value: 8
+    color: 2
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 11
+    x: 5
+    y: 0
+    value: 2
+    color: 4
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 12
+    x: 7
+    y: 1
+    value: 2
+    color: 3
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  solution:
+  - clueId: 0
+    x: 0
+    y: 6
+    width: 6
+    height: 2
+  - clueId: 1
+    x: 6
+    y: 6
+    width: 2
+    height: 2
+  - clueId: 2
+    x: 0
+    y: 3
+    width: 4
+    height: 3
+  - clueId: 3
+    x: 4
+    y: 5
+    width: 3
+    height: 1
+  - clueId: 4
+    x: 7
+    y: 2
+    width: 1
+    height: 4
+  - clueId: 5
+    x: 4
+    y: 2
+    width: 2
+    height: 3
+  - clueId: 6
+    x: 6
+    y: 3
+    width: 1
+    height: 2
+  - clueId: 7
+    x: 0
+    y: 0
+    width: 1
+    height: 3
+  - clueId: 8
+    x: 1
+    y: 2
+    width: 3
+    height: 1
+  - clueId: 9
+    x: 6
+    y: 0
+    width: 1
+    height: 3
+  - clueId: 10
+    x: 1
+    y: 0
+    width: 4
+    height: 2
+  - clueId: 11
+    x: 5
+    y: 0
+    width: 1
+    height: 2
+  - clueId: 12
+    x: 7
+    y: 0
+    width: 1
+    height: 2
+  rules:
+    mistakeLimit: 3

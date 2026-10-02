@@ -1,0 +1,81 @@
+using System;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "SO_LevelDefinition", menuName = "ScriptableObjects/LevelDefinition")]
+public class LevelDefinition : ScriptableObject
+{
+    public string id;
+    public LevelSource source;
+    public int size;
+    public int height;
+
+    public int Height => height > 0 ? height : size;
+
+    public CellOverrideData[] cellOverrides;
+    public ClueData[] clues;
+    public SolutionRectData[] solution;
+    public LevelRules rules;
+}
+
+public enum CellType
+{
+    Playable = 0,
+    Void = 1
+}
+
+public enum ClueConstraint
+{
+    None = 0,
+    Horizontal = 1,
+    Vertical = 2
+}
+
+[Serializable]
+public struct LevelSource
+{
+    public string game;
+    public int sourceIndex;
+}
+
+[Serializable]
+public struct CellOverrideData
+{
+    public int x;
+    public int y;
+    public CellType type;
+}
+
+[Serializable]
+public struct ClueData
+{
+    public int id;
+    public int x;
+    public int y;
+    public int value;
+    public int color;
+    public ClueMechanic mechanic;
+}
+
+[Serializable]
+public struct ClueMechanic
+{
+    public ClueConstraint constraint;
+    public int lockSteps;
+    public bool hidden;
+}
+
+[Serializable]
+public struct SolutionRectData
+{
+    public int clueId;
+    public int x;
+    public int y;
+    public int width;
+    public int height;
+}
+
+[Serializable]
+public struct LevelRules
+{
+    public int mistakeLimit;
+}

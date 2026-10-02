@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 315cf2379ebf1f242b5c9c6ab0f13e4e, type: 3}
+  m_Name: ColorVisualDatabase
+  m_EditorClassIdentifier:
+  colorVisualDatas:
+  - colorType: 0
+    blockSprite: {fileID: 21300000, guid: 4bd6cfe5e39a52f4e95f52f45e4839b0, type: 2}
+    earSprite: {fileID: 21300000, guid: d6358a245e0a64b4b804a1067e60af7c, type: 2}
+    color: {r: 0.18431373, g: 0.7372549, b: 0.9019608, a: 1}
+    textColor: {r: 0.10980393, g: 0.46274513, b: 0.6627451, a: 1}
+  - colorType: 1
+    blockSprite: {fileID: 21300000, guid: 108a211903759fc478b2104ffcb23c78, type: 2}
+    earSprite: {fileID: 21300000, guid: 02a747d7aa8a32440a5edf2737d1ca3a, type: 2}
+    color: {r: 0.83137256, g: 0.5254902, b: 0.19607843, a: 1}
+    textColor: {r: 0.5568628, g: 0.25882354, b: 0.04705883, a: 1}
+  - colorType: 2
+    blockSprite: {fileID: 21300000, guid: 3d97825ea22bfd94698c58070fc036d2, type: 2}
+    earSprite: {fileID: 21300000, guid: 55aa25de935e6144abaff6c3da44f719, type: 2}
+    color: {r: 0.18039216, g: 0.83137256, b: 0.7921569, a: 1}
+    textColor: {r: 0.10980393, g: 0.46274513, b: 0.6627451, a: 1}
+  - colorType: 3
+    blockSprite: {fileID: 21300000, guid: b421b99e0ccc4884da1222af91fcfacb, type: 2}
+    earSprite: {fileID: 21300000, guid: 35985ea2d92d4c54a994dccedab10bdc, type: 2}
+    color: {r: 0.8980392, g: 0.81960785, b: 0.61960787, a: 1}
+    textColor: {r: 0.6039216, g: 0.45882356, b: 0.18431373, a: 1}
+  - colorType: 4
+    blockSprite: {fileID: 21300000, guid: 7b0cbf53ee23533468008bc6b64faa24, type: 2}
+    earSprite: {fileID: 21300000, guid: d6aa147c5e050ea40aacd4dd9e415018, type: 2}
+    color: {r: 0.35686275, g: 0.8352941, b: 0.24313726, a: 1}
+    textColor: {r: 0.16470589, g: 0.5176471, b: 0.027450982, a: 1}
+  - colorType: 5
+    blockSprite: {fileID: 21300000, guid: 91304a278f89e2041a4e46d0141c2f8b, type: 2}
+    earSprite: {fileID: 21300000, guid: f4fcc168f4bc3b54b9effd03ed85e6fc, type: 2}
+    color: {r: 0.99607843, g: 0.41960785, b: 0.13725491, a: 1}
+    textColor: {r: 0.69411767, g: 0.227451, b: 0, a: 1}
+  - colorType: 6
+    blockSprite: {fileID: 21300000, guid: d61a32eec915d9c41b240eed96d92cae, type: 2}
+    earSprite: {fileID: 21300000, guid: 2fe788a6be0262f4bacead3a0c6c5aaa, type: 2}
+    color: {r: 0.972549, g: 0.36078432, b: 0.8666667, a: 1}
+    textColor: {r: 0.7254902, g: 0.16078432, b: 0.6156863, a: 1}
+  - colorType: 7
+    blockSprite: {fileID: 21300000, guid: 522bb519c7edf3a4a8b347bd674174fe, type: 2}
+    earSprite: {fileID: 21300000, guid: 3ef87e6999c80a2438805cfe809a2599, type: 2}
+    color: {r: 0.72156864, g: 0.36078432, b: 0.9490196, a: 1}
+    textColor: {r: 0.454902, g: 0.1254902, b: 0.70980394, a: 1}
+  - colorType: 8
+    blockSprite: {fileID: 21300000, guid: 545305dd907bf3d4a88da980021c6d7d, type: 2}
+    earSprite: {fileID: 21300000, guid: 6614b30ce63d01047941866accd8d251, type: 2}
+    color: {r: 0.9882353, g: 0.22745098, b: 0.23529412, a: 1}
+    textColor: {r: 0.6431373, g: 0.011764707, b: 0.015686275, a: 1}
+  - colorType: 9
+    blockSprite: {fileID: 21300000, guid: 52bea3b1d30b78643a50391064b3c019, type: 2}
+    earSprite: {fileID: 21300000, guid: 2c52f36d63caff54ca5cab752109f88f, type: 2}
+    color: {r: 0.9764706, g: 0.83137256, b: 0.2509804, a: 1}
+    textColor: {r: 0.73333335, g: 0.3921569, b: 0.08627451, a: 1}
