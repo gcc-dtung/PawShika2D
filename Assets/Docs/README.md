@@ -6,6 +6,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 - Scene chính: `Assets/Scenes/SampleScene.unity`
 - Kế hoạch chi tiết và các quyết định: [TaskBreakdown.md](TaskBreakdown.md)
 - Cấu trúc thư mục, script, luồng dữ liệu: [ProjectStructure.md](ProjectStructure.md)
+- Nhật ký thay đổi theo thứ tự thời gian: [RoadMap/](RoadMap/00_README.md)
 
 ---
 

@@ -159,6 +159,9 @@ MonoBehaviour:
   gridSpawner: {fileID: 1117016762}
   selectionBox: {fileID: 1233626863}
   cellSize: 1.2
+  blockPrefab: {fileID: 5184358348631740684, guid: 6aac2c5e08aa6db40a96823f8637cc42, type: 3}
+  blockRoot: {fileID: 0}
+  blockPoolCapacity: 64
   onGameWin:
     m_PersistentCalls:
       m_Calls: []
@@ -205,7 +208,7 @@ MonoBehaviour:
   cellLayer:
     serializedVersion: 2
     m_Bits: 8
-  countBubble: {fileID: 0}
+  countBubble: {fileID: 110402579}
 --- !u!114 &82617380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,6 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79088fa379cbb0f42a6e38a4bbcbe1fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  praisePrefab: {fileID: 1032005736552439911, guid: f37ca40e53a360b46994607acbe6c2cd, type: 3}
+  mistakeFlashPrefab: {fileID: 97758293316436133, guid: caa2d1bccd4dc284cbd7a7e4dba72ff4, type: 3}
   praiseChance: 0.6
   praiseMinCells: 2
   praiseWidth: 2.6
@@ -252,6 +257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30dce2841c152e54ba2cc873f9420a93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLevel: 2
   database: {fileID: 11400000, guid: 694b93c8f63b21349917e9ea7297363b, type: 2}
   gridSpawner: {fileID: 1117016762}
   autoAdvanceDelay: 1.5
@@ -286,6 +292,82 @@ MonoBehaviour:
   onOutOfLives:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1001 &110402578
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 636328251593895996, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_Name
+      value: DragCountBubble
+      objectReference: {fileID: 0}
+    - target: {fileID: 636328251593895996, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4591961319545225095, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9157100341063780665, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+--- !u!114 &110402579 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8486441394693358532, guid: c3917aa6f9d307747839be97b895b216, type: 3}
+  m_PrefabInstance: {fileID: 110402578}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c50eaeac45351034f805d954b539fa02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &138893318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1255,6 +1337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 6907855047975131410, guid: 19185821f4735c047acc3e0b6f2ef16b, type: 3}
   levelData: {fileID: 11400000, guid: aa2795b6c1a966a4cbec02621ccc791c, type: 2}
+  cellPoolCapacity: 144
   gridCellEvent:
     m_PersistentCalls:
       m_Calls: []
@@ -1873,3 +1956,4 @@ SceneRoots:
   - {fileID: 864275409}
   - {fileID: 1056015946}
   - {fileID: 1078517822}
+  - {fileID: 110402578}

@@ -28,7 +28,7 @@ public class DragAndDropController : MonoBehaviour
 
         if (countBubble == null)
         {
-            countBubble = new GameObject("DragCountBubble").AddComponent<DragCountBubble>();
+            Debug.LogError("[DragAndDropController] Chưa gán DragCountBubble");
         }
     }
 

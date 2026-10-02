@@ -1,8 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Pool;
 
 public class GridSpawner : MonoBehaviour
 {
@@ -10,11 +9,35 @@ public class GridSpawner : MonoBehaviour
 
     [SerializeField] private Cell cellPrefab;
     [SerializeField] private LevelDefinition levelData;
+    [SerializeField] private int cellPoolCapacity = 144; // lưới lớn nhất 12x12
     public UnityEvent<List<Cell>> gridCellEvent = new UnityEvent<List<Cell>>();
 
-    private List<Cell> gridCells = new List<Cell>();
+    private readonly List<Cell> gridCells = new List<Cell>();
+    private readonly Dictionary<Vector2Int, ClueData> _clueLookup = new Dictionary<Vector2Int, ClueData>();
+    private readonly HashSet<Vector2Int> _voidLookup = new HashSet<Vector2Int>();
+    private ObjectPool<Cell> _cellPool;
 
     public LevelDefinition LevelData => levelData;
+    public List<Cell> GetGrid => gridCells;
+
+    private void Awake()
+    {
+        // Ô được tái sử dụng giữa các level thay vì Instantiate / Destroy mỗi lần
+        _cellPool = new ObjectPool<Cell>(
+            createFunc: () => Instantiate(cellPrefab, transform),
+            actionOnGet: c => c.gameObject.SetActive(true),
+            actionOnRelease: c =>
+            {
+                c.ClearClue();
+                c.ClearPlacedBlock();
+                c.gameObject.SetActive(false);
+            },
+            // Thoát Play mode: scene hủy object trước, rồi Editor mới Clear() pool -> object có thể đã null
+            actionOnDestroy: c => { if (c != null) Destroy(c.gameObject); },
+            collectionCheck: false,
+            defaultCapacity: cellPoolCapacity,
+            maxSize: cellPoolCapacity * 2);
+    }
 
     private void Start()
     {
@@ -36,6 +59,7 @@ public class GridSpawner : MonoBehaviour
 
         levelData = data;
         DeleteGrid();
+        BuildLookups(data);
 
         int height = data.Height;
         int width = data.size;
@@ -44,34 +68,18 @@ public class GridSpawner : MonoBehaviour
         {
             for (int j = 0; j < width; j++)
             {
-                if (IsVoid(data, j, i)) continue;
+                Vector2Int pos = new Vector2Int(j, i);
+                if (_voidLookup.Contains(pos)) continue;
 
                 float xPos = (j - (float)(width - 1) / 2) * CellSpacing;
                 float yPos = (i - (float)(height - 1) / 2) * CellSpacing;
 
-                Cell cell = Instantiate(cellPrefab, new Vector2(xPos, yPos), Quaternion.identity);
-                cell.transform.SetParent(transform);
+                Cell cell = _cellPool.Get();
+                cell.transform.position = new Vector3(xPos, yPos, 0f);
                 cell.SetPositionInCell(j, i);
 
-                // Kiểm tra xem tọa độ (j, i) có phải là ClueCell không
-                bool isClue = false;
-                if (data.clues != null)
-                {
-                    for (int c = 0; c < data.clues.Length; c++)
-                    {
-                        if (data.clues[c].x == j && data.clues[c].y == i)
-                        {
-                            cell.SetClue(data.clues[c]);
-                            isClue = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!isClue)
-                {
-                    cell.ClearClue();
-                }
+                if (_clueLookup.TryGetValue(pos, out ClueData clue)) cell.SetClue(clue);
+                else cell.ClearClue();
 
                 gridCells.Add(cell);
             }
@@ -79,27 +87,30 @@ public class GridSpawner : MonoBehaviour
         gridCellEvent?.Invoke(gridCells);
     }
 
-    private static bool IsVoid(LevelDefinition data, int x, int y)
+    private void BuildLookups(LevelDefinition data)
     {
-        if (data.cellOverrides == null) return false;
-        foreach (CellOverrideData o in data.cellOverrides)
+        _clueLookup.Clear();
+        _voidLookup.Clear();
+
+        if (data.clues != null)
         {
-            if (o.x == x && o.y == y && o.type == CellType.Void) return true;
+            foreach (ClueData c in data.clues) _clueLookup[new Vector2Int(c.x, c.y)] = c;
         }
-        return false;
+        if (data.cellOverrides != null)
+        {
+            foreach (CellOverrideData o in data.cellOverrides)
+            {
+                if (o.type == CellType.Void) _voidLookup.Add(new Vector2Int(o.x, o.y));
+            }
+        }
     }
 
     public void DeleteGrid()
     {
         foreach (Cell cell in gridCells)
         {
-            if (cell != null)
-            {
-                Destroy(cell.gameObject);
-            }
+            if (cell != null) _cellPool.Release(cell);
         }
         gridCells.Clear();
     }
-
-    public List<Cell> GetGrid => gridCells;
 }

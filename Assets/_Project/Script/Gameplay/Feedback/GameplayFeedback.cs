@@ -1,13 +1,19 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 /// <summary>
 /// Phản hồi trong màn chơi:
 /// - Đặt đúng: chữ khen (NICE / AMAZING...) bật lên ở giữa khối.
 /// - Đặt sai: vùng chớp đỏ, camera rung, điện thoại rung.
+/// Chữ khen và vùng chớp đỏ lấy từ pool (prefab), không tạo GameObject mới.
 /// </summary>
 public class GameplayFeedback : MonoBehaviour
 {
+    [Header("Prefab")]
+    [SerializeField] private SpriteRenderer praisePrefab;
+    [SerializeField] private SpriteRenderer mistakeFlashPrefab; // drawMode Sliced
+
     [Header("Khen")]
     [SerializeField, Range(0f, 1f)] private float praiseChance = 0.6f;
     [SerializeField] private int praiseMinCells = 2;
@@ -22,14 +28,28 @@ public class GameplayFeedback : MonoBehaviour
     [SerializeField] private bool vibrate = true;
 
     private Camera _cam;
-    private Sprite _square;
     private Coroutine _shake;
+    private ObjectPool<SpriteRenderer> _praisePool;
+    private ObjectPool<SpriteRenderer> _flashPool;
 
     private void Awake()
     {
         _cam = Camera.main;
-        Texture2D tex = Texture2D.whiteTexture;
-        _square = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), tex.width);
+        _praisePool = CreatePool(praisePrefab, 4);
+        _flashPool = CreatePool(mistakeFlashPrefab, 2);
+    }
+
+    private ObjectPool<SpriteRenderer> CreatePool(SpriteRenderer prefab, int capacity)
+    {
+        if (prefab == null) Debug.LogError($"[GameplayFeedback] Chưa gán prefab trên {name}");
+        return new ObjectPool<SpriteRenderer>(
+            createFunc: () => Instantiate(prefab, transform),
+            actionOnGet: sr => sr.gameObject.SetActive(true),
+            actionOnRelease: sr => sr.gameObject.SetActive(false),
+            // Thoát Play mode: scene hủy object trước, rồi Editor mới Clear() pool -> object có thể đã null
+            actionOnDestroy: sr => { if (sr != null) Destroy(sr.gameObject); },
+            collectionCheck: false,
+            defaultCapacity: capacity);
     }
 
     private void Start()
@@ -55,7 +75,9 @@ public class GameplayFeedback : MonoBehaviour
         Sprite praise = visuals != null ? visuals.GetRandomPraise() : null;
         if (praise == null) return;
 
-        SpriteRenderer sr = CreateRenderer("Praise", praise, 60);
+        SpriteRenderer sr = _praisePool.Get();
+        sr.sprite = praise;
+        sr.color = Color.white;
         sr.transform.position = block.transform.position + new Vector3(0f, 0f, -1f);
         StartCoroutine(PraiseRoutine(sr));
     }
@@ -64,6 +86,7 @@ public class GameplayFeedback : MonoBehaviour
     {
         float baseScale = praiseWidth / sr.sprite.bounds.size.x;
         Vector3 start = sr.transform.position;
+        Color c = sr.color;
         float t = 0f;
         while (t < praiseDuration)
         {
@@ -73,19 +96,18 @@ public class GameplayFeedback : MonoBehaviour
             float pop = p < 0.2f ? Mathf.Lerp(0.3f, 1.15f, p / 0.2f) : (p < 0.3f ? Mathf.Lerp(1.15f, 1f, (p - 0.2f) / 0.1f) : 1f);
             sr.transform.localScale = Vector3.one * baseScale * pop;
             sr.transform.position = start + Vector3.up * Mathf.Max(0f, p - 0.5f) * 1.2f;
-            Color c = sr.color;
             c.a = p < 0.6f ? 1f : 1f - (p - 0.6f) / 0.4f;
             sr.color = c;
             yield return null;
         }
-        Destroy(sr.gameObject);
+        _praisePool.Release(sr);
     }
 
     private void OnMistake(Vector3 center, Vector2 size)
     {
-        SpriteRenderer flash = CreateRenderer("MistakeFlash", _square, 50);
+        SpriteRenderer flash = _flashPool.Get();
         flash.transform.position = center;
-        flash.transform.localScale = new Vector3(size.x, size.y, 1f);
+        flash.size = size;
         flash.color = mistakeColor;
         StartCoroutine(FlashRoutine(flash));
 
@@ -104,7 +126,7 @@ public class GameplayFeedback : MonoBehaviour
 
     private IEnumerator FlashRoutine(SpriteRenderer sr)
     {
-        Color baseColor = sr.color;
+        Color c = mistakeColor;
         float t = 0f;
         while (t < mistakeFlashDuration)
         {
@@ -112,12 +134,11 @@ public class GameplayFeedback : MonoBehaviour
             float p = Mathf.Clamp01(t / mistakeFlashDuration);
             // 2 nhịp chớp rồi tắt
             float blink = Mathf.Abs(Mathf.Sin(p * Mathf.PI * 2f));
-            Color c = baseColor;
-            c.a = baseColor.a * blink * (1f - p * 0.5f);
+            c.a = mistakeColor.a * blink * (1f - p * 0.5f);
             sr.color = c;
             yield return null;
         }
-        Destroy(sr.gameObject);
+        _flashPool.Release(sr);
     }
 
     private IEnumerator ShakeCamera()
@@ -134,15 +155,5 @@ public class GameplayFeedback : MonoBehaviour
         }
         _cam.transform.position = origin;
         _shake = null;
-    }
-
-    private SpriteRenderer CreateRenderer(string name, Sprite sprite, int order)
-    {
-        GameObject go = new GameObject(name);
-        go.transform.SetParent(transform, false);
-        SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
-        sr.sprite = sprite;
-        sr.sortingOrder = order;
-        return sr;
     }
 }

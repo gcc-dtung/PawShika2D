@@ -18,9 +18,11 @@ public class SelectionBox : MonoBehaviour
     {
         EnsureSpriteRenderer();
 
-        // Đảm bảo SelectionBox luôn hiển thị đè lên trên các ô (Order in Layer cao hơn)
-        spriteRenderer.sortingOrder = 10;
-        Hide();
+        // Luôn đè lên ô và khối mèo đã đặt (thân 20, mặt 21, số 22); dưới bong bóng đếm ô (40)
+        spriteRenderer.sortingOrder = 30;
+
+        // Object để tắt sẵn trong scene thì Awake chạy lần đầu ngay trong Show() -> không được ẩn lại
+        if (!_isSelecting) Hide();
     }
 
     private void EnsureSpriteRenderer()

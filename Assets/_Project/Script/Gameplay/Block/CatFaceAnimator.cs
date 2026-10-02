@@ -14,8 +14,9 @@ public class CatFaceAnimator : MonoBehaviour
 
     public void Play(CatFaceAnimation animation, float fps, float width)
     {
-        _renderer = GetComponent<SpriteRenderer>();
+        if (_renderer == null) _renderer = GetComponent<SpriteRenderer>();
         _animation = animation;
+        _frame = -1;
         _fps = Mathf.Max(1f, fps);
         _time = Random.Range(0f, animation.frames.Count / _fps); // lệch pha để các mèo không chớp mắt cùng lúc
 

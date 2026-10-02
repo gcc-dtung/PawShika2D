@@ -10,6 +10,8 @@ public class LevelManager : Singleton<LevelManager>
 {
     private const string CurrentLevelKey = "PawBlock_CurrentLevel";
 
+    [SerializeField] private int currentLevel = 0;
+    
     [SerializeField] private LevelDatabase database;
     [SerializeField] private GridSpawner gridSpawner;
     [SerializeField] private float autoAdvanceDelay = 1.5f;
@@ -128,5 +130,12 @@ public class LevelManager : Singleton<LevelManager>
         // Dời camera xuống để lưới nằm hơi cao hơn giữa màn hình
         Vector3 pos = targetCamera.transform.position;
         targetCamera.transform.position = new Vector3(0f, -boardCenterOffset * 2f * ortho, pos.z);
+    }
+    
+    [ContextMenu("Load Level")]
+    public void GoToLevel()
+    {
+        PlayerPrefs.SetInt(CurrentLevelKey, currentLevel);
+        LoadLevel(currentLevel);
     }
 }

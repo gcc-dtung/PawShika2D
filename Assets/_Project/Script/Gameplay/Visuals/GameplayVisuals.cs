@@ -17,11 +17,6 @@ public class GameplayVisuals : ScriptableObject
     public CatFaceAnimation[] faces;
     public float faceFps = 24f;
 
-    [Header("Ô đặc biệt")]
-    public Sprite lockBodySprite;
-    public Sprite lockShackleSprite;
-    public Sprite arrowSprite;
-
     [Header("Phản hồi")]
     public Sprite bubbleSprite;
     public Sprite[] praiseSprites;

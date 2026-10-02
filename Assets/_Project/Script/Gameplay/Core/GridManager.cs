@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Pool;
 
 public class GridManager : Singleton<GridManager>
 {
     [SerializeField] private GridSpawner gridSpawner;
     [SerializeField] private SelectionBox selectionBox;
     [SerializeField] private float cellSize = GridSpawner.CellSpacing;
+
+    [Header("Khối mèo (lấy từ pool, không tạo mới mỗi lần đặt)")]
+    [SerializeField] private PlacedBlock blockPrefab;
+    [SerializeField] private Transform blockRoot;
+    [SerializeField] private int blockPoolCapacity = 64;
 
     [Header("Events")]
     public UnityEvent onGameWin = new UnityEvent();
@@ -18,7 +24,10 @@ public class GridManager : Singleton<GridManager>
 
     private List<Cell> _currentGrid;
     private readonly Dictionary<Vector2Int, Cell> _cellMap = new Dictionary<Vector2Int, Cell>();
+    private static readonly int ColorTypeCount = Enum.GetValues(typeof(ColorType)).Length;
+
     private List<PlacedBlock> _placedBlocks = new List<PlacedBlock>();
+    private ObjectPool<PlacedBlock> _blockPool;
     private bool _isGameWon = false;
 
     public IReadOnlyList<PlacedBlock> PlacedBlocks => _placedBlocks;
@@ -30,21 +39,23 @@ public class GridManager : Singleton<GridManager>
     protected override void Awake()
     {
         base.Awake();
-        InitSelectionBox();
-    }
+        if (selectionBox == null) Debug.LogError("[GridManager] Chưa gán SelectionBox");
+        if (blockPrefab == null) Debug.LogError("[GridManager] Chưa gán PlacedBlock prefab");
+        if (blockRoot == null) blockRoot = transform;
 
-    private void InitSelectionBox()
-    {
-        if (selectionBox == null)
-        {
-            selectionBox = FindFirstObjectByType<SelectionBox>(FindObjectsInactive.Include);
-            if (selectionBox == null)
+        _blockPool = new ObjectPool<PlacedBlock>(
+            createFunc: () => Instantiate(blockPrefab, blockRoot),
+            actionOnGet: b => b.gameObject.SetActive(true),
+            actionOnRelease: b =>
             {
-                GameObject selObj = new GameObject("SelectionBox");
-                selObj.transform.SetParent(transform);
-                selectionBox = selObj.AddComponent<SelectionBox>();
-            }
-        }
+                b.ReleaseCells();
+                b.gameObject.SetActive(false);
+            },
+            // Thoát Play mode: scene hủy object trước, rồi Editor mới Clear() pool -> object có thể đã null
+            actionOnDestroy: b => { if (b != null) Destroy(b.gameObject); },
+            collectionCheck: false,
+            defaultCapacity: blockPoolCapacity,
+            maxSize: blockPoolCapacity * 4);
     }
 
     private void OnEnable()
@@ -111,7 +122,7 @@ public class GridManager : Singleton<GridManager>
         }
 
         Cell clueCell = clueCells[0];
-        ClueCell clue = clueCell.ClueCell;
+        ClueCell clue = clueCell.Clue;
 
         // 3. Ô số còn khóa -> chưa chọn được
         if (clue.IsLocked)
@@ -204,13 +215,11 @@ public class GridManager : Singleton<GridManager>
 
     private void CreatePlacedBlock(RectInt rect, List<Cell> cells, Cell clueCell)
     {
-        clueCell.ClueCell.Reveal();
+        clueCell.RevealClue();
 
-        GameObject blockObj = new GameObject($"PlacedBlock_{_placedBlocks.Count + 1}");
-        blockObj.transform.SetParent(transform);
-        PlacedBlock newBlock = blockObj.AddComponent<PlacedBlock>();
+        PlacedBlock newBlock = _blockPool.Get();
 
-        ColorType color = (ColorType)(Mathf.Abs(clueCell.ClueCell.ClueData.color) % Enum.GetValues(typeof(ColorType)).Length);
+        ColorType color = (ColorType)(Mathf.Abs(clueCell.Clue.ColorIndex) % ColorTypeCount);
         newBlock.Init(rect, cells, clueCell, color, cellSize);
         _placedBlocks.Add(newBlock);
 
@@ -230,7 +239,7 @@ public class GridManager : Singleton<GridManager>
         if (_currentGrid == null) return;
         foreach (Cell cell in _currentGrid)
         {
-            if (cell != null && cell.HasClue && cell.ClueCell.StepLock())
+            if (cell != null && cell.StepLock())
             {
                 onClueUnlocked?.Invoke(cell);
             }
@@ -243,7 +252,7 @@ public class GridManager : Singleton<GridManager>
         {
             if (_placedBlocks[i] != null)
             {
-                _placedBlocks[i].Remove();
+                _blockPool.Release(_placedBlocks[i]);
             }
         }
         _placedBlocks.Clear();

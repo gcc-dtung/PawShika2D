@@ -19,9 +19,6 @@ public static class GameplayVisualsSetup
     private const string FaceFolder = Root + "/02_Cat_Characters_Spine/Spine_Cat_Face";
     private const string FaceAtlas = FaceFolder + "/ingame_cat_face_03.atlas.txt";
     private const string PraiseFolder = Root + "/02_Cat_Characters_Spine/Praise_Badges";
-    private const string LockBody = Root + "/04_UI_Graphics/Buttons/btn_lock_1.png";
-    private const string LockShackle = Root + "/04_UI_Graphics/Buttons/btn_lock_2.png";
-    private const string Arrow = "Assets/_Project/ShikaCat_GameAssets/04_UI_Graphics/Dev_Debug_UI/arrow-right@2x.png";
     private const string Bubble = Root + "/03_Gameplay_Blocks_Grid/Grid_Cells/Circle.png";
     private const string OutputPath = "Assets/_Project/Resources/GameplayVisuals.asset";
 
@@ -56,9 +53,6 @@ public static class GameplayVisualsSetup
             visuals.earSprites[i] = LoadSprite($"{EarsFolder}/{colorNames[i]}_Ear.png");
         }
 
-        visuals.lockBodySprite = LoadSprite(LockBody);
-        visuals.lockShackleSprite = LoadSprite(LockShackle);
-        visuals.arrowSprite = LoadSprite(Arrow);
         visuals.bubbleSprite = LoadSprite(Bubble);
         visuals.praiseSprites = Directory.GetFiles(PraiseFolder, "*.png")
             .Select(p => LoadSprite(p.Replace('\\', '/')))

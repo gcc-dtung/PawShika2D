@@ -12,7 +12,12 @@ Assets/
 └── _Project/
     ├── Script/                         Code game, chia theo Gameplay / UI / Editor (chi tiết bên dưới)
     ├── Prefabs/
-    │   └── Cell.prefab                 Ô lưới: Visual (CellBG) + Text (TMP) + BoxCollider2D
+    │   ├── Cell.prefab                 Ô lưới: Visual (CellBG), Text (TMP), Arrow, Lock (Shackle, Body, LockText), BoxCollider2D
+    │   └── Gameplay/                   Prefab dùng với ObjectPool (không tạo GameObject lúc chơi)
+    │       ├── PlacedBlock.prefab      Thân, Number, Face, Ears
+    │       ├── Praise.prefab           Chữ khen
+    │       ├── MistakeFlash.prefab     Vùng chớp đỏ khi sai (WhiteBlock 9-slice)
+    │       └── DragCountBubble.prefab  Bong bóng số ô (1 instance đặt sẵn trong scene)
     ├── Levels/
     │   ├── LevelDatabase.asset         Danh sách 205 level theo thứ tự chơi
     │   └── ShikaCat/Level_001..205     LevelDefinition sinh từ JSON ShikaCat
@@ -62,8 +67,8 @@ Quy tắc đặt file mới:
 | --- | --- |
 | `GridSpawner` | Sinh `Cell` từ `LevelDefinition`, bỏ ô Void, phát `gridCellEvent` |
 | `GridManager` | Nhận vùng kéo, kiểm tra hợp lệ, gọi solver, tạo khối, giảm khóa, kiểm tra thắng |
-| `Cell` | Một ô lưới: vị trí, khối đang chiếm, clue |
-| `ClueCell` | Ô số: giá trị, ổ khóa, ô ẩn `?`, mũi tên ngang/dọc |
+| `Cell` | Một ô lưới: vị trí, khối đang chiếm; sở hữu `ClueCell` và bật/tắt các object con có sẵn trong prefab (số, ổ khóa, mũi tên) |
+| `ClueCell` | Class C# thuần (không phải MonoBehaviour): giá trị, số bước khóa, ẩn/hiện, hướng mũi tên |
 
 ### Gameplay/Level, Lives, Solver
 
@@ -135,7 +140,10 @@ Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920
         ├── LevelText
         └── Hearts     LivesUI
 EventSystem
+DragCountBubble        Instance của prefab, để tắt sẵn; DragAndDropController bật khi kéo
 ```
+
+Khối mèo, chữ khen, vùng chớp đỏ không đặt sẵn trong scene: `GridManager` và `GameplayFeedback` tạo chúng từ prefab qua `ObjectPool` ở lần dùng đầu, sau đó tái sử dụng. Ô lưới cũng được `GridSpawner` tái sử dụng giữa các level.
 
 ---
 
@@ -191,11 +199,11 @@ InputManager ─► DragAndDropController ─► GridManager.OnDrawGrid ─► S
 | Order | Thành phần |
 | --- | --- |
 | 0 | Cell (SortingGroup; bên trong: nền 0, mũi tên 5, số 6, ổ khóa 6–8) |
-| 10 | SelectionBox |
 | 19 | Tai mèo |
 | 20 | Thân khối |
 | 21 | Mặt mèo |
 | 22 | Số trên khối |
+| 30 | SelectionBox (khung đang kéo) |
 | 40–41 | Bong bóng số ô |
 | 50 | Vùng chớp đỏ khi sai |
 | 60 | Chữ khen |

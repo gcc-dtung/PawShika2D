@@ -887,9 +887,6 @@ MonoBehaviour:
     - {fileID: -2762433072550255037, guid: e656cd948342bc84ab2e1d9e4823f6ec, type: 3}
     - {fileID: -8568510299908002028, guid: e656cd948342bc84ab2e1d9e4823f6ec, type: 3}
   faceFps: 24
-  lockBodySprite: {fileID: 21300000, guid: c93d1038b5276a64f870eb23c4e4c051, type: 3}
-  lockShackleSprite: {fileID: 21300000, guid: a860a5f00046e5740b87faf4e255776f, type: 3}
-  arrowSprite: {fileID: 21300000, guid: e70f8d1435ea65a46a531b54d8bcf8d6, type: 3}
   bubbleSprite: {fileID: 21300000, guid: 73177f9220fad784a94824ebe2daa8a1, type: 3}
   praiseSprites:
   - {fileID: 21300000, guid: 0ced9dd6f286fd945aa8f96301dfdc6b, type: 3}
