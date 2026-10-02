@@ -10,12 +10,17 @@ using UnityEngine;
 public class PlacedBlock : MonoBehaviour
 {
     private const float PopDuration = 0.18f;
+    private const float BodyFill = 0.96f; // thân khối chiếm 96% ô, phần còn lại là khe hở
 
     [Header("Object con trong prefab")]
     [SerializeField] private SpriteRenderer body;
     [SerializeField] private TextMeshPro numberText;
     [SerializeField] private CatFaceAnimator face;
     [SerializeField] private SpriteRenderer ears;
+
+    [Header("Tai mèo (tính theo tỉ lệ ô)")]
+    [SerializeField] private float earWidth = 0.36f;   // bề rộng cặp tai
+    [SerializeField] private float earOverlap = 0f;    // đỉnh tai đè lên khối bên trên thêm bao nhiêu
 
     private readonly List<Cell> _occupiedCells = new List<Cell>();
     private float _cellSize = GridSpawner.CellSpacing;
@@ -52,8 +57,8 @@ public class PlacedBlock : MonoBehaviour
         centerPos.z = -0.05f;
         transform.position = centerPos;
 
-        float width = Mathf.Abs(targetPos.x - startPos.x) + _cellSize * 0.96f;
-        float height = Mathf.Abs(targetPos.y - startPos.y) + _cellSize * 0.96f;
+        float width = Mathf.Abs(targetPos.x - startPos.x) + _cellSize * BodyFill;
+        float height = Mathf.Abs(targetPos.y - startPos.y) + _cellSize * BodyFill;
 
         GameplayVisuals visuals = GameplayVisuals.Instance;
         SetupBody(visuals, color, width, height);
@@ -124,12 +129,14 @@ public class PlacedBlock : MonoBehaviour
         if (!show) return;
 
         ears.sprite = sprite;
-        float k = _cellSize * 0.62f / sprite.bounds.size.x;
+        float k = _cellSize * earWidth / sprite.bounds.size.x;
         ears.transform.localScale = new Vector3(k, k, 1f);
 
+        // Đỉnh tai chạm đáy khối bên trên (qua khe hở), phần còn lại lún vào thân khối này
         float earHeight = sprite.bounds.size.y * k;
-        float topY = transform.position.y + blockHeight / 2f;
-        ears.transform.position = new Vector3(faceCell.transform.position.x, topY + earHeight * 0.35f, transform.position.z + 0.01f);
+        float gap = _cellSize * (1f - BodyFill);
+        float tipY = transform.position.y + blockHeight / 2f + gap + _cellSize * earOverlap;
+        ears.transform.position = new Vector3(faceCell.transform.position.x, tipY - earHeight / 2f, transform.position.z - 0.01f);
     }
 
     private IEnumerator PopIn()

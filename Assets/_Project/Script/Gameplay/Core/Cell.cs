@@ -9,7 +9,13 @@ public class Cell : MonoBehaviour
     [SerializeField] private TextMeshPro valueText;
     [SerializeField] private GameObject lockRoot;
     [SerializeField] private TextMeshPro lockText;
-    [SerializeField] private SpriteRenderer arrow;
+    [SerializeField] private SpriteRenderer orientationBadge; // ô nền sau con số: cao = dọc, vuông = vuông, dẹt = ngang
+
+    // Kích thước ô nền (đơn vị world). Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
+    private static readonly Vector2 BadgeTall = new Vector2(0.5f, 0.74f);
+    private static readonly Vector2 BadgeSquare = new Vector2(0.64f, 0.64f);
+    private static readonly Vector2 BadgeWide = new Vector2(0.74f, 0.5f);
+    private const float BadgeScale = 0.25f;
 
     private Vector2Int _cellPos;
 
@@ -89,14 +95,21 @@ public class Cell : MonoBehaviour
             if (locked && lockText != null) lockText.SetText("{0}", Clue.LockSteps);
         }
 
-        if (arrow != null)
+        if (orientationBadge != null)
         {
-            bool showArrow = hasClue && !locked && Clue.Constraint != ClueConstraint.None;
-            arrow.gameObject.SetActive(showArrow);
-            // Sprite mũi tên gốc hướng sang phải: ngang giữ nguyên, dọc xoay 90 độ
-            if (showArrow)
+            // Ô còn khóa: chưa biết gì về clue, kể cả hướng
+            bool showBadge = hasClue && !locked && Clue.Constraint != ClueConstraint.None;
+            orientationBadge.gameObject.SetActive(showBadge);
+            if (showBadge)
             {
-                arrow.transform.localRotation = Quaternion.Euler(0f, 0f, Clue.Constraint == ClueConstraint.Vertical ? 90f : 0f);
+                Vector2 size = Clue.Constraint switch
+                {
+                    ClueConstraint.Vertical => BadgeTall,
+                    ClueConstraint.Horizontal => BadgeWide,
+                    _ => BadgeSquare
+                };
+                orientationBadge.transform.localScale = new Vector3(BadgeScale, BadgeScale, 1f);
+                orientationBadge.size = size / BadgeScale;
             }
         }
     }

@@ -78,6 +78,8 @@ public static class ShikaCatLevelImporter
         {
             database.levels.Add(AssetDatabase.LoadAssetAtPath<LevelDefinition>($"{OutputFolder}/Level_{i + 1:000}.asset"));
         }
+        // Giữ level test (Levels/Test) ở cuối danh sách sau khi nhập lại
+        TestLevelBuilder.AppendTestLevels(database);
         EditorUtility.SetDirty(database);
         AssetDatabase.SaveAssets();
 

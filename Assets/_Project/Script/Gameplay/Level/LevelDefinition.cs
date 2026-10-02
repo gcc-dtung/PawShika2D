@@ -27,7 +27,8 @@ public enum ClueConstraint
 {
     None = 0,
     Horizontal = 1,
-    Vertical = 2
+    Vertical = 2,
+    Square = 3
 }
 
 [Serializable]

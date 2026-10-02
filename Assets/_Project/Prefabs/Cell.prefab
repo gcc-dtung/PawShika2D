@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9067227435790721198}
   - component: {fileID: 7338406764727423489}
   m_Layer: 0
-  m_Name: Arrow
+  m_Name: OrientationBadge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.1875, y: 2.1875, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 883916647605254523}
@@ -73,12 +73,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: e70f8d1435ea65a46a531b54d8bcf8d6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6291f12e502cc514cb1f42c0b847796a, type: 3}
   m_Color: {r: 0.62, g: 0.6, b: 0.9, a: 0.3}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.48, y: 0.48}
+  m_DrawMode: 1
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -766,7 +766,7 @@ MonoBehaviour:
   valueText: {fileID: 8074371776101457053}
   lockRoot: {fileID: 4323124751147739855}
   lockText: {fileID: 3436699085437174217}
-  arrow: {fileID: 7338406764727423489}
+  orientationBadge: {fileID: 7338406764727423489}
 --- !u!61 &751636190205843187
 BoxCollider2D:
   m_ObjectHideFlags: 0

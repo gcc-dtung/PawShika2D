@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | **Chưa push** |
-| Commit | — |
-| Thời gian push | — |
-| Cập nhật lần cuối | 2026-10-02 17:12 |
+| Trạng thái | Đã push |
+| Commit | `7f9a805` "Tối ưu: prefab + ObjectPool, ClueCell C# thuần, sửa SelectionBox" (nhánh `Day-1`) |
+| Thời gian push | 2026-10-02 19:39 |
+| Cập nhật lần cuối | 2026-10-02 19:40 |
 
 ## Tóm tắt
 

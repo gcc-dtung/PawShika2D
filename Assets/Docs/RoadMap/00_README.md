@@ -40,6 +40,7 @@ Bảng các đợt thay đổi trong lần push này.
 | --- | --- | --- | --- |
 | [01](01_Core-GameplayVaCoCheMang.md) | Đã push | 2026-10-02 13:46 · `681d08c` | Phân tích, cơ chế mạng, Giai đoạn 1–2 (solver, 205 level, khối mèo, HUD) |
 | [02](02_TaiLieu-ToChucScript.md) | Đã push | 2026-10-02 16:31 · `08ce8ec` | Tài liệu Docs, tổ chức thư mục Script, quyết định giữ CatFaceAnimator |
-| [03](03_ToiUu-PrefabPool.md) | **Chưa push** | — | SelectionBox, ClueCell C# thuần, prefab + ObjectPool, sửa lỗi pool |
+| [03](03_ToiUu-PrefabPool.md) | Đã push | 2026-10-02 19:39 · `7f9a805` | SelectionBox, ClueCell C# thuần, prefab + ObjectPool, sửa lỗi pool |
+| [04](04_TaiMeo-LevelTest.md) | Chưa push | – | Tai mèo nhỏ lại; level test mọi cơ chế (level 206); kiểm tra level; hướng Square + ô nền điều hướng |
 
 Giờ push lấy từ `git reflog origin/Day-1`; giờ từng đợt lấy từ thời gian sửa file và ảnh chụp thử.

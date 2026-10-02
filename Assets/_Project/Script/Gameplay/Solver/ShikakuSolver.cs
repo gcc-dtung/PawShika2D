@@ -5,6 +5,7 @@ using UnityEngine;
 /// Giải Shikaku trên LevelDefinition. Dùng để:
 /// - Kiểm tra 1 nước đi có SAI không (đặt xong thì lưới không còn lời giải nào) -> trừ mạng.
 /// - Tìm lời giải khớp với các khối đã đặt (Hint / Reveal ở giai đoạn sau).
+/// - Kiểm tra level (Editor): giải khi người chơi CHƯA biết số của ô "?" / ô khóa.
 /// Không so với solution lưu sẵn vì 17/205 level ShikaCat có nhiều hơn 1 lời giải.
 /// </summary>
 public static class ShikakuSolver
@@ -19,6 +20,16 @@ public static class ShikakuSolver
         public int y;
         public int value;
         public ClueConstraint constraint;
+        public bool unknownValue; // chưa biết số: khối có thể rộng bất kỳ
+    }
+
+    private class State
+    {
+        public int width;
+        public int height;
+        public bool[,] blocked;   // Void hoặc đã bị khối khác chiếm
+        public int[,] clueAt;
+        public List<Clue> open = new List<Clue>();
     }
 
     public static bool IsSolvable(LevelDefinition level, IList<RectInt> placed)
@@ -28,23 +39,77 @@ public static class ShikakuSolver
 
     public static bool TrySolve(LevelDefinition level, IList<RectInt> placed, out List<RectInt> solution)
     {
+        bool found = TrySolve(level, placed, null, null, out solution, out bool aborted);
+        if (aborted)
+        {
+            Debug.LogWarning("[ShikakuSolver] Quá giới hạn tìm kiếm, coi như còn lời giải.");
+            return true;
+        }
+        return found;
+    }
+
+    /// <summary>
+    /// Giải với các clue người chơi chưa biết: unknownValue = chưa biết số (ô "?", ô khóa),
+    /// unknownConstraint = chưa biết hướng (ô khóa che mất ô nền điều hướng).
+    /// Khi có clue chưa biết số, lời giải phải phủ kín mọi ô còn trống.
+    /// </summary>
+    public static bool TrySolve(LevelDefinition level, IList<RectInt> placed,
+        ICollection<int> unknownValue, ICollection<int> unknownConstraint,
+        out List<RectInt> solution, out bool aborted)
+    {
         solution = null;
+        aborted = false;
+        if (!BuildState(level, placed, unknownValue, unknownConstraint, out State state)) return false;
+
+        List<List<RectInt>> candidates = new List<List<RectInt>>(state.open.Count);
+        foreach (Clue c in state.open)
+        {
+            List<RectInt> list = BuildCandidates(c, state);
+            if (list.Count == 0) return false;
+            candidates.Add(list);
+        }
+
+        // Có clue chưa biết số (kể cả đã đặt): tổng diện tích không còn tự khớp -> phải kiểm tra phủ kín
+        bool needCoverage = unknownValue != null && unknownValue.Count > 0;
+        List<RectInt> result = new List<RectInt>(state.open.Count);
+        bool[] done = new bool[state.open.Count];
+        int nodes = 0;
+
+        bool found = Backtrack(candidates, done, state.blocked, needCoverage, result, ref nodes, ref aborted);
+        if (aborted) return false;
+
+        if (found) solution = result;
+        return found;
+    }
+
+    /// <summary>Các vùng có thể đặt cho clue (chưa xét clue khác có còn chỗ hay không).</summary>
+    public static List<RectInt> GetCandidates(LevelDefinition level, IList<RectInt> placed, int clueIndex,
+        ICollection<int> unknownValue, ICollection<int> unknownConstraint)
+    {
+        if (!BuildState(level, placed, unknownValue, unknownConstraint, out State state)) return new List<RectInt>();
+        Clue clue = state.open.Find(c => c.index == clueIndex);
+        return clue != null ? BuildCandidates(clue, state) : new List<RectInt>();
+    }
+
+    private static bool BuildState(LevelDefinition level, IList<RectInt> placed,
+        ICollection<int> unknownValue, ICollection<int> unknownConstraint, out State state)
+    {
+        state = null;
         if (level == null || level.clues == null) return false;
 
-        int width = level.size;
-        int height = level.Height;
-        bool[,] blocked = new bool[width, height];   // Void hoặc đã bị khối khác chiếm
-        int[,] clueAt = new int[width, height];
-        for (int x = 0; x < width; x++)
-            for (int y = 0; y < height; y++)
-                clueAt[x, y] = -1;
+        State s = new State { width = level.size, height = level.Height };
+        s.blocked = new bool[s.width, s.height];
+        s.clueAt = new int[s.width, s.height];
+        for (int x = 0; x < s.width; x++)
+            for (int y = 0; y < s.height; y++)
+                s.clueAt[x, y] = -1;
 
         if (level.cellOverrides != null)
         {
             foreach (CellOverrideData o in level.cellOverrides)
             {
-                if (o.type == CellType.Void && InBounds(o.x, o.y, width, height))
-                    blocked[o.x, o.y] = true;
+                if (o.type == CellType.Void && InBounds(o.x, o.y, s.width, s.height))
+                    s.blocked[o.x, o.y] = true;
             }
         }
 
@@ -52,9 +117,18 @@ public static class ShikakuSolver
         for (int i = 0; i < level.clues.Length; i++)
         {
             ClueData c = level.clues[i];
-            if (!InBounds(c.x, c.y, width, height)) continue;
-            clues.Add(new Clue { index = i, x = c.x, y = c.y, value = c.value, constraint = c.mechanic.constraint });
-            clueAt[c.x, c.y] = i;
+            if (!InBounds(c.x, c.y, s.width, s.height)) continue;
+            bool hideConstraint = unknownConstraint != null && unknownConstraint.Contains(i);
+            clues.Add(new Clue
+            {
+                index = i,
+                x = c.x,
+                y = c.y,
+                value = c.value,
+                constraint = hideConstraint ? ClueConstraint.None : c.mechanic.constraint,
+                unknownValue = unknownValue != null && unknownValue.Contains(i)
+            });
+            s.clueAt[c.x, c.y] = i;
         }
 
         // Các khối đã đặt: đánh dấu chiếm chỗ và loại clue tương ứng khỏi danh sách cần giải
@@ -67,40 +141,20 @@ public static class ShikakuSolver
                 {
                     for (int y = r.yMin; y < r.yMax; y++)
                     {
-                        if (!InBounds(x, y, width, height) || blocked[x, y]) return false;
-                        blocked[x, y] = true;
-                        if (clueAt[x, y] >= 0) solvedClues.Add(clueAt[x, y]);
+                        if (!InBounds(x, y, s.width, s.height) || s.blocked[x, y]) return false;
+                        s.blocked[x, y] = true;
+                        if (s.clueAt[x, y] >= 0) solvedClues.Add(s.clueAt[x, y]);
                     }
                 }
             }
         }
 
-        List<Clue> open = clues.FindAll(c => !solvedClues.Contains(c.index));
-        List<List<RectInt>> candidates = new List<List<RectInt>>(open.Count);
-        foreach (Clue c in open)
-        {
-            List<RectInt> list = BuildCandidates(c, width, height, blocked, clueAt);
-            if (list.Count == 0) return false;
-            candidates.Add(list);
-        }
-
-        List<RectInt> result = new List<RectInt>(open.Count);
-        bool[] done = new bool[open.Count];
-        int nodes = 0;
-        bool aborted = false;
-
-        bool found = Backtrack(candidates, done, blocked, result, ref nodes, ref aborted);
-        if (aborted)
-        {
-            Debug.LogWarning("[ShikakuSolver] Quá giới hạn tìm kiếm, coi như còn lời giải.");
-            return true;
-        }
-
-        if (found) solution = result;
-        return found;
+        s.open = clues.FindAll(c => !solvedClues.Contains(c.index));
+        state = s;
+        return true;
     }
 
-    private static bool Backtrack(List<List<RectInt>> candidates, bool[] done, bool[,] occupied,
+    private static bool Backtrack(List<List<RectInt>> candidates, bool[] done, bool[,] occupied, bool needCoverage,
         List<RectInt> result, ref int nodes, ref bool aborted)
     {
         if (++nodes > MaxNodes)
@@ -108,6 +162,10 @@ public static class ShikakuSolver
             aborted = true;
             return false;
         }
+
+        int width = occupied.GetLength(0);
+        int height = occupied.GetLength(1);
+        bool[,] coverable = needCoverage ? new bool[width, height] : null;
 
         // Chọn clue có ít lựa chọn hợp lệ nhất (MRV)
         int best = -1;
@@ -119,7 +177,11 @@ public static class ShikakuSolver
             List<RectInt> options = new List<RectInt>();
             foreach (RectInt r in candidates[i])
             {
-                if (IsFree(r, occupied)) options.Add(r);
+                if (IsFree(r, occupied))
+                {
+                    options.Add(r);
+                    if (needCoverage) SetCells(r, coverable, true);
+                }
             }
 
             if (options.Count == 0) return false;
@@ -127,8 +189,16 @@ public static class ShikakuSolver
             {
                 best = i;
                 bestOptions = options;
-                if (options.Count == 1) break;
+                if (options.Count == 1 && !needCoverage) break;
             }
+        }
+
+        // Có clue chưa biết số: mọi ô trống phải còn ít nhất 1 khối có thể phủ
+        if (needCoverage)
+        {
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    if (!occupied[x, y] && !coverable[x, y]) return false;
         }
 
         if (best < 0) return true; // Mọi clue đã có khối
@@ -139,7 +209,7 @@ public static class ShikakuSolver
             SetCells(r, occupied, true);
             result.Add(r);
 
-            if (Backtrack(candidates, done, occupied, result, ref nodes, ref aborted)) return true;
+            if (Backtrack(candidates, done, occupied, needCoverage, result, ref nodes, ref aborted)) return true;
 
             result.RemoveAt(result.Count - 1);
             SetCells(r, occupied, false);
@@ -149,35 +219,37 @@ public static class ShikakuSolver
         return false;
     }
 
-    private static List<RectInt> BuildCandidates(Clue c, int width, int height, bool[,] blocked, int[,] clueAt)
+    private static List<RectInt> BuildCandidates(Clue c, State s)
     {
         List<RectInt> list = new List<RectInt>();
-        for (int h = 1; h <= c.value; h++)
+        for (int h = 1; h <= s.height; h++)
         {
-            if (c.value % h != 0) continue;
-            int w = c.value / h;
-            if (!MatchesConstraint(c.constraint, w, h)) continue;
-
-            for (int x0 = c.x - w + 1; x0 <= c.x; x0++)
+            for (int w = 1; w <= s.width; w++)
             {
-                for (int y0 = c.y - h + 1; y0 <= c.y; y0++)
-                {
-                    if (x0 < 0 || y0 < 0 || x0 + w > width || y0 + h > height) continue;
+                if (!c.unknownValue && w * h != c.value) continue;
+                if (!MatchesConstraint(c.constraint, w, h)) continue;
 
-                    bool ok = true;
-                    for (int x = x0; x < x0 + w && ok; x++)
+                for (int x0 = c.x - w + 1; x0 <= c.x; x0++)
+                {
+                    for (int y0 = c.y - h + 1; y0 <= c.y; y0++)
                     {
-                        for (int y = y0; y < y0 + h; y++)
+                        if (x0 < 0 || y0 < 0 || x0 + w > s.width || y0 + h > s.height) continue;
+
+                        bool ok = true;
+                        for (int x = x0; x < x0 + w && ok; x++)
                         {
-                            if (blocked[x, y] || (clueAt[x, y] >= 0 && clueAt[x, y] != c.index))
+                            for (int y = y0; y < y0 + h; y++)
                             {
-                                ok = false;
-                                break;
+                                if (s.blocked[x, y] || (s.clueAt[x, y] >= 0 && s.clueAt[x, y] != c.index))
+                                {
+                                    ok = false;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    if (ok) list.Add(new RectInt(x0, y0, w, h));
+                        if (ok) list.Add(new RectInt(x0, y0, w, h));
+                    }
                 }
             }
         }
@@ -190,6 +262,7 @@ public static class ShikakuSolver
         {
             case ClueConstraint.Horizontal: return w > h;
             case ClueConstraint.Vertical: return h > w;
+            case ClueConstraint.Square: return w == h;
             default: return true;
         }
     }
