@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,11 +8,16 @@ public class LosePopup : PopupView
 {
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private Button retryButton;
+    [SerializeField] private Button homeButton;
+
+    /// <summary>GameFlowUI gắn vào để kiểm tra năng lượng trước khi chơi lại; null thì chơi lại luôn.</summary>
+    public Action RetryHandler { get; set; }
 
     protected override void Awake()
     {
         base.Awake();
         if (retryButton != null) retryButton.onClick.AddListener(OnRetry);
+        if (homeButton != null) homeButton.onClick.AddListener(OnHome);
     }
 
     protected override void OnOpen()
@@ -20,9 +26,16 @@ public class LosePopup : PopupView
         if (titleText != null) titleText.SetText($"LEVEL {level}");
     }
 
+    private void OnHome()
+    {
+        Close();
+        if (ScreenFlow.Instance != null) ScreenFlow.Instance.ShowMenu();
+    }
+
     private void OnRetry()
     {
         Close();
-        if (LevelManager.Instance != null) LevelManager.Instance.Retry();
+        if (RetryHandler != null) RetryHandler();
+        else if (LevelManager.Instance != null) LevelManager.Instance.Retry();
     }
 }

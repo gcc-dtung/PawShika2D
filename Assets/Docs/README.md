@@ -23,7 +23,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 | Khối hợp lệ và lưới vẫn còn lời giải | Đặt khối mèo, hiện chữ khen, mọi ổ khóa giảm 1 | Giữ nguyên |
 | Khối đúng số ô nhưng đặt xong thì lưới **không còn lời giải** | Mèo chuyển xám, rung rồi co lại biến mất, camera rung, điện thoại rung | **−1** |
 | Sai số ô, 0 hoặc nhiều ô số, đè khối khác, chứa ô còn khóa, sai hướng mũi tên | Chỉ hủy thao tác | Giữ nguyên |
-| Hết mạng | Khóa lưới, popup Hồi mạng: xem ads +1, trả 900 coin +3, đóng thì thua (popup Retry) | 0 |
+| Hết mạng | Khóa lưới, popup Hồi mạng: xem ads +1, trả 900 coin +3, đóng thì thua (popup Retry, **−1 năng lượng**) | 0 |
 
 - Mọi level đều có **3 mạng**. Không có sao, không có Undo.
 - Không so với lời giải lưu sẵn vì 17/205 level có nhiều hơn một lời giải. `ShikakuSolver` kiểm tra xem lưới còn giải được hay không.
@@ -45,13 +45,16 @@ Dữ liệu level ShikaCat hiện **chưa có** ô đặc biệt nào; code đã
 ## Chạy dự án
 
 1. Mở `Assets/Scenes/SampleScene.unity`.
-2. Lần đầu (hoặc khi đổi asset), chạy 2 menu Editor:
+2. Lần đầu (hoặc khi đổi asset), chạy các menu Editor:
    - **Tools → PawBlock → Import ShikaCat Levels**: tạo 205 `LevelDefinition` trong `Assets/_Project/Levels/ShikaCat/` và `LevelDatabase.asset`.
    - **Tools → PawBlock → Setup Gameplay Visuals**: đặt 9-slice cho khối, cắt atlas mặt mèo, tạo `Assets/_Project/Resources/GameplayVisuals.asset`.
-   - **Tools → PawBlock → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Xác nhận chơi lại trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
-3. Bấm Play. Kéo chuột trên lưới để tạo khối.
+   - **Tools → PawBlock → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Xác nhận chơi lại / Mua booster trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
+   - **Tools → PawBlock → Build Boosters**: dựng lại 3 nút booster, banner Reveal, khung băng Khiên, gắn `BoosterManager`.
+   - **Tools → PawBlock → Build Energy**: dựng lại nút năng lượng (tim) góc trên phải, gắn `EnergyManager`.
+   - **Tools → PawBlock → Build Main Menu**: dựng lại thanh tab Shop / Home / Progress, thanh trên (năng lượng + coin), nút PLAY, 2 panel tạm Shop / Progress trong `Canvas_Menu` (giữ nguyên phần còn lại của `HomePanel`), gắn `ScreenFlow`. Chạy sau Build Popups.
+3. Bấm Play: vào Main Menu (Home) → bấm **PLAY** để vào level đang chơi. Kéo chuột trên lưới để tạo khối. Thua → HOME để về Menu.
 
-Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`, coin ở `PawBlock_Coins`. Xóa key (hoặc Edit → Clear All PlayerPrefs) để quay về level 1 / 0 coin.
+Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`, coin ở `PawBlock_Coins`, lượt booster ở `PawBlock_Booster_Hint/Shield/Reveal`, năng lượng ở `PawBlock_Energy`, `PawBlock_EnergyRefillStart`, `PawBlock_EnergyInfiniteUntil`. Thử năng lượng: chuột phải component `EnergyManager` → Debug (Set 0, Skip 1 refill...). Xóa key (hoặc Edit → Clear All PlayerPrefs) để quay về level 1 / 0 coin.
 
 ---
 
@@ -72,13 +75,13 @@ Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`, coi
 | 1 | Mạng trong màn | Xong |
 | 2 | Gameplay một level đầy đủ | Xong (còn 3 việc tồn đọng) |
 | 3 | Popup Thắng / Hồi mạng / Thua, HUD | Gần xong (còn banner độ khó, làm đẹp HUD) |
-| 4 | Booster Hint, Khiên, Reveal | Chưa làm |
-| 5 | Năng lượng ngoài sảnh (giữ, đổi icon) | Chưa làm |
-| 6 | Meta, Shop, Ads, Firebase | Chưa làm |
+| 4 | Booster Hint, Khiên, Reveal | Xong |
+| 5 | Năng lượng ngoài sảnh (giữ, đổi icon) | Xong (hiện ở HUD trong màn, chờ màn Home) |
+| 6 | Meta, Shop, Ads, Firebase | Đang làm: Main Menu 3 tab, màn Home (PLAY, năng lượng, coin), Menu ↔ màn chơi |
 
 ### Vấn đề đã biết
 
-- Font `Fredoka-Bold SDF` lấy từ game gốc bị hỏng; tạo lại bằng code cũng lỗi. Đang dùng LiberationSans SDF. Cách sửa: Window → TextMeshPro → Font Asset Creator, nguồn `GameAssets/06_Fonts/Fredoka-Bold.ttf`.
+- `GameAssets/09_Shaders_Materials/Shaders/` có bản rip `TextMeshPro/Distance Field` (và Mobile, Sprite) từ game gốc, trùng tên với shader thật của TMP nhưng không vẽ được: material nào lấy shader bằng `Shader.Find` sẽ ra chữ thành ô đen (lý do Fredoka từng "hỏng"). Font Fredoka đã tạo lại và gán `TMP_SDF-Mobile` theo đường dẫn (`GameFontSetup`).
 - Sprite mũi tên đang là ảnh debug (`arrow-right@2x.png`).
 - Bộ mặt mèo `boltie_01` bị bỏ vì khung hình bị xoay khi đóng gói atlas; còn 10 bộ.
 - Quảng cáo có thưởng đang giả lập (luôn thành công sau 0.5 giây); chưa có Shop nên nút trả coin bị mờ khi thiếu coin.

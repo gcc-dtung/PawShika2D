@@ -154,7 +154,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  - {fileID: 4828358086127480198, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -198,8 +198,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
+  m_sharedMaterial: {fileID: 4828358086127480198, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -383,7 +383,12 @@ MonoBehaviour:
   ringStartThickness: 1
   ringEndThickness: 0.35
   ringWhiten: 0.45
-  rejectTint: {r: 1, g: 0.35, b: 0.35, a: 1}
+  rejectStyle: 0
+  rejectRingColor: {r: 1, g: 0.25, b: 0.3, a: 1}
+  rejectRingOutset: 0.05
+  rejectRingThickness: 0.6
+  rejectRingBlinks: 2
+  rejectShrinkTo: 0.75
   rejectShakeDuration: 0.45
   rejectShakeStrength: 0.12
   rejectShakeFrequency: 45

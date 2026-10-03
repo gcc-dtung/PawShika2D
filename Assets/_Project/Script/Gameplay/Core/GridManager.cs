@@ -32,11 +32,14 @@ public class GridManager : Singleton<GridManager>
     private ColorType _dragColor;     // màu khung chọn của lượt kéo -> màu khối mèo
     private readonly DragSelection _drag = new DragSelection();
     private bool _isGameWon = false;
+    private bool _finishing; // đã thả tay, đang chờ khung giãn xong rồi mới đặt / báo sai
 
     public BoardModel Board => _board;
     public bool IsGameWon => _isGameWon;
     public bool IsGameOver => LivesManager.Instance != null && LivesManager.Instance.IsOutOfLives;
-    public bool IsInputLocked => _isGameWon || IsGameOver || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying);
+    public bool IsInputLocked => _isGameWon || IsGameOver || _finishing
+        || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying)
+        || (BoosterManager.Instance != null && BoosterManager.Instance.IsBusy); // Reveal đang tự đặt khối
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
 
     protected override void Awake()
@@ -112,7 +115,10 @@ public class GridManager : Singleton<GridManager>
     /// <summary>Số ô của vùng đang kéo, dùng cho bong bóng đếm ô.</summary>
     public int SelectionCellCount => _drag.IsActive ? _drag.CellCount : 0;
 
-    /// <summary>Khung chọn bám vùng; vùng đủ điều kiện thì hiện mèo xem trước.</summary>
+    /// <summary>
+    /// Khung chọn bám vùng. Vùng đủ điều kiện: khung giãn hết vào vùng rồi mới biến thành mèo xem trước
+    /// (SelectionBoxView.WhenSettled); kéo sang vùng khác trước khi giãn xong thì không hiện mèo.
+    /// </summary>
     private void RefreshSelection()
     {
         RectInt rect = _drag.Rect;
@@ -124,30 +130,46 @@ public class GridManager : Singleton<GridManager>
         }
 
         PlacementCheck check = _board.Check(rect);
-        if (check.IsReady)
-        {
-            if (_preview == null) _preview = _blockPool.Get();
-            if (!_preview.IsPreview || !_preview.Rect.Equals(rect)) _preview.ShowPreview(rect, check.ClueCell, _dragColor, geometry);
-        }
-        else
-        {
-            ReleasePreview();
-        }
+        if (_preview != null && !(check.IsReady && _preview.Rect.Equals(rect))) ReleasePreview();
+        if (selectionBox != null) selectionBox.SetFilled(true);
 
-        if (selectionBox != null) selectionBox.SetFilled(!check.IsReady);
+        if (!check.IsReady)
+        {
+            if (selectionBox != null) selectionBox.WhenSettled(null);
+            return;
+        }
+        if (_preview != null) return; // đã là mèo của đúng vùng này
+
+        if (selectionBox != null) selectionBox.WhenSettled(() => ShowPreviewFor(rect));
+        else ShowPreviewFor(rect);
     }
 
-    /// <summary>Thả tay: đặt khối nếu đúng, mèo rung đỏ + trừ mạng nếu sai lời giải, hủy nếu chưa đủ điều kiện.</summary>
+    /// <summary>Khung đã giãn xong vào vùng đủ điều kiện -> hiện mèo, khung mờ đi.</summary>
+    private void ShowPreviewFor(RectInt rect)
+    {
+        if (_board == null || (_drag.IsActive && !_drag.Rect.Equals(rect))) return;
+        PlacementCheck check = _board.Check(rect);
+        if (!check.IsReady) return;
+
+        if (_preview == null) _preview = _blockPool.Get();
+        if (!_preview.IsPreview || !_preview.Rect.Equals(rect)) _preview.ShowPreview(rect, check.ClueCell, _dragColor, _board.Geometry);
+        if (selectionBox != null) selectionBox.SetFilled(false);
+    }
+
+    /// <summary>
+    /// Thả tay: đặt khối nếu đúng, mèo rung + trừ mạng nếu sai lời giải, hủy nếu chưa đủ điều kiện.
+    /// Đủ điều kiện mà khung chưa giãn xong thì chờ khung giãn hết, hiện mèo, rồi mới đặt / báo sai.
+    /// </summary>
     public void EndSelection()
     {
         if (!_drag.IsActive) return;
         RectInt rect = _drag.Rect;
         _drag.End();
-        if (selectionBox != null) selectionBox.Hide();
 
         // Khi đã win hoặc hết mạng -> Khóa toàn bộ thao tác
         if (IsInputLocked || _board == null)
         {
+            HideSelectionBox();
             ReleasePreview();
             return;
         }
@@ -156,18 +178,45 @@ public class GridManager : Singleton<GridManager>
 
         if (check.Result == PlacementResult.Ignored)
         {
+            HideSelectionBox();
             ReleasePreview();
             return;
         }
 
         if (!check.IsReady)
         {
+            HideSelectionBox();
             ReleasePreview();
             Reject(check);
             return;
         }
 
-        // Thả tay mà chưa kịp hiện mèo xem trước -> tạo luôn
+        if (_preview != null || selectionBox == null || selectionBox.IsSettled)
+        {
+            HideSelectionBox();
+            CommitSelection(check);
+            return;
+        }
+
+        // Khung đang giãn dở: khóa thao tác, chờ giãn xong
+        _finishing = true;
+        selectionBox.WhenSettled(() =>
+        {
+            _finishing = false;
+            HideSelectionBox();
+            CommitSelection(check);
+        });
+    }
+
+    private void HideSelectionBox()
+    {
+        if (selectionBox != null) selectionBox.Hide();
+    }
+
+    /// <summary>Vùng đủ điều kiện sau khi thả tay: hiện mèo (nếu chưa) rồi kiểm tra lời giải.</summary>
+    private void CommitSelection(PlacementCheck check)
+    {
+        RectInt rect = check.Rect;
         if (_preview == null)
         {
             _preview = _blockPool.Get();
@@ -191,6 +240,7 @@ public class GridManager : Singleton<GridManager>
     /// <summary>Hủy lượt kéo (bị khóa input, đổi level...).</summary>
     public void CancelSelection()
     {
+        _finishing = false; // Hide() bỏ luôn callback chờ khung giãn xong
         _drag.End();
         if (selectionBox != null) selectionBox.Hide();
         ReleasePreview();
@@ -211,6 +261,24 @@ public class GridManager : Singleton<GridManager>
 
         // Kiểm tra sau khi đặt khối xem đã phủ kín toàn bộ grid chưa
         if (_board.IsFull()) HandleGameWin();
+    }
+
+    /// <summary>
+    /// Booster (Hint / Reveal) đặt 1 khối của lời giải: không qua kéo thả, không kiểm tra lời giải lại.
+    /// Màu random như khung chọn. Trả về false nếu vùng không đặt được (đã có khối, ô còn khóa...).
+    /// </summary>
+    public bool PlaceSolved(RectInt rect)
+    {
+        if (_board == null || _isGameWon || IsGameOver) return false;
+        PlacementCheck check = _board.Check(rect);
+        if (!check.IsReady) return false;
+
+        CancelSelection();
+        _dragColor = ColorTypeExtensions.GetRandomColorType();
+        PlacedBlockView view = _blockPool.Get();
+        view.ShowPreview(rect, check.ClueCell, _dragColor, _board.Geometry);
+        PlaceBlock(check, view);
+        return true;
     }
 
     private void Reject(PlacementCheck check)

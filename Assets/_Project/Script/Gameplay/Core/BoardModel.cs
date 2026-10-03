@@ -141,6 +141,20 @@ public class BoardModel
         return ShikakuSolver.IsSolvable(Level, rects);
     }
 
+    /// <summary>
+    /// Lời giải cho các ô số chưa có khối, khớp với các khối đã đặt (dùng cho Hint / Reveal).
+    /// Solver dùng giá trị thật của ô ẩn "?" nên luôn ra 1 lời giải nhất quán.
+    /// </summary>
+    public bool TrySolveRemaining(out List<RectInt> remaining)
+    {
+        remaining = null;
+        if (Level == null || Level.clues == null) return false;
+
+        List<RectInt> rects = new List<RectInt>(_blocks.Count);
+        foreach (BlockModel b in _blocks) rects.Add(b.Rect);
+        return ShikakuSolver.TrySolve(Level, rects, out remaining) && remaining != null;
+    }
+
     /// <summary>Đặt khối từ 1 vùng đã Ready, tô màu <paramref name="color"/>. Các ô vừa mở khóa được thêm vào <paramref name="unlocked"/>.</summary>
     public BlockModel Place(PlacementCheck check, ColorType color, List<CellModel> unlocked)
     {

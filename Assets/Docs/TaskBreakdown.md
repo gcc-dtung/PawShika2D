@@ -17,12 +17,15 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 | 5 | Booster Freeze Time | Đổi thành Khiên: chặn 1 lần sai kế tiếp |
 | 6 | Hết mạng | Popup Hồi mạng (ads +1, coin +3) rồi mới sang Lose |
 | 7 | Năng lượng ngoài sảnh | Giữ (phương án B), đổi icon khác tim |
+| 8 | Daily Challenge | Thay bằng tab **Progress**: lên tới level nào thì nhận quà gì (game gốc sinh lưới theo ngày bằng thuật toán, không có) |
 
 ## Câu hỏi mở
 
 - Ô khóa / ô ẩn / mũi tên xuất hiện từ level nào, mật độ bao nhiêu? (dữ liệu ShikaCat không có)
 - Màn Win, Lose, Home của game gốc trông thế nào? (chưa có ảnh tham chiếu)
 - Hết 205 level thì làm gì: quay vòng, màn "Coming soon", hay bộ sinh level?
+- Năng lượng: nút Replay giữa level đang miễn phí → có thể chơi lại trước khi thua để né mất tim năng lượng. Có tính phí khi Replay sau khi đã mất mạng không?
+- Giá nạp đầy năng lượng (đang 900 coin) và hồi mạng (900 coin) chưa có số gốc.
 
 ---
 
@@ -51,7 +54,7 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - [x] `GameplayVisualsSetup`: cắt atlas Spine `ingame_cat_face_03` thành 10 bộ mặt mèo
 - [x] `GameplayFeedback`: chữ khen khi đặt đúng; chớp đỏ, rung camera, rung máy khi sai
 - [x] `LevelHUD`: chữ `LEVEL n`, nút chơi lại
-- [~] Font: tạm dùng LiberationSans (Fredoka hỏng)
+- [x] Font: Fredoka Bold cho toàn game (tạo lại font asset, viền chữ ở Menu); LiberationSans làm fallback
 - [~] Sprite mũi tên: ảnh debug tạm
 - [ ] Gắn ô khóa / ẩn / mũi tên vào level thật (chờ trả lời câu hỏi mở)
 - [ ] Âm thanh: `block_true.ogg`, `unlock_obs2.ogg`, âm sai, nhạc nền
@@ -81,36 +84,44 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - [ ] Banner độ khó (cần thêm trường độ khó vào `LevelDefinition`)
 - [ ] Làm đẹp HUD: khung LEVEL dùng sprite gốc thay cho ô màu
 
-## Giai đoạn 4 — Booster
+## Giai đoạn 4 — Booster ✅
 
 | Booster | Mở ở level | Giá (coin) | Hành vi |
 | --- | --- | --- | --- |
 | Hint | 5 | 1200 / 3 lượt | Tự đặt 1 khối đúng (dùng `ShikakuSolver.TrySolve`) |
-| Khiên (thay Freeze Time) | 7 | 1500 / 3 lượt | Chặn lần sai kế tiếp; dùng lại Spine `Freeze` + hiệu ứng băng |
+| Khiên (thay Freeze Time) | 7 | 1500 / 3 lượt | Chặn lần sai kế tiếp trong level; khung băng `ice_effect_2` phủ hàng tim (chưa có Spine runtime) |
 | Reveal | 9 | 1000 / 1 lượt | Chọn 1 số, giải mọi khối cùng số |
 
-- [ ] `BoosterManager` + 3 nút trong `Canvas_HUD/DownPanel/Booster`
-- [ ] Số lượng, dấu `+` khi hết, mở khóa theo level
-- [ ] Hint và Reveal lấy lời giải khớp với các khối đã đặt (`TrySolve`)
-- [ ] Khiên: trạng thái bật trên nút, `LivesManager` bỏ qua 1 lần `LoseLife`
-- [ ] Sửa `BoosterDatabase.asset`: tên, mô tả, bỏ `activeSeconds`
+- [x] `BoosterManager` + 3 nút `BoosterButton` trong `Canvas_HUD/DownPanel/Booster` (menu `Build Boosters`)
+- [x] Số lượt (`BoosterInventory`, PlayerPrefs, tặng `valueStart`), dấu `+` khi hết → `BuyBoosterPopup`, ổ khóa "LV n" khi chưa tới level
+- [x] Hint và Reveal lấy lời giải khớp với các khối đã đặt (`BoardModel.TrySolveRemaining`); Reveal có banner chọn số + nút X
+- [x] Khiên: quầng sáng trên nút + khung băng trên tim, `LivesManager` bỏ qua 1 lần `LoseLife`; đổi level / chơi lại thì mất
+- [x] Sửa `BoosterDatabase.asset`: trỏ script mới, Freeze Time → Shield, icon, bỏ `activeSeconds`
+- [x] Lượt chỉ bị trừ khi booster có tác dụng (Hint đặt được khối, Reveal có khối để giải)
 
-## Giai đoạn 5 — Năng lượng ngoài sảnh (phương án B)
+## Giai đoạn 5 — Năng lượng ngoài sảnh (phương án B) ✅
 
-- [ ] Thua 1 level tốn 1 năng lượng, tối đa 5
-- [ ] Hồi 1 năng lượng sau 30 phút (`gamePlay_TimeRefillHeart = 1800`)
-- [ ] Icon năng lượng khác tim (cá hoặc bát ăn mèo)
-- [ ] `RefillLivesPopup` → popup nạp năng lượng
-- [ ] Phần thưởng "tim vô hạn" của Daily Challenge → "năng lượng vô hạn"
+Chưa có màn Home (Giai đoạn 6) nên năng lượng hiện ở HUD trong màn, và chặn ngay trong màn.
+
+- [x] Thua 1 level (state Lost) tốn 1 năng lượng, tối đa 5 (`EnergyModel` + `EnergyManager`)
+- [x] Hồi 1 năng lượng sau 30 phút, tính theo mốc thời gian nên tắt game vẫn hồi
+- [x] Icon tim như bản gốc (`icon_hear_2`, vô hạn `icon_hear_infinity2`; trước đó là cá ShikaCat) + HUD góc trên phải: số, đồng hồ, FULL, ∞
+- [x] `RefillEnergyPopup` (thay `RefillLivesPopup`): ads +1, 900 coin nạp đầy; mở từ HUD (có X) hoặc bắt buộc khi hết năng lượng mà Retry / mở game (tự đóng khi có năng lượng)
+- [x] API "năng lượng vô hạn" (`EnergyManager.AddInfinite`) – Daily Challenge (Giai đoạn 6) sẽ gọi
+- [~] Chưa chống chỉnh giờ máy (đồng hồ lùi thì chỉ đặt lại mốc, không cộng thêm)
 
 ## Giai đoạn 6 — Meta, kinh tế, SDK
 
-1. Home, chọn level, Setting (âm thanh, nhạc, rung)
-2. Coin: thưởng khi thắng theo độ khó, x2 bằng ads
-3. Shop / IAP: gói Coin1–6, Starter, Bundle, NoAds
-4. Daily Challenge: lưới theo ngày, quà theo `DailyChallengeData.txt`
-5. Tutorial: luật cơ bản, ô khóa, ô ẩn, mũi tên, từng booster, cơ chế mạng
-6. Ads (MAX / AdMob), Firebase Analytics + Remote Config
+- [x] Main Menu (`Canvas_Menu`): thanh tab dưới **Shop | Home | Progress**, panel trượt ngang (`MainMenuNavigator`, menu `Build Main Menu`)
+- [x] Home: nút PLAY Level n (`ScreenFlow`: ẩn menu, bật HUD, nạp lại level; hết năng lượng → popup nạp có X), năng lượng + coin trên cùng (bấm coin → tab Shop)
+- [x] Popup chuyển sang `Canvas_Popup` riêng (dùng chung Menu và màn chơi); popup Thua có nút HOME
+- [ ] Setting, avatar, nút Starter / No Ads trên Home
+- [ ] Về Home sau khi thắng (bản gốc: `gamePlay_LevelWin_BackToHome` = 10) và nút Home giữa ván
+- [ ] Shop / IAP: gói Coin1–6, Starter, Bundle, NoAds (theo ảnh Shop của bản gốc)
+- [ ] Progress: mốc level → quà (coin, booster, năng lượng vô hạn), nhận quà
+- [ ] Coin: thưởng khi thắng theo độ khó, x2 bằng ads
+- [ ] Tutorial: luật cơ bản, ô khóa, ô ẩn, mũi tên, từng booster, cơ chế mạng
+- [ ] Ads (MAX / AdMob), Firebase Analytics + Remote Config
 
 ---
 

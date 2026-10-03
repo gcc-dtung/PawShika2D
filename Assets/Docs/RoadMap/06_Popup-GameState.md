@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-03 01:09 |
+| Trạng thái | Đã push |
+| Commit | `93c8844` "Popup thắng/hồi mạng/thua, GameState, coin, chuyển anim sang DOTween" (nhánh `Day-2`) |
+| Thời gian push | 2026-10-03 01:13 |
+| Cập nhật lần cuối | 2026-10-03 01:13 |
 
 ## Tóm tắt
 

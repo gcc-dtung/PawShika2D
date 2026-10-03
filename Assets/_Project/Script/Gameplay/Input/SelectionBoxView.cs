@@ -1,8 +1,11 @@
+using System;
+using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
-/// Khung màu phủ lên vùng đang kéo. Khi vùng đổi, tâm và kích thước trượt mượt tới vùng mới
-/// (các mép giãn / co ra) thay vì nhảy ngay. Khi đang hiện mèo xem trước thì khung mờ đi.
+/// Khung màu phủ lên vùng đang kéo. Khi vùng đổi, tâm và kích thước trượt tới vùng mới trong resizeDuration
+/// (tween DOTween, các mép giãn / co ra) thay vì nhảy ngay. Giãn xong thì báo "settled" (WhenSettled) để
+/// GridManager mới biến khung thành mèo xem trước. Khi đang hiện mèo xem trước thì khung mờ đi.
 /// Bình thường khung ôm sát các ô (mỗi mép thụt vào `inset`). Ngón tay đẩy vào khối đã đặt / ô Void /
 /// ra ngoài lưới thì mép phía đó trượt sang lấp khe rồi dừng ngay trước vật cản (như bị kẹt).
 /// </summary>
@@ -12,7 +15,9 @@ public class SelectionBoxView : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float opacity = 0.5f;
 
     [Header("Chuyển động")]
-    [SerializeField] private float resizeSmoothTime = 0.05f; // thời gian mép bắt kịp ô mới
+    [Tooltip("Thời gian khung giãn / co sang vùng mới. Đủ value thì giãn xong mới hiện mèo")]
+    [SerializeField, Min(0f)] private float resizeDuration = 0.15f;
+    [SerializeField] private Ease resizeEase = Ease.OutQuad;
     [SerializeField] private float fadeSpeed = 12f;          // tốc độ mờ / hiện khi bật tắt mèo xem trước
 
     [Header("Ôm ô / bị chặn")]
@@ -29,14 +34,19 @@ public class SelectionBoxView : MonoBehaviour
     private Vector2 _targetSize;
     private Vector3 _center;
     private Vector2 _size;
-    private Vector3 _centerVelocity;
-    private Vector2 _sizeVelocity;
+    private Vector3 _fromCenter;
+    private Vector2 _fromSize;
+    private Tween _resize;      // đang giãn / co tới vùng đích
+    private Action _onSettled;  // gọi 1 lần khi khung tới vùng đích
 
     private float _alpha;        // 0..1, nhân với opacity
     private float _targetAlpha = 1f;
 
     /// <summary>Màu của lượt kéo hiện tại; khối mèo tạo từ lượt kéo này dùng đúng màu này.</summary>
     public ColorType ColorType => _colorType;
+
+    /// <summary>Khung đã nằm đúng vùng đích (không còn giãn / co).</summary>
+    public bool IsSettled => _resize == null;
 
     private void Awake()
     {
@@ -87,18 +97,17 @@ public class SelectionBoxView : MonoBehaviour
             _isSelecting = true;
             _colorType = ColorTypeExtensions.GetRandomColorType();
             _blockDir = Vector2Int.zero;
+            KillResize();
             UpdateTarget();
             _center = _targetCenter;
             _size = _targetSize;
-            _centerVelocity = Vector3.zero;
-            _sizeVelocity = Vector2.zero;
             _alpha = _targetAlpha = 1f;
             gameObject.SetActive(true);
             Apply();
         }
         else
         {
-            UpdateTarget();
+            RetargetResize();
         }
     }
 
@@ -107,7 +116,62 @@ public class SelectionBoxView : MonoBehaviour
     {
         if (dir == _blockDir) return;
         _blockDir = dir;
+        if (_isSelecting) RetargetResize();
+        else UpdateTarget();
+    }
+
+    /// <summary>
+    /// Gọi <paramref name="onSettled"/> khi khung tới vùng đích (ngay lập tức nếu đã tới). Chỉ giữ 1 callback:
+    /// gọi lại thì thay callback cũ; null = bỏ. Khung bị ẩn / tắt thì callback bị bỏ, không gọi.
+    /// </summary>
+    public void WhenSettled(Action onSettled)
+    {
+        _onSettled = onSettled;
+        if (onSettled != null && IsSettled) NotifySettled();
+    }
+
+    /// <summary>Đích đổi -> giãn / co từ vị trí đang hiển thị tới đích mới.</summary>
+    private void RetargetResize()
+    {
+        Vector3 oldCenter = _targetCenter;
+        Vector2 oldSize = _targetSize;
         UpdateTarget();
+        if (_resize != null && oldCenter == _targetCenter && oldSize == _targetSize) return; // đang tới đúng đích này
+
+        KillResize();
+        if ((_center - _targetCenter).sqrMagnitude < 1e-8f && (_size - _targetSize).sqrMagnitude < 1e-8f) return;
+
+        _fromCenter = _center;
+        _fromSize = _size;
+        Tween tween = null;
+        tween = DOVirtual.Float(0f, 1f, resizeDuration, p =>
+            {
+                _center = Vector3.LerpUnclamped(_fromCenter, _targetCenter, p);
+                _size = Vector2.LerpUnclamped(_fromSize, _targetSize, p);
+                Apply();
+            })
+            .SetEase(resizeEase)
+            .SetLink(gameObject)
+            .OnComplete(() =>
+            {
+                _resize = null;
+                NotifySettled();
+            })
+            .OnKill(() => { if (_resize == tween) _resize = null; });
+        _resize = tween;
+    }
+
+    private void NotifySettled()
+    {
+        Action callback = _onSettled;
+        _onSettled = null;
+        callback?.Invoke();
+    }
+
+    private void KillResize()
+    {
+        _resize?.Kill();
+        _resize = null;
     }
 
     /// <summary>Vùng ô thụt vào inset mỗi mép; mép phía bị chặn trượt ra thêm blockedExtend.</summary>
@@ -135,6 +199,8 @@ public class SelectionBoxView : MonoBehaviour
 
     public void Hide()
     {
+        _onSettled = null;
+        KillResize();
         _isSelecting = false;
         _blockDir = Vector2Int.zero;
         gameObject.SetActive(false);
@@ -144,10 +210,14 @@ public class SelectionBoxView : MonoBehaviour
     {
         if (!_isSelecting) return;
 
-        _center = Vector3.SmoothDamp(_center, _targetCenter, ref _centerVelocity, resizeSmoothTime);
-        _size = Vector2.SmoothDamp(_size, _targetSize, ref _sizeVelocity, resizeSmoothTime);
         _alpha = Mathf.MoveTowards(_alpha, _targetAlpha, fadeSpeed * Time.deltaTime);
         Apply();
+    }
+
+    private void OnDisable()
+    {
+        _onSettled = null;
+        KillResize();
     }
 
     private void Apply()

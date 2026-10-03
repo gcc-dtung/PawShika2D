@@ -20,7 +20,9 @@ public class LevelManager : Singleton<LevelManager>
     [Tooltip("Chờ hiệu ứng đặt khối / mèo rung xong rồi mới đổi trạng thái (popup hiện sau khoảng này)")]
     [SerializeField] private float stateChangeDelay = 0.8f;
 
-    [Header("Camera fit (tỉ lệ màn hình dành cho lưới)")]
+    [Header("Camera fit")]
+    [Tooltip("Vùng chơi trong Canvas_HUD: lưới luôn nằm trọn trong vùng này. Không có (hoặc đang tắt) thì dùng tỉ lệ bên dưới.")]
+    [SerializeField] private PlayZone playZone;
     [SerializeField] private Camera targetCamera;
     [SerializeField, Range(0.3f, 1f)] private float boardHeightRatio = 0.62f;
     [SerializeField, Range(0.5f, 1f)] private float boardWidthRatio = 0.92f;
@@ -178,13 +180,23 @@ public class LevelManager : Singleton<LevelManager>
         _pending = null;
     }
 
-    /// <summary>Phóng camera cho lưới vừa vùng giữa HUD trên và thanh booster dưới.</summary>
+    /// <summary>
+    /// Phóng camera cho lưới vừa vùng chơi. Có PlayZone: PlayZone căn (và tự căn lại khi màn hình đổi).
+    /// PlayZone đang tắt (ở Menu) thì căn tạm theo tỉ lệ màn hình; vào màn chơi PlayZone căn lại.
+    /// </summary>
     private void FitCamera(LevelDefinition level)
     {
-        if (targetCamera == null || !targetCamera.orthographic || level == null) return;
-
+        if (level == null) return;
         float gridW = level.size * GridSpawner.CellSpacing;
         float gridH = level.Height * GridSpawner.CellSpacing;
+
+        if (playZone != null)
+        {
+            playZone.SetContent(new Vector2(gridW, gridH));
+            if (playZone.isActiveAndEnabled) return;
+        }
+
+        if (targetCamera == null || !targetCamera.orthographic) return;
         float aspect = targetCamera.aspect;
 
         float sizeByHeight = gridH / 2f / boardHeightRatio;

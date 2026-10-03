@@ -1,0 +1,129 @@
+using DG.Tweening;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+/// <summary>
+/// 1 nút booster trên thanh dưới. Hiện: icon + số lượt; hết lượt thì dấu "+"; chưa tới level thì ổ khóa + "LV n";
+/// đang bật (Khiên / đang chọn số Reveal) thì quầng sáng xoay sau nút. Bấm -> BoosterManager.Press.
+/// </summary>
+[RequireComponent(typeof(Button))]
+public class BoosterButton : MonoBehaviour
+{
+    [SerializeField] private BoosterType type;
+    [SerializeField] private Image icon;
+    [SerializeField] private GameObject countBadge;
+    [SerializeField] private TMP_Text countText;
+    [SerializeField] private GameObject addBadge;
+    [SerializeField] private GameObject lockGroup;
+    [SerializeField] private TMP_Text lockText;
+    [SerializeField] private Image glow;
+    [SerializeField] private float glowSpin = 90f; // độ / giây
+
+    private Button _button;
+    private Tween _glowTween;
+    private Tween _punch;
+
+    public BoosterType Type => type;
+
+    private void Awake()
+    {
+        _button = GetComponent<Button>();
+        _button.onClick.AddListener(OnClick);
+    }
+
+    private void OnEnable()
+    {
+        BoosterInventory.Changed += OnInventoryChanged;
+        BoosterManager bm = BoosterManager.Instance;
+        if (bm != null)
+        {
+            bm.onRevealModeChanged.AddListener(OnRevealMode);
+            bm.onBoosterUsed.AddListener(OnUsed);
+        }
+        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
+        if (LivesManager.Instance != null) LivesManager.Instance.onShieldChanged.AddListener(OnShield);
+        Refresh();
+    }
+
+    private void OnDisable()
+    {
+        BoosterInventory.Changed -= OnInventoryChanged;
+        BoosterManager bm = BoosterManager.Instance;
+        if (bm != null)
+        {
+            bm.onRevealModeChanged.RemoveListener(OnRevealMode);
+            bm.onBoosterUsed.RemoveListener(OnUsed);
+        }
+        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
+        if (LivesManager.Instance != null) LivesManager.Instance.onShieldChanged.RemoveListener(OnShield);
+
+        _glowTween?.Kill();
+        _glowTween = null;
+        _punch?.Kill();
+        _punch = null;
+    }
+
+    private void OnClick()
+    {
+        if (BoosterManager.Instance != null) BoosterManager.Instance.Press(type);
+    }
+
+    private void OnInventoryChanged(BoosterType changed, int count)
+    {
+        if (changed == type) Refresh();
+    }
+
+    private void OnLevelLoaded(int _) => Refresh();
+    private void OnRevealMode(bool _) => Refresh();
+    private void OnShield(bool _) => Refresh();
+
+    private void OnUsed(BoosterType used)
+    {
+        if (used != type) return;
+        _punch?.Kill();
+        transform.localScale = Vector3.one;
+        _punch = transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, 6, 0.6f)
+            .SetLink(gameObject)
+            .OnKill(() => { if (this != null) transform.localScale = Vector3.one; });
+    }
+
+    public void Refresh()
+    {
+        BoosterManager bm = BoosterManager.Instance;
+        BoosterData data = bm != null ? bm.Get(type) : null;
+        bool unlocked = bm != null && bm.IsUnlocked(type);
+        int count = bm != null ? bm.Count(type) : 0;
+        bool active = bm != null && bm.IsActive(type);
+
+        if (icon != null)
+        {
+            if (data != null && data.icon != null) icon.sprite = data.icon;
+            icon.gameObject.SetActive(unlocked);
+        }
+        if (lockGroup != null) lockGroup.SetActive(!unlocked);
+        if (lockText != null && data != null) lockText.SetText("LV {0}", data.levelUnlock);
+        if (countBadge != null) countBadge.SetActive(unlocked && count > 0);
+        if (countText != null) countText.SetText("{0}", count);
+        if (addBadge != null) addBadge.SetActive(unlocked && count <= 0);
+        SetGlow(unlocked && active);
+    }
+
+    private void SetGlow(bool on)
+    {
+        if (glow == null) return;
+        if (glow.gameObject.activeSelf == on && (!on || _glowTween != null)) return;
+
+        _glowTween?.Kill();
+        _glowTween = null;
+        glow.gameObject.SetActive(on);
+        if (!on) return;
+
+        RectTransform rt = glow.rectTransform;
+        rt.localRotation = Quaternion.identity;
+        _glowTween = rt.DOLocalRotate(new Vector3(0f, 0f, -360f), 360f / glowSpin, RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear)
+            .SetLoops(-1)
+            .SetLink(gameObject);
+    }
+}

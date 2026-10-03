@@ -15,12 +15,16 @@ public class LivesManager : Singleton<LivesManager>
     public UnityEvent<int, int> onLivesChanged = new UnityEvent<int, int>(); // (current, max)
     public UnityEvent<int> onLifeLost = new UnityEvent<int>();                // current sau khi trừ
     public UnityEvent onOutOfLives = new UnityEvent();
+    public UnityEvent<bool> onShieldChanged = new UnityEvent<bool>(); // bật / tắt khiên
+    public UnityEvent onShieldBlocked = new UnityEvent();             // khiên vừa chặn 1 lần sai
 
     private int _currentLives;
+    private bool _shield; // booster Khiên: chặn lần trừ mạng kế tiếp
 
     public int MaxLives => maxLives;
     public int CurrentLives => _currentLives;
     public bool IsOutOfLives => _currentLives <= 0;
+    public bool HasShield => _shield;
 
     protected override void Awake()
     {
@@ -53,8 +57,10 @@ public class LivesManager : Singleton<LivesManager>
         ResetLives();
     }
 
+    /// <summary>Level mới / chơi lại: đủ mạng, khiên chưa dùng tới cũng mất.</summary>
     public void ResetLives()
     {
+        SetShield(false);
         _currentLives = maxLives;
         onLivesChanged?.Invoke(_currentLives, maxLives);
     }
@@ -62,6 +68,14 @@ public class LivesManager : Singleton<LivesManager>
     public void LoseLife()
     {
         if (IsOutOfLives) return;
+
+        if (_shield)
+        {
+            Debug.Log("[LivesManager] Khiên chặn 1 lần sai, không trừ mạng");
+            SetShield(false);
+            onShieldBlocked?.Invoke();
+            return;
+        }
 
         _currentLives--;
         Debug.LogWarning($"<color=red>[LivesManager] -1 mạng! Còn {_currentLives}/{maxLives}</color>");
@@ -74,6 +88,21 @@ public class LivesManager : Singleton<LivesManager>
             Debug.Log("<color=red>✖ ✖ ✖ HẾT MẠNG -> GAME OVER ✖ ✖ ✖</color>");
             onOutOfLives?.Invoke();
         }
+    }
+
+    /// <summary>Bật khiên. Trả về false nếu đang có khiên hoặc đã hết mạng.</summary>
+    public bool ActivateShield()
+    {
+        if (_shield || IsOutOfLives) return false;
+        SetShield(true);
+        return true;
+    }
+
+    private void SetShield(bool on)
+    {
+        if (_shield == on) return;
+        _shield = on;
+        onShieldChanged?.Invoke(on);
     }
 
     /// <summary>Hồi mạng (popup Hồi mạng ở giai đoạn 3: xem ads +1, coin +3).</summary>

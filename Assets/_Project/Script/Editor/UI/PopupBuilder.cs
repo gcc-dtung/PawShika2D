@@ -5,30 +5,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Dựng popup Giai đoạn 3 vào Canvas_HUD của scene đang mở: Win, Hồi mạng, Thua, Xác nhận chơi lại;
-/// gắn GameFlowUI, RewardedAds và nối nút chơi lại của LevelHUD.
-/// Chạy lại được: xóa "Popups" cũ rồi dựng mới (kèm "LowLivesWarning" của bản trước nếu còn).
+/// Dựng các popup vào Canvas_Popup (canvas riêng, luôn bật, vẽ trên Canvas_HUD và Canvas_Menu) để dùng được
+/// ở cả màn chơi lẫn Main Menu: Win, Hồi mạng, Thua, Xác nhận chơi lại, Mua booster, Nạp năng lượng;
+/// gắn GameFlowUI, RewardedAds và nối các nút cần GameFlowUI (LevelHUD, EnergyHUD, ScreenFlow).
+/// Chạy lại được: xóa "Popups" cũ (cả bản cũ nằm trong Canvas_HUD) rồi dựng mới.
 /// </summary>
 public static class PopupBuilder
 {
-    private const string UI = "Assets/_Project/GameAssets/04_UI_Graphics/";
+    internal const string UI = "Assets/_Project/GameAssets/04_UI_Graphics/";
     private const float PanelScale = 1.6f; // popup_1 552x442 -> 883x707
 
-    private static readonly Color Yellow = new Color(1f, 0.84f, 0.29f);
+    internal static readonly Color Yellow = new Color(1f, 0.84f, 0.29f);
+    // Icon năng lượng: tim như bản gốc (trước đây là cá ShikaCat tô cam)
+    internal const string EnergySprite = UI + "Icons/icon_hear_2.png";
+    internal const string EnergyInfiniteSprite = UI + "Icons/icon_hear_infinity2.png";
     private static readonly Color Red = new Color(1f, 0.45f, 0.45f);
 
     [MenuItem("Tools/PawBlock/Build Popups")]
     public static void Build()
     {
-        GameObject canvasGo = GameObject.Find("Canvas_HUD");
-        if (canvasGo == null)
+        GameObject hudGo = FindRoot("Canvas_HUD");
+        if (hudGo != null)
         {
-            Debug.LogError("[PopupBuilder] Không tìm thấy Canvas_HUD trong scene.");
-            return;
+            DestroyChild(hudGo.transform, "LowLivesWarning");
+            DestroyChild(hudGo.transform, "Popups"); // bản cũ nằm trong HUD
         }
-        Transform canvas = canvasGo.transform;
 
-        DestroyChild(canvas, "LowLivesWarning");
+        GameObject canvasGo = EnsurePopupCanvas();
+        Transform canvas = canvasGo.transform;
         DestroyChild(canvas, "Popups");
 
         RectTransform root = Stretch(NewUI("Popups", canvas));
@@ -38,22 +42,75 @@ public static class PopupBuilder
         ReviveLivesPopup revive = BuildRevive(root);
         LosePopup lose = BuildLose(root);
         ConfirmReplayPopup confirm = BuildConfirm(root);
+        BuyBoosterPopup buy = BuildBuyBooster(root);
+        RefillEnergyPopup refill = BuildRefillEnergy(root);
 
         Assign(flow, "winPopup", win);
         Assign(flow, "revivePopup", revive);
         Assign(flow, "losePopup", lose);
         Assign(flow, "confirmReplayPopup", confirm);
+        Assign(flow, "buyBoosterPopup", buy);
+        Assign(flow, "refillEnergyPopup", refill);
+
+        EnergyHUD energyHud = Object.FindFirstObjectByType<EnergyHUD>(FindObjectsInactive.Include);
+        if (energyHud != null) Assign(energyHud, "gameFlow", flow);
 
         LevelHUD hud = Object.FindFirstObjectByType<LevelHUD>(FindObjectsInactive.Include);
         if (hud != null) Assign(hud, "gameFlow", flow);
 
+        foreach (EnergyHUD e in Object.FindObjectsByType<EnergyHUD>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Assign(e, "gameFlow", flow);
+        ScreenFlow screenFlow = Object.FindFirstObjectByType<ScreenFlow>(FindObjectsInactive.Include);
+        if (screenFlow != null) Assign(screenFlow, "gameFlow", flow);
+
         LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
         if (lm != null && lm.GetComponent<RewardedAds>() == null) lm.gameObject.AddComponent<RewardedAds>();
 
-        foreach (PopupView p in new PopupView[] { win, revive, lose, confirm }) p.gameObject.SetActive(false);
+        foreach (PopupView p in new PopupView[] { win, revive, lose, confirm, buy, refill }) p.gameObject.SetActive(false);
 
         EditorSceneManager.MarkSceneDirty(canvasGo.scene);
-        Debug.Log("[PopupBuilder] Đã dựng popup trong Canvas_HUD/Popups.");
+        Debug.Log("[PopupBuilder] Đã dựng popup trong Canvas_Popup/Popups.");
+    }
+
+    /// <summary>Canvas Overlay riêng cho popup: 1080x1920 như HUD, sortingOrder 20 (trên Menu 10, HUD 0).</summary>
+    private static GameObject EnsurePopupCanvas()
+    {
+        GameObject go = FindRoot("Canvas_Popup");
+        if (go == null)
+        {
+            go = new GameObject("Canvas_Popup", typeof(RectTransform), typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
+            go.layer = LayerMask.NameToLayer("UI");
+            Undo.RegisterCreatedObjectUndo(go, "Build Popups");
+        }
+        Canvas c = go.GetComponent<Canvas>();
+        c.renderMode = RenderMode.ScreenSpaceOverlay;
+        c.sortingOrder = 20;
+        CanvasScaler scaler = go.GetComponent<CanvasScaler>();
+        scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1080, 1920);
+        scaler.matchWidthOrHeight = 0f;
+        if (!go.activeSelf) go.SetActive(true);
+        return go;
+    }
+
+    /// <summary>Tìm object gốc trong scene đang mở, kể cả đang tắt.</summary>
+    internal static GameObject FindRoot(string name)
+    {
+        foreach (GameObject root in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+        {
+            if (root.name == name) return root;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Gốc chứa UI của Canvas_HUD: Canvas_HUD/UIZone (khung safe area, dựng bằng Build UI Zone) nếu có, không thì chính canvas.
+    /// Các builder tìm TopPanel / DownPanel / RevealBanner / PlayZone theo gốc này.
+    /// </summary>
+    internal static Transform HudRoot(GameObject hudCanvas)
+    {
+        if (hudCanvas == null) return null;
+        Transform zone = hudCanvas.transform.Find(UIZoneBuilder.ZoneName);
+        return zone != null ? zone : hudCanvas.transform;
     }
 
     // ---------- Từng popup ----------
@@ -122,11 +179,16 @@ public static class PopupBuilder
         LosePopup popup = NewPopup<LosePopup>(root, "LosePopup", out panel);
         TMP_Text title = Title(panel, "LEVEL 1");
         Text(panel, "Failed", "FAILED", new Vector2(0, -60), new Vector2(760, 120), 84, Red);
-        Text(panel, "Hint", "Try again!", new Vector2(0, -185), new Vector2(760, 80), 54, Color.white);
-        Button retry = NewButton(panel, "RetryButton", UI + "Buttons/btn_green_1.png", new Vector2(0, -470), "RETRY", null, null);
+        // Thua tốn 1 năng lượng (tim)
+        RectTransform cost = Row(panel, "EnergyCost", new Vector2(0, -190), 100);
+        Fit(Text(cost, "Amount", "-1", Vector2.zero, new Vector2(120, 90), 60, Color.white));
+        Icon(cost, "Heart", EnergySprite, 100);
+        Button home = NewButton(panel, "HomeButton", UI + "Buttons/btn_red_1.png", new Vector2(-200, -470), "HOME", null, null);
+        Button retry = NewButton(panel, "RetryButton", UI + "Buttons/btn_green_1.png", new Vector2(200, -470), "RETRY", null, null);
 
         Assign(popup, "titleText", title);
         Assign(popup, "retryButton", retry);
+        Assign(popup, "homeButton", home);
         return popup;
     }
 
@@ -141,6 +203,82 @@ public static class PopupBuilder
 
         Assign(popup, "yesButton", yes);
         Assign(popup, "noButton", no);
+        return popup;
+    }
+
+    private static BuyBoosterPopup BuildBuyBooster(Transform root)
+    {
+        RectTransform panel;
+        BuyBoosterPopup popup = NewPopup<BuyBoosterPopup>(root, "BuyBoosterPopup", out panel);
+        TMP_Text title = Title(panel, "HINT");
+
+        Button close = NewButton(panel, "CloseButton", UI + "Buttons/btn_X_1.png", new Vector2(405, 255), null, null, null);
+        ((RectTransform)close.transform).sizeDelta = new Vector2(120, 120);
+
+        RectTransform iconRow = Row(panel, "Item", new Vector2(0, -20), 170);
+        Image icon = Icon(iconRow, "Icon", "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Boosters_Obstacles/btn_hint.png", 160);
+        TMP_Text amount = Text(iconRow, "Amount", "x3", Vector2.zero, new Vector2(150, 100), 72, Color.white);
+        Fit(amount);
+
+        TMP_Text detail = Text(panel, "Detail", "Detail", new Vector2(0, -190), new Vector2(720, 130), 40, Color.white);
+        detail.fontStyle = FontStyles.Normal;
+
+        Button buy = NewButton(panel, "BuyButton", UI + "Buttons/btn_green_1.png", new Vector2(0, -470), "1200", UI + "Icons/coin.png", null);
+        TMP_Text price = buy.transform.Find("Content/Label").GetComponent<TMP_Text>();
+
+        RectTransform balanceRow = Row(panel, "Balance", new Vector2(0, -590), 80);
+        Icon(balanceRow, "Coin", UI + "Icons/coin.png", 60);
+        TMP_Text balance = Text(balanceRow, "Amount", "0", Vector2.zero, new Vector2(160, 70), 48, Yellow);
+        Fit(balance);
+
+        Assign(popup, "titleText", title);
+        Assign(popup, "detailText", detail);
+        Assign(popup, "icon", icon);
+        Assign(popup, "amountText", amount);
+        Assign(popup, "priceText", price);
+        Assign(popup, "balanceText", balance);
+        Assign(popup, "buyButton", buy);
+        Assign(popup, "closeButton", close);
+        return popup;
+    }
+
+    private static RefillEnergyPopup BuildRefillEnergy(Transform root)
+    {
+        RectTransform panel;
+        RefillEnergyPopup popup = NewPopup<RefillEnergyPopup>(root, "RefillEnergyPopup", out panel);
+        Title(panel, "MORE LIVES");
+
+        Button close = NewButton(panel, "CloseButton", UI + "Buttons/btn_X_1.png", new Vector2(405, 255), null, null, null);
+        ((RectTransform)close.transform).sizeDelta = new Vector2(120, 120);
+
+        RectTransform heartRow = Row(panel, "Energy", new Vector2(0, -40), 150);
+        Icon(heartRow, "Heart", EnergySprite, 150);
+        TMP_Text count = Text(heartRow, "Count", "0/5", Vector2.zero, new Vector2(200, 100), 72, Color.white);
+        Fit(count);
+
+        TMP_Text timer = Text(panel, "Timer", "Next in 30:00", new Vector2(0, -170), new Vector2(720, 70), 48, Yellow);
+
+        Button ads = NewButton(panel, "AdsButton", UI + "Buttons/btn_green_1.png", new Vector2(-200, -470), "+1", UI + "Buttons/btn_video.png", EnergySprite);
+        Button coin = NewButton(panel, "CoinButton", UI + "Buttons/btn_yellow_1.png", new Vector2(200, -470), "FULL", null, EnergySprite);
+
+        RectTransform costRow = Row(panel, "Cost", new Vector2(200, -590), 80);
+        Icon(costRow, "Coin", UI + "Icons/coin.png", 60);
+        TMP_Text cost = Text(costRow, "Amount", "900", Vector2.zero, new Vector2(160, 70), 48, Color.white);
+        Fit(cost);
+        Fit(Text(panel, "AdsCaption", "FREE", new Vector2(-200, -590), new Vector2(300, 70), 48, Color.white));
+
+        RectTransform balanceRow = Row(panel, "Balance", new Vector2(0, -680), 70);
+        Icon(balanceRow, "Coin", UI + "Icons/coin.png", 50);
+        TMP_Text balance = Text(balanceRow, "Amount", "0", Vector2.zero, new Vector2(160, 60), 40, Yellow);
+        Fit(balance);
+
+        Assign(popup, "countText", count);
+        Assign(popup, "timerText", timer);
+        Assign(popup, "coinCostText", cost);
+        Assign(popup, "balanceText", balance);
+        Assign(popup, "adsButton", ads);
+        Assign(popup, "coinButton", coin);
+        Assign(popup, "closeButton", close);
         return popup;
     }
 
@@ -198,7 +336,7 @@ public static class PopupBuilder
     }
 
     /// <summary>Hàng ngang tự căn giữa theo nội dung (icon + chữ).</summary>
-    private static RectTransform Row(Transform parent, string name, Vector2 pos, float height)
+    internal static RectTransform Row(Transform parent, string name, Vector2 pos, float height)
     {
         RectTransform rt = NewUI(name, parent);
         rt.anchoredPosition = pos;
@@ -215,11 +353,11 @@ public static class PopupBuilder
         return rt;
     }
 
-    private static Image Icon(Transform parent, string name, string spritePath, float size)
+    internal static Image Icon(Transform parent, string name, string spritePath, float size)
     {
         RectTransform rt = NewUI(name, parent);
         Image img = rt.gameObject.AddComponent<Image>();
-        img.sprite = LoadSprite(spritePath);
+        img.sprite = spritePath != null ? LoadSprite(spritePath) : null;
         img.preserveAspect = true;
         img.raycastTarget = false;
         rt.sizeDelta = new Vector2(size, size);
@@ -229,7 +367,7 @@ public static class PopupBuilder
         return img;
     }
 
-    private static TMP_Text Text(Transform parent, string name, string text, Vector2 pos, Vector2 size, float fontSize, Color color)
+    internal static TMP_Text Text(Transform parent, string name, string text, Vector2 pos, Vector2 size, float fontSize, Color color)
     {
         RectTransform rt = NewUI(name, parent);
         rt.anchoredPosition = pos;
@@ -246,7 +384,7 @@ public static class PopupBuilder
     }
 
     /// <summary>Chữ trong Row (hoặc đứng riêng): một dòng, Row lấy độ rộng theo nội dung.</summary>
-    private static void Fit(TMP_Text t)
+    internal static void Fit(TMP_Text t)
     {
         t.enableWordWrapping = false;
         t.overflowMode = TextOverflowModes.Overflow;
@@ -254,7 +392,7 @@ public static class PopupBuilder
 
     // ---------- Tiện ích ----------
 
-    private static RectTransform NewUI(string name, Transform parent)
+    internal static RectTransform NewUI(string name, Transform parent)
     {
         GameObject go = new GameObject(name, typeof(RectTransform));
         go.layer = LayerMask.NameToLayer("UI");
@@ -263,7 +401,7 @@ public static class PopupBuilder
         return (RectTransform)go.transform;
     }
 
-    private static RectTransform Stretch(RectTransform rt)
+    internal static RectTransform Stretch(RectTransform rt)
     {
         rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
@@ -272,20 +410,20 @@ public static class PopupBuilder
         return rt;
     }
 
-    private static void DestroyChild(Transform parent, string name)
+    internal static void DestroyChild(Transform parent, string name)
     {
         Transform old = parent.Find(name);
         if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
     }
 
-    private static Sprite LoadSprite(string path)
+    internal static Sprite LoadSprite(string path)
     {
         Sprite s = AssetDatabase.LoadAssetAtPath<Sprite>(path);
         if (s == null) Debug.LogWarning($"[PopupBuilder] Không tìm thấy sprite: {path}");
         return s;
     }
 
-    private static void Assign(Object target, string field, Object value)
+    internal static void Assign(Object target, string field, Object value)
     {
         SerializedObject so = new SerializedObject(target);
         SerializedProperty p = so.FindProperty(field);

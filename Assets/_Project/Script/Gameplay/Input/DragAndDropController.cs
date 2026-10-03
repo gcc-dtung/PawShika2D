@@ -65,7 +65,13 @@ public class DragAndDropController : MonoBehaviour
 
         // Bắt đầu phải chạm trúng 1 ô; ô đã có khối thì GridManager từ chối
         CellView cell = GetCellAtPosition(pos);
-        if (cell == null || !gm.BeginSelection(cell.Position)) return;
+        if (cell == null) return;
+
+        // Đang chọn số cho booster Reveal: chạm ô là chọn, không kéo
+        BoosterManager booster = BoosterManager.Instance;
+        if (booster != null && booster.HandleCellTap(cell.Position)) return;
+
+        if (!gm.BeginSelection(cell.Position)) return;
 
         _isDragging = true;
         UpdateBubble(pos);
