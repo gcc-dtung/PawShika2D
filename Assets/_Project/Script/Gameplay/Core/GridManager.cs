@@ -39,7 +39,8 @@ public class GridManager : Singleton<GridManager>
     public bool IsGameOver => LivesManager.Instance != null && LivesManager.Instance.IsOutOfLives;
     public bool IsInputLocked => _isGameWon || IsGameOver || _finishing
         || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying)
-        || (BoosterManager.Instance != null && BoosterManager.Instance.IsBusy); // Reveal đang tự đặt khối
+        || (BoosterManager.Instance != null && BoosterManager.Instance.IsBusy) // Reveal đang tự đặt khối
+        || (gridSpawner != null && gridSpawner.IsIntroPlaying);                 // lưới đang xuất hiện
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
 
     protected override void Awake()

@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-03 16:10 |
+| Trạng thái | Đã push |
+| Commit | `c2b6cfb` "Booster, năng lượng tim, Main Menu, font Fredoka, Play Zone, safe area" (nhánh `Day-2`) |
+| Thời gian push | 2026-10-03 16:27 |
+| Cập nhật lần cuối | 2026-10-03 16:28 |
 
 ## Tóm tắt
 

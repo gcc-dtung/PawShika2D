@@ -74,12 +74,12 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `GridSpawner` | Sinh `CellView` + `CellModel` từ `LevelDefinition`, bỏ ô Void, phát `gridCellEvent` |
+| `GridSpawner` | Sinh `CellView` + `CellModel` từ `LevelDefinition`, bỏ ô Void, phát `gridCellEvent`; hiệu ứng xuất hiện (ô nảy lần lượt thứ tự ngẫu nhiên, rồi số hiện dần; `IsIntroPlaying` khóa thao tác) |
 | `GridManager` | Điều phối: nhận vùng kéo → hỏi `BoardModel` → điều khiển `SelectionBoxView` / `PlacedBlockView`, trừ mạng, phát event. Vùng đủ điều kiện: chờ khung giãn hết vào vùng mới hiện mèo; thả tay khi khung chưa giãn xong thì khóa thao tác, chờ giãn xong rồi mới đặt / báo sai |
 | `GridGeometry` | Struct C# thuần: tọa độ ô / vùng → world; `WorldToCell` (kẹp trong lưới) |
 | `BoardModel` | **Logic** C# thuần: các ô, các khối đã đặt, `Check(rect)` → `PlacementResult`, gọi solver, đặt khối, giảm khóa, kiểm tra kín lưới |
 | `CellModel` | **Logic** C# thuần: vị trí, `ClueCell`, khối đang chiếm; event `Changed` khi ô số đổi |
-| `CellView` | **View**: bật/tắt object con có sẵn trong prefab (số, ổ khóa, ô nền điều hướng); là đích raycast khi kéo |
+| `CellView` | **View**: bật/tắt object con có sẵn trong prefab (số, ổ khóa, ô nền điều hướng); là đích raycast khi kéo; `PlayIntro` / `StopIntro` (nảy + hiện dần, DOTween) |
 | `ClueCell` | **Logic** C# thuần: giá trị, số bước khóa, ẩn/hiện, hướng |
 
 ### Gameplay/Level, Lives, Solver

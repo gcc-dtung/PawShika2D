@@ -10,15 +10,29 @@ public class GridSpawner : MonoBehaviour
     [SerializeField] private CellView cellPrefab;
     [SerializeField] private LevelDefinition levelData;
     [SerializeField] private int cellPoolCapacity = 144; // lưới lớn nhất 12x12
+
+    [Header("Hiệu ứng xuất hiện (ô nảy lần lượt, thứ tự ngẫu nhiên, rồi số hiện dần)")]
+    [SerializeField] private bool playIntro = true;
+    [Tooltip("Khoảng cách giữa 2 ô bắt đầu nảy (s); cả lưới không quá cellSpreadMax")]
+    [SerializeField] private float cellInterval = 0.035f;
+    [SerializeField] private float cellSpreadMax = 0.6f;
+    [SerializeField] private float cellDuration = 0.28f;
+    [Tooltip("Số bắt đầu hiện sau khi ô cuối bắt đầu nảy bao lâu (s)")]
+    [SerializeField] private float contentGap = 0.12f;
+    [SerializeField] private float contentSpread = 0.35f;
+    [SerializeField] private float contentDuration = 0.25f;
     public UnityEvent<List<CellView>> gridCellEvent = new UnityEvent<List<CellView>>();
 
     private readonly List<CellView> gridCells = new List<CellView>();
     private readonly Dictionary<Vector2Int, ClueData> _clueLookup = new Dictionary<Vector2Int, ClueData>();
     private readonly HashSet<Vector2Int> _voidLookup = new HashSet<Vector2Int>();
     private ObjectPool<CellView> _cellPool;
+    private float _introEndTime;
 
     public LevelDefinition LevelData => levelData;
     public List<CellView> GetGrid => gridCells;
+    /// <summary>Hiệu ứng xuất hiện đang chạy: GridManager khóa thao tác.</summary>
+    public bool IsIntroPlaying => Time.time < _introEndTime;
     public GridGeometry Geometry => levelData != null
         ? new GridGeometry(levelData.size, levelData.Height, CellSpacing)
         : new GridGeometry(0, 0, CellSpacing);
@@ -82,7 +96,43 @@ public class GridSpawner : MonoBehaviour
                 gridCells.Add(cell);
             }
         }
+        if (playIntro) PlayIntro();
         gridCellEvent?.Invoke(gridCells);
+    }
+
+    /// <summary>
+    /// Các ô nảy lần lượt theo thứ tự ngẫu nhiên, nhịp đều; xong lượt ô thì số / khóa hiện dần, cũng ngẫu nhiên.
+    /// </summary>
+    private void PlayIntro()
+    {
+        int count = gridCells.Count;
+        if (count == 0) return;
+
+        float interval = count > 1 ? Mathf.Min(cellInterval, cellSpreadMax / (count - 1)) : 0f;
+        float contentStart = interval * (count - 1) + contentGap;
+        float contentInterval = count > 1 ? contentSpread / (count - 1) : 0f;
+
+        int[] cellOrder = Shuffled(count);
+        int[] contentOrder = Shuffled(count);
+        for (int i = 0; i < count; i++)
+        {
+            float cellDelay = cellOrder[i] * interval;
+            float contentDelay = contentStart + contentOrder[i] * contentInterval;
+            gridCells[i].PlayIntro(cellDelay, cellDuration, contentDelay, contentDuration);
+        }
+        _introEndTime = Time.time + contentStart + contentSpread + contentDuration;
+    }
+
+    private static int[] Shuffled(int count)
+    {
+        int[] a = new int[count];
+        for (int i = 0; i < count; i++) a[i] = i;
+        for (int i = count - 1; i > 0; i--)
+        {
+            int j = Random.Range(0, i + 1);
+            (a[i], a[j]) = (a[j], a[i]);
+        }
+        return a;
     }
 
     private void BuildLookups(LevelDefinition data)
