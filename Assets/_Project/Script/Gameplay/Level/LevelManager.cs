@@ -10,8 +10,6 @@ using UnityEngine.Events;
 /// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
-    private const string CurrentLevelKey = "PawBlock_CurrentLevel";
-
     [SerializeField] private int currentLevel = 0;
     
     [SerializeField] private LevelDatabase database;
@@ -43,6 +41,7 @@ public class LevelManager : Singleton<LevelManager>
     public bool HasRevived => _hasRevived;
 
     public int CurrentIndex => _currentIndex;
+    public int LevelCount => database != null ? database.Count : 0;
     public int CurrentLevelNumber => _currentIndex + 1;
     public LevelDefinition CurrentLevel => database != null ? database.Get(_currentIndex) : null;
 
@@ -51,7 +50,7 @@ public class LevelManager : Singleton<LevelManager>
         base.Awake();
         if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
         if (targetCamera == null) targetCamera = Camera.main;
-        _currentIndex = PlayerPrefs.GetInt(CurrentLevelKey, 0);
+        _currentIndex = SaveSystem.Data.currentLevel;
     }
 
     private void Start()
@@ -79,8 +78,11 @@ public class LevelManager : Singleton<LevelManager>
 
         CancelPending();
         _currentIndex = Mathf.Clamp(index, 0, database.Count - 1);
-        PlayerPrefs.SetInt(CurrentLevelKey, _currentIndex);
-        PlayerPrefs.Save();
+        if (SaveSystem.Data.currentLevel != _currentIndex)
+        {
+            SaveSystem.Data.currentLevel = _currentIndex;
+            SaveSystem.MarkDirty();
+        }
 
         LevelDefinition level = database.Get(_currentIndex);
         gridSpawner.Spawn(level);
@@ -212,7 +214,6 @@ public class LevelManager : Singleton<LevelManager>
     [ContextMenu("Load Level")]
     public void GoToLevel()
     {
-        PlayerPrefs.SetInt(CurrentLevelKey, currentLevel);
-        LoadLevel(currentLevel);
+        LoadLevel(currentLevel); // LoadLevel tự lưu level hiện tại
     }
 }

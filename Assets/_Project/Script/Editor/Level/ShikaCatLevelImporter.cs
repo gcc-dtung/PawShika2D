@@ -80,6 +80,7 @@ public static class ShikaCatLevelImporter
         }
         // Giữ level test (Levels/Test) ở cuối danh sách sau khi nhập lại
         TestLevelBuilder.AppendTestLevels(database);
+        LevelEditorWindow.AppendCustomLevels(database); // level tự làm bằng Level Editor (thêm vào cuối)
         EditorUtility.SetDirty(database);
         AssetDatabase.SaveAssets();
 

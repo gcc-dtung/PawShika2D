@@ -17,6 +17,9 @@ public class GridManager : Singleton<GridManager>
     [SerializeField] private Transform blockRoot;
     [SerializeField] private int blockPoolCapacity = 64;
 
+    [Header("Thắng")]
+    [SerializeField] private float winFlashDelay = 0.1f;
+
     [Header("Events")]
     public UnityEvent onGameWin = new UnityEvent();
     public UnityEvent<BlockModel> onBlockPlaced = new UnityEvent<BlockModel>();
@@ -40,7 +43,8 @@ public class GridManager : Singleton<GridManager>
     public bool IsInputLocked => _isGameWon || IsGameOver || _finishing
         || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying)
         || (BoosterManager.Instance != null && BoosterManager.Instance.IsBusy) // Reveal đang tự đặt khối
-        || (gridSpawner != null && gridSpawner.IsIntroPlaying);                 // lưới đang xuất hiện
+        || (gridSpawner != null && gridSpawner.IsIntroPlaying)                  // lưới đang xuất hiện
+        || DifficultyIntro.Playing;                                              // băng "HARD / EXTREME LEVEL" đang chạy
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
 
     protected override void Awake()
@@ -305,6 +309,12 @@ public class GridManager : Singleton<GridManager>
     {
         if (_isGameWon) return;
         _isGameWon = true;
+
+        // Cả lưới lóe sáng (như bản gốc), khối vừa đặt đang bật nên chờ 1 nhịp
+        foreach (PlacedBlockView view in _blockViews.Values)
+        {
+            if (view != null) view.PlayWinFlash(winFlashDelay);
+        }
 
         Debug.Log("<color=yellow>★ ★ ★ LEVEL COMPLETED! FULL GRID -> YOU WIN! ★ ★ ★</color>");
         onGameWin?.Invoke();

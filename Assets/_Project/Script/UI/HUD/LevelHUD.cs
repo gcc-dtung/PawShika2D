@@ -1,17 +1,23 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-/// <summary>HUD trên: chữ "LEVEL n" và nút chơi lại.</summary>
+/// <summary>HUD trên: chữ "LEVEL n"; level Hard / Very Hard thì có khung có tab ghi mức khó bao ô LEVEL (DifficultyTheme).</summary>
 public class LevelHUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text levelText;
-    [SerializeField] private Button replayButton;
-    [SerializeField] private GameFlowUI gameFlow; // có thì hỏi xác nhận trước khi chơi lại
+    [SerializeField] private DifficultyTheme theme;
+    [SerializeField] private UnityEngine.UI.Image hardFrame;
+    [SerializeField] private TMP_Text tabText;
+    [Tooltip("Nền ô LEVEL: mức khó thì đổi sang hình bo góc để góc vuông không lòi ra ngoài khung")]
+    [SerializeField] private UnityEngine.UI.Image background;
+    [SerializeField] private Sprite roundedBackground;
+
+    private Sprite _normalBg;
+    private UnityEngine.UI.Image.Type _normalBgType;
+    private bool _cached;
 
     private void Start()
     {
-        if (replayButton != null) replayButton.onClick.AddListener(OnReplayClicked);
         if (LevelManager.Instance != null)
         {
             LevelManager.Instance.onLevelLoaded.AddListener(SetLevel);
@@ -21,18 +27,34 @@ public class LevelHUD : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (replayButton != null) replayButton.onClick.RemoveListener(OnReplayClicked);
         if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(SetLevel);
     }
 
     private void SetLevel(int number)
     {
         if (levelText != null) levelText.SetText($"LEVEL {number}");
-    }
 
-    private void OnReplayClicked()
-    {
-        if (gameFlow != null) gameFlow.RequestReplay();
-        else if (LevelManager.Instance != null) LevelManager.Instance.Retry();
+        LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+        DifficultyStyle style = theme != null && level != null ? theme.Get(level.difficulty) : null;
+        bool hard = style != null && style.hudFrame != null;
+        if (background != null)
+        {
+            if (!_cached)
+            {
+                _cached = true;
+                _normalBg = background.sprite;
+                _normalBgType = background.type;
+            }
+            bool rounded = hard && roundedBackground != null;
+            background.sprite = rounded ? roundedBackground : _normalBg;
+            background.type = rounded ? UnityEngine.UI.Image.Type.Sliced : _normalBgType;
+        }
+        if (hardFrame == null) return;
+        hardFrame.gameObject.SetActive(hard);
+        if (!hard) return;
+        hardFrame.sprite = style.hudFrame;
+        if (tabText == null) return;
+        tabText.SetText(style.label);
+        if (style.hudTabOutline != null) tabText.fontSharedMaterial = style.hudTabOutline;
     }
 }

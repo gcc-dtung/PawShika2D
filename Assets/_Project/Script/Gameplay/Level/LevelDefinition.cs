@@ -15,6 +15,8 @@ public class LevelDefinition : ScriptableObject
     public ClueData[] clues;
     public SolutionRectData[] solution;
     public LevelRules rules;
+    [Tooltip("Hard / Very Hard: nút PLAY, khung HUD riêng và hiệu ứng vào màn (DifficultyTheme)")]
+    public LevelDifficulty difficulty;
 }
 
 public enum CellType

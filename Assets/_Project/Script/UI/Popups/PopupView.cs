@@ -37,6 +37,7 @@ public class PopupView : MonoBehaviour
         _group.interactable = true;
         _group.blocksRaycasts = true;
         OnOpen();
+        AudioManager.Play(SoundId.PopupOpen);
 
         _group.alpha = 0f;
         if (panel != null) panel.localScale = Vector3.one * 0.6f;
@@ -51,6 +52,7 @@ public class PopupView : MonoBehaviour
         if (!IsOpen) return;
         IsOpen = false;
         _group.interactable = false;
+        AudioManager.Play(SoundId.PopupClose);
 
         Sequence seq = NewSequence();
         seq.Join(_group.DOFade(0f, hideDuration).SetEase(Ease.Linear));

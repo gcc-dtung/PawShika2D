@@ -116,14 +116,7 @@ public class GameplayFeedback : MonoBehaviour
     private void OnMistake(Vector3 center, Vector2 size)
     {
         ShakeCamera();
-        if (vibrate) Vibrate();
-    }
-
-    private static void Vibrate()
-    {
-#if UNITY_ANDROID || UNITY_IOS
-        Handheld.Vibrate();
-#endif
+        if (vibrate) AudioManager.Vibrate(); // theo cài đặt Rung của người chơi
     }
 
     /// <summary>Rung ngang, biên độ giảm dần; bị hủy giữa chừng thì camera vẫn về đúng vị trí gốc.</summary>

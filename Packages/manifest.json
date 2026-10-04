@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.besty.unity-skills": "https://github.com/Besty0728/Unity-Skills.git?path=/SkillsForUnity",
+    "com.coffee.ui-particle": "https://github.com/mob-sakai/ParticleEffectForUGUI.git?path=Packages/src#v4.14.1",
     "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
     "com.unity.collab-proxy": "2.12.4",
     "com.unity.device-simulator.devices": "1.0.1",

@@ -14,6 +14,7 @@ public class ScreenFlow : Singleton<ScreenFlow>
     [SerializeField] private MainMenuNavigator navigator;
     [SerializeField] private GameFlowUI gameFlow;
     [SerializeField] private bool startInMenu = true;
+    [SerializeField] private int shopTab = 0;
 
     [Header("Events")]
     public UnityEvent<bool> onScreenChanged = new UnityEvent<bool>(); // true = đang ở Menu
@@ -44,6 +45,14 @@ public class ScreenFlow : Singleton<ScreenFlow>
         onScreenChanged?.Invoke(true);
     }
 
+    /// <summary>Về Main Menu (nếu đang trong ván) rồi chuyển sang tab Shop (vd thiếu coin khi nạp năng lượng).</summary>
+    public void ShowShop()
+    {
+        bool wasMenu = IsMenu;
+        if (!wasMenu) ShowMenu();
+        if (navigator != null) navigator.Select(shopTab, wasMenu); // đang ở Menu thì trượt sang, vừa từ ván ra thì nhảy luôn
+    }
+
     /// <summary>Nút PLAY trên Home.</summary>
     public void Play()
     {
@@ -51,6 +60,9 @@ public class ScreenFlow : Singleton<ScreenFlow>
         if (gameFlow != null) gameFlow.RequestPlay(EnterGame);
         else EnterGame();
     }
+
+    /// <summary>Vào ván ngay, bỏ qua kiểm tra năng lượng (Debug Panel).</summary>
+    public void EnterGameNow() => EnterGame();
 
     private void EnterGame()
     {

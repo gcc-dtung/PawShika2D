@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Nạp năng lượng (thay RefillLivesPopup của bản gốc): xem quảng cáo +1, trả coin nạp đầy, hoặc chờ đồng hồ.
+/// Nạp năng lượng ("REFILL LIVES?" như bản gốc): xem quảng cáo +1 (Free live), trả coin nạp đầy (Refill), hoặc chờ đồng hồ.
+/// Thiếu coin mà bấm Refill: đóng popup (thôi chơi) rồi sang tab Shop.
+/// Tim to hiện số năng lượng hiện có, ô đồng hồ đếm tới lần hồi kế (đầy thì "FULL").
 /// - ShowOptional: mở từ HUD, có nút X; ván tạm dừng khi mở.
 /// - ShowRequired(onReady, onCancel): hết năng lượng mà cần chơi (PLAY, Retry sau khi thua) -> có năng lượng
 ///   (ads / coin / hết giờ chờ) thì tự đóng rồi gọi onReady. Có onCancel thì hiện X (bấm X -> onCancel), không có thì ẩn X.
@@ -14,7 +16,7 @@ public class RefillEnergyPopup : PopupView
     [SerializeField] private TMP_Text countText;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private TMP_Text coinCostText;
-    [SerializeField] private TMP_Text balanceText;
+    [SerializeField] private TMP_Text balanceText; // tùy chọn (bản theo ref không hiện số dư)
     [SerializeField] private Button adsButton;
     [SerializeField] private Button coinButton;
     [SerializeField] private Button closeButton;
@@ -102,11 +104,11 @@ public class RefillEnergyPopup : PopupView
         EnergyManager em = EnergyManager.Instance;
         if (em == null) return;
 
-        if (countText != null) countText.SetText("{0}/{1}", em.Current, em.Max);
-        if (timerText != null) timerText.SetText(em.IsFull ? "FULL" : "Next in " + EnergyManager.FormatTime(em.SecondsToNext));
+        if (countText != null) countText.SetText("{0}", em.Current);
+        if (timerText != null) timerText.SetText(em.IsFull ? "FULL" : EnergyManager.FormatTime(em.SecondsToNext));
         if (balanceText != null) balanceText.SetText("{0}", CoinWallet.Balance);
         if (adsButton != null) adsButton.interactable = !_waitingAd && !em.IsFull;
-        if (coinButton != null) coinButton.interactable = !_waitingAd && !em.IsFull && CoinWallet.CanAfford(refillCost);
+        if (coinButton != null) coinButton.interactable = !_waitingAd && !em.IsFull; // thiếu coin vẫn bấm được -> Shop
     }
 
     private void OnEnergyChanged(int current, int max)
@@ -137,8 +139,8 @@ public class RefillEnergyPopup : PopupView
         if (em == null || em.IsFull) return;
         if (!CoinWallet.TrySpend(refillCost))
         {
-            Debug.Log($"[RefillEnergyPopup] Không đủ coin: {CoinWallet.Balance}/{refillCost}");
-            Refresh();
+            Debug.Log($"[RefillEnergyPopup] Không đủ coin: {CoinWallet.Balance}/{refillCost} -> Shop");
+            GoShop();
             return;
         }
         em.RefillFull();
@@ -151,6 +153,14 @@ public class RefillEnergyPopup : PopupView
         _onReady = null; // đóng = thôi, không chơi
         Finish();
         cancel?.Invoke();
+    }
+
+    /// <summary>Đóng popup như bấm X nhưng không gọi onCancel (không mở lại popup Thua...), rồi sang Shop.</summary>
+    private void GoShop()
+    {
+        _onReady = null;
+        Finish();
+        if (ScreenFlow.Instance != null) ScreenFlow.Instance.ShowShop();
     }
 
     private void Finish()

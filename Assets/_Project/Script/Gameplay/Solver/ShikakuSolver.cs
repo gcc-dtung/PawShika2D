@@ -143,7 +143,13 @@ public static class ShikakuSolver
                     {
                         if (!InBounds(x, y, s.width, s.height) || s.blocked[x, y]) return false;
                         s.blocked[x, y] = true;
-                        if (s.clueAt[x, y] >= 0) solvedClues.Add(s.clueAt[x, y]);
+                        if (s.clueAt[x, y] < 0) continue;
+
+                        // Khối phải đúng số ô của clue (ô "?" người chơi đặt không qua kiểm tra số ô ở BoardModel.Check)
+                        int ci = s.clueAt[x, y];
+                        bool known = unknownValue == null || !unknownValue.Contains(ci);
+                        if (known && r.width * r.height != level.clues[ci].value) return false;
+                        solvedClues.Add(ci);
                     }
                 }
             }

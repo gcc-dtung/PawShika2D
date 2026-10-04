@@ -374,6 +374,7 @@ MonoBehaviour:
   face: {fileID: 3351630146771361030}
   ears: {fileID: 744860377652785215}
   ring: {fileID: 44163525888296703}
+  flashMaterial: {fileID: 2100000, guid: 69be9dcd8e0232343926d2297b43855d, type: 2}
   earWidth: 0.36
   earOverlap: 0
   popDuration: 0.18

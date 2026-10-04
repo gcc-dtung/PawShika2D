@@ -1,23 +1,22 @@
 using System;
 using UnityEngine;
 
-/// <summary>Số lượt mỗi booster, lưu PlayerPrefs "PawBlock_Booster_{type}". Lần đầu đọc thì tặng valueStart.</summary>
+/// <summary>Số lượt mỗi booster, lưu trong SaveData. Lần đầu đọc thì tặng valueStart.</summary>
 public static class BoosterInventory
 {
-    private const string KeyPrefix = "PawBlock_Booster_";
-
     /// <summary>(loại, số lượt mới)</summary>
     public static event Action<BoosterType, int> Changed;
 
     public static int Get(BoosterData data)
     {
-        string key = Key(data.boosterType);
-        if (!PlayerPrefs.HasKey(key))
+        int count = SaveSystem.Data.GetBooster(data.boosterType);
+        if (count < 0)
         {
-            PlayerPrefs.SetInt(key, Mathf.Max(0, data.valueStart));
-            PlayerPrefs.Save();
+            count = Mathf.Max(0, data.valueStart);
+            SaveSystem.Data.SetBooster(data.boosterType, count);
+            SaveSystem.MarkDirty();
         }
-        return PlayerPrefs.GetInt(key);
+        return count;
     }
 
     public static void Add(BoosterData data, int amount)
@@ -34,12 +33,13 @@ public static class BoosterInventory
         return true;
     }
 
+    /// <summary>Đặt thẳng số lượt (Debug Panel).</summary>
+    public static void SetCount(BoosterData data, int value) => Set(data.boosterType, value);
+
     private static void Set(BoosterType type, int value)
     {
-        PlayerPrefs.SetInt(Key(type), Mathf.Max(0, value));
-        PlayerPrefs.Save();
+        SaveSystem.Data.SetBooster(type, Mathf.Max(0, value));
+        SaveSystem.MarkDirty();
         Changed?.Invoke(type, value);
     }
-
-    private static string Key(BoosterType type) => KeyPrefix + type;
 }

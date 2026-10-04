@@ -5,14 +5,10 @@ using UnityEngine.Events;
 /// <summary>
 /// Năng lượng ngoài màn chơi (phương án B, Giai đoạn 5), icon cá thay tim để không lẫn với mạng trong màn.
 /// Thua 1 level (state Lost) tốn 1; tối đa 5; hồi 1 sau 30 phút (gamePlay_TimeRefillHeart = 1800 của bản gốc).
-/// Lưu PlayerPrefs: PawBlock_Energy, PawBlock_EnergyRefillStart, PawBlock_EnergyInfiniteUntil (unix giây).
+/// Lưu trong SaveData.energy: số năng lượng, mốc bắt đầu hồi, hạn vô hạn (unix giây).
 /// </summary>
 public class EnergyManager : Singleton<EnergyManager>
 {
-    private const string EnergyKey = "PawBlock_Energy";
-    private const string RefillKey = "PawBlock_EnergyRefillStart";
-    private const string InfiniteKey = "PawBlock_EnergyInfiniteUntil";
-
     [SerializeField] private int maxEnergy = 5;
     [SerializeField] private int refillSeconds = 1800;
 
@@ -92,13 +88,18 @@ public class EnergyManager : Singleton<EnergyManager>
         SaveAndNotify();
     }
 
+    /// <summary>Trừ 1 năng lượng (đang vô hạn thì không trừ). Thua level, bỏ dở level (QuitLevelPopup).</summary>
+    public void ConsumeOne(string reason)
+    {
+        if (Model.TryConsume(Now)) Debug.Log($"[EnergyManager] {reason} -> -1 năng lượng, còn {Current}/{Max}");
+        SaveAndNotify();
+    }
+
     // ---------- Nội bộ ----------
 
     private void OnStateChanged(GameState state)
     {
-        if (state != GameState.Lost) return;
-        if (Model.TryConsume(Now)) Debug.Log($"[EnergyManager] Thua level -> -1 năng lượng, còn {Current}/{Max}");
-        SaveAndNotify();
+        if (state == GameState.Lost) ConsumeOne("Thua level");
     }
 
     private void RefreshNow()
@@ -108,20 +109,22 @@ public class EnergyManager : Singleton<EnergyManager>
 
     private void Load()
     {
+        EnergySave save = SaveSystem.Data.energy;
         _model = new EnergyModel(
             maxEnergy, refillSeconds,
-            PlayerPrefs.GetInt(EnergyKey, maxEnergy),
-            long.TryParse(PlayerPrefs.GetString(RefillKey, "0"), out long r) ? r : 0,
-            long.TryParse(PlayerPrefs.GetString(InfiniteKey, "0"), out long i) ? i : 0);
+            save.energy < 0 ? maxEnergy : save.energy, // -1: lần đầu chơi, đầy
+            save.refillStart,
+            save.infiniteUntil);
         _model.Refresh(Now);
     }
 
     private void SaveAndNotify()
     {
-        PlayerPrefs.SetInt(EnergyKey, _model.Energy);
-        PlayerPrefs.SetString(RefillKey, _model.RefillStart.ToString());
-        PlayerPrefs.SetString(InfiniteKey, _model.InfiniteUntil.ToString());
-        PlayerPrefs.Save();
+        EnergySave save = SaveSystem.Data.energy;
+        save.energy = _model.Energy;
+        save.refillStart = _model.RefillStart;
+        save.infiniteUntil = _model.InfiniteUntil;
+        SaveSystem.MarkDirty();
         onEnergyChanged?.Invoke(_model.Energy, _model.Max);
         onTick?.Invoke();
     }

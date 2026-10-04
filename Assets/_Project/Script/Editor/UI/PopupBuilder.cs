@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Dựng các popup vào Canvas_Popup (canvas riêng, luôn bật, vẽ trên Canvas_HUD và Canvas_Menu) để dùng được
-/// ở cả màn chơi lẫn Main Menu: Win, Hồi mạng, Thua, Xác nhận chơi lại, Mua booster, Nạp năng lượng;
-/// gắn GameFlowUI, RewardedAds và nối các nút cần GameFlowUI (LevelHUD, EnergyHUD, ScreenFlow).
+/// ở cả màn chơi lẫn Main Menu: Win, Hồi mạng, Thua, Cài đặt, Mua booster, Nạp năng lượng, Điểm danh;
+/// gắn GameFlowUI, RewardedAds và nối các nút cần GameFlowUI (SettingsButton, EnergyHUD, ScreenFlow).
 /// Chạy lại được: xóa "Popups" cũ (cả bản cũ nằm trong Canvas_HUD) rồi dựng mới.
 /// </summary>
 public static class PopupBuilder
@@ -20,6 +20,14 @@ public static class PopupBuilder
     internal const string EnergySprite = UI + "Icons/icon_hear_2.png";
     internal const string EnergyInfiniteSprite = UI + "Icons/icon_hear_infinity2.png";
     private static readonly Color Red = new Color(1f, 0.45f, 0.45f);
+    // Linear color space: alpha 0.75 chỉ làm nền tối đi ~1/2, 0.88 mới tối như ref
+    internal const float DimAlpha = 0.88f;
+    internal static readonly Color SettingLabel = new Color(0.36f, 0.24f, 0.72f);
+    private const string SettingsBox = UI + "Frames_Borders/khung_popup_1.png";
+    // popup_1.png bỏ tab (tách bằng script ngoài): thân 9-slice dùng cho cả thân lẫn tab tiêu đề của popup cài đặt
+    private const string SettingsFrame = UI + "Popups_Dialogs/popup_1_body.png";
+    private const float FrameBorderScale = 1.4f; // viền 9-slice hiện nhỏ đi 1.4 lần (viền vàng ~14 px như ref)
+    private const string TimerPill = UI + "Frames_Borders/khung_popup_4.png";
 
     [MenuItem("Tools/PawBlock/Build Popups")]
     public static void Build()
@@ -41,22 +49,28 @@ public static class PopupBuilder
         WinPopup win = BuildWin(root);
         ReviveLivesPopup revive = BuildRevive(root);
         LosePopup lose = BuildLose(root);
-        ConfirmReplayPopup confirm = BuildConfirm(root);
+        SettingsPopup settings = BuildSettings(root);
+        QuitLevelPopup quit = BuildQuitLevel(root);
+        NoticePopup notice = BuildNotice(root);
+        Assign(settings, "quitPopup", quit);
         BuyBoosterPopup buy = BuildBuyBooster(root);
         RefillEnergyPopup refill = BuildRefillEnergy(root);
+        DailyRewardPopup daily = DailyRewardBuilder.BuildPopup(root);
 
         Assign(flow, "winPopup", win);
         Assign(flow, "revivePopup", revive);
         Assign(flow, "losePopup", lose);
-        Assign(flow, "confirmReplayPopup", confirm);
+        Assign(flow, "settingsPopup", settings);
+        Assign(flow, "quitLevelPopup", quit);
+        Assign(flow, "noticePopup", notice);
         Assign(flow, "buyBoosterPopup", buy);
         Assign(flow, "refillEnergyPopup", refill);
+        Assign(flow, "dailyRewardPopup", daily);
 
         EnergyHUD energyHud = Object.FindFirstObjectByType<EnergyHUD>(FindObjectsInactive.Include);
         if (energyHud != null) Assign(energyHud, "gameFlow", flow);
 
-        LevelHUD hud = Object.FindFirstObjectByType<LevelHUD>(FindObjectsInactive.Include);
-        if (hud != null) Assign(hud, "gameFlow", flow);
+        foreach (SettingsButton b in Object.FindObjectsByType<SettingsButton>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Assign(b, "gameFlow", flow);
 
         foreach (EnergyHUD e in Object.FindObjectsByType<EnergyHUD>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Assign(e, "gameFlow", flow);
         ScreenFlow screenFlow = Object.FindFirstObjectByType<ScreenFlow>(FindObjectsInactive.Include);
@@ -65,7 +79,7 @@ public static class PopupBuilder
         LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
         if (lm != null && lm.GetComponent<RewardedAds>() == null) lm.gameObject.AddComponent<RewardedAds>();
 
-        foreach (PopupView p in new PopupView[] { win, revive, lose, confirm, buy, refill }) p.gameObject.SetActive(false);
+        foreach (PopupView p in new PopupView[] { win, revive, lose, settings, quit, buy, refill, daily, notice }) p.gameObject.SetActive(false);
 
         EditorSceneManager.MarkSceneDirty(canvasGo.scene);
         Debug.Log("[PopupBuilder] Đã dựng popup trong Canvas_Popup/Popups.");
@@ -115,27 +129,8 @@ public static class PopupBuilder
 
     // ---------- Từng popup ----------
 
-    private static WinPopup BuildWin(Transform root)
-    {
-        RectTransform panel;
-        WinPopup popup = NewPopup<WinPopup>(root, "WinPopup", out panel);
-        TMP_Text title = Title(panel, "LEVEL 1");
-        Text(panel, "Completed", "COMPLETED!", new Vector2(0, -50), new Vector2(760, 110), 76, Yellow);
-
-        RectTransform reward = Row(panel, "Reward", new Vector2(0, -190), 150);
-        Icon(reward, "Coin", UI + "Icons/coin.png", 90);
-        TMP_Text rewardText = Text(reward, "Amount", "+10", Vector2.zero, new Vector2(200, 100), 72, Color.white);
-        Fit(rewardText);
-
-        Button doubleBtn = NewButton(panel, "DoubleButton", UI + "Buttons/btn_yellow_1.png", new Vector2(-200, -470), "x2", UI + "Buttons/btn_video.png", null);
-        Button next = NewButton(panel, "NextButton", UI + "Buttons/btn_green_1.png", new Vector2(200, -470), "NEXT", null, null);
-
-        Assign(popup, "titleText", title);
-        Assign(popup, "rewardText", rewardText);
-        Assign(popup, "nextButton", next);
-        Assign(popup, "doubleButton", doubleBtn);
-        return popup;
-    }
+    /// <summary>Màn thắng như bản gốc: dựng ở WinScreenBuilder.</summary>
+    private static WinPopup BuildWin(Transform root) => WinScreenBuilder.BuildPopup(root);
 
     private static ReviveLivesPopup BuildRevive(Transform root)
     {
@@ -192,18 +187,156 @@ public static class PopupBuilder
         return popup;
     }
 
-    private static ConfirmReplayPopup BuildConfirm(Transform root)
+    /// <summary>
+    /// Cài đặt như ref: thân cao (popup_1_body 9-slice) + tab "SETTING" rộng (cùng sprite, nhỏ hơn) đè lên mép trên,
+    /// nút X góc trên phải, khung trắng chứa 3 nút tròn Music / Sound / Vibrate (xanh = bật, xám + gạch đỏ = tắt),
+    /// nút Home trong thân (ẩn khi mở ở Main Menu), chữ phiên bản dưới popup.
+    /// Kích thước đo từ ảnh ref (màn 900 px rộng = canvas 1080, x1.2).
+    /// </summary>
+    internal static SettingsPopup BuildSettings(Transform root)
     {
         RectTransform panel;
-        ConfirmReplayPopup popup = NewPopup<ConfirmReplayPopup>(root, "ConfirmReplayPopup", out panel);
-        Title(panel, "REPLAY?");
-        Text(panel, "Message", "Placed blocks will be lost.\nStart this level again?", new Vector2(0, -110), new Vector2(760, 220), 52, Color.white);
-        Button no = NewButton(panel, "NoButton", UI + "Buttons/btn_red_1.png", new Vector2(-200, -470), "NO", null, null);
-        Button yes = NewButton(panel, "YesButton", UI + "Buttons/btn_green_1.png", new Vector2(200, -470), "YES", null, null);
+        Button close;
+        SettingsPopup popup = FramedPopup<SettingsPopup>(root, "SettingsPopup", "SETTING", new Vector2(920, 800), 150, out panel, out close);
+        RectTransform box = WhiteBox(panel, "Options", new Vector2(0, 38), new Vector2(780, 372));
 
-        Assign(popup, "yesButton", yes);
-        Assign(popup, "noButton", no);
+        SettingToggle(box, SettingType.Music, "Music", UI + "Icons/music.png", new Vector2(-246, 40));
+        SettingToggle(box, SettingType.Sound, "Sound", UI + "Icons/sound.png", new Vector2(0, 40));
+        SettingToggle(box, SettingType.Vibrate, "Vibrate", UI + "Icons/vibrate.png", new Vector2(246, 40));
+
+        Button home = NewButton(panel, "HomeButton", UI + "Buttons/btn_yellow_5_0.png", new Vector2(0, -262), "Home", UI + "Icons/icon_home2.png", null);
+        ((RectTransform)home.transform).sizeDelta = new Vector2(358, 150);
+        TMP_Text homeLabel = home.transform.Find("Content/Label").GetComponent<TMP_Text>();
+        homeLabel.fontStyle = FontStyles.Normal;
+        homeLabel.font = GameFontSetup.Font;
+        homeLabel.fontSharedMaterial = GameFontSetup.OutlineBrown();
+
+        TMP_Text version = Text(panel, "Version", "Ver 0.0.0", new Vector2(0, -462), new Vector2(600, 70), 48, Color.white);
+        version.fontStyle = FontStyles.Normal;
+        version.font = GameFontSetup.Font;
+
+        // Neo mép trên (chữ phiên bản neo mép dưới): ở Menu popup thu ngắn đáy mà nội dung không xê dịch
+        foreach (RectTransform child in panel)
+        {
+            if (child == version.rectTransform) Anchor(child, 0f);
+            else Anchor(child, 1f);
+        }
+
+        Assign(popup, "closeButton", close);
+        Assign(popup, "homeButton", home);
+        Assign(popup, "versionText", version);
         return popup;
+    }
+
+    /// <summary>Đổi neo dọc của con (đang neo giữa cha) sang mép trên (y = 1) / dưới (y = 0), giữ nguyên vị trí.</summary>
+    private static void Anchor(RectTransform rt, float y)
+    {
+        float parentHeight = ((RectTransform)rt.parent).rect.height;
+        Vector2 pos = rt.anchoredPosition;
+        pos.y -= (y - 0.5f) * parentHeight;
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, y);
+        rt.anchoredPosition = pos;
+    }
+
+    /// <summary>"NOTICE" (như bản gốc): khung chung, khung trắng chứa nội dung, nút xanh viền kem "Continue".</summary>
+    internal static NoticePopup BuildNotice(Transform root)
+    {
+        RectTransform panel;
+        Button close;
+        NoticePopup popup = FramedPopup<NoticePopup>(root, "NoticePopup", "NOTICE", new Vector2(920, 800), 150, out panel, out close);
+        RectTransform box = WhiteBox(panel, "Content", new Vector2(0, 38), new Vector2(780, 372));
+        TMP_Text message = GameText(box, "Message", "Purchase Failed!", Vector2.zero, new Vector2(700, 320), 58, SettingLabel);
+        message.enableAutoSizing = true;
+        message.fontSizeMin = 36;
+        message.fontSizeMax = 58;
+
+        RectTransform face;
+        Button cont = FramedButton(panel, "ContinueButton", UI + "Buttons/btn_green_2.png", UI + "Buttons/btn_green_1.png",
+            new Vector2(0, -262), new Vector2(360, 150), out face);
+        TMP_Text label = GameText(face, "Label", "Continue", Vector2.zero, new Vector2(300, 100), 62, Color.white);
+        label.fontSharedMaterial = GameFontSetup.OutlineGreen();
+
+        Assign(popup, "titleText", panel.Find("TitleTab/Title").GetComponent<TMP_Text>());
+        Assign(popup, "messageText", message);
+        Assign(popup, "continueButton", cont);
+        Assign(popup, "closeButton", close);
+        return popup;
+    }
+
+    /// <summary>Thay riêng popup NOTICE trong scene (không dựng lại popup khác).</summary>
+    [MenuItem("Tools/PawBlock/Build Notice Popup")]
+    public static void BuildNoticeOnly()
+    {
+        GameObject canvas = FindRoot("Canvas_Popup");
+        Transform popups = canvas != null ? canvas.transform.Find("Popups") : null;
+        GameFlowUI flow = popups != null ? popups.GetComponent<GameFlowUI>() : null;
+        if (flow == null)
+        {
+            Debug.LogError("[PopupBuilder] Không tìm thấy Canvas_Popup/Popups (GameFlowUI). Chạy Build Popups trước.");
+            return;
+        }
+        DestroyChild(popups, "NoticePopup");
+        NoticePopup notice = BuildNotice(popups);
+        notice.gameObject.SetActive(false);
+        Assign(flow, "noticePopup", notice);
+        EditorSceneManager.MarkSceneDirty(canvas.scene);
+    }
+
+    /// <summary>
+    /// "QUIT LEVEL" (như bản gốc): khung chung, khung trắng "You will lose" + tim vỡ "-1", nút đỏ viền kem "Quit".
+    /// Đang chơi mà bấm Home trong Cài đặt thì mở popup này.
+    /// </summary>
+    internal static QuitLevelPopup BuildQuitLevel(Transform root)
+    {
+        RectTransform panel;
+        Button close;
+        QuitLevelPopup popup = FramedPopup<QuitLevelPopup>(root, "QuitLevelPopup", "QUIT LEVEL", new Vector2(920, 800), 150, out panel, out close);
+        RectTransform box = WhiteBox(panel, "Content", new Vector2(0, 38), new Vector2(780, 372));
+        GameText(box, "Message", "You will lose", new Vector2(0, 120), new Vector2(700, 90), 62, SettingLabel);
+        Image heart = Icon(box, "Heart", UI + "Icons/heart_2.png", 230);
+        heart.rectTransform.anchoredPosition = new Vector2(0, -42);
+        TMP_Text minus = GameText(heart.transform, "Amount", "-1", new Vector2(78, -58), new Vector2(220, 140), 118, Color.white);
+        minus.fontSharedMaterial = GameFontSetup.OutlineRed();
+        Fit(minus);
+
+        RectTransform quitFace;
+        Button quit = FramedButton(panel, "QuitButton", UI + "Buttons/btn_red_2_0.png", UI + "Buttons/btn_red_1_0.png",
+            new Vector2(0, -262), new Vector2(360, 150), out quitFace);
+        TMP_Text label = GameText(quitFace, "Label", "Quit", Vector2.zero, new Vector2(300, 100), 68, Color.white);
+        label.fontSharedMaterial = GameFontSetup.OutlineRed();
+
+        Assign(popup, "quitButton", quit);
+        Assign(popup, "closeButton", close);
+        return popup;
+    }
+
+    /// <summary>1 nút tròn + icon + gạch đỏ (khi tắt) + chữ bên dưới.</summary>
+    private static void SettingToggle(Transform parent, SettingType type, string label, string iconPath, Vector2 pos)
+    {
+        RectTransform rt = NewUI(label + "Toggle", parent);
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = new Vector2(192, 192);
+        Image bg = rt.gameObject.AddComponent<Image>();
+        bg.sprite = LoadSprite(UI + "Buttons/btn_setting2.png");
+        Button b = rt.gameObject.AddComponent<Button>();
+        b.targetGraphic = bg;
+
+        Icon(rt, "Icon", iconPath, 110).rectTransform.anchoredPosition = new Vector2(0, 4);
+        Image off = Icon(rt, "OffMark", UI + "Icons/off.png", 136);
+        off.gameObject.SetActive(false);
+        TMP_Text t = Text(rt, "Label", label, new Vector2(0, -154), new Vector2(260, 76), 56, SettingLabel);
+        t.fontStyle = FontStyles.Normal;
+        t.font = GameFontSetup.Font;
+        Fit(t);
+
+        SettingToggleView view = rt.gameObject.AddComponent<SettingToggleView>();
+        SerializedObject so = new SerializedObject(view);
+        so.FindProperty("type").enumValueIndex = (int)type;
+        so.FindProperty("background").objectReferenceValue = bg;
+        so.FindProperty("onSprite").objectReferenceValue = LoadSprite(UI + "Buttons/btn_setting2.png");
+        so.FindProperty("offSprite").objectReferenceValue = LoadSprite(UI + "Buttons/btn_setting1.png");
+        so.FindProperty("offMark").objectReferenceValue = off.gameObject;
+        so.ApplyModifiedPropertiesWithoutUndo();
     }
 
     private static BuyBoosterPopup BuildBuyBooster(Transform root)
@@ -242,40 +375,64 @@ public static class PopupBuilder
         return popup;
     }
 
+    /// <summary>
+    /// Nạp năng lượng như ref "REFILL LIVES?": khung như popup cài đặt; trong khung trắng: tim to có số năng lượng,
+    /// chữ mời, ô đồng hồ đếm tới lần hồi kế; dưới: nút xanh "Refill" + giá coin, nút vàng "Free live" + video.
+    /// Số đo từ ảnh ref (màn 858 px rộng = canvas 1080, x1.259).
+    /// </summary>
     private static RefillEnergyPopup BuildRefillEnergy(Transform root)
     {
         RectTransform panel;
-        RefillEnergyPopup popup = NewPopup<RefillEnergyPopup>(root, "RefillEnergyPopup", out panel);
-        Title(panel, "MORE LIVES");
+        Button close;
+        RefillEnergyPopup popup = FramedPopup<RefillEnergyPopup>(root, "RefillEnergyPopup", "REFILL LIVES?", new Vector2(920, 820), 166, out panel, out close);
+        RectTransform box = WhiteBox(panel, "Content", new Vector2(0, 33), new Vector2(778, 424));
 
-        Button close = NewButton(panel, "CloseButton", UI + "Buttons/btn_X_1.png", new Vector2(405, 255), null, null, null);
-        ((RectTransform)close.transform).sizeDelta = new Vector2(120, 120);
+        Image heart = Icon(box, "Heart", UI + "Icons/heart_1.png", 250);
+        heart.rectTransform.anchoredPosition = new Vector2(-201, 0);
+        TMP_Text count = GameText(heart.transform, "Count", "5", new Vector2(0, 8), new Vector2(200, 150), 120, Color.white);
+        count.fontSharedMaterial = GameFontSetup.OutlineRed();
 
-        RectTransform heartRow = Row(panel, "Energy", new Vector2(0, -40), 150);
-        Icon(heartRow, "Heart", EnergySprite, 150);
-        TMP_Text count = Text(heartRow, "Count", "0/5", Vector2.zero, new Vector2(200, 100), 72, Color.white);
-        Fit(count);
+        TMP_Text message = GameText(box, "Message", "Get more lives to\ncontinue playing", new Vector2(156, 60), new Vector2(420, 140), 46, SettingLabel);
+        message.lineSpacing = -10;
 
-        TMP_Text timer = Text(panel, "Timer", "Next in 30:00", new Vector2(0, -170), new Vector2(720, 70), 48, Yellow);
+        // Ô đồng hồ: khung tím nhạt kéo dài, đồng hồ tai mèo đè mép trái
+        EnsureSliced(TimerPill, new Vector4(45, 45, 45, 45));
+        RectTransform pill = NewUI("Timer", box);
+        pill.anchoredPosition = new Vector2(157, -75);
+        pill.sizeDelta = new Vector2(287, 83);
+        Image pillImg = pill.gameObject.AddComponent<Image>();
+        pillImg.sprite = LoadSprite(TimerPill);
+        pillImg.type = Image.Type.Sliced;
+        pillImg.raycastTarget = false;
+        Icon(pill, "Clock", UI + "Buttons/btn_time_2.png", 104).rectTransform.anchoredPosition = new Vector2(-115, 4);
+        TMP_Text timer = GameText(pill, "Time", "29:59", new Vector2(26, 2), new Vector2(200, 70), 50, Color.white);
+        timer.fontSharedMaterial = GameFontSetup.OutlinePurple();
 
-        Button ads = NewButton(panel, "AdsButton", UI + "Buttons/btn_green_1.png", new Vector2(-200, -470), "+1", UI + "Buttons/btn_video.png", EnergySprite);
-        Button coin = NewButton(panel, "CoinButton", UI + "Buttons/btn_yellow_1.png", new Vector2(200, -470), "FULL", null, EnergySprite);
-
-        RectTransform costRow = Row(panel, "Cost", new Vector2(200, -590), 80);
-        Icon(costRow, "Coin", UI + "Icons/coin.png", 60);
-        TMP_Text cost = Text(costRow, "Amount", "900", Vector2.zero, new Vector2(160, 70), 48, Color.white);
+        // Nút xanh: "Refill" trên, coin + giá dưới
+        RectTransform coinFace;
+        Button coin = FramedButton(panel, "CoinButton", UI + "Buttons/btn_green_2.png", UI + "Buttons/btn_green_1.png", new Vector2(-213, -277), new Vector2(345, 145), out coinFace);
+        TMP_Text refillLabel = GameText(coinFace, "Label", "Refill", new Vector2(0, 30), new Vector2(260, 50), 40, Color.white);
+        refillLabel.fontSharedMaterial = GameFontSetup.OutlineGreen();
+        RectTransform priceRow = Row(coinFace, "Price", new Vector2(0, -16), 70);
+        priceRow.GetComponent<HorizontalLayoutGroup>().spacing = 8;
+        Icon(priceRow, "Coin", UI + "Icons/coin.png", 62);
+        TMP_Text cost = GameText(priceRow, "Amount", "900", Vector2.zero, new Vector2(160, 70), 66, Color.white);
+        cost.fontSharedMaterial = GameFontSetup.OutlineGreen();
         Fit(cost);
-        Fit(Text(panel, "AdsCaption", "FREE", new Vector2(-200, -590), new Vector2(300, 70), 48, Color.white));
 
-        RectTransform balanceRow = Row(panel, "Balance", new Vector2(0, -680), 70);
-        Icon(balanceRow, "Coin", UI + "Icons/coin.png", 50);
-        TMP_Text balance = Text(balanceRow, "Amount", "0", Vector2.zero, new Vector2(160, 60), 40, Yellow);
-        Fit(balance);
+        // Nút vàng: "Free live" + video
+        RectTransform adsFace;
+        Button ads = FramedButton(panel, "AdsButton", UI + "Buttons/btn_yellow_6_0.png", UI + "Buttons/btn_yellow_5_0.png", new Vector2(206, -277), new Vector2(345, 145), out adsFace);
+        RectTransform adsRow = Row(adsFace, "Content", new Vector2(0, 0), 90);
+        adsRow.GetComponent<HorizontalLayoutGroup>().spacing = 10;
+        TMP_Text free = GameText(adsRow, "Label", "Free live", Vector2.zero, new Vector2(200, 80), 54, Color.white);
+        free.fontSharedMaterial = GameFontSetup.OutlineBrown();
+        Fit(free);
+        Icon(adsRow, "Video", UI + "Buttons/btn_video2.png", 84);
 
         Assign(popup, "countText", count);
         Assign(popup, "timerText", timer);
         Assign(popup, "coinCostText", cost);
-        Assign(popup, "balanceText", balance);
         Assign(popup, "adsButton", ads);
         Assign(popup, "coinButton", coin);
         Assign(popup, "closeButton", close);
@@ -284,7 +441,98 @@ public static class PopupBuilder
 
     // ---------- Khung chung ----------
 
-    private static T NewPopup<T>(Transform root, string name, out RectTransform panel) where T : PopupView
+    /// <summary>
+    /// Khung kiểu ref (Cài đặt, Nạp năng lượng): thân popup_1_body 9-slice cỡ <paramref name="size"/> (tâm cao <paramref name="posY"/>),
+    /// tab tiêu đề rộng 690 nhô 60 px trên mép thân (cùng sprite, nhỏ hơn), nút X góc trên phải.
+    /// </summary>
+    internal static T FramedPopup<T>(Transform root, string name, string titleText, Vector2 size, float posY,
+        out RectTransform panel, out Button close) where T : PopupView
+    {
+        T popup = NewPopup<T>(root, name, out panel);
+        EnsureSliced(SettingsFrame, new Vector4(130, 130, 130, 130));
+        Image body = panel.GetComponent<Image>();
+        body.sprite = LoadSprite(SettingsFrame);
+        body.type = Image.Type.Sliced;
+        body.pixelsPerUnitMultiplier = FrameBorderScale;
+        panel.sizeDelta = size;
+        panel.anchoredPosition = new Vector2(0, posY);
+
+        RectTransform tab = NewUI("TitleTab", panel);
+        tab.anchoredPosition = new Vector2(0, size.y * 0.5f + 60 - 100);
+        tab.sizeDelta = new Vector2(690, 200);
+        Image tabImg = tab.gameObject.AddComponent<Image>();
+        tabImg.sprite = body.sprite;
+        tabImg.type = Image.Type.Sliced;
+        tabImg.pixelsPerUnitMultiplier = FrameBorderScale;
+        tabImg.raycastTarget = false;
+        TMP_Text title = GameText(tab, "Title", titleText, new Vector2(0, 4), new Vector2(620, 150), 100, Color.white);
+        title.fontSharedMaterial = GameFontSetup.OutlinePurple();
+        title.enableAutoSizing = true;
+        title.fontSizeMin = 60;
+        title.fontSizeMax = 100;
+        title.enableWordWrapping = false;
+
+        close = NewButton(panel, "CloseButton", UI + "Buttons/btn_X_1.png", new Vector2(size.x * 0.5f - 28, size.y * 0.5f - 52), null, null, null);
+        ((RectTransform)close.transform).sizeDelta = new Vector2(124, 124);
+        return popup;
+    }
+
+    /// <summary>Khung trắng bo tròn (khung_popup_1 9-slice) trong thân popup.</summary>
+    internal static RectTransform WhiteBox(Transform panel, string name, Vector2 pos, Vector2 size)
+    {
+        EnsureSliced(SettingsBox, new Vector4(60, 60, 60, 60));
+        RectTransform box = NewUI(name, panel);
+        box.anchoredPosition = pos;
+        box.sizeDelta = size;
+        Image img = box.gameObject.AddComponent<Image>();
+        img.sprite = LoadSprite(SettingsBox);
+        img.type = Image.Type.Sliced;
+        img.raycastTarget = false;
+        return box;
+    }
+
+    /// <summary>
+    /// Nút 2 lớp như ref: nền viền kem (<paramref name="backer"/>) + mặt nút (<paramref name="face"/>) nhích lên 4 px (theo ảnh gốc).
+    /// <paramref name="size"/> là cỡ nền; mặt co theo tỉ lệ 2 sprite gốc. Tắt (interactable = false) thì mặt xám.
+    /// </summary>
+    internal static Button FramedButton(Transform parent, string name, string backer, string face, Vector2 pos, Vector2 size, out RectTransform faceRect)
+    {
+        RectTransform rt = NewUI(name, parent);
+        rt.anchoredPosition = pos;
+        rt.sizeDelta = size;
+        Image back = rt.gameObject.AddComponent<Image>();
+        back.sprite = LoadSprite(backer);
+
+        faceRect = NewUI("Face", rt);
+        Image faceImg = faceRect.gameObject.AddComponent<Image>();
+        faceImg.sprite = LoadSprite(face);
+        faceImg.raycastTarget = false;
+        if (back.sprite != null && faceImg.sprite != null)
+        {
+            Vector2 b = back.sprite.rect.size;
+            Vector2 f = faceImg.sprite.rect.size;
+            faceRect.sizeDelta = new Vector2(size.x * f.x / b.x, size.y * f.y / b.y);
+            faceRect.anchoredPosition = new Vector2(0, size.y * 4f / b.y);
+        }
+
+        Button button = rt.gameObject.AddComponent<Button>();
+        button.targetGraphic = faceImg;
+        ColorBlock colors = button.colors;
+        colors.disabledColor = new Color(0.55f, 0.55f, 0.55f, 1f);
+        button.colors = colors;
+        return button;
+    }
+
+    /// <summary>Chữ font game (Fredoka), không in đậm giả.</summary>
+    internal static TMP_Text GameText(Transform parent, string name, string text, Vector2 pos, Vector2 size, float fontSize, Color color)
+    {
+        TMP_Text t = Text(parent, name, text, pos, size, fontSize, color);
+        t.fontStyle = FontStyles.Normal;
+        t.font = GameFontSetup.Font;
+        return t;
+    }
+
+    internal static T NewPopup<T>(Transform root, string name, out RectTransform panel) where T : PopupView
     {
         RectTransform rt = Stretch(NewUI(name, root));
         rt.gameObject.AddComponent<CanvasGroup>();
@@ -292,7 +540,7 @@ public static class PopupBuilder
 
         RectTransform dim = Stretch(NewUI("Dim", rt));
         Image dimImg = dim.gameObject.AddComponent<Image>();
-        dimImg.color = new Color(0f, 0f, 0f, 0.75f);
+        dimImg.color = new Color(0f, 0f, 0f, DimAlpha);
 
         panel = NewUI("Panel", rt);
         Image bg = panel.gameObject.AddComponent<Image>();
@@ -414,6 +662,29 @@ public static class PopupBuilder
     {
         Transform old = parent.Find(name);
         if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+    }
+
+    /// <summary>Ảnh mới thêm vào project: đặt kiểu Sprite nếu chưa phải.</summary>
+    internal static void EnsureSprite(string path)
+    {
+        TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (importer == null || importer.textureType == TextureImporterType.Sprite) return;
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.alphaIsTransparency = true;
+        importer.SaveAndReimport();
+    }
+
+    /// <summary>Đặt sprite + viền 9-slice nếu chưa có (để kéo giãn không méo góc bo).</summary>
+    internal static void EnsureSliced(string path, Vector4 border)
+    {
+        TextureImporter importer = AssetImporter.GetAtPath(path) as TextureImporter;
+        if (importer == null) return;
+        if (importer.textureType == TextureImporterType.Sprite && importer.spriteBorder != Vector4.zero) return;
+        importer.textureType = TextureImporterType.Sprite;
+        importer.spriteImportMode = SpriteImportMode.Single;
+        importer.spriteBorder = border;
+        importer.SaveAndReimport();
     }
 
     internal static Sprite LoadSprite(string path)

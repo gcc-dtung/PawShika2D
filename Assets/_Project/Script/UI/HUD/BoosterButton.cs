@@ -81,6 +81,7 @@ public class BoosterButton : MonoBehaviour
     private void OnUsed(BoosterType used)
     {
         if (used != type) return;
+        if (TryGetComponent(out ButtonPress press) && press.IsPlaying) return; // vừa bấm nút: đang có hiệu ứng nhấn của nút
         _punch?.Kill();
         transform.localScale = Vector3.one;
         _punch = transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, 6, 0.6f)

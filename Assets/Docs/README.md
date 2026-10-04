@@ -48,13 +48,21 @@ Dữ liệu level ShikaCat hiện **chưa có** ô đặc biệt nào; code đã
 2. Lần đầu (hoặc khi đổi asset), chạy các menu Editor:
    - **Tools → PawBlock → Import ShikaCat Levels**: tạo 205 `LevelDefinition` trong `Assets/_Project/Levels/ShikaCat/` và `LevelDatabase.asset`.
    - **Tools → PawBlock → Setup Gameplay Visuals**: đặt 9-slice cho khối, cắt atlas mặt mèo, tạo `Assets/_Project/Resources/GameplayVisuals.asset`.
-   - **Tools → PawBlock → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Xác nhận chơi lại / Mua booster trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
+   - **Tools → PawBlock → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Cài đặt / Mua booster trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
    - **Tools → PawBlock → Build Boosters**: dựng lại 3 nút booster, banner Reveal, khung băng Khiên, gắn `BoosterManager`.
-   - **Tools → PawBlock → Build Energy**: dựng lại nút năng lượng (tim) góc trên phải, gắn `EnergyManager`.
+   - **Tools → PawBlock → Build Energy**: gắn `EnergyManager` (trong ván không còn tim năng lượng).
+   - **Tools → PawBlock → Build Shop**: tab Shop (Starter Pack, Remove Ads, No Ads Bundle, Special Bundle, Coin); dữ liệu gói trong `ShopDatabase.asset`, mua bằng VND qua `IAPService` (chưa SDK: "Purchase Failed!").
+   - **Tools → PawBlock → Build Difficulty**: level Hard / Very Hard – `DifficultyTheme`, nút PLAY có tab mức khó, khung HUD, hiệu ứng vào màn (đánh dấu mẫu level 20 Hard, 30 Very Hard). Độ khó từng level chỉnh trong Level Editor.
+   - **Tools → PawBlock → Debug Panel** (Ctrl + Shift + D, dùng khi Play): đổi level, thắng / thua ngay, cộng coin / mạng / năng lượng / booster, sang ngày điểm danh, tốc độ game.
+   - **Tools → PawBlock → Build Win Screen**: màn thắng (WELL DONE, sao, huy hiệu mèo, confetti, coin bay) + material lóe sáng cho khối mèo. Confetti cần package **UI Particle** (`com.coffee.ui-particle`, đã có trong `Packages/manifest.json`, cài từ git `mob-sakai/ParticleEffectForUGUI` tag `v4.14.1`).
+   - **Tools → PawBlock → Build Daily Reward**: điểm danh hằng ngày – `DailyRewardDatabase` (quà 7 ngày), `DailyRewardManager`, popup, nút Daily dưới Starter.
+   - **Tools → PawBlock → Build Settings**: nút bánh răng góc trên phải HUD (thay nút chơi lại + tim năng lượng) và popup cài đặt Nhạc / Âm / Rung.
    - **Tools → PawBlock → Build Main Menu**: dựng lại thanh tab Shop / Home / Progress, thanh trên (năng lượng + coin), nút PLAY, 2 panel tạm Shop / Progress trong `Canvas_Menu` (giữ nguyên phần còn lại của `HomePanel`), gắn `ScreenFlow`. Chạy sau Build Popups.
-3. Bấm Play: vào Main Menu (Home) → bấm **PLAY** để vào level đang chơi. Kéo chuột trên lưới để tạo khối. Thua → HOME để về Menu.
+   - **Tools → PawBlock → Setup Audio**: tạo / bổ sung `AudioDatabase`, object `AudioManager`, âm bấm nút trên các canvas (scene đã có sẵn).
+3. Sửa / làm level: **Tools → PawBlock → Level Editor** (kéo hình chữ nhật để xếp khối, số tự = diện tích; Kiểm tra; ▶ Chơi thử vào thẳng level). Level mới nằm ở `Assets/_Project/Levels/Custom/`.
+4. Bấm Play: vào Main Menu (Home) → bấm **PLAY** để vào level đang chơi. Kéo chuột trên lưới để tạo khối. Thua → HOME để về Menu.
 
-Level đang chơi được lưu ở PlayerPrefs key `PawBlock_CurrentLevel`, coin ở `PawBlock_Coins`, lượt booster ở `PawBlock_Booster_Hint/Shield/Reveal`, năng lượng ở `PawBlock_Energy`, `PawBlock_EnergyRefillStart`, `PawBlock_EnergyInfiniteUntil`. Thử năng lượng: chuột phải component `EnergyManager` → Debug (Set 0, Skip 1 refill...). Xóa key (hoặc Edit → Clear All PlayerPrefs) để quay về level 1 / 0 coin.
+Dữ liệu người chơi (level đang chơi, coin, lượt booster, năng lượng, cài đặt Nhạc / Âm / Rung) lưu trong 1 file JSON `save.json` ở `Application.persistentDataPath` (Windows: `%USERPROFILE%/AppData/LocalLow/DefaultCompany/TestProject/`). Xem / mở thư mục / xóa: **Tools → PawBlock → Save Data** (Log Save, Open Save Folder, Delete Save). Bản trước lưu PlayerPrefs: lần đầu chạy bản mới tự chuyển sang file rồi xóa key cũ. Thử năng lượng: chuột phải component `EnergyManager` → Debug (Set 0, Skip 1 refill...).
 
 ---
 

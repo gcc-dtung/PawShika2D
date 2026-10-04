@@ -12,6 +12,16 @@
       },
       "hash": "0984b9ac550dc0223e7ad42d5fd11c6676adec9e"
     },
+    "com.coffee.ui-particle": {
+      "version": "https://github.com/mob-sakai/ParticleEffectForUGUI.git?path=Packages/src#v4.14.1",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0"
+      },
+      "hash": "2d9091f6dc3ad8bd78f8bcfbd08894f9834a545d"
+    },
     "com.coplaydev.unity-mcp": {
       "version": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
       "depth": 0,

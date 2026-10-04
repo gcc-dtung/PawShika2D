@@ -24,7 +24,7 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - Ô khóa / ô ẩn / mũi tên xuất hiện từ level nào, mật độ bao nhiêu? (dữ liệu ShikaCat không có)
 - Màn Win, Lose, Home của game gốc trông thế nào? (chưa có ảnh tham chiếu)
 - Hết 205 level thì làm gì: quay vòng, màn "Coming soon", hay bộ sinh level?
-- Năng lượng: nút Replay giữa level đang miễn phí → có thể chơi lại trước khi thua để né mất tim năng lượng. Có tính phí khi Replay sau khi đã mất mạng không?
+- ~~Năng lượng: Setting → HOME giữa level rồi PLAY lại miễn phí~~ – đã chốt: bỏ dở level hỏi lại (QUIT LEVEL) và mất 1 năng lượng như thua.
 - Giá nạp đầy năng lượng (đang 900 coin) và hồi mạng (900 coin) chưa có số gốc.
 
 ---
@@ -53,11 +53,11 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - [x] `PlacedBlock`: khối mèo (thân 9-slice, tai, số, mặt hoạt hình), hiệu ứng bật khi xuất hiện
 - [x] `GameplayVisualsSetup`: cắt atlas Spine `ingame_cat_face_03` thành 10 bộ mặt mèo
 - [x] `GameplayFeedback`: chữ khen khi đặt đúng; chớp đỏ, rung camera, rung máy khi sai
-- [x] `LevelHUD`: chữ `LEVEL n`, nút chơi lại
+- [x] `LevelHUD`: chữ `LEVEL n` (nút chơi lại đã bỏ, thay bằng nút cài đặt)
 - [x] Font: Fredoka Bold cho toàn game (tạo lại font asset, viền chữ ở Menu); LiberationSans làm fallback
 - [~] Sprite mũi tên: ảnh debug tạm
 - [ ] Gắn ô khóa / ẩn / mũi tên vào level thật (chờ trả lời câu hỏi mở)
-- [ ] Âm thanh: `block_true.ogg`, `unlock_obs2.ogg`, âm sai, nhạc nền
+- [x] Âm thanh: AudioManager + AudioDatabase; đặt khối (`block_true`), mở khóa (`unlock_obs2`), sai, thắng / thua, booster, popup, nút, tiếng mèo, nhạc nền; cài đặt Nhạc / Âm / Rung (chưa có popup cài đặt)
 
 ## Giai đoạn 3 — Thay các thành phần dính tới thời gian (gần xong)
 
@@ -77,11 +77,12 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - [x] `ReviveLivesPopup`: ads +1 mạng, 900 coin +3 mạng, nút X = thua; hồi mạng chơi tiếp lưới đang dở
 - [x] `WinPopup`: không sao, +10 coin, x2 bằng ads, Next → level kế
 - [x] `LosePopup`: nút Retry
-- [x] `ConfirmReplayPopup` cho nút Replay (tạm dừng ván khi mở)
+- [x] ~~`ConfirmReplayPopup` cho nút Replay~~ – đã bỏ cùng nút Replay
+- [x] `SettingsPopup`: Nhạc / Âm / Rung, HOME; tạm dừng ván khi mở
 - [x] ~~Viền đỏ nhấp nháy khi còn 1 mạng~~ – đã làm rồi bỏ: che lưới, khó chơi
-- [x] `CoinWallet` (PlayerPrefs) + `RewardedAds` giả lập (chờ SDK ở Giai đoạn 6)
+- [x] `CoinWallet` (save JSON) + `RewardedAds` giả lập (chờ SDK ở Giai đoạn 6)
 - [~] Giao diện popup dựng bằng menu `Build Popups` từ sprite gốc; chưa có hiệu ứng pháo hoa / mèo trên Win
-- [ ] Banner độ khó (cần thêm trường độ khó vào `LevelDefinition`)
+- [x] Độ khó Hard / Very Hard (`LevelDefinition.difficulty`): nút PLAY, khung HUD, hiệu ứng vào màn
 - [ ] Làm đẹp HUD: khung LEVEL dùng sprite gốc thay cho ô màu
 
 ## Giai đoạn 4 — Booster ✅
@@ -93,7 +94,7 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 | Reveal | 9 | 1000 / 1 lượt | Chọn 1 số, giải mọi khối cùng số |
 
 - [x] `BoosterManager` + 3 nút `BoosterButton` trong `Canvas_HUD/DownPanel/Booster` (menu `Build Boosters`)
-- [x] Số lượt (`BoosterInventory`, PlayerPrefs, tặng `valueStart`), dấu `+` khi hết → `BuyBoosterPopup`, ổ khóa "LV n" khi chưa tới level
+- [x] Số lượt (`BoosterInventory`, save JSON, tặng `valueStart`), dấu `+` khi hết → `BuyBoosterPopup`, ổ khóa "LV n" khi chưa tới level
 - [x] Hint và Reveal lấy lời giải khớp với các khối đã đặt (`BoardModel.TrySolveRemaining`); Reveal có banner chọn số + nút X
 - [x] Khiên: quầng sáng trên nút + khung băng trên tim, `LivesManager` bỏ qua 1 lần `LoseLife`; đổi level / chơi lại thì mất
 - [x] Sửa `BoosterDatabase.asset`: trỏ script mới, Freeze Time → Shield, icon, bỏ `activeSeconds`

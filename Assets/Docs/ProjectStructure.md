@@ -42,23 +42,27 @@ Script/
 │   ├── Core/       GridManager, GridSpawner, GridGeometry, BoardModel, CellModel, CellView, ClueCell
 │   ├── Level/      LevelManager, GameState, LevelDefinition, LevelDatabase
 │   ├── Lives/      LivesManager
-│   ├── Economy/    CoinWallet, RewardedAds
+│   ├── Economy/    CoinWallet, RewardedAds, IAPService, ShopDatabase, ShopService
 │   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager
+│   ├── Cheats/     DebugCheats
+│   ├── Daily/      DailyRewardDatabase, DailyRewardModel, DailyRewardManager
 │   ├── Energy/     EnergyModel, EnergyManager
 │   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, ColorType
 │   ├── Input/      InputManager, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
 │   ├── Feedback/   GameplayFeedback
+│   ├── Audio/      SoundId, AudioDatabase, AudioManager, GameAudioEvents
+│   ├── Save/       SaveData, SaveSystem, SaveRunner
 │   ├── Visuals/    GameplayVisuals, BackgroundFitter, PlayZone
 │   └── Util/       Singleton
 ├── UI/
-│   ├── Common/     SafeAreaZone, BackgroundCover
+│   ├── Common/     SafeAreaZone, BackgroundCover, UIButtonSounds, NoClickSound, UIButtonPress, ButtonPress, SettingsButton, UIConfetti, TMPLetterPopIn, ButtonPressIgnore, NestedScrollRect
 │   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD
-│   ├── Menu/       ScreenFlow, MainMenuNavigator, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton
-│   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, ConfirmReplayPopup, BuyBoosterPopup, RefillEnergyPopup
+│   ├── Menu/       ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
+│   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
     ├── Level/      ShikaCatLevelImporter
-    ├── UI/         PopupBuilder, BoosterBuilder, EnergyBuilder, MainMenuBuilder
+    ├── UI/         PopupBuilder, ShopBuilder, SettingsBuilder, DifficultyBuilder, DailyRewardBuilder, WinScreenBuilder, BoosterBuilder, EnergyBuilder, MainMenuBuilder
     └── Visuals/    GameplayVisualsSetup
 ```
 
@@ -97,30 +101,48 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `CoinWallet` | Static, coin lưu PlayerPrefs `PawBlock_Coins`: `Add`, `TrySpend`, event `Changed` |
+| `CoinWallet` | Static, coin lưu `SaveData.coins`: `Add`, `TrySpend`, event `Changed` |
 | `RewardedAds` | Quảng cáo có thưởng, đặt trên `Manager`. Hiện giả lập: chờ 0.5 s rồi trả thành công. Thay thân `ShowRoutine` khi gắn SDK |
+| `IAPService` | Mua bằng tiền thật (VND). Chưa có SDK: `Purchase(productId, onDone)` luôn thất bại, phát `PurchaseFailed` (popup "Purchase Failed!" như bản gốc). Tích hợp Google Play / App Store: thay thân `Purchase`, nơi gọi giữ nguyên |
+| `ShopDatabase` | ScriptableObject `10_Data_Configs/ShopDatabase.asset` + `ShopProduct` (mã IAP, tên, mục `ShopSection`, giá VND, hình, coin / Hint / Shield / Reveal / phút năng lượng vô hạn / removeAds, tem giảm giá). Số chép từ `*PackShop.asset` gốc (freeze = Shield), giá theo video |
+| `ShopService` | `Buy(product)` → `IAPService.Purchase`; thành công thì `Grant` (coin, booster, năng lượng vô hạn, `SaveData.noAds`), phát `Purchased` |
 
 ### Gameplay/Booster
 
 | File | Vai trò |
 | --- | --- |
 | `BoosterDatabase` | ScriptableObject + `BoosterType` (Hint 0, Shield 1, Reveal 2) + `BoosterData`. Tên field giữ như bản gốc; asset ở `GameAssets/10_Data_Configs/BoosterDatabase.asset` |
-| `BoosterInventory` | Static, số lượt lưu PlayerPrefs `PawBlock_Booster_{type}`; lần đầu tặng `valueStart`; event `Changed` |
+| `BoosterInventory` | Static, số lượt lưu `SaveData.boosters` (theo tên loại); lần đầu tặng `valueStart`; event `Changed` |
 | `BoosterManager` | Trên `Manager`. `Press(type)`: chưa mở → bỏ qua; hết lượt → `onBuyRequested`; Hint đặt khối nhỏ nhất của lời giải; Khiên bật `LivesManager`; Reveal vào chế độ chọn số (`HandleCellTap` từ `DragAndDropController`), đặt lần lượt mọi khối cùng số (DOTween, cách 0.12 s, `IsBusy` khóa lưới). Chỉ trừ lượt khi có tác dụng. `Buy(type)` trừ coin |
+
+### Gameplay/Cheats
+
+| File | Vai trò |
+| --- | --- |
+| `DebugCheats` | Lệnh cheat dùng chung (static), chỉ gọi API sẵn có nên hiệu ứng / popup / save chạy như chơi thật: level (`GoToLevel`, `PlayLevel` – vào ván bỏ qua năng lượng, Next / Prev / Retry), thắng (`WinNow` – đặt hết lời giải, `SolveOneBlock`), thua (`LoseLife`, `OutOfLives` → popup Hồi mạng, `LoseNow` – chờ sự kiện OutOfLives rồi `GiveUp` → popup Thua), coin, mạng / khiên, năng lượng, booster (`BoosterInventory.SetCount`), điểm danh, lưu save |
+
+### Gameplay/Daily
+
+| File | Vai trò |
+| --- | --- |
+| `DailyRewardDatabase` | ScriptableObject `10_Data_Configs/DailyRewardDatabase.asset`: quà 7 ngày (mỗi ngày nhiều món: Coin / Booster / InfiniteEnergy – phút), icon coin / năng lượng vô hạn, `recoverMissedWithAd` |
+| `DailyRewardModel` | **Logic** C# thuần: chu kỳ 7 ngày theo lịch máy từ `cycleStart`; ô i = ngày `cycleStart + i`; trạng thái Claimed / Today / Missed / Future; quá 7 ngày thì chu kỳ mới; đồng hồ lùi thì coi như ngày đầu. Lưu `SaveData.daily` (`cycleStart`, `claimedMask`) |
+| `DailyRewardManager` | Trên `Manager`. `Claim(day)`: hôm nay nhận luôn, ngày lỡ xem quảng cáo (không chờ nếu đang có quảng cáo khác); trao quà (CoinWallet / BoosterInventory / EnergyManager.AddInfinite); kiểm tra sang ngày mới mỗi 5 s và khi quay lại app; `autoOpen`: vào game lần đầu trong ngày còn quà thì mở popup. `onChanged`, `onClaimed`. Context menu Debug: Next Day / Reset |
 
 ### Gameplay/Energy
 
 | File | Vai trò |
 | --- | --- |
 | `EnergyModel` | **Logic** C# thuần (nhận `now` từ ngoài): năng lượng, mốc bắt đầu đếm hồi, hạn vô hạn; `Refresh` cộng bù theo thời gian đã trôi, `TryConsume`, `Add`, `AddInfinite`, `SecondsToNext` |
-| `EnergyManager` | Trên `Manager`. Tối đa 5, hồi 1/1800 s; nghe `GameState.Lost` → −1; lưu PlayerPrefs; tick mỗi giây (`onTick`) cho đồng hồ, `onEnergyChanged`. Context menu Debug: Set 0 / Set Full / Skip 1 refill / Infinite 5 min |
+| `EnergyManager` | Trên `Manager`. Tối đa 5, hồi 1/1800 s; nghe `GameState.Lost` → −1 (`ConsumeOne`, dùng cả khi bỏ dở level); lưu `SaveData.energy`; tick mỗi giây (`onTick`) cho đồng hồ, `onEnergyChanged`. Context menu Debug: Set 0 / Set Full / Skip 1 refill / Infinite 5 min |
 
 ### Gameplay/Block
 
 | File | Vai trò |
 | --- | --- |
 | `BlockModel` | **Logic** C# thuần: vùng, các ô chiếm, ô số, màu (= màu khung chọn của lượt kéo tạo ra khối) |
-| `PlacedBlockView` | **View** khối mèo: thân 9-slice, tai, số, mặt, viền `Ring`. Trạng thái: xem trước (đặc ngay, viền màu mèo thu bên trong 0.2 s) → `Confirm` (bật) hoặc `PlayReject` (rung, co nhỏ + mờ; `rejectStyle`: `GrayOut` mèo xám – mặc định / `RedRing` viền đỏ ngoài mép / `GrayAndRedRing`) |
+| `DifficultyTheme` | ScriptableObject `10_Data_Configs/DifficultyTheme.asset` + `LevelDifficulty` (Normal / Hard / VeryHard) + `DifficultyStyle`: chữ tab, mặt nút PLAY + màu chữ + viền chữ PLAY, khung HUD + viền chữ tab, đầu lâu, băng chữ; dùng chung khung PLAY `khung_home_hard`, dải sọc. `LevelDefinition.difficulty` (sửa trong Level Editor) |
+| `PlacedBlockView` | **View** khối mèo: thân 9-slice, tai, số, mặt, viền `Ring`. Trạng thái: xem trước (đặc ngay, viền màu mèo thu bên trong 0.2 s) → `Confirm` (bật) hoặc `PlayReject` (rung, co nhỏ + mờ; `rejectStyle`: `GrayOut` mèo xám – mặc định / `RedRing` viền đỏ ngoài mép / `GrayAndRedRing`). `PlayWinFlash`: thắng thì thân + tai phủ trắng 0.6 rồi tan (lớp sprite đè lên dùng `flashMaterial` = `BlockFlash.mat`, GUI/Text Shader) |
 | `CatFaceAnimator` | Chạy chuỗi khung hình mặt mèo trên SpriteRenderer |
 | `ColorType` | Enum 10 màu + bảng màu RGB |
 
@@ -133,7 +155,24 @@ Quy tắc đặt file mới:
 | `DragSelection` | **Logic** C# thuần của vùng đang kéo: không bao giờ phủ lên khối đã đặt / ô Void (bị chặn thì giữ vùng hợp lệ trước đó), vuốt nhanh thì đi qua từng ô ở giữa; `BlockDir` = mép nào đang bị ngón tay đẩy vào vật cản |
 | `SelectionBoxView` | Khung màu mờ phủ vùng đang kéo, random 1 `ColorType` mỗi lượt kéo (mèo xem trước và khối đặt ra dùng đúng màu này); đổi ô thì giãn / co tới vùng mới trong `resizeDuration` 0.15 s (`resizeEase` OutQuad, tween DOTween, chỉnh trong Inspector), giãn xong báo `WhenSettled`; mờ đi khi đang hiện mèo xem trước. Bình thường ôm sát ô (`inset` 0.1); bị chặn (khối, Void, mép lưới) thì mép phía đó trượt sang lấp khe, dừng ngay trước vật cản (`blockedExtend` 0.1) |
 | `DragCountBubble` | Bong bóng số ô bám ngón tay |
-| `GameplayFeedback` | Chữ khen khi đúng; rung camera, rung máy khi sai |
+| `GameplayFeedback` | Chữ khen khi đúng; rung camera, rung máy khi sai (qua `AudioManager.Vibrate`, theo cài đặt Rung) |
+
+### Gameplay/Audio
+
+| File | Vai trò |
+| --- | --- |
+| `SoundId` | Enum các âm: UI (Click, PopupOpen/Close, Coin), màn chơi (LevelStart, BlockPlace, Mistake, Unlock, Win, Lose, OutOfLives), booster (Booster, ShieldOn, ShieldBlock), tiếng mèo (CatHappy, CatSad) |
+| `AudioDatabase` | ScriptableObject `10_Data_Configs/AudioDatabase.asset`: mỗi âm → nhiều clip (phát ngẫu nhiên), âm lượng, khoảng cao độ, cooldown; nhạc nền + âm lượng |
+| `AudioManager` | Trên object `AudioManager`. Nhạc nền lặp, đổi / bật / tắt có fade (DOTween, thời gian thực); pool `sfxVoices` AudioSource 2D, hết thì dùng lại nguồn phát lâu nhất; cooldown từng âm. `Play(id)`, `PlayChance(id, p)`, `Vibrate()`; `MusicOn` / `SoundOn` / `VibrateOn` lưu `SaveData.settings`, sự kiện `SettingsChanged` |
+| `GameAudioEvents` | Nối âm vào sự kiện có sẵn: `GridManager` (đặt khối + mèo vui 35 %, sai + mèo buồn 80 %, mở khóa), `LevelManager.onStateChanged` (Won / OutOfLives / Lost), `GridSpawner.gridCellEvent` (LevelStart, bỏ qua khi ở Menu), `LivesManager` (khiên bật / chặn), `BoosterManager.onBoosterUsed`, `CoinWallet.Changed` (nhận coin) |
+
+### Gameplay/Save
+
+| File | Vai trò |
+| --- | --- |
+| `SaveData` | Toàn bộ dữ liệu người chơi (JsonUtility): `version`, `savedAt`, `currentLevel`, `coins`, `boosters` (tên loại + số lượt), `energy` (số, mốc hồi, hạn vô hạn), `settings` (nhạc, âm, rung). Field mới đặt mặc định tại khai báo |
+| `SaveSystem` | Static. `Data` nạp lười từ `persistentDataPath/save.json`; `MarkDirty()` (Play: SaveRunner ghi sau 0.5 s; Editor: ghi ngay), `Save()`, `Delete()`. Ghi an toàn: `.tmp` → giữ bản cũ `.bak` → đổi tên; đọc lần lượt file chính → `.tmp` → `.bak`. Không có file: chuyển PlayerPrefs bản cũ rồi xóa key. `Upgrade` theo `version`. Reset static khi vào Play (tắt Domain Reload vẫn đúng) |
+| `SaveRunner` | Object ẩn, DontDestroyOnLoad, tạo khi cần: gom thay đổi ghi sau 0.5 s, luôn ghi khi app vào nền / mất focus / thoát |
 
 ### Gameplay/Visuals, Util
 
@@ -147,7 +186,8 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `LevelHUD` | Chữ `LEVEL n`, nút chơi lại |
+| `LevelHUD` | Chữ `LEVEL n`; level Hard / Very Hard: khung có tab ghi mức khó (`khung_hard1` / `khung_expert1`, chữ tab viền theo mức khó) bao ô LEVEL, nền ô đổi sang `rounded_white` bo góc |
+| `DifficultyIntro` | Trên `Canvas_HUD/DifficultyIntro`. Vào ván level Hard / Very Hard: chờ lưới hiện xong → nền tối, dải sọc `khung_expert_4` + băng chữ (`khung_hard_3` HARD LEVEL / `khung_expert_3` EXTREME LEVEL) trượt chéo từ góc trên trái vào, mèo đầu lâu (`khung_hard_2` / `khung_expert_2`) bật ra + nhịp, giữ 1.3 s, đầu lâu thu lại, băng trượt ra, nền sáng lại; âm `HardLevel`. `Playing` (tĩnh) khóa thao tác trên lưới |
 | `LivesUI` | Hàng tim trên Canvas |
 | `BoosterButton` | 1 nút booster: icon, số lượt (`btn_number`), dấu `+` (`btn_add_0`), ổ khóa "LV n", quầng sáng xoay khi đang bật; bấm → `BoosterManager.Press` |
 | `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số |
@@ -158,40 +198,60 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `MainMenuNavigator` | Trên `Canvas_Menu`. Panel xếp ngang theo thứ tự tab, đổi tab thì trượt (`duration` 0.3 s, `ease` OutCubic); tab chọn rộng `selectedWidth` 408, nền `home_tab1` trượt theo, tab khác chia đều; xong thì tắt panel khuất màn hình. Tab / nền tab chọn neo bottom center. `Select(index)`, `onTabChanged`; `LayoutInEditor` (chuột phải component) xếp sẵn trong Editor |
-| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua → HOME). `onScreenChanged` |
+| `MainMenuNavigator` | Trên `Canvas_Menu`. Panel xếp ngang theo thứ tự tab, đổi tab thì trượt (`duration` 0.3 s, `ease` OutCubic); tab chọn rộng `selectedWidth` 408, nền `home_tab1` trượt theo, tab khác chia đều; xong thì tắt panel khuất màn hình. Tab / nền tab chọn neo bottom center. `Select(index)`, `onTabChanged`; vuốt: `BeginSwipe` / `Swipe(dx)` / `EndSwipe(v)` (panel theo ngón tay, đang ở tab đầu / cuối thì không kéo ra ngoài được; thả: quá `swipeThreshold` 20% bề rộng hoặc nhanh hơn `swipeVelocity` 900/s thì sang tab kề, thời gian trượt theo quãng còn lại, tối thiểu `minReleaseRatio`); `LayoutInEditor` (chuột phải component) xếp sẵn trong Editor |
+| `ShopCardView` | 1 thẻ / dòng / ô Shop: đọc `ShopProduct` lúc chạy (tên, giá, hình, coin, ô vật phẩm 2x2 cố định Hint / Shield / Reveal / vô hạn, ẩn món = 0); bấm giá → `ShopService.Buy`; dòng Remove Ads ẩn khi đã `noAds` |
+| `MenuSwipe` | Trên `Canvas_Menu/Panels`: nhận kéo từ mọi thứ trong panel, kéo dọc thì bỏ qua; vận tốc làm mượt, dừng tay > 0.08 s rồi thả = vận tốc 0. Kéo quá ngưỡng thì EventSystem hủy click của nút đang ấn |
+| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua / Cài đặt → HOME). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `shopTab` (Nạp năng lượng thiếu coin). `onScreenChanged` |
 | `PlayButtonView` | Nút PLAY: "Level n" theo `onLevelLoaded`, thở nhẹ (DOTween lặp, kill khi tắt) → `ScreenFlow.Play` |
 | `CoinHUD` | Số coin (nghe `CoinWallet.Changed`, icon nảy); bấm → tab Shop |
 | `SafeAreaZone` | UI Zone: neo RectTransform theo `Screen.safeArea` (chọn cạnh trên / dưới / trái / phải) để UI tránh tai thỏ, thanh home; chỉ chạy khi Play, tự cập nhật khi màn hình đổi |
 | `BackgroundCover` | Ảnh nền UI phủ kín RectTransform cha: kích thước trong scene là tối thiểu, chưa kín thì phóng đều vừa đủ (tính cả lệch tâm) |
-| `MenuShortcutButton` | Nút phụ trên Home (Starter, No Ads): nhún nhẹ lên xuống (DOTween), bấm → chuyển tab (mặc định Shop) |
-| `MenuTabButton` | 1 tab: icon to 1.3x + nhô lên, hiện chữ khi được chọn; vạch ngăn `home_tab3` chỉ giữa 2 tab không chọn: đổi ngay khi bắt đầu trượt, vạch mới hiện dần cả quãng, vạch cũ mờ nhanh (`dividerHideRatio`) |
+| `MenuShortcutButton` | Nút phụ trên Home (Starter, No Ads): định kỳ icon (`icon`, pivot ở đáy) nhấc lên `lift`, to `scaleUp`, lắc nghiêng `angle` nhỏ dần `swings` nhịp rồi hạ xuống (OutBounce), ~0.65 s / lần; nghỉ `interval`, lần đầu chờ `firstDelay` (Starter 1.4 / 0.6, No Ads 2.35 / 1.3 – nhịp ~2 s / ~3 s như bản gốc). Khung tròn / ruy băng / chữ đứng yên. Bấm → chuyển tab (mặc định Shop) |
+| `MenuTabButton` | 1 tab: icon to 1.3x + nhô lên, hiện chữ khi được chọn (nảy nhẹ OutBack `selectOvershoot` 2; bỏ chọn thu về nhanh `deselectRatio` 0.6); có `ButtonPress` tắt (đổi tab đã có hiệu ứng riêng); vạch ngăn `home_tab3` chỉ giữa 2 tab không chọn: đổi ngay khi bắt đầu trượt, vạch mới hiện dần cả quãng, vạch cũ mờ nhanh (`dividerHideRatio`) |
 
 ### UI/Popups
 
 | File | Vai trò |
 | --- | --- |
-| `PopupView` | Base: CanvasGroup, nền tối `Dim` chắn bấm, `Panel` bật lên (scale 0.6 → 1), dùng thời gian thực |
-| `GameFlowUI` | Trên `Canvas_Popup/Popups`. Nghe `onStateChanged`: Won → Win, OutOfLives → Hồi mạng, Lost → Thua; `RequestReplay` cho nút chơi lại; `RequestPlay` cho nút PLAY; `OpenEnergyRefill` (HUD / Menu). Hết năng lượng mà PLAY / Retry → `RefillEnergyPopup.ShowRequired` (X: PLAY → ở lại Menu, Retry → mở lại popup Thua) |
-| `WinPopup` | `LEVEL n` / COMPLETED!, +10 coin; x2 (ads) hoặc Next → `NextLevel` |
+| `PopupView` | Base: CanvasGroup, nền tối `Dim` chắn bấm, `Panel` bật lên (scale 0.6 → 1), dùng thời gian thực; âm PopupOpen / PopupClose |
+| `UIButtonSounds` | Trên Canvas_Menu / Canvas_HUD / Canvas_Popup: mọi Button bên trong (kể cả đang tắt) phát Click; nút có `NoClickSound` thì bỏ qua |
+| `UIButtonPress` | Trên Canvas_Menu / Canvas_HUD / Canvas_Popup: gắn `ButtonPress` cho mọi Button bên trong (kể cả đang tắt); nút đã có `ButtonPress` thì giữ nguyên |
+| `ButtonPress` | Cảm giác nhấn như bản gốc (chỉ khi nút tương tác được). Nút có khung + mặt riêng (con `Face` / `Fill`: PLAY, Refill, Free live): khung đứng yên, mọi con lún `insetScale` 0.94 quanh tâm nút và tối `pressedTint` 0.78 → lộ viền tối quanh mặt như bị nhấn xuống; Button đang tô khung thì chuyển `targetGraphic` sang mặt. Nút 1 ảnh: cả nút lún `pressScale` 0.93 và tối (tạm dừng tween scale khác trên nút). Thả: nảy nhẹ về (OutBack `releaseOvershoot` 3, 0.18 s); kéo ra ngoài / vuốt: về luôn. Thời gian thực. Tắt cho 1 nút: gắn sẵn `ButtonPress` rồi bỏ tick |
+| `GameFlowUI` | Trên `Canvas_Popup/Popups`. Nghe `onStateChanged`: Won → Win, OutOfLives → Hồi mạng, Lost → Thua; `OpenSettings` cho nút bánh răng (HUD / Menu; trong ván chỉ mở khi đang chơi); `RequestPlay` cho nút PLAY; `OpenEnergyRefill` (Menu). Hết năng lượng mà PLAY / Retry → `RefillEnergyPopup.ShowRequired` (X: PLAY → ở lại Menu, Retry → mở lại popup Thua) |
+| `WinPopup` | Màn thắng như bản gốc (không bảng, nền tối 0.95, không có sao): ô coin trên cùng, chữ "WELL DONE!" to (156, tự co) ngay trên huy hiệu mèo (`khung_win1` + `cat_1`) với quầng sáng + tia sáng xoay, `UIConfetti`. Mở: chữ đi vào từng ký tự (`TMPLetterPopIn`) cùng lúc huy hiệu + tia bật, confetti bắn 2 bên rồi mưa → chữ cuối đáp xuống thì Continue / x2 Coin bật. Nhận: huy hiệu thu lại, coin (≤ 12) bung ra rồi bay vào ô coin, số đếm lên → `NextLevel` |
+| `TMPLetterPopIn` | Chữ TMP hiện lần lượt từng ký tự: mỗi chữ bắt đầu to `startScale` 2.4, lệch ±`startRotation` 16°, trong suốt → thu về cỡ chuẩn (OutBack `overshoot` 1.7), hiện dần (`fadeRatio`), xoay về thẳng; chữ sau trễ `letterDelay` 0.06 s, mỗi chữ `letterDuration` 0.38 s. Sửa đỉnh lưới chữ (không tách object), giữ màu / gradient / viền. `Play`, `Hide`, `Finish`, `Duration` |
+| `UIConfetti` | Confetti bằng ParticleSystem vẽ lên uGUI qua **UIParticle** (package `com.coffee.ui-particle` 4.14.1): UIParticle scale 100 (1 đơn vị particle = 100 đơn vị canvas) + 3 ParticleSystem con `BurstLeft` / `BurstRight` (60 mảnh, bắn chéo lên 55–85°) / `Rain` (22 mảnh / giây từ mép trên). Dùng chung `ConfettiUI.mat` (UI/Default – UIParticle chỉ hỗ trợ shader UI) + atlas `confetti_sheet` 2x2 qua Texture Sheet Animation → 1 mesh, 1 draw call. Trọng lực, lực cản 1.6, Noise (lắc), xoay + lật trục X, mờ 20 % cuối. Vị trí phát tính theo rect lúc gọi (màn cao / thấp đều đúng mép) |
+| `NestedScrollRect` | ScrollRect dọc trong vùng vuốt ngang: lượt kéo ngang nhiều hơn dọc thì chuyển lên cha (`MenuSwipe` chuyển tab) |
 | `ReviveLivesPopup` | Ads +1 mạng, 900 coin +3 mạng (mờ khi thiếu coin), X → `GiveUp` |
-| `ConfirmReplayPopup` | Mở thì `Pause`; YES → `Retry`, NO → `Resume` |
+| `SettingsPopup` | Cài đặt như ref: thân + tab "SETTING" (`popup_1_body` 9-slice), 3 `SettingToggleView` (Music / Sound / Vibrate), X, Home (trong ván → `QuitLevelPopup`; ở Menu ẩn), "Ver" + `Application.version`. Mở ở Menu: ẩn Home, thân ngắn đi `menuHeightCut` (con của Panel neo mép trên, chữ phiên bản neo mép dưới). Mở trong ván thì `Pause`, X thì `Resume` |
+| `QuitLevelPopup` | "QUIT LEVEL" như bản gốc: "You will lose" + tim vỡ "-1", nút đỏ Quit. Mở từ Cài đặt → Home khi đang trong ván (ván vẫn tạm dừng). Quit: `EnergyManager.ConsumeOne` (vô hạn thì không trừ) → `ScreenFlow.ShowMenu`; X: `Resume` chơi tiếp |
+| `NoticePopup` | Thông báo chung "NOTICE" (khung chung, khung trắng nội dung, nút xanh Continue, X): `GameFlowUI.ShowNotice(message, title, onClose)`; mở trong ván thì tạm dừng. GameFlowUI nghe `IAPService.PurchaseFailed` → "Purchase Failed!" |
+| `SettingToggleView` | 1 nút tròn: bật = `btn_setting2` (xanh), tắt = `btn_setting1` (xám) + gạch đỏ `off`; bấm đảo `AudioManager.MusicOn / SoundOn / VibrateOn` (lưu save), vừa bật rung thì rung thử; vẽ lại theo `AudioManager.SettingsChanged` |
+| `SettingsButton` | Nút bánh răng (HUD trong ván, thanh trên Menu) → `GameFlowUI.OpenSettings` |
+| `DailyRewardPopup` | Popup điểm danh (khung chung, "DAILY REWARD"): 7 `DailyRewardSlot` (như bản gốc: hàng 1 ngày 1–3, hàng 2 ngày 4–6, hàng 3 ô ngày 7 rộng hết 3 cột, icon to); CLAIM nhận quà hôm nay, nhận rồi thay bằng "Next reward in hh:mm:ss"; bấm ô hôm nay cũng nhận, ô lỡ có icon video thì xem quảng cáo bù |
+| `DailyRewardSlot` | 1 ô: "Day n", tối đa 5 món (icon + số: coin "100", booster "x1", vô hạn "30m"); hôm nay viền vàng nhấp nháy, đã nhận mờ + tick, lỡ xám (+ video), chưa tới bình thường; nhận thì ô nảy + tick bật ra |
+| `DailyRewardButton` | Nút Daily trên Home (cùng `MenuShortcutButton` tab -1): bấm → `GameFlowUI.OpenDailyReward`; còn quà hôm nay thì lắc + chấm đỏ (`SetAttention`) |
 | `BuyBoosterPopup` | Hết lượt booster: icon, mô tả, "x n", giá coin (mờ khi thiếu), X; mở thì `Pause` |
-| `RefillEnergyPopup` | Nạp năng lượng: "n/5", "Next in mm:ss", ads +1, 900 coin nạp đầy. `ShowOptional` (từ HUD, có X) / `ShowRequired(onReady, onCancel)` (có năng lượng thì tự đóng rồi gọi `onReady`; có `onCancel` thì hiện X); tạm dừng ván khi mở |
+| `RefillEnergyPopup` | "REFILL LIVES?" như ref (khung chung với Cài đặt): tim to có số năng lượng, "Get more lives to continue playing", ô đồng hồ `mm:ss` tới lần hồi kế (đầy: FULL); nút xanh Refill 900 coin nạp đầy (mờ khi đã đầy; thiếu coin thì đóng popup, không gọi `onCancel`, rồi `ScreenFlow.ShowShop`), nút vàng Free live (ads +1). `ShowOptional` (từ nút tim, có X) / `ShowRequired(onReady, onCancel)` (có năng lượng thì tự đóng rồi gọi `onReady`; có `onCancel` thì hiện X); tạm dừng ván khi mở |
 | `LosePopup` | FAILED, "−1 🐟"; RETRY (qua `GameFlowUI` kiểm tra năng lượng), HOME → `ScreenFlow.ShowMenu` |
 
 ### Editor
 
 | File | Menu | Việc làm |
 | --- | --- | --- |
-| `Level/ShikaCatLevelImporter` | Tools → PawBlock → Import ShikaCat Levels | JSON → `LevelDefinition` + `LevelDatabase` |
+| `Level/ShikaCatLevelImporter` | Tools → PawBlock → Import ShikaCat Levels | JSON → `LevelDefinition` + `LevelDatabase` (thêm cuối: level Test, level Custom) |
+| `Level/LevelEditorWindow` | Tools → PawBlock → Level Editor | Cửa sổ sửa / xếp level: chọn theo database, tạo mới / nhân bản vào `Levels/Custom`, đổi thứ tự; công cụ Khối / Số / Void / Xóa trên lưới; sửa hướng, khóa, "?"; Kiểm tra (LevelValidator + lời giải duy nhất), Giải, Chơi thử (`LevelEditorPlayTest` vào thẳng màn chơi) |
 | `Visuals/GameplayVisualsSetup` | Tools → PawBlock → Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, tạo `GameplayVisuals.asset` |
-| `UI/PopupBuilder` | Tools → PawBlock → Build Popups | Tạo `Canvas_Popup` (Overlay 1080x1920, sortingOrder 20) nếu chưa có, xóa rồi dựng lại `Popups` trong đó (xóa cả bản cũ trong `Canvas_HUD`), nối `GameFlowUI` cho LevelHUD / EnergyHUD / ScreenFlow, thêm `RewardedAds` vào `Manager` |
-| `UI/MainMenuBuilder` | Tools → PawBlock → Build Main Menu | `Canvas_Menu`: CanvasScaler 1080x1920, sortingOrder 10; `Panels` (ShopPanel tạm, HomePanel + `PlayButton`, `Starter`, `NoAds`, `TopBar` (Avatar, Energy, Coin, Settings – ô kem `khung_pill_kem`), ProgressPanel tạm, mỗi panel `RectMask2D`); `AlwayOn/TabBar`; `MainMenuNavigator`; `ScreenFlow` trên `Manager`; chữ viền dùng preset của `GameFontSetup` |
+| `UI/PopupBuilder` | Tools → PawBlock → Build Popups | Tạo `Canvas_Popup` (Overlay 1080x1920, sortingOrder 20) nếu chưa có, xóa rồi dựng lại `Popups` trong đó (xóa cả bản cũ trong `Canvas_HUD`), nối `GameFlowUI` cho SettingsButton / EnergyHUD / ScreenFlow, thêm `RewardedAds` vào `Manager` |
+| `UI/ShopBuilder` | Tools → PawBlock → Build Shop | Thay `ShopPanel`: mái hiên + ô năng lượng / coin, danh sách cuộn (`NestedScrollRect`, VerticalLayoutGroup): Starter Pack, Remove Ads, No Ads Bundle, Special Bundle (5 gói), lưới Coin 3x2; tạo `ShopDatabase.asset` nếu chưa có |
+| `UI/MainMenuBuilder` | Tools → PawBlock → Build Main Menu | `Canvas_Menu`: CanvasScaler 1080x1920, sortingOrder 10; `Panels` (ShopPanel – ShopBuilder, HomePanel + `PlayButton`, `Starter`, `NoAds`, `TopBar` (Avatar, Energy, Coin, Settings – ô kem `khung_pill_kem`), ProgressPanel tạm, mỗi panel `RectMask2D`); `AlwayOn/TabBar` (tab có `ButtonPress` tắt); Starter dựng từ `starter_back` / `starter_chest` / `starter_ribbon`, No Ads lắc riêng `Tv`; `MainMenuNavigator`, `MenuSwipe` trên `Panels`; `ScreenFlow` trên `Manager`; chữ viền dùng preset của `GameFontSetup` |
+| `Save/SaveDataMenu` | Tools → PawBlock → Save Data | Log Save (in nội dung save.json), Open Save Folder, Delete Save (hỏi xác nhận, không chạy khi đang Play) |
+| `Audio/AudioSetup` | Tools → PawBlock → Setup Audio | Tạo / bổ sung `AudioDatabase` (chỉ thêm âm còn thiếu), BGM nhập Streaming, object `AudioManager` (AudioManager + GameAudioEvents), `UIButtonSounds` trên 3 canvas |
 | `UI/UIZoneBuilder` | Tools → PawBlock → Build UI Zone | `Canvas_HUD/UIZone` (4 cạnh) chứa PlayZone, TopPanel, DownPanel, RevealBanner; gọi Build Main Menu để dựng `HomePanel/UIZone` (cạnh trên). Builder HUD tìm theo `PopupBuilder.HudRoot` (UIZone nếu có) |
 | `UI/PlayZoneBuilder` | Tools → PawBlock → Build Play Zone | Dựng `Canvas_HUD/PlayZone` (giãn theo màn hình, lề trên 300 / dưới 310 / hai bên 30), gán cho `LevelManager.playZone` |
 | `UI/GameFontSetup` | Tools → PawBlock → Apply Game Font | Fredoka Bold làm font mặc định TMP (fallback LiberationSans), gán shader `TMP_SDF-Mobile` theo đường dẫn, tạo preset viền `Fredoka-Bold SDF - Outline Purple / Green / Brown`, đổi font mọi chữ LiberationSans trong scene và prefab `Assets/_Project` |
-| `UI/EnergyBuilder` | Tools → PawBlock → Build Energy | Dựng `TopPanel/Energy` (EnergyHUD) góc trên phải, thêm `EnergyManager` vào `Manager` |
+| `UI/EnergyBuilder` | Tools → PawBlock → Build Energy | Thêm `EnergyManager` vào `Manager`; xóa `TopPanel/Energy` cũ (trong ván không còn tim năng lượng) |
+| `UI/SettingsBuilder` | Tools → PawBlock → Build Settings | `TopPanel`: xóa ReplayButton / Energy, dựng `SettingsButton` góc trên phải; thay `SettingsPopup` trong `Canvas_Popup/Popups` (xóa ConfirmReplayPopup cũ) mà không dựng lại popup khác; gắn `SettingsButton` cho nút Settings trên Menu |
 | `UI/BoosterBuilder` | Tools → PawBlock → Build Boosters | Dựng phần con của 3 nút booster, `RevealBanner`, `TopPanel/LevelFrame/Shield`; thêm `BoosterManager` vào `Manager` |
 
 ---
@@ -211,20 +271,19 @@ Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920, sortingOrder 0; S
 └── UIZone             SafeAreaZone (4 cạnh): mọi UI của HUD nằm trong safe area
     ├── PlayZone       PlayZone + Image (tắt, bật `showZone` để xem vùng): lưới luôn nằm trọn trong vùng này
     ├── TopPanel       LevelHUD
-    │   ├── ReplayButton
     │   ├── LevelFrame / LevelText, Hearts (LivesUI), Shield (ShieldIndicator, khung băng)
-    │   └── Energy     EnergyHUD (Bg khung_refill, Heart, Count, Timer)
+    │   └── SettingsButton  SettingsButton (khung_setting_3 + bánh răng), góc trên phải
     ├── DownPanel/Booster  Booster1..3: BoosterButton (Hint, Shield, Reveal) / Glow, Icon, Count, Add, Lock
     └── RevealBanner   RevealBanner + CanvasGroup (ẩn khi không chọn số)
 Canvas_Popup           Canvas Overlay 1080x1920, sortingOrder 20, luôn bật (dùng chung Menu và màn chơi)
 └── Popups             GameFlowUI (dựng bằng Build Popups)
-    ├── WinPopup  ReviveLivesPopup  LosePopup  ConfirmReplayPopup  BuyBoosterPopup  RefillEnergyPopup   (tắt sẵn)
-    └── mỗi popup: Dim, Panel (popup_1 x1.6) / Title, nội dung, nút
+    ├── WinPopup  ReviveLivesPopup  LosePopup  SettingsPopup  BuyBoosterPopup  RefillEnergyPopup   (tắt sẵn)
+    └── mỗi popup: Dim (đen alpha 0.88 – Linear color space nên cần cao để tối như ref), Panel / Title, nội dung, nút
 Canvas_Menu            Canvas Overlay 1080x1920, sortingOrder 10 (trên HUD), MainMenuNavigator
 ├── Panels             ShopPanel | HomePanel | ProgressPanel (trượt ngang, RectMask2D)
 │   └── HomePanel      Background (BackgroundCover), PlayButton,
 │                      UIZone (SafeAreaZone cạnh trên): Starter, NoAds,
-│                      TopBar (Avatar, Energy: EnergyHUD tim + số, đồng hồ, "+"; Coin: CoinHUD; Settings) – chỉ ở tab Home
+│                      TopBar (Avatar, Energy: EnergyHUD tim + số, đồng hồ, "+"; Coin: CoinHUD; Settings: SettingsButton) – chỉ ở tab Home
 └── AlwayOn            Lớp luôn hiện (không chặn bấm)
     └── TabBar         1080x200 neo bottom center: Background (home_tab2), SelectedTab (home_tab1), Tab_Shop / Tab_Home / Tab_Progress (neo bottom center)
 EventSystem

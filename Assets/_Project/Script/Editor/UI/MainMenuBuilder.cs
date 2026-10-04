@@ -70,7 +70,7 @@ public static class MainMenuBuilder
 
         PopupBuilder.DestroyChild(panels, "ShopPanel");
         PopupBuilder.DestroyChild(panels, "ProgressPanel");
-        RectTransform shop = BuildShopPlaceholder(panels);
+        RectTransform shop = ShopBuilder.BuildPanel(panels);
         RectTransform progress = BuildProgressPlaceholder(panels);
         // Nội dung tràn ra ngoài panel (vd. home_bg 2048px) không được đè panel bên cạnh khi trượt
         foreach (Transform p in new[] { shop, home, progress })
@@ -120,7 +120,7 @@ public static class MainMenuBuilder
         // Xóa cả bản cũ nằm thẳng trong HomePanel / AlwayOn
         RectTransform homeZone = UIZoneBuilder.Ensure(home, true, false, false, false);
         homeZone.SetSiblingIndex(home.Find("PlayButton").GetSiblingIndex()); // trên nền, cùng lớp với nút PLAY
-        foreach (string old in new[] { "Starter", "NoAds", "TopBar" })
+        foreach (string old in new[] { "Starter", "NoAds", "Daily", "TopBar" })
         {
             PopupBuilder.DestroyChild(home, old);
             PopupBuilder.DestroyChild(homeZone, old);
@@ -128,6 +128,7 @@ public static class MainMenuBuilder
         PopupBuilder.DestroyChild(alwaysOn, "TopBar");
         MenuShortcutButton starter = BuildStarter(homeZone);
         MenuShortcutButton noAds = BuildNoAds(homeZone);
+        MenuShortcutButton daily = BuildDaily(homeZone);
 
         // Thanh trên chỉ thuộc tab Home (trượt đi cùng panel)
         RectTransform topBar = PopupBuilder.NewUI("TopBar", homeZone);
@@ -139,7 +140,7 @@ public static class MainMenuBuilder
         BuildAvatar(topBar);
         EnergyHUD energy = BuildEnergyPill(topBar);
         CoinHUD coin = BuildCoinPill(topBar);
-        BuildSettings(topBar);
+        SettingsButton settings = BuildSettings(topBar);
 
         // ---------- Navigator ----------
         MainMenuNavigator nav = canvasGo.GetComponent<MainMenuNavigator>();
@@ -153,11 +154,23 @@ public static class MainMenuBuilder
         SetArray(so.FindProperty("tabs"), tabs);
         so.ApplyModifiedPropertiesWithoutUndo();
 
+        // Vuốt ngang trên panel để chuyển tab
+        MenuSwipe swipe = panels.GetComponent<MenuSwipe>();
+        if (swipe == null) swipe = Undo.AddComponent<MenuSwipe>(panels.gameObject);
+        PopupBuilder.Assign(swipe, "navigator", nav);
+
         PopupBuilder.Assign(coin, "navigator", nav);
+        ShopBuilder.Wire(shop, nav);
         PopupBuilder.Assign(starter, "navigator", nav);
         PopupBuilder.Assign(noAds, "navigator", nav);
+        PopupBuilder.Assign(daily, "navigator", nav);
         GameFlowUI flow = Object.FindFirstObjectByType<GameFlowUI>(FindObjectsInactive.Include);
-        if (flow != null) PopupBuilder.Assign(energy, "gameFlow", flow);
+        if (flow != null)
+        {
+            PopupBuilder.Assign(energy, "gameFlow", flow);
+            PopupBuilder.Assign(settings, "gameFlow", flow);
+            PopupBuilder.Assign(daily.GetComponent<DailyRewardButton>(), "gameFlow", flow);
+        }
 
         // ---------- ScreenFlow ----------
         LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
@@ -213,6 +226,8 @@ public static class MainMenuBuilder
         PopupBuilder.Assign(mtb, "icon", iconRt);
         PopupBuilder.Assign(mtb, "label", label);
         PopupBuilder.Assign(mtb, "divider", divider.gameObject);
+        // Tab không có phản hồi nhấn (ButtonPress tắt): đổi tab đã có hiệu ứng icon + nền trượt riêng
+        Undo.AddComponent<ButtonPress>(tab.gameObject).enabled = false;
         return mtb;
     }
 
@@ -235,7 +250,7 @@ public static class MainMenuBuilder
         fillImg.raycastTarget = false;
 
         Button b = rt.gameObject.AddComponent<Button>();
-        b.targetGraphic = frame;
+        b.targetGraphic = fillImg; // khung viền kem đứng yên khi nhấn, chỉ mặt nút tối đi (ButtonPress lún phần bên trong)
 
         TMP_Text play = PopupBuilder.Text(rt, "Play", "PLAY", new Vector2(0f, 26f), new Vector2(520f, 130f), 118f, Color.white);
         Outline(play, GameFontSetup.OutlineGreen());
@@ -245,6 +260,7 @@ public static class MainMenuBuilder
 
         PlayButtonView view = Undo.AddComponent<PlayButtonView>(rt.gameObject);
         PopupBuilder.Assign(view, "levelText", level);
+        DifficultyBuilder.BuildPlayParts(view, DifficultyBuilder.EnsureTheme()); // level Hard / Very Hard
     }
 
     /// <summary>Avatar góc trên trái (khung + mặt khối xanh có sẵn trong khung_avatar).</summary>
@@ -258,8 +274,8 @@ public static class MainMenuBuilder
         b.targetGraphic = img;
     }
 
-    /// <summary>Nút cài đặt góc trên phải: ô tím nhạt + bánh răng.</summary>
-    private static void BuildSettings(Transform topBar)
+    /// <summary>Nút cài đặt góc trên phải: ô tím nhạt + bánh răng; bấm mở popup cài đặt.</summary>
+    private static SettingsButton BuildSettings(Transform topBar)
     {
         RectTransform root = TopCenter(PopupBuilder.NewUI("Settings", topBar), new Vector2(445f, -122f), new Vector2(118f, 118f));
         Image bg = root.gameObject.AddComponent<Image>();
@@ -268,10 +284,11 @@ public static class MainMenuBuilder
         b.targetGraphic = bg;
         Image gear = PopupBuilder.Icon(root, "Gear", Buttons + "btn_setting.png", 88f);
         gear.rectTransform.anchoredPosition = new Vector2(0f, 3f);
+        return Undo.AddComponent<SettingsButton>(root.gameObject);
     }
 
     /// <summary>Ô năng lượng như ô tim bản gốc: tim (số đè lên) chồm lên đầu ô kem, đồng hồ trong ô, "+" dưới tim.</summary>
-    private static EnergyHUD BuildEnergyPill(Transform topBar)
+    internal static EnergyHUD BuildEnergyPill(Transform topBar)
     {
         RectTransform root = TopCenter(PopupBuilder.NewUI("Energy", topBar), new Vector2(-150f, -110f), new Vector2(300f, 120f));
         Image hit = root.gameObject.AddComponent<Image>();
@@ -300,7 +317,7 @@ public static class MainMenuBuilder
     }
 
     /// <summary>Ô coin; bấm -> tab Shop.</summary>
-    private static CoinHUD BuildCoinPill(Transform topBar)
+    internal static CoinHUD BuildCoinPill(Transform topBar)
     {
         RectTransform root = TopCenter(PopupBuilder.NewUI("Coin", topBar), new Vector2(170f, -110f), new Vector2(300f, 120f));
         Image hit = root.gameObject.AddComponent<Image>();
@@ -333,12 +350,16 @@ public static class MainMenuBuilder
 
         RectTransform content = PopupBuilder.NewUI("Content", root);
         content.sizeDelta = root.sizeDelta;
-        PopupBuilder.Icon(content, "Chest", PopupBuilder.UI + "Icons/btm_chest_stater.png", 205f);
+        // btm_chest_stater.png tách sẵn 3 lớp (cùng khung 200x192) để chỉ rương lắc: vòng tròn | rương | ruy băng đè đáy rương
+        PopupBuilder.Icon(content, "Back", StarterSprite("back"), 205f);
+        Image chest = PopupBuilder.Icon(content, "Chest", StarterSprite("chest"), 205f);
+        PopupBuilder.Icon(content, "Ribbon", StarterSprite("ribbon"), 205f);
+        SetPivotKeepPlace(chest.rectTransform, new Vector2(0.5f, 0.245f)); // đáy rương (100, 147 trong ảnh)
         TMP_Text label = PopupBuilder.Text(content, "Label", "Starter", new Vector2(0f, -72f), new Vector2(200f, 50f), 40f, Color.white);
         Outline(label, GameFontSetup.OutlinePurple());
         label.enableWordWrapping = false;
 
-        return Shortcut(root, content);
+        return Shortcut(root, chest.rectTransform, 1.4f, 0.6f, 12f, 0.05f, 9f);
     }
 
     /// <summary>TV "ADS" gạch chéo + ruy băng cam "No Ads" bên phải -> Shop.</summary>
@@ -354,6 +375,7 @@ public static class MainMenuBuilder
         content.sizeDelta = root.sizeDelta;
         Image tv = PopupBuilder.Icon(content, "Tv", PopupBuilder.UI + "Icons/no_ads_2.png", 175f);
         tv.rectTransform.anchoredPosition = new Vector2(0f, 18f);
+        SetPivotKeepPlace(tv.rectTransform, new Vector2(0.5f, 0.06f)); // chân TV
         Image ribbon = PopupBuilder.Icon(content, "Ribbon", PopupBuilder.UI + "Icons/no_ads_1.png", 205f);
         ribbon.rectTransform.sizeDelta = new Vector2(205f, 68f);
         ribbon.rectTransform.anchoredPosition = new Vector2(0f, -70f);
@@ -361,14 +383,103 @@ public static class MainMenuBuilder
         Outline(label, GameFontSetup.OutlineBrown());
         label.enableWordWrapping = false;
 
-        return Shortcut(root, content);
+        return Shortcut(root, tv.rectTransform, 2.35f, 1.3f, 10f, 0.1f, 6f);
     }
 
-    private static MenuShortcutButton Shortcut(RectTransform root, RectTransform bob)
+    /// <summary>
+    /// Điểm danh hằng ngày dưới Starter: quyển lịch trong khung tròn + ruy băng như Starter, tông hồng tím
+    /// (daily_back / daily_ribbon đổi màu từ starter_back / starter_ribbon), chấm đỏ "!" báo chưa điểm danh.
+    /// Bấm mở popup điểm danh (DailyRewardButton); còn quà hôm nay thì lắc + chấm đỏ.
+    /// </summary>
+    private static MenuShortcutButton BuildDaily(Transform home)
+    {
+        RectTransform root = TopCenter(PopupBuilder.NewUI("Daily", home), new Vector2(-407f, -615f), new Vector2(210f, 210f));
+        Image hit = root.gameObject.AddComponent<Image>();
+        hit.color = new Color(1f, 1f, 1f, 0f);
+        Button b = root.gameObject.AddComponent<Button>();
+        b.transition = Selectable.Transition.None;
+
+        RectTransform content = PopupBuilder.NewUI("Content", root);
+        content.sizeDelta = root.sizeDelta;
+        PopupBuilder.Icon(content, "Back", IconSprite("daily_back"), 205f);
+        Image calendar = PopupBuilder.Icon(content, "Calendar", PopupBuilder.UI + "Icons/icon_daily.png", 126f);
+        calendar.rectTransform.anchoredPosition = new Vector2(0f, 14f);
+        SetPivotKeepPlace(calendar.rectTransform, new Vector2(0.5f, 0.05f)); // đáy quyển lịch
+        PopupBuilder.Icon(content, "Ribbon", IconSprite("daily_ribbon"), 205f);
+        TMP_Text label = PopupBuilder.Text(content, "Label", "Daily", new Vector2(0f, -72f), new Vector2(200f, 50f), 40f, Color.white);
+        Outline(label, GameFontSetup.OutlinePurple());
+        label.enableWordWrapping = false;
+
+        Image badge = PopupBuilder.Icon(content, "Badge", IconSprite("badge_red"), 52f);
+        badge.rectTransform.anchoredPosition = new Vector2(66f, 68f);
+        TMP_Text mark = PopupBuilder.Text(badge.transform, "Mark", "!", new Vector2(0f, 2f), new Vector2(52f, 52f), 40f, Color.white);
+        mark.font = GameFontSetup.Font;
+
+        MenuShortcutButton s = Shortcut(root, calendar.rectTransform, 1.9f, 1.0f, 10f, 0.06f, 8f);
+        SerializedObject so = new SerializedObject(s);
+        so.FindProperty("tab").intValue = -1; // không chuyển tab: DailyRewardButton mở popup
+        so.FindProperty("badge").objectReferenceValue = badge.gameObject;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        DailyRewardButton daily = Undo.AddComponent<DailyRewardButton>(root.gameObject);
+        PopupBuilder.Assign(daily, "shortcut", s);
+        return s;
+    }
+
+    /// <summary>Dựng lại riêng nút Daily trong scene đang mở (Build Daily Reward gọi), nối navigator + GameFlowUI.</summary>
+    internal static void RebuildDaily(GameFlowUI flow)
+    {
+        MainMenuNavigator nav = Object.FindFirstObjectByType<MainMenuNavigator>(FindObjectsInactive.Include);
+        Transform zone = nav != null ? nav.transform.Find("Panels/HomePanel/" + UIZoneBuilder.ZoneName) : null;
+        if (zone == null)
+        {
+            Debug.LogError("[MainMenuBuilder] Không tìm thấy HomePanel/UIZone. Chạy Build Main Menu trước.");
+            return;
+        }
+        Transform old = zone.Find("Daily");
+        Transform starter = zone.Find("Starter");
+        int index = old != null ? old.GetSiblingIndex() : (starter != null ? starter.GetSiblingIndex() + 1 : zone.childCount);
+        if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+        MenuShortcutButton daily = BuildDaily(zone);
+        daily.transform.SetSiblingIndex(index);
+        PopupBuilder.Assign(daily, "navigator", nav);
+        if (flow != null) PopupBuilder.Assign(daily.GetComponent<DailyRewardButton>(), "gameFlow", flow);
+    }
+
+    /// <summary>
+    /// Nhịp lắc đo từ video bản gốc (30 fps): Starter ~2 s / lần, No Ads ~3 s / lần, lệch pha nhau; mỗi lần ~0.65 s.
+    /// No Ads nhấc ít hơn nhưng to ra nhiều hơn, nghiêng nhẹ hơn.
+    /// </summary>
+    private static MenuShortcutButton Shortcut(RectTransform root, RectTransform icon, float interval, float firstDelay,
+        float lift, float scaleUp, float angle)
     {
         MenuShortcutButton s = Undo.AddComponent<MenuShortcutButton>(root.gameObject);
-        PopupBuilder.Assign(s, "bob", bob);
+        SerializedObject so = new SerializedObject(s);
+        so.FindProperty("icon").objectReferenceValue = icon;
+        so.FindProperty("interval").floatValue = interval;
+        so.FindProperty("firstDelay").floatValue = firstDelay;
+        so.FindProperty("lift").floatValue = lift;
+        so.FindProperty("scaleUp").floatValue = scaleUp;
+        so.FindProperty("angle").floatValue = angle;
+        so.ApplyModifiedPropertiesWithoutUndo();
         return s;
+    }
+
+    private static string StarterSprite(string layer) => IconSprite("starter_" + layer);
+
+    /// <summary>Ảnh trong Icons/ tạo thêm bằng script (tách / đổi màu): đảm bảo kiểu Sprite.</summary>
+    private static string IconSprite(string name)
+    {
+        string path = PopupBuilder.UI + "Icons/" + name + ".png";
+        PopupBuilder.EnsureSprite(path);
+        return path;
+    }
+
+    /// <summary>Đổi pivot mà hình vẫn nằm nguyên chỗ (để xoay / phóng quanh điểm khác tâm).</summary>
+    private static void SetPivotKeepPlace(RectTransform rt, Vector2 pivot)
+    {
+        Vector2 delta = pivot - rt.pivot;
+        rt.pivot = pivot;
+        rt.anchoredPosition += new Vector2(delta.x * rt.rect.width, delta.y * rt.rect.height);
     }
 
     private static void PillBackground(RectTransform root, float x, float width)
@@ -429,28 +540,6 @@ public static class MainMenuBuilder
         return rt;
     }
 
-    /// <summary>Khung tạm cho Shop: nền xanh đậm + mái hiên sọc (bg_shop_1) trên cùng như bản gốc.</summary>
-    private static RectTransform BuildShopPlaceholder(Transform parent)
-    {
-        RectTransform panel = PopupBuilder.Stretch(PopupBuilder.NewUI("ShopPanel", parent));
-        panel.gameObject.AddComponent<Image>().color = new Color(0.16f, 0.19f, 0.42f);
-
-        // 4 tấm mái hiên (mỗi tấm 2 sọc trắng / đỏ) kéo ngang mép trên
-        for (int i = 0; i < 4; i++)
-        {
-            RectTransform awning = PopupBuilder.NewUI("Awning_" + i, panel);
-            awning.anchorMin = awning.anchorMax = new Vector2(0f, 1f);
-            awning.pivot = new Vector2(0f, 0f);
-            awning.sizeDelta = new Vector2(270f, 353f);
-            awning.anchoredPosition = new Vector2(i * 270f, -300f);
-            Image img = awning.gameObject.AddComponent<Image>();
-            img.sprite = PopupBuilder.LoadSprite(BG + "bg_shop_1.png");
-            img.raycastTarget = false;
-        }
-
-        Placeholder(panel, "SHOP", "Coming soon");
-        return panel;
-    }
 
     /// <summary>Khung tạm cho Progress: lên level nào nhận quà gì (thay Daily Challenge của bản gốc).</summary>
     private static RectTransform BuildProgressPlaceholder(Transform parent)

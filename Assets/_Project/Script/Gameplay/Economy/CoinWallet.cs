@@ -1,15 +1,13 @@
 using System;
 using UnityEngine;
 
-/// <summary>Số coin của người chơi, lưu PlayerPrefs. Shop / IAP (Giai đoạn 6) sẽ cộng vào đây.</summary>
+/// <summary>Số coin của người chơi, lưu trong SaveData. Shop / IAP (Giai đoạn 6) sẽ cộng vào đây.</summary>
 public static class CoinWallet
 {
-    private const string Key = "PawBlock_Coins";
-
     /// <summary>(số dư mới, thay đổi)</summary>
     public static event Action<int, int> Changed;
 
-    public static int Balance => PlayerPrefs.GetInt(Key, 0);
+    public static int Balance => SaveSystem.Data.coins;
 
     public static void Add(int amount)
     {
@@ -28,8 +26,8 @@ public static class CoinWallet
 
     private static void Set(int value, int delta)
     {
-        PlayerPrefs.SetInt(Key, Mathf.Max(0, value));
-        PlayerPrefs.Save();
+        SaveSystem.Data.coins = Mathf.Max(0, value);
+        SaveSystem.MarkDirty();
         Changed?.Invoke(Balance, delta);
     }
 }

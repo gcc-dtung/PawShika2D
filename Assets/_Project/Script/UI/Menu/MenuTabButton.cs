@@ -19,6 +19,12 @@ public class MenuTabButton : MonoBehaviour
     [SerializeField] private float selectedIconY = 175f;
     [SerializeField] private float normalIconY = 100f;
 
+    [Header("Chuyển tab")]
+    [Tooltip("Icon tab vừa chọn: phóng to + nhô lên, vượt nhẹ rồi về (như bản gốc)")]
+    [SerializeField] private float selectOvershoot = 2f;
+    [Tooltip("Icon tab bỏ chọn thu về nhanh hơn tab mới (tỉ lệ thời gian)")]
+    [SerializeField, Range(0.2f, 1f)] private float deselectRatio = 0.6f;
+
     [Header("Vạch ngăn")]
     [Tooltip("Vạch biến mất trong tỉ lệ này của thời gian chuyển tab (nhanh, trước khi nền tab chọn lướt qua)")]
     [SerializeField, Range(0.1f, 1f)] private float dividerHideRatio = 0.35f;
@@ -48,7 +54,8 @@ public class MenuTabButton : MonoBehaviour
         if (_dividerFade != null) SetDividerVisible(_dividerVisible);
     }
 
-    public void SetSelected(bool selected, float duration, Ease ease)
+    /// <summary>Chọn: icon nảy lên (OutBack); bỏ chọn: thu về nhanh (OutCubic, deselectRatio thời gian).</summary>
+    public void SetSelected(bool selected, float duration)
     {
         _selected = selected;
         KillAnim();
@@ -61,7 +68,10 @@ public class MenuTabButton : MonoBehaviour
         float from = CurrentProgress();
         float to = selected ? 1f : 0f;
         Sequence seq = DOTween.Sequence().SetLink(gameObject);
-        seq.Append(DOVirtual.Float(from, to, duration, Apply).SetEase(ease));
+        Tween t = selected
+            ? DOVirtual.Float(from, to, duration, Apply).SetEase(Ease.OutBack, selectOvershoot)
+            : DOVirtual.Float(from, to, duration * deselectRatio, Apply).SetEase(Ease.OutCubic);
+        seq.Append(t);
         seq.OnKill(() => { if (_anim == seq) _anim = null; });
         _anim = seq;
     }

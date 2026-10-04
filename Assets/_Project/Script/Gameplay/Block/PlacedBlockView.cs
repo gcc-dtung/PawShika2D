@@ -12,6 +12,7 @@ using UnityEngine;
 ///   ShowPreview  -> đang kéo, vùng đủ value: mèo hiện ra đặc ngay, viền màu mèo thu bên trong khối
 ///   Confirm      -> thả tay, nước đi đúng: mèo đặc lại và bật nhẹ
 ///   PlayReject   -> thả tay, sai lời giải: rung rồi mờ đi; kiểu báo sai chọn bằng rejectStyle (mèo xám / viền đỏ / cả hai)
+///   PlayWinFlash -> thắng: thân + tai phủ trắng rồi tan (lớp sprite trắng đặc đè lên, tạo lúc cần)
 /// </summary>
 public class PlacedBlockView : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class PlacedBlockView : MonoBehaviour
     [SerializeField] private CatFaceAnimator face;
     [SerializeField] private SpriteRenderer ears;
     [SerializeField] private SpriteRenderer ring;  // viền 9-slice (RingBlock) cho hiệu ứng đủ value
+    [Tooltip("Material vẽ sprite thành 1 màu đặc (GUI/Text Shader) cho hiệu ứng lóe sáng khi thắng")]
+    [SerializeField] private Material flashMaterial;
 
     [Header("Tai mèo (tính theo tỉ lệ ô)")]
     [SerializeField] private float earWidth = 0.36f;   // bề rộng cặp tai
@@ -66,6 +69,10 @@ public class PlacedBlockView : MonoBehaviour
     private Vector2 _bodySize;
     private Tween _anim;     // bật / báo sai
     private Tween _ringAnim; // viền đủ value
+    private Tween _flashAnim;
+    private SpriteRenderer _bodyFlash;
+    private SpriteRenderer _earsFlash;
+    private static Material _fallbackFlashMaterial;
     private ColorType _color;
 
     public bool IsPreview { get; private set; }
@@ -105,11 +112,64 @@ public class PlacedBlockView : MonoBehaviour
         PlayAnim(RejectRoutine(onDone));
     }
 
+    /// <summary>
+    /// Thắng: thân + tai phủ trắng tới <paramref name="strength"/> rồi tan dần (mèo sáng bừng như bản gốc).
+    /// </summary>
+    public void PlayWinFlash(float delay = 0f, float strength = 0.6f, float rise = 0.08f, float fall = 0.32f)
+    {
+        _flashAnim?.Kill();
+        SpriteRenderer bodyFlash = EnsureFlash(ref _bodyFlash, body, "BodyFlash");
+        SpriteRenderer earsFlash = ears != null && ears.gameObject.activeSelf ? EnsureFlash(ref _earsFlash, ears, "EarsFlash") : null;
+        SetFlash(0f);
+
+        Sequence seq = DOTween.Sequence().SetLink(gameObject);
+        seq.AppendInterval(delay);
+        seq.Append(DOVirtual.Float(0f, strength, rise, SetFlash).SetEase(Ease.OutQuad));
+        seq.Append(DOVirtual.Float(strength, 0f, fall, SetFlash).SetEase(Ease.InQuad));
+        seq.OnKill(() => { if (this != null) SetFlash(0f); });
+        _flashAnim = seq;
+
+        void SetFlash(float a)
+        {
+            if (bodyFlash != null) bodyFlash.color = new Color(1f, 1f, 1f, a);
+            if (earsFlash != null) earsFlash.color = new Color(1f, 1f, 1f, a);
+        }
+    }
+
+    /// <summary>Lớp trắng đè lên <paramref name="src"/>: cùng sprite / kích thước / thứ tự vẽ, nhích về phía camera.</summary>
+    private SpriteRenderer EnsureFlash(ref SpriteRenderer flash, SpriteRenderer src, string name)
+    {
+        if (src == null) return null;
+        if (flash == null)
+        {
+            Material mat = flashMaterial;
+            if (mat == null)
+            {
+                if (_fallbackFlashMaterial == null) _fallbackFlashMaterial = new Material(Shader.Find("GUI/Text Shader"));
+                mat = _fallbackFlashMaterial;
+            }
+            GameObject go = new GameObject(name);
+            go.transform.SetParent(src.transform, false);
+            go.transform.localPosition = new Vector3(0f, 0f, -0.001f);
+            flash = go.AddComponent<SpriteRenderer>();
+            flash.sharedMaterial = mat;
+        }
+        flash.gameObject.layer = src.gameObject.layer;
+        flash.sprite = src.sprite;
+        flash.drawMode = src.drawMode;
+        if (src.drawMode != SpriteDrawMode.Simple) flash.size = src.size;
+        flash.sortingLayerID = src.sortingLayerID;
+        flash.sortingOrder = src.sortingOrder;
+        return flash;
+    }
+
     /// <summary>Đưa về trạng thái gốc trước khi trả về pool.</summary>
     public void ResetView()
     {
         KillAnim();
         KillRing();
+        _flashAnim?.Kill();
+        _flashAnim = null;
         IsPreview = false;
         transform.localScale = Vector3.one;
         SetTint(Color.white, 1f);
@@ -246,6 +306,8 @@ public class PlacedBlockView : MonoBehaviour
     {
         KillAnim();
         KillRing();
+        _flashAnim?.Kill();
+        _flashAnim = null;
     }
 
     private void KillAnim()
