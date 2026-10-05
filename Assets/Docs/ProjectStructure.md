@@ -24,6 +24,7 @@ Assets/
     │   ├── MechanicInjectorSettings.asset  Lịch gắn cơ chế (Mechanic Injector)
     │   ├── LevelDifficultySettings.asset   Trọng số công thức độ khó (Level Difficulty)
     │   ├── ShikaCat/Level_001..205     LevelDefinition sinh từ JSON ShikaCat (bản gốc, không cơ chế)
+    │   ├── Custom/                     Level tự làm (Level Editor); Level_Custom_Level01_4x4 = Level 1 (thay ShikaCat/Level_001)
     │   └── Mechanic/Level_NNN          Bản có cơ chế do Mechanic Injector sinh, thay bản gốc trong database
     ├── Resources/
     │   └── GameplayVisuals.asset       Sprite khối, tai, mặt mèo, ổ khóa, chữ khen...
@@ -47,14 +48,14 @@ Script/
 │   ├── Level/      LevelManager, GameState, LevelDefinition, LevelDatabase
 │   ├── Lives/      LivesManager
 │   ├── Economy/    CoinWallet, RewardedAds, IAPService, ShopDatabase, ShopService
-│   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager
+│   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager, BoosterTutorial
 │   ├── Cheats/     DebugCheats
 │   ├── Daily/      DailyRewardDatabase, DailyRewardModel, DailyRewardManager
 │   ├── Energy/     EnergyModel, EnergyManager
 │   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, ColorType
 │   ├── Input/      InputManager, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
-│   ├── Tutorial/   TutorialController, TutorialLevels, TutorialHand
+│   ├── Tutorial/   TutorialController, TutorialLevels, TutorialHand, MechanicIntro
 │   ├── Feedback/   GameplayFeedback
 │   ├── Audio/      SoundId, AudioDatabase, AudioManager, GameAudioEvents
 │   ├── Save/       SaveData, SaveSystem, SaveRunner
@@ -62,7 +63,7 @@ Script/
 │   └── Util/       Singleton
 ├── UI/
 │   ├── Common/     SafeAreaZone, BackgroundCover, UIButtonSounds, NoClickSound, UIButtonPress, ButtonPress, SettingsButton, UIConfetti, TMPLetterPopIn, ButtonPressIgnore, NestedScrollRect
-│   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD, TutorialView
+│   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD, TutorialView, BoosterTutorialView
 │   ├── Menu/       ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
 │   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
@@ -118,13 +119,14 @@ Quy tắc đặt file mới:
 | --- | --- |
 | `BoosterDatabase` | ScriptableObject + `BoosterType` (Hint 0, Shield 1, Reveal 2) + `BoosterData`. Tên field giữ như bản gốc; asset ở `GameAssets/10_Data_Configs/BoosterDatabase.asset` |
 | `BoosterInventory` | Static, số lượt lưu `SaveData.boosters` (theo tên loại); lần đầu tặng `valueStart`; event `Changed` |
-| `BoosterManager` | Trên `Manager`. `Press(type)`: chưa mở → bỏ qua; hết lượt → `onBuyRequested`; Hint đặt khối nhỏ nhất của lời giải; Khiên bật `LivesManager`; Reveal vào chế độ chọn số (`HandleCellTap` từ `DragAndDropController`), đặt lần lượt mọi khối cùng số (DOTween, cách 0.12 s, `IsBusy` khóa lưới). Chỉ trừ lượt khi có tác dụng. `Buy(type)` trừ coin |
+| `BoosterManager` | Trên `Manager`. `IsUnlocked`: đã lưu trong `SaveData.unlockedBoosters` (qua tutorial mở khóa) hoặc đang là đích của tutorial. `Press(type)`: đang tutorial mở khóa → chỉ nhận đúng nút, gọi `BoosterTutorial.Complete`, lần dùng này miễn phí (`_freeUse`; Reveal miễn phí tới khi chọn số); chưa mở → bỏ qua; hết lượt → `onBuyRequested`; Hint đặt khối nhỏ nhất của lời giải; Khiên bật `LivesManager`; Reveal vào chế độ chọn số (`HandleCellTap` từ `DragAndDropController`), đặt lần lượt mọi khối cùng số (DOTween, cách 0.12 s, `IsBusy` khóa lưới). Chỉ trừ lượt khi có tác dụng. `Buy(type)` trừ coin |
+| `BoosterTutorial` | Trên `Manager`. Sau mỗi lần nạp level, chờ đang chơi thật (không Menu / popup / tutorial lần đầu / lưới đang hiện / băng HARD) thêm 0.3 s → booster chưa mở có `levelUnlock` nhỏ nhất mà level hiện tại đã tới: `Active`, `Target`, `BoosterTutorialView.Show` (lời nhắc = `BoosterData.detail`). Mỗi lần nạp level tối đa 1 tutorial. `Active` khóa lưới (`GridManager.IsInputLocked`). `Complete` (bấm đúng nút): lưu `unlockedBoosters`, đóng lớp tối |
 
 ### Gameplay/Cheats
 
 | File | Vai trò |
 | --- | --- |
-| `DebugCheats` | Lệnh cheat dùng chung (static), chỉ gọi API sẵn có nên hiệu ứng / popup / save chạy như chơi thật: level (`GoToLevel`, `PlayLevel` – vào ván bỏ qua năng lượng, Next / Prev / Retry), thắng (`WinNow` – đặt hết lời giải, `SolveOneBlock`), thua (`LoseLife`, `OutOfLives` → popup Hồi mạng, `LoseNow` – chờ sự kiện OutOfLives rồi `GiveUp` → popup Thua), coin, mạng / khiên, năng lượng, booster (`BoosterInventory.SetCount`), điểm danh, lưu save, tutorial (`PlayTutorial` – chơi lại từ bước 1, `ResetTutorial` – bỏ cờ đã xem) |
+| `DebugCheats` | Lệnh cheat dùng chung (static), chỉ gọi API sẵn có nên hiệu ứng / popup / save chạy như chơi thật: level (`GoToLevel`, `PlayLevel` – vào ván bỏ qua năng lượng, Next / Prev / Retry), thắng (`WinNow` – đặt hết lời giải, `SolveOneBlock`), thua (`LoseLife`, `OutOfLives` → popup Hồi mạng, `LoseNow` – chờ sự kiện OutOfLives rồi `GiveUp` → popup Thua), coin, mạng / khiên, năng lượng, booster (`BoosterInventory.SetCount`), điểm danh, lưu save, tutorial (`PlayTutorial` – chơi lại từ bước 1, `ResetTutorial` – bỏ cờ đã xem, `ResetMechanicIntros` – xem lại popup cơ chế), booster (`UnlockAllBoosters`, `LockAllBoosters` – xem lại tutorial mở khóa) |
 
 ### Gameplay/Tutorial
 
@@ -134,6 +136,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | --- | --- |
 | `TutorialController` | Trên `Manager`. `Pending` (tĩnh): save chưa có `tutorialDone` và đang ở level 1 → `ScreenFlow` vào thẳng tutorial khi mở game, `LevelManager` không nạp level. 4 bước nạp bằng `LevelManager.LoadTutorial`; thắng bước (`GridManager.onGameWin`) → chờ 1.1 s sang bước kế; đặt khối → bàn tay chuyển sang số kế. Xong / Skip: lưu `tutorialDone`, `LoadLevel` level hiện tại. `Active` (tĩnh): `GridManager` không trừ mạng, `LevelManager` không sang WinPopup |
 | `TutorialLevels` | 4 bước như bản gốc, dựng `LevelDefinition` trong code: 3 ô ngang, 3 ô dọc, 3x3 (3 + 6), 3x3 (2 + 4 + 3); lời nhắc tiếng Anh; gợi ý bàn tay (số, ô bắt đầu, ô kết thúc) |
+| `MechanicIntro` | Trên `Manager`. Sau mỗi lần nạp level (lưới hiện xong, băng HARD xong, không tutorial khác) + 0.15 s: level có cơ chế chưa xem (Hướng → Khóa → "?") thì mở `MechanicIntroPopup` lần lượt; Ok lưu `SaveData.seenMechanics`. Popup tạm dừng ván nên `BoosterTutorial` chờ popup xong. Void không có popup |
 | `TutorialHand` | Object `TutorialHand` (world, sprite `tutorial_hand`, order 80): hiện → nhấn → trượt tới ô cuối → nhấc → mờ, lặp; ẩn khi người chơi đang kéo (`GridManager.IsSelecting`) |
 
 ### Gameplay/Daily
@@ -208,6 +211,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số |
 | `ShieldIndicator` | Khung băng `ice_effect_2` phủ hàng tim khi có khiên; khiên chặn lỗi thì phồng to rồi mờ |
 | `TutorialView` | `Canvas_HUD/UIZone/TutorialPanel` (tắt sẵn): tiêu đề Tutorial, nút Skip, vạch tiến độ `tutorial_dot` (bước hiện tại sáng), khung lời nhắc `popup_tutorial` 9-slice (nảy nhẹ khi đổi bước). Hiện thì ẩn `TopPanel`, `DownPanel`, ẩn thì trả lại |
+| `BoosterTutorialView` | `Canvas_HUD/BoosterTutorial` (Canvas riêng sortingOrder 5, tắt sẵn): nền tối chặn thao tác, khung lời nhắc `khung_reveal2` đè khung LEVEL, bàn tay nhấn lặp lên nút. Nút booster được nhấc trên nền tối bằng Canvas override sorting (+ GraphicRaycaster, thêm lúc chạy) và bật quầng sáng (`BoosterButton.SetHighlight`) |
 | `EnergyHUD` | Icon tim (`icon_hear_2`), số năng lượng, đồng hồ / FULL / ∞; có `infiniteSprite` (ô ở Home) thì khi vô hạn đổi sang tim ∞ (`icon_hear_infinity2`) và ẩn số; bấm khi chưa đầy → `GameFlowUI.OpenEnergyRefill` |
 
 ### UI/Menu
@@ -229,6 +233,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 
 | File | Vai trò |
 | --- | --- |
+| `MechanicIntroPopup` | `Canvas_Popup/Popups/MechanicIntroPopup` như popup "Orientation" bản gốc: khung `popup_tutorial`, tiêu đề, 1 dòng giải thích, ảnh `popup_tutorial_4` (Hướng) / `_2` (Khóa) / `_3` ("?"), nút xanh Ok. Mở thì tạm dừng ván |
 | `PopupView` | Base: CanvasGroup, nền tối `Dim` chắn bấm, `Panel` bật lên (scale 0.6 → 1), dùng thời gian thực; âm PopupOpen / PopupClose |
 | `UIButtonSounds` | Trên Canvas_Menu / Canvas_HUD / Canvas_Popup: mọi Button bên trong (kể cả đang tắt) phát Click; nút có `NoClickSound` thì bỏ qua |
 | `UIButtonPress` | Trên Canvas_Menu / Canvas_HUD / Canvas_Popup: gắn `ButtonPress` cho mọi Button bên trong (kể cả đang tắt); nút đã có `ButtonPress` thì giữ nguyên |
@@ -266,7 +271,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `Save/SaveDataMenu` | Tools → PawBlock → Save Data | Log Save (in nội dung save.json), Open Save Folder, Delete Save (hỏi xác nhận, không chạy khi đang Play) |
 | `Audio/AudioSetup` | Tools → PawBlock → Builders → Setup Audio | Tạo / bổ sung `AudioDatabase` (chỉ thêm âm còn thiếu), BGM nhập Streaming, object `AudioManager` (AudioManager + GameAudioEvents), `UIButtonSounds` trên 3 canvas |
 | `UI/UIZoneBuilder` | Tools → PawBlock → Builders → Build UI Zone | `Canvas_HUD/UIZone` (4 cạnh) chứa PlayZone, TopPanel, DownPanel, RevealBanner; gọi Build Main Menu để dựng `HomePanel/UIZone` (cạnh trên). Builder HUD tìm theo `PopupBuilder.HudRoot` (UIZone nếu có) |
-| `UI/TutorialBuilder` | Tools → PawBlock → Builders → Build Tutorial | Dựng lại `Canvas_HUD/UIZone/TutorialPanel` (TutorialView), object `TutorialHand`, gắn `TutorialController` lên `Manager` |
+| `UI/TutorialBuilder` | Tools → PawBlock → Builders → Build Tutorial | Dựng lại `Canvas_HUD/UIZone/TutorialPanel` (TutorialView), object `TutorialHand`, gắn `TutorialController` lên `Manager`; dựng `Canvas_HUD/BoosterTutorial` (BoosterTutorialView), gắn `BoosterTutorial`; dựng `Canvas_Popup/Popups/MechanicIntroPopup`, gắn `MechanicIntro` + 3 ảnh |
 | `UI/GameFontSetup` | Tools → PawBlock → Builders → Apply Game Font | Fredoka Bold làm font mặc định TMP (fallback LiberationSans), gán shader `TMP_SDF-Mobile` theo đường dẫn, tạo preset viền `Fredoka-Bold SDF - Outline Purple / Green / Brown`, đổi font mọi chữ LiberationSans trong scene và prefab `Assets/_Project` |
 | `UI/SettingsBuilder` | Tools → PawBlock → Builders → Build Settings | `TopPanel`: xóa ReplayButton / Energy, dựng `SettingsButton` góc trên phải; thay `SettingsPopup` trong `Canvas_Popup/Popups` (xóa ConfirmReplayPopup cũ) mà không dựng lại popup khác; gắn `SettingsButton` cho nút Settings trên Menu |
 | `UI/BoosterBuilder` | Tools → PawBlock → Builders → Build Boosters | Dựng phần con của 3 nút booster, `RevealBanner`, `TopPanel/LevelFrame/Shield`; thêm `BoosterManager` vào `Manager` |
@@ -281,7 +286,7 @@ Global Light 2D
 SpawnGrid              GridSpawner
 Manager                GridManager, InputManager, DragAndDropController,
                        LivesManager, LevelManager, GameplayFeedback, RewardedAds, BoosterManager,
-                       EnergyManager, ScreenFlow, TutorialController
+                       EnergyManager, ScreenFlow, TutorialController, BoosterTutorial, MechanicIntro
 TutorialHand           TutorialHand / Sprite (tắt sẵn): bàn tay tutorial, đầu ngón ở gốc object
 SelectionBox           SelectionBoxView + SpriteRenderer
 bg                     SpriteRenderer + BackgroundFitter
@@ -294,9 +299,10 @@ Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920, sortingOrder 0; S
     ├── DownPanel/Booster  Booster1..3: BoosterButton (Hint, Shield, Reveal) / Glow, Icon, Count, Add, Lock
     ├── RevealBanner   RevealBanner + CanvasGroup (ẩn khi không chọn số)
     └── TutorialPanel  TutorialView + CanvasGroup (tắt sẵn): Title, SkipButton, Dots/Dot1..4, Bubble/Message
+└── BoosterTutorial    BoosterTutorialView + Canvas (override, order 5) + GraphicRaycaster + CanvasGroup (tắt sẵn): Dim, Bubble/Message, Hand
 Canvas_Popup           Canvas Overlay 1080x1920, sortingOrder 20, luôn bật (dùng chung Menu và màn chơi)
 └── Popups             GameFlowUI (dựng bằng Build Popups)
-    ├── WinPopup  ReviveLivesPopup  LosePopup  SettingsPopup  BuyBoosterPopup  RefillEnergyPopup   (tắt sẵn)
+    ├── WinPopup  ReviveLivesPopup  LosePopup  SettingsPopup  BuyBoosterPopup  RefillEnergyPopup  MechanicIntroPopup   (tắt sẵn)
     └── mỗi popup: Dim (đen alpha 0.88 – Linear color space nên cần cao để tối như ref), Panel / Title, nội dung, nút
 Canvas_Menu            Canvas Overlay 1080x1920, sortingOrder 10 (trên HUD), MainMenuNavigator
 ├── Panels             ShopPanel | HomePanel | ProgressPanel (trượt ngang, RectMask2D)
@@ -384,6 +390,8 @@ InputManager ─► DragAndDropController ─► GridManager.BeginSelection (ch�
 | 40–41 | Bong bóng số ô |
 | 60 | Chữ khen |
 | 80 | Bàn tay tutorial |
+
+Canvas_HUD (order 0) < BoosterTutorial (Canvas override, order 5) < nút booster đang được chỉ (order 6) < Canvas_Menu (10) < Canvas_Popup (20).
 
 ### Dữ liệu level (`LevelDefinition`)
 

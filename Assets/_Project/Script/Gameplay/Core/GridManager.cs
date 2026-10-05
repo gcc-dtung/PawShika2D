@@ -44,7 +44,8 @@ public class GridManager : Singleton<GridManager>
         || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying)
         || (BoosterManager.Instance != null && BoosterManager.Instance.IsBusy) // Reveal đang tự đặt khối
         || (gridSpawner != null && gridSpawner.IsIntroPlaying)                  // lưới đang xuất hiện
-        || DifficultyIntro.Playing;                                              // băng "HARD / EXTREME LEVEL" đang chạy
+        || DifficultyIntro.Playing                                               // băng "HARD / EXTREME LEVEL" đang chạy
+        || BoosterTutorial.Active;                                               // tutorial mở khóa booster: chỉ bấm được nút booster
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
 
     protected override void Awake()

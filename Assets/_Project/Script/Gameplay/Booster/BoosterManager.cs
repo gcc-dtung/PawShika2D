@@ -9,6 +9,7 @@ using UnityEngine.Events;
 /// - Khiên (thay Freeze Time): chặn lần sai kế tiếp trong level này (LivesManager bỏ qua 1 lần trừ mạng).
 /// - Reveal: vào chế độ chọn số; chạm 1 ô số -> giải mọi khối cùng số (ô còn khóa thì bỏ qua).
 /// Lượt chỉ bị trừ khi booster thực sự có tác dụng.
+/// Khóa tới khi qua tutorial mở khóa (BoosterTutorial); lần dùng trong tutorial không trừ lượt.
 /// </summary>
 public class BoosterManager : Singleton<BoosterManager>
 {
@@ -23,6 +24,7 @@ public class BoosterManager : Singleton<BoosterManager>
 
     private bool _revealMode;
     private Sequence _revealPlacing; // Reveal đang đặt lần lượt từng khối
+    private BoosterType? _freeUse;   // lần dùng trong tutorial mở khóa: không trừ lượt (Reveal: tới khi chọn số)
 
     public BoosterDatabase Database => database;
     public bool IsRevealMode => _revealMode;
@@ -53,11 +55,11 @@ public class BoosterManager : Singleton<BoosterManager>
 
     public BoosterData Get(BoosterType type) => database != null ? database.Get(type) : null;
 
+    /// <summary>Đã qua tutorial mở khóa (BoosterTutorial), hoặc đang trong tutorial của chính booster này.</summary>
     public bool IsUnlocked(BoosterType type)
     {
-        BoosterData data = Get(type);
-        int level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevelNumber : int.MaxValue;
-        return data != null && level >= data.levelUnlock;
+        if (Get(type) == null) return false;
+        return SaveSystem.Data.IsBoosterUnlocked(type) || (BoosterTutorial.Active && BoosterTutorial.Target == type);
     }
 
     public int Count(BoosterType type)
@@ -73,6 +75,13 @@ public class BoosterManager : Singleton<BoosterManager>
     /// <summary>Bấm nút booster trên HUD.</summary>
     public void Press(BoosterType type)
     {
+        // Tutorial mở khóa: chỉ nhận đúng nút đang chỉ; bấm -> mở khóa, lần dùng này miễn phí
+        if (BoosterTutorial.Active)
+        {
+            if (type != BoosterTutorial.Target || BoosterTutorial.Instance == null) return;
+            BoosterTutorial.Instance.Complete();
+            _freeUse = type;
+        }
         if (!IsUnlocked(type) || !CanPlay()) return;
 
         // Bấm lại Reveal khi đang chọn số = hủy
@@ -83,7 +92,7 @@ public class BoosterManager : Singleton<BoosterManager>
         }
         if (IsActive(type)) return;
 
-        if (Count(type) <= 0)
+        if (Count(type) <= 0 && _freeUse != type) // lần miễn phí của tutorial dùng được cả khi hết lượt
         {
             SetRevealMode(false);
             onBuyRequested?.Invoke(type);
@@ -195,7 +204,8 @@ public class BoosterManager : Singleton<BoosterManager>
     private void Consume(BoosterType type)
     {
         BoosterData data = Get(type);
-        if (data != null) BoosterInventory.TryConsume(data);
+        if (_freeUse == type) _freeUse = null;
+        else if (data != null) BoosterInventory.TryConsume(data);
         onBoosterUsed?.Invoke(type);
     }
 
@@ -213,6 +223,7 @@ public class BoosterManager : Singleton<BoosterManager>
 
     private void OnLevelLoaded(int _)
     {
+        _freeUse = null;
         KillRevealPlacing();
         SetRevealMode(false);
     }

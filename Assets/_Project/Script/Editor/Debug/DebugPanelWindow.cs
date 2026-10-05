@@ -93,6 +93,7 @@ public class DebugPanelWindow : EditorWindow
             if (GUILayout.Button("Chơi lại tutorial")) DebugCheats.PlayTutorial();
             if (GUILayout.Button(new GUIContent("Bỏ cờ đã xem tutorial", "Mở game lần sau (đang ở level 1) sẽ chạy lại tutorial"))) DebugCheats.ResetTutorial();
         }
+        if (GUILayout.Button(new GUIContent("Xem lại popup cơ chế", "Bỏ cờ đã xem popup Hướng / Khóa / \"?\"; nạp level có cơ chế là hiện lại"))) DebugCheats.ResetMechanicIntros();
     }
 
     // ---------- Thắng / thua ----------
@@ -186,6 +187,11 @@ public class DebugPanelWindow : EditorWindow
         if (GUILayout.Button("Tất cả +10"))
         {
             foreach (BoosterType type in System.Enum.GetValues(typeof(BoosterType))) DebugCheats.AddBooster(type, 10);
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Mở khóa tất cả")) DebugCheats.UnlockAllBoosters();
+            if (GUILayout.Button(new GUIContent("Khóa lại tất cả", "Xem lại tutorial mở khóa: nạp lại level >= level mở của booster"))) DebugCheats.LockAllBoosters();
         }
     }
 

@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-05 11:11 |
+| Trạng thái | Đã push |
+| Commit | `bb4c0c2` "Mechanic Injector, độ khó lý thuyết, đánh dấu Hard, tutorial lần đầu" (nhánh `Day-4`) |
+| Thời gian push | 2026-10-05 11:12 |
+| Cập nhật lần cuối | 2026-10-05 11:13 |
 
 ## Tóm tắt
 

@@ -1,6 +1,6 @@
 # Hướng dẫn làm tutorial
 
-Tài liệu này mô tả tutorial lần đầu mở game (4 bước, làm theo video bản gốc) và các bước để **sửa** tutorial đó hoặc **tạo** một tutorial mới (vd. giới thiệu cơ chế Khóa / "?" / Hướng).
+Tài liệu này mô tả tutorial lần đầu mở game (4 bước, làm theo video bản gốc), tutorial mở khóa booster (mục 7) và các bước để **sửa** hoặc **tạo** tutorial mới (vd. giới thiệu cơ chế Khóa / "?" / Hướng).
 
 ## 1. Tutorial hoạt động thế nào
 
@@ -152,6 +152,8 @@ Tutorial lần đầu là trường hợp "chạy trước mọi thứ". Tutoria
 
 ### Cách A: popup giải thích (nhẹ, nên làm trước)
 
+> **Đã làm** cho Hướng / Khóa / "?": `MechanicIntro` (Gameplay/Tutorial) + `MechanicIntroPopup` (UI/Popups), cờ `SaveData.seenMechanics`, dựng bằng Build Tutorial. Muốn thêm cơ chế (vd. Void): thêm giá trị vào `MechanicIntro.Kind`, điều kiện trong `NewMechanics`, nội dung trong `ShowNext`, field ảnh + gán trong `TutorialBuilder`. Các bước dưới là cách nó được làm.
+
 Hợp với cơ chế nhìn là hiểu. Project đã có sẵn ảnh minh họa: `popup_tutorial_2` (Khóa), `popup_tutorial_3` ("?"), `popup_tutorial_4` (Hướng: Vertical / Square / Horizontal).
 
 1. **Cờ đã xem** trong `SaveData`, mỗi cơ chế 1 cờ (thêm field mới có giá trị mặc định, không cần tăng `CurrentVersion`):
@@ -201,3 +203,37 @@ Hợp với cơ chế cần thao tác mới dạy được, vd. khóa phải đ�
 - [ ] Debug Panel có nút chơi lại / bỏ cờ để test nhanh.
 - [ ] Builder dựng lại được UI; đã lưu scene.
 - [ ] Cập nhật `ProjectStructure.md`, `README.md`, RoadMap.
+
+## 7. Tutorial mở khóa booster
+
+Booster (Hint, Khiên, Reveal) **khóa** tới khi người chơi qua tutorial của nó. Làm theo video bản gốc: tới level mở khóa thì màn hình tối, chỉ nút booster đó sáng (quầng xoay), bàn tay nhấn liên tục vào nút, lời nhắc ở trên. Người chơi phải bấm nút đó; booster chạy ngay và lần này **không trừ lượt**.
+
+| File | Vai trò |
+| --- | --- |
+| `Script/Gameplay/Booster/BoosterTutorial.cs` | Trên `Manager`: chọn lúc hiện, booster nào, mở khóa (`SaveData.unlockedBoosters`) |
+| `Script/UI/HUD/BoosterTutorialView.cs` | `Canvas_HUD/BoosterTutorial`: nền tối, lời nhắc, bàn tay; nhấc nút booster lên trên nền tối |
+| `BoosterManager` | `IsUnlocked` đọc save; `Press` trong lúc tutorial chỉ nhận đúng nút, gọi `BoosterTutorial.Complete`, lần dùng miễn phí |
+| `BoosterButton.SetHighlight` | Bật quầng sáng xoay cho nút đang được chỉ |
+| `GameAssets/10_Data_Configs/BoosterDatabase.asset` | `levelUnlock` (level mở), `detail` (lời nhắc), `valueStart` (lượt tặng) |
+
+**Khi nào hiện:** sau mỗi lần nạp level, `BoosterTutorial` chờ tới khi đang chơi thật (không ở Menu, không popup, không tutorial lần đầu), lưới đã hiện xong và băng HARD đã chạy xong, thêm 0.3 s. Lúc đó nó chọn booster **chưa mở** có `levelUnlock` nhỏ nhất mà level hiện tại đã tới. Mỗi lần nạp level chỉ hiện **1** tutorial. Người chơi cũ đã qua nhiều level sẽ được giới thiệu lần lượt ở các lần vào level kế tiếp.
+
+**Đổi level mở / lời nhắc:** sửa `levelUnlock` / `detail` trong `BoosterDatabase.asset` (Inspector). Ổ khóa trên nút tự hiện "LV n" theo `levelUnlock`.
+
+**Thêm booster mới có tutorial:**
+
+1. Thêm giá trị vào `BoosterType`, dòng mới trong `BoosterDatabase.asset` (`levelUnlock`, `detail`, `icon`, `valueStart`...).
+2. Thêm nút trên thanh booster (Build Boosters) với `BoosterButton.type` đúng loại.
+3. Viết tác dụng trong `BoosterManager.Press` và gọi `Consume(type)` khi booster thực sự có tác dụng (để lần miễn phí được tính đúng).
+4. Không cần sửa `BoosterTutorial`: nó đọc danh sách từ database và tìm nút theo `BoosterButton.Type`.
+
+**Chỉnh giao diện:** vị trí / cỡ khung lời nhắc, độ tối nền, bàn tay trong `TutorialBuilder.BuildBoosterPanel` → chạy lại **Build Tutorial** → lưu scene. Độ lệch đầu ngón tay so với tâm nút: Inspector `BoosterTutorial` → `BoosterTutorialView.handOffset`. Thời gian chờ trước khi tối màn: `BoosterTutorial.startDelay`.
+
+**Kiểm tra:** Debug Panel → Booster → **Khóa lại tất cả**, rồi Đổi + vào ván level ≥ level mở (vd. 5). Lần lượt thấy Hint (level ≥ 5), Khiên (≥ 7), Reveal (≥ 9), mỗi lần nạp level một cái. Kiểm:
+
+- chỉ nút được chỉ bấm được, lưới và nút khác bị chặn;
+- bấm thì booster chạy và số lượt không giảm;
+- lần dùng sau thì trừ lượt;
+- nạp lại level thì không hiện lại.
+
+**Mở khóa tất cả** để bỏ qua khi test việc khác.

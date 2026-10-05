@@ -164,6 +164,27 @@ public static class DebugCheats
         if (data != null) BoosterInventory.SetCount(data, Mathf.Max(0, value));
     }
 
+    /// <summary>Mở khóa mọi booster, bỏ qua tutorial.</summary>
+    public static void UnlockAllBoosters()
+    {
+        foreach (BoosterType type in System.Enum.GetValues(typeof(BoosterType))) SaveSystem.Data.UnlockBooster(type);
+        SaveSystem.MarkDirty();
+        RefreshBoosterButtons();
+    }
+
+    /// <summary>Khóa lại mọi booster: nạp level (>= level mở) để xem lại tutorial mở khóa.</summary>
+    public static void LockAllBoosters()
+    {
+        SaveSystem.Data.unlockedBoosters.Clear();
+        SaveSystem.MarkDirty();
+        RefreshBoosterButtons();
+    }
+
+    private static void RefreshBoosterButtons()
+    {
+        foreach (BoosterButton b in Object.FindObjectsByType<BoosterButton>(FindObjectsInactive.Include, FindObjectsSortMode.None)) b.Refresh();
+    }
+
     // ---------- Khác ----------
 
     public static void DailyNextDay() { if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.DebugNextDay(); }
@@ -175,6 +196,13 @@ public static class DebugCheats
     public static void PlayTutorial()
     {
         if (ScreenFlow.Instance != null) ScreenFlow.Instance.EnterTutorial();
+    }
+
+    /// <summary>Bỏ cờ đã xem popup cơ chế (Hướng / Khóa / "?"): nạp level có cơ chế là hiện lại.</summary>
+    public static void ResetMechanicIntros()
+    {
+        SaveSystem.Data.seenMechanics.Clear();
+        SaveSystem.MarkDirty();
     }
 
     /// <summary>Bỏ cờ đã xem tutorial: lần mở game sau (đang ở level 1) sẽ chạy lại tutorial.</summary>

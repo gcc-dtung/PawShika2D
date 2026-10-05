@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 1 nút booster trên thanh dưới. Hiện: icon + số lượt; hết lượt thì dấu "+"; chưa tới level thì ổ khóa + "LV n";
+/// 1 nút booster trên thanh dưới. Hiện: icon + số lượt; hết lượt thì dấu "+"; chưa mở khóa (BoosterTutorial) thì ổ khóa + "LV n";
 /// đang bật (Khiên / đang chọn số Reveal) thì quầng sáng xoay sau nút. Bấm -> BoosterManager.Press.
 /// </summary>
 [RequireComponent(typeof(Button))]
@@ -23,6 +23,14 @@ public class BoosterButton : MonoBehaviour
     private Button _button;
     private Tween _glowTween;
     private Tween _punch;
+    private bool _highlight; // tutorial mở khóa đang chỉ vào nút này
+
+    /// <summary>BoosterTutorialView: bật quầng sáng xoay khi tutorial chỉ vào nút.</summary>
+    public void SetHighlight(bool on)
+    {
+        _highlight = on;
+        Refresh();
+    }
 
     public BoosterType Type => type;
 
@@ -107,7 +115,7 @@ public class BoosterButton : MonoBehaviour
         if (countBadge != null) countBadge.SetActive(unlocked && count > 0);
         if (countText != null) countText.SetText("{0}", count);
         if (addBadge != null) addBadge.SetActive(unlocked && count <= 0);
-        SetGlow(unlocked && active);
+        SetGlow(unlocked && (active || _highlight));
     }
 
     private void SetGlow(bool on)

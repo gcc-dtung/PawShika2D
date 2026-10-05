@@ -42,6 +42,7 @@ public class UIConfetti : MonoBehaviour
 
     public void Burst()
     {
+        Unpause();
         Rect r = _rect.rect;
         float unit = Unit();
         PlaceShape(burstLeft, new Vector3(r.xMin / unit, -r.height * burstHeight / unit, 0f));
@@ -53,6 +54,7 @@ public class UIConfetti : MonoBehaviour
     public void StartRain()
     {
         if (rain == null) return;
+        Unpause();
         Rect r = _rect.rect;
         float unit = Unit();
         ParticleSystem.ShapeModule shape = rain.shape;
@@ -64,6 +66,15 @@ public class UIConfetti : MonoBehaviour
     public void StopRain()
     {
         if (rain != null) rain.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    /// <summary>
+    /// UIParticle.Stop() / Clear() (gọi ở OnDisable khi popup đóng) bật cờ isPaused: renderer ngừng mô phỏng.
+    /// ParticleSystem.Play() không tắt cờ này -> lần thắng thứ 2 hạt sinh ra ở mép rồi đứng im. Phải Resume trước khi phát.
+    /// </summary>
+    private void Unpause()
+    {
+        if (_ui != null && _ui.isPaused) _ui.Resume();
     }
 
     private float Unit() => _ui != null && _ui.scale > 0f ? _ui.scale : 100f;

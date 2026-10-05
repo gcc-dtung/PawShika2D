@@ -22,6 +22,16 @@ public class SaveData
     public DailySave daily = new DailySave();
     public bool noAds; // đã mua Remove Ads / No Ads Bundle
     public bool tutorialDone; // đã xong / bỏ qua tutorial lần đầu
+    public List<string> unlockedBoosters = new List<string>(); // booster đã qua tutorial mở khóa (tên BoosterType)
+
+    public List<string> seenMechanics = new List<string>(); // cơ chế đã xem popup giới thiệu (tên MechanicIntro.Kind)
+
+    public bool IsBoosterUnlocked(BoosterType type) => unlockedBoosters.Contains(type.ToString());
+
+    public void UnlockBooster(BoosterType type)
+    {
+        if (!IsBoosterUnlocked(type)) unlockedBoosters.Add(type.ToString());
+    }
 
     /// <summary>Số lượt booster; chưa có (lần đầu) thì -1 để BoosterInventory tặng lượt khởi đầu.</summary>
     public int GetBooster(BoosterType type)
