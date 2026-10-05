@@ -5,6 +5,7 @@ using UnityEngine.Events;
 /// Chuyển giữa Main Menu và màn chơi.
 /// - Menu: bật Canvas_Menu, tắt Canvas_HUD, ván đang nạp ở nền bị tạm dừng (không kéo được).
 /// - PLAY: kiểm tra năng lượng (GameFlowUI.RequestPlay), tắt menu, bật HUD, nạp lại level hiện tại từ đầu.
+/// - Lần đầu mở game (TutorialController.Pending): vào thẳng tutorial thay cho Menu.
 /// Popup nằm ở Canvas_Popup riêng nên dùng được ở cả 2 màn.
 /// </summary>
 public class ScreenFlow : Singleton<ScreenFlow>
@@ -24,8 +25,20 @@ public class ScreenFlow : Singleton<ScreenFlow>
     private void Start()
     {
         if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
-        if (startInMenu) ShowMenu();
+        if (TutorialController.Pending) EnterTutorial(); // lần đầu mở game: vào thẳng tutorial, xong thì vào level 1
+        else if (startInMenu) ShowMenu();
         else EnterGame();
+    }
+
+    /// <summary>Vào màn chơi chạy tutorial (lần đầu mở game, hoặc Debug Panel xem lại).</summary>
+    public void EnterTutorial()
+    {
+        if (TutorialController.Instance == null) return;
+        IsMenu = false;
+        if (menuCanvas != null) menuCanvas.SetActive(false);
+        if (hudCanvas != null) hudCanvas.SetActive(true);
+        TutorialController.Instance.Begin();
+        onScreenChanged?.Invoke(false);
     }
 
     private void OnDestroy()

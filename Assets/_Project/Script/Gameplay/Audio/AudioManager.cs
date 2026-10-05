@@ -205,7 +205,7 @@ public class AudioManager : Singleton<AudioManager>
         _lookup.Clear();
         if (database == null)
         {
-            Debug.LogWarning("[AudioManager] Chưa gán AudioDatabase (chạy Tools/PawBlock/Setup Audio).");
+            Debug.LogWarning("[AudioManager] Chưa gán AudioDatabase (chạy Tools/PawBlock/Builders/Setup Audio).");
             return;
         }
         foreach (AudioDatabase.Sound s in database.sounds)

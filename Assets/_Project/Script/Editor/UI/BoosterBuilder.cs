@@ -18,7 +18,7 @@ public static class BoosterBuilder
     private const string DatabasePath = "Assets/_Project/GameAssets/10_Data_Configs/BoosterDatabase.asset";
     private static readonly string[] ButtonParts = { "Glow", "Icon", "Count", "Add", "Lock" };
 
-    [MenuItem("Tools/PawBlock/Build Boosters")]
+    [MenuItem("Tools/PawBlock/Builders/Build Boosters", priority = 101)]
     public static void Build()
     {
         GameObject canvasGo = PopupBuilder.FindRoot("Canvas_HUD"); // tìm được cả khi HUD đang tắt (đang ở Menu)

@@ -7,6 +7,8 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 - Kế hoạch chi tiết và các quyết định: [TaskBreakdown.md](TaskBreakdown.md)
 - Cấu trúc thư mục, script, luồng dữ liệu: [ProjectStructure.md](ProjectStructure.md)
 - Nhật ký thay đổi theo thứ tự thời gian: [RoadMap/](RoadMap/00_README.md)
+- Công thức độ khó level: [DifficultyFormula.md](DifficultyFormula.md)
+- Sửa / tạo tutorial: [TutorialGuide.md](TutorialGuide.md)
 
 ---
 
@@ -38,7 +40,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 | Mũi tên ngang | Mũi tên mờ | Khối phải rộng hơn cao |
 | Mũi tên dọc | Mũi tên mờ, xoay 90° | Khối phải cao hơn rộng |
 
-Dữ liệu level ShikaCat hiện **chưa có** ô đặc biệt nào; code đã hỗ trợ, dữ liệu sẽ bổ sung sau.
+Dữ liệu level ShikaCat gốc **không có** ô đặc biệt nào; cơ chế được gắn bằng **Mechanic Injector** (131/205 level, xem bên dưới).
 
 ---
 
@@ -46,21 +48,23 @@ Dữ liệu level ShikaCat hiện **chưa có** ô đặc biệt nào; code đã
 
 1. Mở `Assets/Scenes/SampleScene.unity`.
 2. Lần đầu (hoặc khi đổi asset), chạy các menu Editor:
-   - **Tools → PawBlock → Import ShikaCat Levels**: tạo 205 `LevelDefinition` trong `Assets/_Project/Levels/ShikaCat/` và `LevelDatabase.asset`.
-   - **Tools → PawBlock → Setup Gameplay Visuals**: đặt 9-slice cho khối, cắt atlas mặt mèo, tạo `Assets/_Project/Resources/GameplayVisuals.asset`.
-   - **Tools → PawBlock → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Cài đặt / Mua booster trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
-   - **Tools → PawBlock → Build Boosters**: dựng lại 3 nút booster, banner Reveal, khung băng Khiên, gắn `BoosterManager`.
-   - **Tools → PawBlock → Build Energy**: gắn `EnergyManager` (trong ván không còn tim năng lượng).
-   - **Tools → PawBlock → Build Shop**: tab Shop (Starter Pack, Remove Ads, No Ads Bundle, Special Bundle, Coin); dữ liệu gói trong `ShopDatabase.asset`, mua bằng VND qua `IAPService` (chưa SDK: "Purchase Failed!").
-   - **Tools → PawBlock → Build Difficulty**: level Hard / Very Hard – `DifficultyTheme`, nút PLAY có tab mức khó, khung HUD, hiệu ứng vào màn (đánh dấu mẫu level 20 Hard, 30 Very Hard). Độ khó từng level chỉnh trong Level Editor.
+   - **Tools → PawBlock → Builders → Import ShikaCat Levels**: tạo 205 `LevelDefinition` trong `Assets/_Project/Levels/ShikaCat/` và `LevelDatabase.asset`.
+   - **Tools → PawBlock → Builders → Setup Gameplay Visuals**: đặt 9-slice cho khối, cắt atlas mặt mèo, tạo `Assets/_Project/Resources/GameplayVisuals.asset`.
+   - **Tools → PawBlock → Builders → Build Popups**: dựng lại popup Win / Hồi mạng / Thua / Cài đặt / Mua booster trong `Canvas_HUD` (scene đã có sẵn, chỉ chạy khi sửa builder).
+   - **Tools → PawBlock → Builders → Build Boosters**: dựng lại 3 nút booster, banner Reveal, khung băng Khiên, gắn `BoosterManager`.
+   - **Tools → PawBlock → Builders → Build Shop**: tab Shop (Starter Pack, Remove Ads, No Ads Bundle, Special Bundle, Coin); dữ liệu gói trong `ShopDatabase.asset`, mua bằng VND qua `IAPService` (chưa SDK: "Purchase Failed!").
+   - **Tools → PawBlock → Builders → Build Difficulty**: level Hard / Very Hard – `DifficultyTheme`, nút PLAY có tab mức khó, khung HUD, hiệu ứng vào màn. Level nào Hard / Very Hard: đánh dấu trong Level Difficulty (hoặc Level Editor).
    - **Tools → PawBlock → Debug Panel** (Ctrl + Shift + D, dùng khi Play): đổi level, thắng / thua ngay, cộng coin / mạng / năng lượng / booster, sang ngày điểm danh, tốc độ game.
-   - **Tools → PawBlock → Build Win Screen**: màn thắng (WELL DONE, sao, huy hiệu mèo, confetti, coin bay) + material lóe sáng cho khối mèo. Confetti cần package **UI Particle** (`com.coffee.ui-particle`, đã có trong `Packages/manifest.json`, cài từ git `mob-sakai/ParticleEffectForUGUI` tag `v4.14.1`).
-   - **Tools → PawBlock → Build Daily Reward**: điểm danh hằng ngày – `DailyRewardDatabase` (quà 7 ngày), `DailyRewardManager`, popup, nút Daily dưới Starter.
-   - **Tools → PawBlock → Build Settings**: nút bánh răng góc trên phải HUD (thay nút chơi lại + tim năng lượng) và popup cài đặt Nhạc / Âm / Rung.
-   - **Tools → PawBlock → Build Main Menu**: dựng lại thanh tab Shop / Home / Progress, thanh trên (năng lượng + coin), nút PLAY, 2 panel tạm Shop / Progress trong `Canvas_Menu` (giữ nguyên phần còn lại của `HomePanel`), gắn `ScreenFlow`. Chạy sau Build Popups.
-   - **Tools → PawBlock → Setup Audio**: tạo / bổ sung `AudioDatabase`, object `AudioManager`, âm bấm nút trên các canvas (scene đã có sẵn).
+   - **Tools → PawBlock → Builders → Build Win Screen**: màn thắng (WELL DONE, sao, huy hiệu mèo, confetti, coin bay) + material lóe sáng cho khối mèo. Confetti cần package **UI Particle** (`com.coffee.ui-particle`, đã có trong `Packages/manifest.json`, cài từ git `mob-sakai/ParticleEffectForUGUI` tag `v4.14.1`).
+   - **Tools → PawBlock → Builders → Build Daily Reward**: điểm danh hằng ngày – `DailyRewardDatabase` (quà 7 ngày), `DailyRewardManager`, popup, nút Daily dưới Starter.
+   - **Tools → PawBlock → Builders → Build Settings**: nút bánh răng góc trên phải HUD (thay nút chơi lại + tim năng lượng) và popup cài đặt Nhạc / Âm / Rung.
+   - **Tools → PawBlock → Builders → Build Main Menu**: dựng lại thanh tab Shop / Home / Progress, thanh trên (năng lượng + coin), nút PLAY, 2 panel tạm Shop / Progress trong `Canvas_Menu` (giữ nguyên phần còn lại của `HomePanel`), gắn `ScreenFlow`. Chạy sau Build Popups.
+   - **Tools → PawBlock → Builders → Setup Audio**: tạo / bổ sung `AudioDatabase`, object `AudioManager`, âm bấm nút trên các canvas (scene đã có sẵn).
+   - **Tools → PawBlock → Builders → Build Tutorial**: dựng lại giao diện tutorial (TutorialPanel, bàn tay), gắn `TutorialController` (scene đã có sẵn). Xem lại tutorial: Debug Panel → Chơi lại tutorial. Sửa / thêm bước, tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md).
 3. Sửa / làm level: **Tools → PawBlock → Level Editor** (kéo hình chữ nhật để xếp khối, số tự = diện tích; Kiểm tra; ▶ Chơi thử vào thẳng level). Level mới nằm ở `Assets/_Project/Levels/Custom/`.
-4. Bấm Play: vào Main Menu (Home) → bấm **PLAY** để vào level đang chơi. Kéo chuột trên lưới để tạo khối. Thua → HOME để về Menu.
+   - Gắn cơ chế cho level có sẵn: **Tools → PawBlock → Mechanic Injector** (lịch trong `Levels/MechanicInjectorSettings.asset`; Xem trước → Áp dụng; Khôi phục bản gốc để bỏ). Level có cơ chế nằm ở `Assets/_Project/Levels/Mechanic/`, bản gốc ShikaCat không bị sửa. Chạy lại Import ShikaCat Levels sẽ đưa database về bản gốc, cần Áp dụng lại.
+   - Độ khó lý thuyết + đánh dấu Hard / Very Hard: **Tools → PawBlock → Level Difficulty** (tick cột Hard / V.Hard, hoặc Áp dụng gợi ý; Xuất CSV / Nạp dữ liệu thực tế để so). Công thức: [DifficultyFormula.md](DifficultyFormula.md).
+4. Bấm Play: lần đầu (save mới, đang ở level 1) vào thẳng **tutorial** 4 bước (Skip để bỏ qua), xong thì vào Level 1; các lần sau vào Main Menu (Home) → bấm **PLAY** để vào level đang chơi. Kéo chuột trên lưới để tạo khối. Thua → HOME để về Menu.
 
 Dữ liệu người chơi (level đang chơi, coin, lượt booster, năng lượng, cài đặt Nhạc / Âm / Rung) lưu trong 1 file JSON `save.json` ở `Application.persistentDataPath` (Windows: `%USERPROFILE%/AppData/LocalLow/DefaultCompany/TestProject/`). Xem / mở thư mục / xóa: **Tools → PawBlock → Save Data** (Log Save, Open Save Folder, Delete Save). Bản trước lưu PlayerPrefs: lần đầu chạy bản mới tự chuyển sang file rồi xóa key cũ. Thử năng lượng: chuột phải component `EnergyManager` → Debug (Set 0, Skip 1 refill...).
 

@@ -117,6 +117,9 @@ public class GridManager : Singleton<GridManager>
         if (selectionBox != null) selectionBox.SetBlocked(dir);
     }
 
+    /// <summary>Người chơi đang kéo (bàn tay tutorial ẩn đi).</summary>
+    public bool IsSelecting => _drag.IsActive;
+
     /// <summary>Số ô của vùng đang kéo, dùng cho bong bóng đếm ô.</summary>
     public int SelectionCellCount => _drag.IsActive ? _drag.CellCount : 0;
 
@@ -299,7 +302,7 @@ public class GridManager : Singleton<GridManager>
         GridGeometry geometry = _board.Geometry;
         onMistake?.Invoke(geometry.RectCenter(rect), geometry.RectSize(rect));
 
-        if (LivesManager.Instance != null)
+        if (LivesManager.Instance != null && !TutorialController.Active) // tutorial: chỉ báo sai, không trừ mạng
         {
             LivesManager.Instance.LoseLife();
         }

@@ -21,6 +21,7 @@ public class SaveData
     public SettingsSave settings = new SettingsSave();
     public DailySave daily = new DailySave();
     public bool noAds; // đã mua Remove Ads / No Ads Bundle
+    public bool tutorialDone; // đã xong / bỏ qua tutorial lần đầu
 
     /// <summary>Số lượt booster; chưa có (lần đầu) thì -1 để BoosterInventory tặng lượt khởi đầu.</summary>
     public int GetBooster(BoosterType type)

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Màn thắng như bản gốc (Tools → PawBlock → Build Win Screen, chạy lại được):
+/// Màn thắng như bản gốc (Tools → PawBlock → Builders → Build Win Screen, chạy lại được):
 /// - WinPopup trong Canvas_Popup/Popups (thay bản cũ, giữ thứ tự, nối GameFlowUI); Build Popups cũng gọi BuildPopup
 /// - Material lóe sáng BlockFlash.mat (GUI/Text Shader) gán cho PlacedBlock.prefab
 /// Vị trí (canvas 1080x1920, tính từ tâm): chữ WELL DONE +392 (ngay trên huy hiệu), huy hiệu +46, nút -509. Không có sao.
@@ -28,7 +28,7 @@ public static class WinScreenBuilder
     };
     private static readonly Color PillText = new Color32(0x5A, 0x2A, 0x14, 0xFF);
 
-    [MenuItem("Tools/PawBlock/Build Win Screen")]
+    [MenuItem("Tools/PawBlock/Builders/Build Win Screen", priority = 110)]
     public static void Build()
     {
         GameObject popupCanvas = PopupBuilder.FindRoot("Canvas_Popup");

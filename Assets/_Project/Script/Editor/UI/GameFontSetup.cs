@@ -27,7 +27,7 @@ public static class GameFontSetup
 
     public static TMP_FontAsset Font => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
 
-    [MenuItem("Tools/PawBlock/Apply Game Font")]
+    [MenuItem("Tools/PawBlock/Builders/Apply Game Font", priority = 100)]
     public static void Apply()
     {
         TMP_FontAsset font = Font;

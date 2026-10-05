@@ -54,7 +54,7 @@ public class LevelEditorWindow : EditorWindow
     private List<string> _warnings = new List<string>();
     private List<string> _infos = new List<string>();
 
-    [MenuItem("Tools/PawBlock/Level Editor")]
+    [MenuItem("Tools/PawBlock/Level Editor", priority = 1)]
     public static void Open()
     {
         LevelEditorWindow w = GetWindow<LevelEditorWindow>("Level Editor");
@@ -191,6 +191,8 @@ public class LevelEditorWindow : EditorWindow
             EditorGUILayout.HelpBox("Level chưa có trong database: không chơi thử được.", MessageType.None);
         if (_level != null && AssetDatabase.GetAssetPath(_level).Contains("/ShikaCat/"))
             EditorGUILayout.HelpBox("Level ShikaCat: chạy lại Import ShikaCat Levels sẽ ghi đè chỉnh sửa. Muốn giữ lâu dài thì Nhân bản sang Custom.", MessageType.Warning);
+        if (_level != null && AssetDatabase.GetAssetPath(_level).StartsWith(MechanicInjectorWindow.OutputFolder + "/"))
+            EditorGUILayout.HelpBox("Level do Mechanic Injector sinh: Áp dụng lại tool sẽ ghi đè chỉnh sửa. Muốn giữ lâu dài thì Nhân bản sang Custom.", MessageType.Warning);
     }
 
     private void DrawSizeRow()

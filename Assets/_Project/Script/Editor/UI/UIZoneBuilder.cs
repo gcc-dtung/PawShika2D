@@ -13,7 +13,7 @@ public static class UIZoneBuilder
     public const string ZoneName = "UIZone";
     private static readonly string[] HudChildren = { "PlayZone", "TopPanel", "DownPanel", "RevealBanner" };
 
-    [MenuItem("Tools/PawBlock/Build UI Zone")]
+    [MenuItem("Tools/PawBlock/Builders/Build UI Zone", priority = 109)]
     public static void Build()
     {
         GameObject hud = PopupBuilder.FindRoot("Canvas_HUD");

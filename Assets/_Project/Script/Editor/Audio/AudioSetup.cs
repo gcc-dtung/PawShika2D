@@ -4,7 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 
 /// <summary>
-/// Tools → PawBlock → Setup Audio:
+/// Tools → PawBlock → Builders → Setup Audio:
 /// - Tạo / bổ sung AudioDatabase (10_Data_Configs) với clip có sẵn trong 01_Audio (game gốc) và ShikaCat.
 ///   Chạy lại chỉ thêm âm còn thiếu, không ghi đè âm đã chỉnh trong Inspector.
 /// - Nhạc nền nhập kiểu Streaming (không nạp cả bài vào RAM).
@@ -63,7 +63,7 @@ public static class AudioSetup
             A + "Cat_Voices/Angry1.ogg", A + "Cat_Voices/Angry2.ogg", A + "Cat_Voices/Sad.ogg", A + "Cat_Voices/Dizzy.ogg", A + "Cat_Voices/Scare.ogg"),
     };
 
-    [MenuItem("Tools/PawBlock/Setup Audio")]
+    [MenuItem("Tools/PawBlock/Builders/Setup Audio", priority = 112)]
     public static void Setup()
     {
         AudioDatabase db = BuildDatabase();

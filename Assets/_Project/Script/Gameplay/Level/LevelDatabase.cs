@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>Danh sách level theo thứ tự chơi. Tạo/cập nhật bằng menu Tools/PawBlock/Import ShikaCat Levels.</summary>
+/// <summary>Danh sách level theo thứ tự chơi. Tạo/cập nhật bằng menu Tools/PawBlock/Builders/Import ShikaCat Levels.</summary>
 [CreateAssetMenu(fileName = "LevelDatabase", menuName = "ScriptableObjects/LevelDatabase")]
 public class LevelDatabase : ScriptableObject
 {

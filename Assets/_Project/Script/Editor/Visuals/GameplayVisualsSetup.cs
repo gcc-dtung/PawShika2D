@@ -33,7 +33,7 @@ public static class GameplayVisualsSetup
         public bool rotated;
     }
 
-    [MenuItem("Tools/PawBlock/Setup Gameplay Visuals")]
+    [MenuItem("Tools/PawBlock/Builders/Setup Gameplay Visuals", priority = 113)]
     public static void Setup()
     {
         GameplayVisuals visuals = AssetDatabase.LoadAssetAtPath<GameplayVisuals>(OutputPath);

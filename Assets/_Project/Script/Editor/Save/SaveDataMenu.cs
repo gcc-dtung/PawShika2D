@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>Tools → PawBlock → Save Data: xem, mở thư mục, xóa file save (save.json trong persistentDataPath).</summary>
 public static class SaveDataMenu
 {
-    [MenuItem("Tools/PawBlock/Save Data/Log Save")]
+    [MenuItem("Tools/PawBlock/Save Data/Log Save", priority = 21)]
     public static void LogSave()
     {
         string path = SaveSystem.FilePath;
@@ -17,14 +17,14 @@ public static class SaveDataMenu
         Debug.Log($"[SaveData] {path}\n{File.ReadAllText(path)}");
     }
 
-    [MenuItem("Tools/PawBlock/Save Data/Open Save Folder")]
+    [MenuItem("Tools/PawBlock/Save Data/Open Save Folder", priority = 22)]
     public static void OpenFolder()
     {
         Directory.CreateDirectory(Application.persistentDataPath);
         EditorUtility.RevealInFinder(SaveSystem.FilePath);
     }
 
-    [MenuItem("Tools/PawBlock/Save Data/Delete Save")]
+    [MenuItem("Tools/PawBlock/Save Data/Delete Save", priority = 23)]
     public static void DeleteSave()
     {
         if (EditorApplication.isPlaying)

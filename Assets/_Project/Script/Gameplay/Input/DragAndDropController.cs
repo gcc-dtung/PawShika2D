@@ -32,9 +32,6 @@ public class DragAndDropController : MonoBehaviour
 
     private CellView GetCellAtPosition(Vector2 screenPos)
     {
-        if (cam == null) cam = Camera.main;
-        if (cam == null) return null;
-
         Vector3 worldPos = cam.ScreenToWorldPoint(screenPos);
 
         // 1. Thử Physics2D (nếu dùng BoxCollider2D)

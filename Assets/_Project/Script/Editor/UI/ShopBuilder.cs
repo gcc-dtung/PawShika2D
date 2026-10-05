@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Tab Shop như bản gốc (Tools → PawBlock → Build Shop; Build Main Menu cũng gọi BuildPanel):
+/// Tab Shop như bản gốc (Tools → PawBlock → Builders → Build Shop; Build Main Menu cũng gọi BuildPanel):
 /// mái hiên + ô năng lượng / coin trên cùng (đè lên nội dung cuộn); danh sách cuộn dọc (NestedScrollRect: vuốt ngang vẫn chuyển tab):
 /// Starter Pack (tem 90% Off) → "Remove Ads" (dòng No more disruptive ads, thẻ No Ads Bundle) → "Special Bundle"
 /// (Fail / Mini / Super / Mega / Deluxe Offer) → "Coin" (lưới 3 x 2). Dữ liệu ShopDatabase.asset (chép số từ *PackShop.asset gốc,
@@ -26,7 +26,7 @@ public static class ShopBuilder
     private static readonly Vector2 CoinSize = new Vector2(323, 421);
     private static readonly Color CoinYellow = new Color32(0xFF, 0xD8, 0x3A, 0xFF);
 
-    [MenuItem("Tools/PawBlock/Build Shop")]
+    [MenuItem("Tools/PawBlock/Builders/Build Shop", priority = 108)]
     public static void Build()
     {
         MainMenuNavigator nav = Object.FindFirstObjectByType<MainMenuNavigator>(FindObjectsInactive.Include);

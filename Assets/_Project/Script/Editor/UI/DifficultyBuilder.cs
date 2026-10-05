@@ -5,12 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Level Hard / Very Hard (Tools → PawBlock → Build Difficulty), chạy lại được:
+/// Level Hard / Very Hard (Tools → PawBlock → Builders → Build Difficulty), chạy lại được:
 /// - DifficultyTheme.asset (sprite / chữ / màu từng mức khó; chưa có thì tạo)
 /// - Nút PLAY: con HardFrame (khung_home_hard: viền kem có tab ghi mức khó), đứng yên khi nhấn (ButtonPressIgnore)
 /// - Canvas_HUD LevelFrame: con HardFrame (khung_hard1 / khung_expert1 có tab) bao ô LEVEL
 /// - Canvas_HUD/DifficultyIntro: nền tối, dải băng sọc, băng chữ, mèo đầu lâu (hiệu ứng vào màn)
-/// - Level mẫu: 20 = Hard, 30 = Very Hard (chỉ khi đang Normal; đổi trong Level Editor)
+/// - Level nào Hard / Very Hard: đánh dấu trong Tools → PawBlock → Level Difficulty (hoặc Level Editor)
 /// </summary>
 public static class DifficultyBuilder
 {
@@ -18,13 +18,12 @@ public static class DifficultyBuilder
     private const string UI = PopupBuilder.UI;
     private const string Frames = UI + "Frames_Borders/";
     private const string Buttons = UI + "Buttons/";
-    private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
 
     // khung_home_hard 534x283: thân (không tính tab) cao ~229 -> thu theo thân nút PLAY 225
     private const float PlayFrameScale = 225f / 229f;
     private const float PlayTabHeight = 54f;
 
-    [MenuItem("Tools/PawBlock/Build Difficulty")]
+    [MenuItem("Tools/PawBlock/Builders/Build Difficulty", priority = 103)]
     public static void Build()
     {
         DifficultyTheme theme = EnsureTheme();
@@ -41,7 +40,6 @@ public static class DifficultyBuilder
         GameObject hudCanvas = PopupBuilder.FindRoot("Canvas_HUD");
         if (hudCanvas != null) BuildIntro(hudCanvas.transform, theme);
 
-        MarkSampleLevels();
         if (play != null) EditorSceneManager.MarkSceneDirty(play.gameObject.scene);
         Debug.Log("[DifficultyBuilder] Đã dựng giao diện level Hard / Very Hard.");
     }
@@ -232,24 +230,5 @@ public static class DifficultyBuilder
         so.FindProperty("skull").objectReferenceValue = skull;
         so.FindProperty("offscreen").vector2Value = new Vector2(-2200f, 900f); // băng dài ~2000: xuất phát hẳn ngoài màn
         so.ApplyModifiedPropertiesWithoutUndo();
-    }
-
-    // ---------- Level mẫu ----------
-
-    private static void MarkSampleLevels()
-    {
-        LevelDatabase db = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
-        if (db == null) return;
-        Mark(db, 20, LevelDifficulty.Hard);
-        Mark(db, 30, LevelDifficulty.VeryHard);
-        AssetDatabase.SaveAssets();
-    }
-
-    private static void Mark(LevelDatabase db, int number, LevelDifficulty difficulty)
-    {
-        LevelDefinition level = db.Get(number - 1);
-        if (level == null || level.difficulty != LevelDifficulty.Normal) return;
-        level.difficulty = difficulty;
-        EditorUtility.SetDirty(level);
     }
 }

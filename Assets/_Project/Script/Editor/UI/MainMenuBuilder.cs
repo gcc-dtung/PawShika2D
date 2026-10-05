@@ -32,7 +32,7 @@ public static class MainMenuBuilder
     private static readonly string[] TabNames = { "Shop", "Home", "Progress" };
     private static readonly string[] TabIcons = { Icons + "icon_shop.png", Icons + "icon_home.png", Icons + "icon_cup.png" };
 
-    [MenuItem("Tools/PawBlock/Build Main Menu")]
+    [MenuItem("Tools/PawBlock/Builders/Build Main Menu", priority = 104)]
     public static void Build()
     {
         GameObject canvasGo = FindInScene("Canvas_Menu");

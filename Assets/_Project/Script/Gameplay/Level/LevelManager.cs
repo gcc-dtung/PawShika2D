@@ -57,7 +57,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (GridManager.Instance != null) GridManager.Instance.onGameWin.AddListener(OnWin);
         if (LivesManager.Instance != null) LivesManager.Instance.onOutOfLives.AddListener(OnOutOfLives);
-        LoadLevel(_currentIndex);
+        if (!TutorialController.Pending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
     }
 
     private void OnDisable() => CancelPending();
@@ -72,7 +72,7 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (database == null || database.Count == 0)
         {
-            Debug.LogError("[LevelManager] Chưa có LevelDatabase. Chạy menu Tools/PawBlock/Import ShikaCat Levels.");
+            Debug.LogError("[LevelManager] Chưa có LevelDatabase. Chạy menu Tools/PawBlock/Builders/Import ShikaCat Levels.");
             return;
         }
 
@@ -91,6 +91,20 @@ public class LevelManager : Singleton<LevelManager>
         SetState(GameState.Playing);
         onLevelLoaded?.Invoke(CurrentLevelNumber);
         Debug.Log($"[LevelManager] Level {CurrentLevelNumber}/{database.Count}: {level.name} ({level.size}x{level.Height})");
+    }
+
+    /// <summary>
+    /// Màn tutorial (TutorialController): dựng lưới như level thường nhưng không lưu level hiện tại,
+    /// không phát onLevelLoaded (HUD level / băng HARD / booster không đổi), thắng không sang WinPopup.
+    /// </summary>
+    public void LoadTutorial(LevelDefinition level)
+    {
+        if (level == null) return;
+        CancelPending();
+        gridSpawner.Spawn(level);
+        FitCamera(level);
+        _hasRevived = false;
+        SetState(GameState.Playing);
     }
 
     public void Retry() => LoadLevel(_currentIndex);
@@ -134,6 +148,7 @@ public class LevelManager : Singleton<LevelManager>
 
     private void OnWin()
     {
+        if (TutorialController.Active) return; // TutorialController tự sang bước kế
         CancelPending();
         After(stateChangeDelay, () =>
         {

@@ -23,7 +23,7 @@ public static class LevelValidator
         public bool IsValid => errors.Count == 0;
     }
 
-    [MenuItem("Tools/PawBlock/Validate Levels")]
+    [MenuItem("Tools/PawBlock/Validate Levels", priority = 4)]
     public static void ValidateDatabase()
     {
         LevelDatabase database = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
@@ -75,7 +75,9 @@ public static class LevelValidator
         else if (logPassed) Debug.Log($"{head}: hợp lệ", level);
     }
 
-    public static Report Validate(LevelDefinition level)
+    /// <param name="alwaysCheckGuessing">Kiểm tra "không cần đoán" cả khi level không có ô "?" / ô khóa
+    /// (Mechanic Injector dùng để biết level gốc có gắn được khóa / "?" không).</param>
+    public static Report Validate(LevelDefinition level, bool alwaysCheckGuessing = false)
     {
         Report report = new Report();
         if (!CheckData(level, report)) return report;
@@ -91,7 +93,7 @@ public static class LevelValidator
         {
             if (c.mechanic.hidden || c.mechanic.lockSteps > 0) hasHiddenInfo = true;
         }
-        if (hasHiddenInfo) CheckNoGuessing(level, report);
+        if (hasHiddenInfo || alwaysCheckGuessing) CheckNoGuessing(level, report);
 
         return report;
     }

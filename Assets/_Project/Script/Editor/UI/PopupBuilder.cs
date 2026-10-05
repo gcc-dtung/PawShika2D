@@ -29,7 +29,7 @@ public static class PopupBuilder
     private const float FrameBorderScale = 1.4f; // viền 9-slice hiện nhỏ đi 1.4 lần (viền vàng ~14 px như ref)
     private const string TimerPill = UI + "Frames_Borders/khung_popup_4.png";
 
-    [MenuItem("Tools/PawBlock/Build Popups")]
+    [MenuItem("Tools/PawBlock/Builders/Build Popups", priority = 106)]
     public static void Build()
     {
         GameObject hudGo = FindRoot("Canvas_HUD");
@@ -264,7 +264,7 @@ public static class PopupBuilder
     }
 
     /// <summary>Thay riêng popup NOTICE trong scene (không dựng lại popup khác).</summary>
-    [MenuItem("Tools/PawBlock/Build Notice Popup")]
+    [MenuItem("Tools/PawBlock/Builders/Build Notice Popup", priority = 105)]
     public static void BuildNoticeOnly()
     {
         GameObject canvas = FindRoot("Canvas_Popup");

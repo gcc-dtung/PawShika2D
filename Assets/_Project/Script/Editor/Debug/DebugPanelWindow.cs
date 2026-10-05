@@ -15,7 +15,7 @@ public class DebugPanelWindow : EditorWindow
 
     private static readonly float[] Speeds = { 0.25f, 0.5f, 1f, 2f, 4f };
 
-    [MenuItem("Tools/PawBlock/Debug Panel %#d")] // Ctrl + Shift + D
+    [MenuItem("Tools/PawBlock/Debug Panel %#d", priority = 20)] // Ctrl + Shift + D
     public static void Open()
     {
         DebugPanelWindow w = GetWindow<DebugPanelWindow>("Debug Panel");
@@ -88,6 +88,11 @@ public class DebugPanelWindow : EditorWindow
             if (GUILayout.Button("Đổi + vào ván")) DebugCheats.PlayLevel(_levelInput);
         }
         if (GUILayout.Button("Vào ván level hiện tại (bỏ qua năng lượng)")) DebugCheats.PlayLevel(DebugCheats.CurrentLevel);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("Chơi lại tutorial")) DebugCheats.PlayTutorial();
+            if (GUILayout.Button(new GUIContent("Bỏ cờ đã xem tutorial", "Mở game lần sau (đang ở level 1) sẽ chạy lại tutorial"))) DebugCheats.ResetTutorial();
+        }
     }
 
     // ---------- Thắng / thua ----------

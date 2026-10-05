@@ -16,7 +16,7 @@ public static class SettingsBuilder
     private const string Frame = PopupBuilder.UI + "Frames_Borders/khung_setting_3.png";
     private const string Gear = PopupBuilder.UI + "Buttons/btn_setting.png";
 
-    [MenuItem("Tools/PawBlock/Build Settings")]
+    [MenuItem("Tools/PawBlock/Builders/Build Settings", priority = 107)]
     public static void Build()
     {
         GameObject hudGo = PopupBuilder.FindRoot("Canvas_HUD");

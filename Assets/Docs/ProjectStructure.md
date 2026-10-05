@@ -3,6 +3,7 @@
 ## Thư mục
 
 ```text
+
 Assets/
 ├── Docs/                               Tài liệu (README, TaskBreakdown, file này)
 ├── Scenes/
@@ -20,7 +21,10 @@ Assets/
     │       └── DragCountBubble.prefab  Bong bóng số ô (1 instance đặt sẵn trong scene)
     ├── Levels/
     │   ├── LevelDatabase.asset         Danh sách 205 level theo thứ tự chơi
-    │   └── ShikaCat/Level_001..205     LevelDefinition sinh từ JSON ShikaCat
+    │   ├── MechanicInjectorSettings.asset  Lịch gắn cơ chế (Mechanic Injector)
+    │   ├── LevelDifficultySettings.asset   Trọng số công thức độ khó (Level Difficulty)
+    │   ├── ShikaCat/Level_001..205     LevelDefinition sinh từ JSON ShikaCat (bản gốc, không cơ chế)
+    │   └── Mechanic/Level_NNN          Bản có cơ chế do Mechanic Injector sinh, thay bản gốc trong database
     ├── Resources/
     │   └── GameplayVisuals.asset       Sprite khối, tai, mặt mèo, ổ khóa, chữ khen...
     ├── SO_LevelDefinition.asset        Level mẫu 4x4, chỉ dùng khi scene không có LevelManager
@@ -50,6 +54,7 @@ Script/
 │   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, ColorType
 │   ├── Input/      InputManager, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
+│   ├── Tutorial/   TutorialController, TutorialLevels, TutorialHand
 │   ├── Feedback/   GameplayFeedback
 │   ├── Audio/      SoundId, AudioDatabase, AudioManager, GameAudioEvents
 │   ├── Save/       SaveData, SaveSystem, SaveRunner
@@ -57,12 +62,12 @@ Script/
 │   └── Util/       Singleton
 ├── UI/
 │   ├── Common/     SafeAreaZone, BackgroundCover, UIButtonSounds, NoClickSound, UIButtonPress, ButtonPress, SettingsButton, UIConfetti, TMPLetterPopIn, ButtonPressIgnore, NestedScrollRect
-│   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD
+│   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD, TutorialView
 │   ├── Menu/       ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
 │   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
-    ├── Level/      ShikaCatLevelImporter
-    ├── UI/         PopupBuilder, ShopBuilder, SettingsBuilder, DifficultyBuilder, DailyRewardBuilder, WinScreenBuilder, BoosterBuilder, EnergyBuilder, MainMenuBuilder
+    ├── Level/      ShikaCatLevelImporter, LevelEditorWindow, LevelValidator, MechanicInjector*, LevelDifficulty*
+    ├── UI/         PopupBuilder, ShopBuilder, SettingsBuilder, DifficultyBuilder, DailyRewardBuilder, WinScreenBuilder, BoosterBuilder, MainMenuBuilder, TutorialBuilder
     └── Visuals/    GameplayVisualsSetup
 ```
 
@@ -119,7 +124,17 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `DebugCheats` | Lệnh cheat dùng chung (static), chỉ gọi API sẵn có nên hiệu ứng / popup / save chạy như chơi thật: level (`GoToLevel`, `PlayLevel` – vào ván bỏ qua năng lượng, Next / Prev / Retry), thắng (`WinNow` – đặt hết lời giải, `SolveOneBlock`), thua (`LoseLife`, `OutOfLives` → popup Hồi mạng, `LoseNow` – chờ sự kiện OutOfLives rồi `GiveUp` → popup Thua), coin, mạng / khiên, năng lượng, booster (`BoosterInventory.SetCount`), điểm danh, lưu save |
+| `DebugCheats` | Lệnh cheat dùng chung (static), chỉ gọi API sẵn có nên hiệu ứng / popup / save chạy như chơi thật: level (`GoToLevel`, `PlayLevel` – vào ván bỏ qua năng lượng, Next / Prev / Retry), thắng (`WinNow` – đặt hết lời giải, `SolveOneBlock`), thua (`LoseLife`, `OutOfLives` → popup Hồi mạng, `LoseNow` – chờ sự kiện OutOfLives rồi `GiveUp` → popup Thua), coin, mạng / khiên, năng lượng, booster (`BoosterInventory.SetCount`), điểm danh, lưu save, tutorial (`PlayTutorial` – chơi lại từ bước 1, `ResetTutorial` – bỏ cờ đã xem) |
+
+### Gameplay/Tutorial
+
+Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md).
+
+| File | Vai trò |
+| --- | --- |
+| `TutorialController` | Trên `Manager`. `Pending` (tĩnh): save chưa có `tutorialDone` và đang ở level 1 → `ScreenFlow` vào thẳng tutorial khi mở game, `LevelManager` không nạp level. 4 bước nạp bằng `LevelManager.LoadTutorial`; thắng bước (`GridManager.onGameWin`) → chờ 1.1 s sang bước kế; đặt khối → bàn tay chuyển sang số kế. Xong / Skip: lưu `tutorialDone`, `LoadLevel` level hiện tại. `Active` (tĩnh): `GridManager` không trừ mạng, `LevelManager` không sang WinPopup |
+| `TutorialLevels` | 4 bước như bản gốc, dựng `LevelDefinition` trong code: 3 ô ngang, 3 ô dọc, 3x3 (3 + 6), 3x3 (2 + 4 + 3); lời nhắc tiếng Anh; gợi ý bàn tay (số, ô bắt đầu, ô kết thúc) |
+| `TutorialHand` | Object `TutorialHand` (world, sprite `tutorial_hand`, order 80): hiện → nhấn → trượt tới ô cuối → nhấc → mờ, lặp; ẩn khi người chơi đang kéo (`GridManager.IsSelecting`) |
 
 ### Gameplay/Daily
 
@@ -192,6 +207,7 @@ Quy tắc đặt file mới:
 | `BoosterButton` | 1 nút booster: icon, số lượt (`btn_number`), dấu `+` (`btn_add_0`), ổ khóa "LV n", quầng sáng xoay khi đang bật; bấm → `BoosterManager.Press` |
 | `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số |
 | `ShieldIndicator` | Khung băng `ice_effect_2` phủ hàng tim khi có khiên; khiên chặn lỗi thì phồng to rồi mờ |
+| `TutorialView` | `Canvas_HUD/UIZone/TutorialPanel` (tắt sẵn): tiêu đề Tutorial, nút Skip, vạch tiến độ `tutorial_dot` (bước hiện tại sáng), khung lời nhắc `popup_tutorial` 9-slice (nảy nhẹ khi đổi bước). Hiện thì ẩn `TopPanel`, `DownPanel`, ẩn thì trả lại |
 | `EnergyHUD` | Icon tim (`icon_hear_2`), số năng lượng, đồng hồ / FULL / ∞; có `infiniteSprite` (ô ở Home) thì khi vô hạn đổi sang tim ∞ (`icon_hear_infinity2`) và ẩn số; bấm khi chưa đầy → `GameFlowUI.OpenEnergyRefill` |
 
 ### UI/Menu
@@ -239,20 +255,21 @@ Quy tắc đặt file mới:
 
 | File | Menu | Việc làm |
 | --- | --- | --- |
-| `Level/ShikaCatLevelImporter` | Tools → PawBlock → Import ShikaCat Levels | JSON → `LevelDefinition` + `LevelDatabase` (thêm cuối: level Test, level Custom) |
+| `Level/ShikaCatLevelImporter` | Tools → PawBlock → Builders → Import ShikaCat Levels | JSON → `LevelDefinition` + `LevelDatabase` (thêm cuối: level Test, level Custom) |
 | `Level/LevelEditorWindow` | Tools → PawBlock → Level Editor | Cửa sổ sửa / xếp level: chọn theo database, tạo mới / nhân bản vào `Levels/Custom`, đổi thứ tự; công cụ Khối / Số / Void / Xóa trên lưới; sửa hướng, khóa, "?"; Kiểm tra (LevelValidator + lời giải duy nhất), Giải, Chơi thử (`LevelEditorPlayTest` vào thẳng màn chơi) |
-| `Visuals/GameplayVisualsSetup` | Tools → PawBlock → Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, tạo `GameplayVisuals.asset` |
-| `UI/PopupBuilder` | Tools → PawBlock → Build Popups | Tạo `Canvas_Popup` (Overlay 1080x1920, sortingOrder 20) nếu chưa có, xóa rồi dựng lại `Popups` trong đó (xóa cả bản cũ trong `Canvas_HUD`), nối `GameFlowUI` cho SettingsButton / EnergyHUD / ScreenFlow, thêm `RewardedAds` vào `Manager` |
-| `UI/ShopBuilder` | Tools → PawBlock → Build Shop | Thay `ShopPanel`: mái hiên + ô năng lượng / coin, danh sách cuộn (`NestedScrollRect`, VerticalLayoutGroup): Starter Pack, Remove Ads, No Ads Bundle, Special Bundle (5 gói), lưới Coin 3x2; tạo `ShopDatabase.asset` nếu chưa có |
-| `UI/MainMenuBuilder` | Tools → PawBlock → Build Main Menu | `Canvas_Menu`: CanvasScaler 1080x1920, sortingOrder 10; `Panels` (ShopPanel – ShopBuilder, HomePanel + `PlayButton`, `Starter`, `NoAds`, `TopBar` (Avatar, Energy, Coin, Settings – ô kem `khung_pill_kem`), ProgressPanel tạm, mỗi panel `RectMask2D`); `AlwayOn/TabBar` (tab có `ButtonPress` tắt); Starter dựng từ `starter_back` / `starter_chest` / `starter_ribbon`, No Ads lắc riêng `Tv`; `MainMenuNavigator`, `MenuSwipe` trên `Panels`; `ScreenFlow` trên `Manager`; chữ viền dùng preset của `GameFontSetup` |
+| `Level/MechanicInjectorWindow` (+ `MechanicInjector`, `MechanicInjectorSettings`) | Tools → PawBlock → Mechanic Injector | Gắn Void / hướng / khóa / "?" vào level ShikaCat theo lịch trong `MechanicInjectorSettings.asset` (giới thiệu từng cơ chế, level nghỉ, kết hợp, level Hard / Very Hard nhiều cơ chế); mỗi lần gắn chạy `LevelValidator`, sai thì thử chỗ khác; random theo seed + số level nên chạy lại ra y hệt. Xem trước / Áp dụng (ghi `Levels/Mechanic`, thay vào database) / Khôi phục bản gốc |
+| `Level/LevelDifficultyWindow` (+ `LevelDifficultyAnalyzer`, `LevelDifficultySettings`) | Tools → PawBlock → Level Difficulty | Độ khó lý thuyết từng level: mô phỏng người chơi giải từng khối (T1 đơn trực tiếp / T2 loại trừ 1 bước / T3 thử sâu / T4 không có nước bắt buộc) → điểm D, thời gian, rủi ro mất mạng (công thức: `Docs/DifficultyFormula.md`, trọng số trong `LevelDifficultySettings.asset`); biểu đồ D theo level; tick Hard / Very Hard (ghi cả bản gốc ShikaCat nếu là level Mechanic), Áp dụng gợi ý theo phân vị; Xuất CSV; Nạp CSV dữ liệu thực tế → tương quan Spearman |
+| `Visuals/GameplayVisualsSetup` | Tools → PawBlock → Builders → Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, tạo `GameplayVisuals.asset` |
+| `UI/PopupBuilder` | Tools → PawBlock → Builders → Build Popups | Tạo `Canvas_Popup` (Overlay 1080x1920, sortingOrder 20) nếu chưa có, xóa rồi dựng lại `Popups` trong đó (xóa cả bản cũ trong `Canvas_HUD`), nối `GameFlowUI` cho SettingsButton / EnergyHUD / ScreenFlow, thêm `RewardedAds` vào `Manager` |
+| `UI/ShopBuilder` | Tools → PawBlock → Builders → Build Shop | Thay `ShopPanel`: mái hiên + ô năng lượng / coin, danh sách cuộn (`NestedScrollRect`, VerticalLayoutGroup): Starter Pack, Remove Ads, No Ads Bundle, Special Bundle (5 gói), lưới Coin 3x2; tạo `ShopDatabase.asset` nếu chưa có |
+| `UI/MainMenuBuilder` | Tools → PawBlock → Builders → Build Main Menu | `Canvas_Menu`: CanvasScaler 1080x1920, sortingOrder 10; `Panels` (ShopPanel – ShopBuilder, HomePanel + `PlayButton`, `Starter`, `NoAds`, `TopBar` (Avatar, Energy, Coin, Settings – ô kem `khung_pill_kem`), ProgressPanel tạm, mỗi panel `RectMask2D`); `AlwayOn/TabBar` (tab có `ButtonPress` tắt); Starter dựng từ `starter_back` / `starter_chest` / `starter_ribbon`, No Ads lắc riêng `Tv`; `MainMenuNavigator`, `MenuSwipe` trên `Panels`; `ScreenFlow` trên `Manager`; chữ viền dùng preset của `GameFontSetup` |
 | `Save/SaveDataMenu` | Tools → PawBlock → Save Data | Log Save (in nội dung save.json), Open Save Folder, Delete Save (hỏi xác nhận, không chạy khi đang Play) |
-| `Audio/AudioSetup` | Tools → PawBlock → Setup Audio | Tạo / bổ sung `AudioDatabase` (chỉ thêm âm còn thiếu), BGM nhập Streaming, object `AudioManager` (AudioManager + GameAudioEvents), `UIButtonSounds` trên 3 canvas |
-| `UI/UIZoneBuilder` | Tools → PawBlock → Build UI Zone | `Canvas_HUD/UIZone` (4 cạnh) chứa PlayZone, TopPanel, DownPanel, RevealBanner; gọi Build Main Menu để dựng `HomePanel/UIZone` (cạnh trên). Builder HUD tìm theo `PopupBuilder.HudRoot` (UIZone nếu có) |
-| `UI/PlayZoneBuilder` | Tools → PawBlock → Build Play Zone | Dựng `Canvas_HUD/PlayZone` (giãn theo màn hình, lề trên 300 / dưới 310 / hai bên 30), gán cho `LevelManager.playZone` |
-| `UI/GameFontSetup` | Tools → PawBlock → Apply Game Font | Fredoka Bold làm font mặc định TMP (fallback LiberationSans), gán shader `TMP_SDF-Mobile` theo đường dẫn, tạo preset viền `Fredoka-Bold SDF - Outline Purple / Green / Brown`, đổi font mọi chữ LiberationSans trong scene và prefab `Assets/_Project` |
-| `UI/EnergyBuilder` | Tools → PawBlock → Build Energy | Thêm `EnergyManager` vào `Manager`; xóa `TopPanel/Energy` cũ (trong ván không còn tim năng lượng) |
-| `UI/SettingsBuilder` | Tools → PawBlock → Build Settings | `TopPanel`: xóa ReplayButton / Energy, dựng `SettingsButton` góc trên phải; thay `SettingsPopup` trong `Canvas_Popup/Popups` (xóa ConfirmReplayPopup cũ) mà không dựng lại popup khác; gắn `SettingsButton` cho nút Settings trên Menu |
-| `UI/BoosterBuilder` | Tools → PawBlock → Build Boosters | Dựng phần con của 3 nút booster, `RevealBanner`, `TopPanel/LevelFrame/Shield`; thêm `BoosterManager` vào `Manager` |
+| `Audio/AudioSetup` | Tools → PawBlock → Builders → Setup Audio | Tạo / bổ sung `AudioDatabase` (chỉ thêm âm còn thiếu), BGM nhập Streaming, object `AudioManager` (AudioManager + GameAudioEvents), `UIButtonSounds` trên 3 canvas |
+| `UI/UIZoneBuilder` | Tools → PawBlock → Builders → Build UI Zone | `Canvas_HUD/UIZone` (4 cạnh) chứa PlayZone, TopPanel, DownPanel, RevealBanner; gọi Build Main Menu để dựng `HomePanel/UIZone` (cạnh trên). Builder HUD tìm theo `PopupBuilder.HudRoot` (UIZone nếu có) |
+| `UI/TutorialBuilder` | Tools → PawBlock → Builders → Build Tutorial | Dựng lại `Canvas_HUD/UIZone/TutorialPanel` (TutorialView), object `TutorialHand`, gắn `TutorialController` lên `Manager` |
+| `UI/GameFontSetup` | Tools → PawBlock → Builders → Apply Game Font | Fredoka Bold làm font mặc định TMP (fallback LiberationSans), gán shader `TMP_SDF-Mobile` theo đường dẫn, tạo preset viền `Fredoka-Bold SDF - Outline Purple / Green / Brown`, đổi font mọi chữ LiberationSans trong scene và prefab `Assets/_Project` |
+| `UI/SettingsBuilder` | Tools → PawBlock → Builders → Build Settings | `TopPanel`: xóa ReplayButton / Energy, dựng `SettingsButton` góc trên phải; thay `SettingsPopup` trong `Canvas_Popup/Popups` (xóa ConfirmReplayPopup cũ) mà không dựng lại popup khác; gắn `SettingsButton` cho nút Settings trên Menu |
+| `UI/BoosterBuilder` | Tools → PawBlock → Builders → Build Boosters | Dựng phần con của 3 nút booster, `RevealBanner`, `TopPanel/LevelFrame/Shield`; thêm `BoosterManager` vào `Manager` |
 
 ---
 
@@ -264,7 +281,8 @@ Global Light 2D
 SpawnGrid              GridSpawner
 Manager                GridManager, InputManager, DragAndDropController,
                        LivesManager, LevelManager, GameplayFeedback, RewardedAds, BoosterManager,
-                       EnergyManager, ScreenFlow
+                       EnergyManager, ScreenFlow, TutorialController
+TutorialHand           TutorialHand / Sprite (tắt sẵn): bàn tay tutorial, đầu ngón ở gốc object
 SelectionBox           SelectionBoxView + SpriteRenderer
 bg                     SpriteRenderer + BackgroundFitter
 Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920, sortingOrder 0; ScreenFlow bật khi vào màn chơi, tắt ở Menu
@@ -274,7 +292,8 @@ Canvas_HUD             Canvas Overlay, CanvasScaler 1080x1920, sortingOrder 0; S
     │   ├── LevelFrame / LevelText, Hearts (LivesUI), Shield (ShieldIndicator, khung băng)
     │   └── SettingsButton  SettingsButton (khung_setting_3 + bánh răng), góc trên phải
     ├── DownPanel/Booster  Booster1..3: BoosterButton (Hint, Shield, Reveal) / Glow, Icon, Count, Add, Lock
-    └── RevealBanner   RevealBanner + CanvasGroup (ẩn khi không chọn số)
+    ├── RevealBanner   RevealBanner + CanvasGroup (ẩn khi không chọn số)
+    └── TutorialPanel  TutorialView + CanvasGroup (tắt sẵn): Title, SkipButton, Dots/Dot1..4, Bubble/Message
 Canvas_Popup           Canvas Overlay 1080x1920, sortingOrder 20, luôn bật (dùng chung Menu và màn chơi)
 └── Popups             GameFlowUI (dựng bằng Build Popups)
     ├── WinPopup  ReviveLivesPopup  LosePopup  SettingsPopup  BuyBoosterPopup  RefillEnergyPopup   (tắt sẵn)
@@ -364,6 +383,7 @@ InputManager ─► DragAndDropController ─► GridManager.BeginSelection (ch�
 | 30 | SelectionBoxView (khung đang kéo) |
 | 40–41 | Bong bóng số ô |
 | 60 | Chữ khen |
+| 80 | Bàn tay tutorial |
 
 ### Dữ liệu level (`LevelDefinition`)
 

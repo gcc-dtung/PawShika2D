@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Điểm danh hằng ngày (Tools → PawBlock → Build Daily Reward), chạy lại được:
+/// Điểm danh hằng ngày (Tools → PawBlock → Builders → Build Daily Reward), chạy lại được:
 /// - DailyRewardDatabase.asset (chưa có thì tạo với quà mặc định 7 ngày)
 /// - DailyRewardManager trên Manager
 /// - DailyRewardPopup trong Canvas_Popup/Popups (thay bản cũ, không dựng lại popup khác), nối GameFlowUI
@@ -24,7 +24,7 @@ public static class DailyRewardBuilder
     private static readonly Color HighlightColor = new Color(1f, 0.8f, 0.15f);
     private const int ItemsPerSlot = 5; // ngày 7 mặc định 5 món
 
-    [MenuItem("Tools/PawBlock/Build Daily Reward")]
+    [MenuItem("Tools/PawBlock/Builders/Build Daily Reward", priority = 102)]
     public static void Build()
     {
         GameObject popupCanvas = PopupBuilder.FindRoot("Canvas_Popup");

@@ -13,6 +13,7 @@ public static class ShikaCatLevelImporter
     private const string JsonPath = "Assets/_Project/ShikaCat_GameAssets/03_Gameplay_Boxes_Grid/Level_Data/shikacat-levels.json";
     private const string OutputFolder = "Assets/_Project/Levels/ShikaCat";
     private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
+    private const string TestFolder = "Assets/_Project/Levels/Test";
 
     [Serializable] private class Wrapper { public SkLevel[] items; }
 
@@ -29,7 +30,7 @@ public static class ShikaCatLevelImporter
     [Serializable] private class SkCat { public int _row; public int _col; public int _size; public int _color; }
     [Serializable] private class SkRect { public int _row; public int _col; public int _width; public int _height; public int _catIndex; }
 
-    [MenuItem("Tools/PawBlock/Import ShikaCat Levels")]
+    [MenuItem("Tools/PawBlock/Builders/Import ShikaCat Levels", priority = 111)]
     public static void Import()
     {
         TextAsset json = AssetDatabase.LoadAssetAtPath<TextAsset>(JsonPath);
@@ -79,7 +80,7 @@ public static class ShikaCatLevelImporter
             database.levels.Add(AssetDatabase.LoadAssetAtPath<LevelDefinition>($"{OutputFolder}/Level_{i + 1:000}.asset"));
         }
         // Giữ level test (Levels/Test) ở cuối danh sách sau khi nhập lại
-        TestLevelBuilder.AppendTestLevels(database);
+        AppendTestLevels(database);
         LevelEditorWindow.AppendCustomLevels(database); // level tự làm bằng Level Editor (thêm vào cuối)
         EditorUtility.SetDirty(database);
         AssetDatabase.SaveAssets();
@@ -148,5 +149,18 @@ public static class ShikaCatLevelImporter
             if (!AssetDatabase.IsValidFolder(next)) AssetDatabase.CreateFolder(current, parts[i]);
             current = next;
         }
+    }
+
+    /// <summary>Thêm mọi level trong Levels/Test vào cuối database (bỏ qua level đã có).</summary>
+    private static void AppendTestLevels(LevelDatabase database)
+    {
+        if (!AssetDatabase.IsValidFolder(TestFolder)) return;
+
+        foreach (string guid in AssetDatabase.FindAssets("t:LevelDefinition", new[] { TestFolder }))
+        {
+            LevelDefinition level = AssetDatabase.LoadAssetAtPath<LevelDefinition>(AssetDatabase.GUIDToAssetPath(guid));
+            if (level != null && !database.levels.Contains(level)) database.levels.Add(level);
+        }
+        EditorUtility.SetDirty(database);
     }
 }

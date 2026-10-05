@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Bảng âm thanh: mỗi SoundId -> 1 hoặc nhiều clip (phát ngẫu nhiên), âm lượng, khoảng cao độ ngẫu nhiên,
 /// khoảng cách tối thiểu giữa 2 lần phát (chống dồn tiếng). Thêm nhạc nền.
-/// Tạo / điền sẵn bằng Tools → PawBlock → Setup Audio; chỉnh tiếp trong Inspector.
+/// Tạo / điền sẵn bằng Tools → PawBlock → Builders → Setup Audio; chỉnh tiếp trong Inspector.
 /// </summary>
 [CreateAssetMenu(fileName = "AudioDatabase", menuName = "ScriptableObjects/AudioDatabase")]
 public class AudioDatabase : ScriptableObject

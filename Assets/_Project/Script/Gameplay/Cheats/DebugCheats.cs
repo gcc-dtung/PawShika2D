@@ -171,6 +171,19 @@ public static class DebugCheats
 
     public static void SaveNow() => SaveSystem.Save(true);
 
+    /// <summary>Chơi lại tutorial từ bước 1 (xong / Skip thì về level đang chơi).</summary>
+    public static void PlayTutorial()
+    {
+        if (ScreenFlow.Instance != null) ScreenFlow.Instance.EnterTutorial();
+    }
+
+    /// <summary>Bỏ cờ đã xem tutorial: lần mở game sau (đang ở level 1) sẽ chạy lại tutorial.</summary>
+    public static void ResetTutorial()
+    {
+        SaveSystem.Data.tutorialDone = false;
+        SaveSystem.MarkDirty();
+    }
+
     /// <summary>Thử mua bằng tiền thật (chưa có SDK: luôn hiện "Purchase Failed!").</summary>
     public static void TryIAP() => IAPService.Purchase("debug_test_pack");
 }
