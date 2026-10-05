@@ -163,3 +163,4 @@ MonoBehaviour:
     height: 5
   rules:
     mistakeLimit: 3
+  difficulty: 0

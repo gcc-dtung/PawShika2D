@@ -35,10 +35,11 @@ public class MechanicInjectorSettings : ScriptableObject
 
     public List<MechanicRule> mechanics = new List<MechanicRule>
     {
-        new MechanicRule { kind = MechanicKind.Void, introLevel = 12, introLength = 3, amount = new Vector2Int(1, 2), weight = 1f },
-        new MechanicRule { kind = MechanicKind.Constraint, introLevel = 25, introLength = 3, amount = new Vector2Int(2, 3), weight = 1f },
-        new MechanicRule { kind = MechanicKind.Lock, introLevel = 40, introLength = 3, amount = new Vector2Int(1, 2), weight = 1f },
-        new MechanicRule { kind = MechanicKind.Hidden, introLevel = 60, introLength = 3, amount = new Vector2Int(1, 2), weight = 1f }
+        // Mọi cơ chế giới thiệu trước level 20 (level xếp theo độ khó bằng Reorder Levels)
+        new MechanicRule { kind = MechanicKind.Void, introLevel = 5, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f },
+        new MechanicRule { kind = MechanicKind.Constraint, introLevel = 8, introLength = 2, amount = new Vector2Int(2, 3), weight = 1f },
+        new MechanicRule { kind = MechanicKind.Lock, introLevel = 12, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f },
+        new MechanicRule { kind = MechanicKind.Hidden, introLevel = 16, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f }
     };
 
     [Header("Level thường (sau giai đoạn giới thiệu)")]
@@ -47,22 +48,22 @@ public class MechanicInjectorSettings : ScriptableObject
     [Tooltip("Level chia hết cho số này là level nghỉ: không cơ chế (0 = tắt)")]
     public int reliefEvery = 10;
     [Tooltip("Cơ chế mới nhất được ưu tiên trong số level này sau khi giới thiệu xong")]
-    public int newestBoostLevels = 15;
+    public int newestBoostLevels = 10;
     public float newestBoost = 3f;
 
     [Header("Kết hợp nhiều cơ chế")]
     [Tooltip("Từ level này mới random kết hợp 2 cơ chế")]
-    public int comboStartLevel = 70;
+    public int comboStartLevel = 30;
     [Range(0f, 1f)]
     public float comboChance = 0.25f;
-    [Tooltip("Level Hard / Very Hard luôn kết hợp 2 / 3 cơ chế (trong số đã mở)")]
+    [Tooltip("Level Hard / Very Hard luôn kết hợp 2 / 3 cơ chế (trong số đã mở), ưu tiên \"?\" → khóa → Void, không dùng hướng")]
     public bool comboOnHardLevels = true;
 
     [Header("Giới hạn")]
     [Tooltip("Số bước khóa (min, max); không vượt quá số khối còn lại")]
     public Vector2Int lockSteps = new Vector2Int(2, 5);
     [Tooltip("Sau khi bỏ khối thành Void, level còn ít nhất bấy nhiêu khối")]
-    public int minCluesAfterVoid = 5;
+    public int minCluesAfterVoid = 3; // level đầu nhỏ (4–6 khối) vẫn giới thiệu được Void
     [Range(0f, 0.6f), Tooltip("Tỉ lệ ô bị bỏ tối đa so với level gốc")]
     public float maxVoidRatio = 0.3f;
     [Tooltip("Số lần thử mỗi cơ chế trước khi bỏ cuộc (mỗi lần thử chạy LevelValidator)")]

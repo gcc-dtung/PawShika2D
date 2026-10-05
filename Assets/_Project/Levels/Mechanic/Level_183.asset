@@ -35,7 +35,7 @@ MonoBehaviour:
     value: 12
     color: 7
     mechanic:
-      constraint: 2
+      constraint: 0
       lockSteps: 0
       hidden: 0
   - id: 2
@@ -107,9 +107,9 @@ MonoBehaviour:
     value: 10
     color: 3
     mechanic:
-      constraint: 2
+      constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
   - id: 10
     x: 3
     y: 4
@@ -145,7 +145,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
   - id: 14
     x: 3
     y: 2
@@ -170,7 +170,7 @@ MonoBehaviour:
     value: 4
     color: 4
     mechanic:
-      constraint: 3
+      constraint: 0
       lockSteps: 0
       hidden: 0
   - id: 17
@@ -303,4 +303,4 @@ MonoBehaviour:
     height: 1
   rules:
     mistakeLimit: 3
-  difficulty: 0
+  difficulty: 1

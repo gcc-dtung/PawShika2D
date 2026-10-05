@@ -18,7 +18,31 @@ MonoBehaviour:
     sourceIndex: 204
   size: 12
   height: 12
-  cellOverrides: []
+  cellOverrides:
+  - x: 0
+    y: 5
+    type: 1
+  - x: 0
+    y: 6
+    type: 1
+  - x: 1
+    y: 5
+    type: 1
+  - x: 1
+    y: 6
+    type: 1
+  - x: 2
+    y: 5
+    type: 1
+  - x: 2
+    y: 6
+    type: 1
+  - x: 3
+    y: 5
+    type: 1
+  - x: 3
+    y: 6
+    type: 1
   clues:
   - id: 0
     x: 2
@@ -55,7 +79,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
   - id: 4
     x: 2
     y: 9
@@ -64,7 +88,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
   - id: 5
     x: 3
     y: 9
@@ -97,15 +121,6 @@ MonoBehaviour:
     y: 5
     value: 4
     color: 5
-    mechanic:
-      constraint: 0
-      lockSteps: 0
-      hidden: 0
-  - id: 9
-    x: 3
-    y: 5
-    value: 8
-    color: 4
     mechanic:
       constraint: 0
       lockSteps: 0
@@ -237,11 +252,6 @@ MonoBehaviour:
     y: 4
     width: 1
     height: 4
-  - clueId: 9
-    x: 0
-    y: 5
-    width: 4
-    height: 2
   - clueId: 10
     x: 4
     y: 2
@@ -289,4 +299,4 @@ MonoBehaviour:
     height: 1
   rules:
     mistakeLimit: 3
-  difficulty: 2
+  difficulty: 0

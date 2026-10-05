@@ -227,9 +227,16 @@ Booster (Hint, Khiên, Reveal) **khóa** tới khi người chơi qua tutorial c
 3. Viết tác dụng trong `BoosterManager.Press` và gọi `Consume(type)` khi booster thực sự có tác dụng (để lần miễn phí được tính đúng).
 4. Không cần sửa `BoosterTutorial`: nó đọc danh sách từ database và tìm nút theo `BoosterButton.Type`.
 
+**Khiên – bước 2 "kéo sai thử"** (khiên bật thì chỉ thấy lớp băng, chưa hiểu tác dụng):
+
+1. Bấm Khiên xong 0.2 s: nền tối tắt, lưới mở, khung lời nhắc xuống dưới hàng tim (`BoosterTutorialView.messageOnlyY`) để thấy lớp băng: "Now make a wrong move like this - the Shield will block it!".
+2. Bàn tay (`TutorialHand`, dùng chung với tutorial lần đầu) kéo mẫu 1 vùng **đúng số ô nhưng làm lưới hết lời giải** (`BoosterTutorial.FindWrongMove`, chọn số nhỏ nhất cho dễ kéo). Người chơi đặt đúng thay vì sai thì bàn tay chỉ lại cách sai trên lưới mới.
+3. Kéo sai → khiên chặn (`LivesManager.onShieldBlocked`) → "The Shield saved you - no life lost!" 2 s rồi tắt. Thắng / nạp level khác thì bỏ bước này.
+4. Chữ ở 2 bước: Inspector `Manager` → `BoosterTutorial` (`wrongMoveMessage`, `savedMessage`, `savedMessageTime`).
+
 **Chỉnh giao diện:** vị trí / cỡ khung lời nhắc, độ tối nền, bàn tay trong `TutorialBuilder.BuildBoosterPanel` → chạy lại **Build Tutorial** → lưu scene. Độ lệch đầu ngón tay so với tâm nút: Inspector `BoosterTutorial` → `BoosterTutorialView.handOffset`. Thời gian chờ trước khi tối màn: `BoosterTutorial.startDelay`.
 
-**Kiểm tra:** Debug Panel → Booster → **Khóa lại tất cả**, rồi Đổi + vào ván level ≥ level mở (vd. 5). Lần lượt thấy Hint (level ≥ 5), Khiên (≥ 7), Reveal (≥ 9), mỗi lần nạp level một cái. Kiểm:
+**Kiểm tra:** Debug Panel → Booster → **Khóa lại tất cả**, rồi Đổi + vào ván level ≥ level mở (vd. 5). Lần lượt thấy Hint (level ≥ 5), Khiên (≥ 7), Reveal (≥ 9), mỗi lần nạp level một cái. Khiên: bấm xong thì làm đúng cách kéo sai bàn tay chỉ → lời nhắc "The Shield saved you", mạng không giảm. Kiểm:
 
 - chỉ nút được chỉ bấm được, lưới và nút khác bị chặn;
 - bấm thì booster chạy và số lượt không giảm;

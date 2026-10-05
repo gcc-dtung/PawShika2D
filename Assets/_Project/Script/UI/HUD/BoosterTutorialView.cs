@@ -7,6 +7,7 @@ using UnityEngine.UI;
 /// Giao diện tutorial mở khóa booster (Canvas_HUD/BoosterTutorial, Canvas riêng sortingOrder 5):
 /// nền tối chặn mọi thao tác, khung lời nhắc trên cùng, bàn tay nhấn liên tục vào nút booster.
 /// Nút booster được "nhấc" lên trên nền tối bằng Canvas override sorting (thêm lúc chạy nếu chưa có) và bật quầng sáng.
+/// Thứ tự: nền tối (order nền) < nút (nền + 1) < bàn tay (Canvas riêng, nền + 2).
 /// </summary>
 public class BoosterTutorialView : MonoBehaviour
 {
@@ -17,6 +18,10 @@ public class BoosterTutorialView : MonoBehaviour
     [SerializeField] private RectTransform hand;
     [Tooltip("Đầu ngón tay lệch khỏi tâm nút (đơn vị canvas)")]
     [SerializeField] private Vector2 handOffset = new Vector2(20f, -20f);
+    [Tooltip("ShowMessage (không nền tối): khung xuống dưới hàng tim để thấy lớp băng khiên")]
+    [SerializeField] private float messageOnlyY = -390f;
+
+    private float _bubbleY = float.NaN; // vị trí dựng sẵn (đè khung LEVEL)
 
     private BoosterButton _target;
     private Canvas _targetCanvas;
@@ -24,9 +29,38 @@ public class BoosterTutorialView : MonoBehaviour
     private int _targetOrder;
     private Tween _handTween;
 
+    /// <summary>
+    /// Chỉ khung lời nhắc, không nền tối / bàn tay / nút: lưới vẫn kéo được (bước 2 tutorial Khiên: "kéo sai thử").
+    /// Khung và chữ không nhận chạm nên không chặn thao tác.
+    /// </summary>
+    public void ShowMessage(string text)
+    {
+        _handTween?.Kill();
+        _handTween = null;
+        if (_target != null)
+        {
+            _target.SetHighlight(false);
+            RaiseTarget(false);
+            _target = null;
+        }
+        gameObject.SetActive(true);
+        SetDim(false);
+        SetBubbleY(messageOnlyY);
+        if (hand != null) hand.gameObject.SetActive(false);
+        if (message != null) message.text = text;
+        if (group != null)
+        {
+            group.DOKill();
+            group.alpha = 1f;
+        }
+        PopBubble();
+    }
+
     public void Show(BoosterButton target, string text)
     {
         gameObject.SetActive(true);
+        SetDim(true);
+        SetBubbleY(float.NaN);
         _target = target;
         if (message != null) message.text = text;
 
@@ -39,13 +73,31 @@ public class BoosterTutorialView : MonoBehaviour
             group.alpha = 0f;
             group.DOFade(1f, 0.25f).SetLink(gameObject);
         }
-        if (bubble != null)
-        {
-            bubble.DOKill();
-            bubble.localScale = Vector3.one * 0.9f;
-            bubble.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetLink(bubble.gameObject);
-        }
+        PopBubble();
         PlayHand(target);
+    }
+
+    private void PopBubble()
+    {
+        if (bubble == null) return;
+        bubble.DOKill();
+        bubble.localScale = Vector3.one * 0.9f;
+        bubble.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetLink(bubble.gameObject);
+    }
+
+    /// <summary>NaN = về vị trí dựng sẵn.</summary>
+    private void SetBubbleY(float y)
+    {
+        if (bubble == null) return;
+        if (float.IsNaN(_bubbleY)) _bubbleY = bubble.anchoredPosition.y;
+        bubble.anchoredPosition = new Vector2(bubble.anchoredPosition.x, float.IsNaN(y) ? _bubbleY : y);
+    }
+
+    /// <summary>Nền tối (con "Dim") bật = chặn mọi thao tác ngoài nút được chỉ.</summary>
+    private void SetDim(bool on)
+    {
+        Transform dim = transform.Find("Dim");
+        if (dim != null) dim.gameObject.SetActive(on);
     }
 
     public void Hide()
@@ -90,6 +142,11 @@ public class BoosterTutorialView : MonoBehaviour
         if (hand == null) return;
         _handTween?.Kill();
         hand.gameObject.SetActive(true);
+        // Bàn tay vẽ trên nút booster (nút đã nhấc lên order nền + 1): Canvas riêng order nền + 2
+        Canvas handCanvas = hand.GetComponent<Canvas>();
+        if (handCanvas == null) handCanvas = hand.gameObject.AddComponent<Canvas>();
+        handCanvas.overrideSorting = true;
+        handCanvas.sortingOrder = (canvas != null ? canvas.sortingOrder : 5) + 2;
         hand.position = ((RectTransform)target.transform).position;
         hand.anchoredPosition += handOffset;
         hand.localScale = Vector3.one;

@@ -55,7 +55,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
   - id: 4
     x: 5
     y: 7
@@ -109,7 +109,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
   - id: 10
     x: 0
     y: 0

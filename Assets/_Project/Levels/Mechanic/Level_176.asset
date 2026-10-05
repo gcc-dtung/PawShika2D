@@ -45,7 +45,7 @@ MonoBehaviour:
     color: 6
     mechanic:
       constraint: 0
-      lockSteps: 2
+      lockSteps: 0
       hidden: 0
   - id: 3
     x: 4
@@ -91,7 +91,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
   - id: 8
     x: 4
     y: 1
@@ -108,7 +108,7 @@ MonoBehaviour:
     color: 2
     mechanic:
       constraint: 0
-      lockSteps: 4
+      lockSteps: 0
       hidden: 0
   - id: 10
     x: 5
@@ -117,7 +117,7 @@ MonoBehaviour:
     color: 2
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 4
       hidden: 0
   - id: 11
     x: 1
@@ -126,7 +126,7 @@ MonoBehaviour:
     color: 6
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 2
       hidden: 0
   solution:
   - clueId: 0

@@ -77,6 +77,7 @@ T và R so trực tiếp được với "thời gian giải trung bình" và "s�
 
 ## 4. Gợi ý Hard / Very Hard
 
+- **Đánh dấu hiện tại do Reorder Levels đặt theo vị trí** (đỉnh mỗi khối 10 level: ...9 Hard, chia 30 dư 29 Very Hard). Bấm **Áp dụng gợi ý** sẽ thay bằng đánh dấu theo phân vị bên dưới (chạy lại Mechanic Injector sau đó).
 - Chỉ xét level từ `minLevelForHard` (15) trở đi, không xét level trong `Levels/Test`.
 - Xếp các level này theo D giảm dần: `veryHardShare` (4%) đầu tiên là **Very Hard**, `hardShare` (10%) kế tiếp là **Hard**.
 - Tick cột **Hard** / **V.Hard** trong tool để đổi `LevelDefinition.difficulty`. Game sẽ hiện tab mức khó trên nút PLAY, khung HUD và hiệu ứng vào màn. **Áp dụng gợi ý** đặt theo đúng cột Gợi ý.

@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-05 11:56 |
+| Trạng thái | Đã push |
+| Commit | `25db7d6` "Tutorial mở khóa booster, popup cơ chế, Level 1 4x4, sửa confetti" (nhánh `Day-4`) |
+| Thời gian push | 2026-10-05 17:30 |
+| Cập nhật lần cuối | 2026-10-05 17:31 |
 
 ## Tóm tắt
 

@@ -90,7 +90,7 @@ MonoBehaviour:
     color: 4
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 5
       hidden: 0
   - id: 8
     x: 6
@@ -127,7 +127,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
   solution:
   - clueId: 0
     x: 0
@@ -191,4 +191,4 @@ MonoBehaviour:
     height: 1
   rules:
     mistakeLimit: 3
-  difficulty: 2
+  difficulty: 1

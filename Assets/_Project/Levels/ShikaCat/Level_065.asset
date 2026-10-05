@@ -191,4 +191,4 @@ MonoBehaviour:
     height: 1
   rules:
     mistakeLimit: 3
-  difficulty: 2
+  difficulty: 0

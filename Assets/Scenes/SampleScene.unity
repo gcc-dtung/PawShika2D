@@ -2799,6 +2799,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 181314146}
   startDelay: 0.3
+  wrongMoveMessage: Now make a wrong move like this - the Shield will block it!
+  savedMessage: The Shield saved you - no life lost!
+  savedMessageTime: 2
 --- !u!114 &82617391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7834,6 +7837,7 @@ MonoBehaviour:
   bubble: {fileID: 156639385}
   hand: {fileID: 1340034905}
   handOffset: {x: 20, y: -20}
+  messageOnlyY: -390
 --- !u!225 &181314147
 CanvasGroup:
   m_ObjectHideFlags: 0

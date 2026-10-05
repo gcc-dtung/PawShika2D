@@ -19,11 +19,23 @@ MonoBehaviour:
   size: 7
   height: 7
   cellOverrides:
-  - x: 0
-    y: 5
+  - x: 3
+    y: 0
     type: 1
-  - x: 0
-    y: 6
+  - x: 3
+    y: 1
+    type: 1
+  - x: 4
+    y: 0
+    type: 1
+  - x: 4
+    y: 1
+    type: 1
+  - x: 5
+    y: 0
+    type: 1
+  - x: 5
+    y: 1
     type: 1
   - x: 2
     y: 6
@@ -41,20 +53,20 @@ MonoBehaviour:
     y: 6
     type: 1
   clues:
+  - id: 0
+    x: 0
+    y: 6
+    value: 2
+    color: 0
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
   - id: 1
     x: 6
     y: 1
     value: 2
     color: 1
-    mechanic:
-      constraint: 0
-      lockSteps: 0
-      hidden: 0
-  - id: 2
-    x: 3
-    y: 1
-    value: 6
-    color: 2
     mechanic:
       constraint: 0
       lockSteps: 0
@@ -103,7 +115,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
   - id: 9
     x: 6
     y: 3
@@ -114,15 +126,15 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
   solution:
+  - clueId: 0
+    x: 0
+    y: 5
+    width: 1
+    height: 2
   - clueId: 1
     x: 6
     y: 0
     width: 1
-    height: 2
-  - clueId: 2
-    x: 3
-    y: 0
-    width: 3
     height: 2
   - clueId: 3
     x: 0

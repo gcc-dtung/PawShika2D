@@ -36,7 +36,7 @@ MonoBehaviour:
     color: 1
     mechanic:
       constraint: 0
-      lockSteps: 3
+      lockSteps: 0
       hidden: 0
   - id: 2
     x: 6
@@ -62,7 +62,7 @@ MonoBehaviour:
     value: 12
     color: 6
     mechanic:
-      constraint: 1
+      constraint: 0
       lockSteps: 0
       hidden: 0
   - id: 5
@@ -71,7 +71,7 @@ MonoBehaviour:
     value: 5
     color: 5
     mechanic:
-      constraint: 2
+      constraint: 0
       lockSteps: 0
       hidden: 0
   - id: 6
@@ -98,7 +98,7 @@ MonoBehaviour:
     value: 6
     color: 7
     mechanic:
-      constraint: 1
+      constraint: 0
       lockSteps: 0
       hidden: 0
   - id: 9
@@ -171,7 +171,7 @@ MonoBehaviour:
     color: 4
     mechanic:
       constraint: 0
-      lockSteps: 5
+      lockSteps: 0
       hidden: 0
   - id: 17
     x: 10
@@ -180,7 +180,7 @@ MonoBehaviour:
     color: 0
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 3
       hidden: 0
   solution:
   - clueId: 0
@@ -275,4 +275,4 @@ MonoBehaviour:
     height: 1
   rules:
     mistakeLimit: 3
-  difficulty: 1
+  difficulty: 0

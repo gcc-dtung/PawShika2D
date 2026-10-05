@@ -16,9 +16,21 @@ MonoBehaviour:
   source:
     game: ShikaCat
     sourceIndex: 105
-  size: 5
+  size: 7
   height: 7
-  cellOverrides: []
+  cellOverrides:
+  - x: 0
+    y: 0
+    type: 1
+  - x: 0
+    y: 1
+    type: 1
+  - x: 0
+    y: 2
+    type: 1
+  - x: 0
+    y: 3
+    type: 1
   clues:
   - id: 0
     x: 0
@@ -45,13 +57,13 @@ MonoBehaviour:
     color: 4
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 2
       hidden: 0
-  - id: 4
-    x: 0
-    y: 3
-    value: 4
-    color: 0
+  - id: 3
+    x: 6
+    y: 1
+    value: 12
+    color: 6
     mechanic:
       constraint: 0
       lockSteps: 0
@@ -64,7 +76,7 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
   - id: 6
     x: 4
     y: 1
@@ -79,6 +91,15 @@ MonoBehaviour:
     y: 0
     value: 2
     color: 2
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+  - id: 8
+    x: 5
+    y: 0
+    value: 2
+    color: 3
     mechanic:
       constraint: 0
       lockSteps: 0
@@ -99,11 +120,11 @@ MonoBehaviour:
     y: 2
     width: 1
     height: 5
-  - clueId: 4
-    x: 0
-    y: 0
-    width: 1
-    height: 4
+  - clueId: 3
+    x: 5
+    y: 1
+    width: 2
+    height: 6
   - clueId: 5
     x: 1
     y: 1
@@ -116,6 +137,11 @@ MonoBehaviour:
     height: 2
   - clueId: 7
     x: 1
+    y: 0
+    width: 2
+    height: 1
+  - clueId: 8
+    x: 5
     y: 0
     width: 2
     height: 1

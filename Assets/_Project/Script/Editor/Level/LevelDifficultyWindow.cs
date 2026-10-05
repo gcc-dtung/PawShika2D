@@ -8,7 +8,8 @@ using UnityEngine;
 
 /// <summary>
 /// Tools → PawBlock → Level Difficulty: độ khó lý thuyết của mọi level trong LevelDatabase (LevelDifficultyAnalyzer).
-/// - Biểu đồ điểm D theo level (màu = đánh dấu Hard / Very Hard, chấm trắng = gợi ý), bảng chỉ số từng level.
+/// - Biểu đồ điểm D theo level (màu = đánh dấu Hard / Very Hard, chấm trắng = gợi ý), rê chuột hiện level / D, bấm mở Level Editor;
+///   bảng chỉ số từng level.
 /// - Tick Hard / Very Hard để level hiện giao diện khó trong game (LevelDefinition.difficulty). Level trong Levels/Mechanic
 ///   ghi cả bản gốc ShikaCat để Mechanic Injector chạy lại vẫn giữ.
 /// - Xuất CSV chỉ số lý thuyết; nạp CSV dữ liệu thực tế (cột level / id / name + cột số bất kỳ) để xem tương quan Spearman.
@@ -64,6 +65,7 @@ public class LevelDifficultyWindow : EditorWindow
 
     private void OnEnable()
     {
+        wantsMouseMove = true; // chú thích khi rê chuột trên biểu đồ
         _database = AssetDatabase.LoadAssetAtPath<LevelDatabase>(DatabasePath);
         _settings = AssetDatabase.LoadAssetAtPath<LevelDifficultySettings>(SettingsPath);
         if (_settings == null)
@@ -126,6 +128,7 @@ public class LevelDifficultyWindow : EditorWindow
 
     private void OnGUI()
     {
+        if (Event.current.type == EventType.MouseMove) Repaint();
         if (_database == null)
         {
             EditorGUILayout.HelpBox($"Không tìm thấy {DatabasePath}.", MessageType.Error);
@@ -215,6 +218,41 @@ public class LevelDifficultyWindow : EditorWindow
             }
         }
         GUI.Label(new Rect(rect.x + 4, rect.y + 2, 400, 16), $"D tối đa {max:0.0}" + (metric != null ? $" · chấm xanh: {metric} (thực tế)" : ""), EditorStyles.miniLabel);
+        DrawChartHover(rect, barW, metric);
+    }
+
+    /// <summary>Rê chuột trên biểu đồ: viền cột đang chỉ + hộp "Level n · tên · D · giây · Hard...". Bấm để mở Level Editor.</summary>
+    private void DrawChartHover(Rect rect, float barW, string metric)
+    {
+        Vector2 mouse = Event.current.mousePosition;
+        if (!rect.Contains(mouse) || barW <= 0f) return;
+        int index = Mathf.Clamp((int)((mouse.x - rect.x) / barW), 0, _rows.Count - 1);
+        Row r = _rows[index];
+
+        Rect col = new Rect(rect.x + index * barW, rect.y, Mathf.Max(2f, barW), rect.height);
+        EditorGUI.DrawRect(new Rect(col.x, col.y, col.width, 1), Color.white);
+        EditorGUI.DrawRect(new Rect(col.x, col.yMax - 1, col.width, 1), Color.white);
+        EditorGUI.DrawRect(new Rect(col.x, col.y, 1, col.height), Color.white);
+        EditorGUI.DrawRect(new Rect(col.xMax - 1, col.y, 1, col.height), Color.white);
+
+        string text = $"Level {r.number} · {r.level.name}\nD {r.report.score:0.0} · {r.report.seconds:0}s · {r.report.t1}/{r.report.t2}/{r.report.t3}/{r.report.t4}";
+        if (r.level.difficulty != LevelDifficulty.Normal) text += $" · {r.level.difficulty}";
+        double? real = metric != null ? RealValue(r, metric) : null;
+        if (real.HasValue) text += $"\n{metric}: {real.Value.ToString("0.###", CultureInfo.InvariantCulture)}";
+
+        GUIContent content = new GUIContent(text);
+        Vector2 size = EditorStyles.helpBox.CalcSize(content) + new Vector2(8, 4);
+        // Hộp nằm bên phải chuột, sát mép phải thì lật sang trái
+        float x = mouse.x + 12 + size.x > rect.xMax ? mouse.x - 12 - size.x : mouse.x + 12;
+        Rect box = new Rect(x, rect.y + 4, size.x, size.y);
+        EditorGUI.DrawRect(box, new Color(0.08f, 0.08f, 0.1f, 0.95f));
+        GUI.Label(box, content, EditorStyles.whiteMiniLabel);
+
+        if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+        {
+            LevelEditorWindow.Open(r.level);
+            Event.current.Use();
+        }
     }
 
     private void DrawRealData()

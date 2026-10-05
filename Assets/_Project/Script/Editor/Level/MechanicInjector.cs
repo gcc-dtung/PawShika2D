@@ -21,6 +21,8 @@ public static class MechanicInjector
         /// <summary>Cơ chế người chơi đã được giới thiệu tới level này (dùng để thay khi gắn hỏng).</summary>
         public readonly List<MechanicKind> unlocked = new List<MechanicKind>();
         public bool intro;
+        /// <summary>Level Hard / Very Hard: chỉ gắn cơ chế làm khó hơn (không thay bằng mũi tên hướng khi gắn hỏng).</summary>
+        public bool hard;
         public string reason;
 
         public override string ToString() => kinds.Count == 0 ? "—" : string.Join(" + ", kinds);
@@ -148,6 +150,21 @@ public static class MechanicInjector
             plan.reason = "Thường";
         }
 
+        if (hard)
+        {
+            plan.hard = true;
+            // Level khó: chỉ cơ chế làm level khó hơn. "?" / khóa giấu thông tin; Void đổi hình lưới (dễ đi chút) nên xếp sau;
+            // mũi tên hướng cho thêm thông tin (dễ đi) nên không dùng.
+            MechanicKind[] hardOrder = { MechanicKind.Hidden, MechanicKind.Lock, MechanicKind.Void };
+            foreach (MechanicKind kind in hardOrder)
+            {
+                if (plan.kinds.Count >= count) break;
+                if (pool.Exists(r => r.kind == kind)) plan.kinds.Add(kind);
+            }
+            plan.kinds.Sort();
+            return plan;
+        }
+
         while (plan.kinds.Count < count && pool.Count > 0)
         {
             MechanicInjectorSettings.MechanicRule pick = PickWeighted(pool, r =>
@@ -200,7 +217,9 @@ public static class MechanicInjector
             if (plan.intro) continue; // level giới thiệu không thay cơ chế khác
 
             // Thay bằng cơ chế đã mở khác (ưu tiên hướng: luôn giữ nguyên lời giải)
-            MechanicKind[] fallbacks = { MechanicKind.Constraint, MechanicKind.Void, MechanicKind.Hidden, MechanicKind.Lock };
+            MechanicKind[] fallbacks = plan.hard
+                ? new[] { MechanicKind.Lock, MechanicKind.Hidden, MechanicKind.Void }
+                : new[] { MechanicKind.Constraint, MechanicKind.Void, MechanicKind.Hidden, MechanicKind.Lock };
             foreach (MechanicKind f in fallbacks)
             {
                 if (tried.Contains(f) || plan.kinds.Contains(f) || !plan.unlocked.Contains(f)) continue;
