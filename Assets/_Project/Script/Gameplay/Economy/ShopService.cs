@@ -26,9 +26,7 @@ public static class ShopService
     public static void Grant(ShopProduct product)
     {
         if (product.coin > 0) CoinWallet.Add(product.coin);
-        AddBooster(BoosterType.Hint, product.hint);
-        AddBooster(BoosterType.Shield, product.shield);
-        AddBooster(BoosterType.Reveal, product.reveal);
+        foreach (BoosterType type in Enum.GetValues(typeof(BoosterType))) AddBooster(type, product.BoosterAmount(type));
         if (product.infiniteMinutes > 0 && EnergyManager.Instance != null) EnergyManager.Instance.AddInfinite(product.infiniteMinutes * 60);
         if (product.removeAds && !SaveSystem.Data.noAds)
         {

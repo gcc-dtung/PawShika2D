@@ -62,7 +62,7 @@ public class PlayButtonView : MonoBehaviour
 
     private void OnEnable()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(SetLevel);
+        EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
         Refresh();
 
         transform.localScale = Vector3.one;
@@ -74,7 +74,7 @@ public class PlayButtonView : MonoBehaviour
 
     private void OnDisable()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(SetLevel);
+        EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
         _breath?.Kill();
         _breath = null;
         transform.localScale = Vector3.one;
@@ -89,6 +89,8 @@ public class PlayButtonView : MonoBehaviour
     {
         if (LevelManager.Instance != null) SetLevel(LevelManager.Instance.CurrentLevelNumber);
     }
+
+    private void OnLevelLoaded(LevelLoadedEvent e) => SetLevel(e.Number);
 
     private void SetLevel(int number)
     {

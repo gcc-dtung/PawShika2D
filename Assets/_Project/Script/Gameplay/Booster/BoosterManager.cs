@@ -1,65 +1,78 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
 /// <summary>
-/// Luật 3 booster (Giai đoạn 4). Nút trên HUD chỉ gọi Press(type); popup mua nghe onBuyRequested.
-/// - Hint: tự đặt 1 khối đúng, lấy từ lời giải khớp với các khối đã đặt.
-/// - Khiên (thay Freeze Time): chặn lần sai kế tiếp trong level này (LivesManager bỏ qua 1 lần trừ mạng).
-/// - Reveal: vào chế độ chọn số; chạm 1 ô số -> giải mọi khối cùng số (ô còn khóa thì bỏ qua).
-/// Lượt chỉ bị trừ khi booster thực sự có tác dụng.
-/// Khóa tới khi qua tutorial mở khóa (BoosterTutorial); lần dùng trong tutorial không trừ lượt.
+/// Phần chung của mọi booster: khóa / mở, đếm lượt, mua, lượt miễn phí của tutorial, khóa lưới khi tự đặt khối.
+/// Luật riêng từng booster nằm ở BoosterEffect (Strategy: HintBooster, ShieldBooster, RevealBooster), tạo bằng BoosterEffectFactory.
+/// Nút trên HUD chỉ gọi Press(type); popup mua nghe onBuyRequested. Lượt chỉ bị trừ khi booster thực sự có tác dụng.
+/// Tutorial mở khóa (BoosterTutorial): BeginTutorial(type) -> chỉ nút đó bấm được; bấm -> TutorialPressed, lần dùng này miễn phí.
 /// </summary>
-public class BoosterManager : Singleton<BoosterManager>
+public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
 {
     [SerializeField] private BoosterDatabase database;
     [Tooltip("Khoảng cách giữa các khối Reveal tự đặt")]
     [SerializeField] private float revealStagger = 0.12f;
 
     [Header("Events")]
-    public UnityEvent<BoosterType> onBuyRequested = new UnityEvent<BoosterType>(); // hết lượt -> mở popup mua
-    public UnityEvent<bool> onRevealModeChanged = new UnityEvent<bool>();
+    public UnityEvent<BoosterType> onBuyRequested = new UnityEvent<BoosterType>();        // hết lượt -> mở popup mua
+    public UnityEvent<BoosterType, bool> onModeChanged = new UnityEvent<BoosterType, bool>(); // bật / tắt chế độ chờ (Reveal)
     public UnityEvent<BoosterType> onBoosterUsed = new UnityEvent<BoosterType>();
+    public UnityEvent onTutorialChanged = new UnityEvent();                                  // bắt đầu / xong tutorial mở khóa
 
-    private bool _revealMode;
-    private Sequence _revealPlacing; // Reveal đang đặt lần lượt từng khối
-    private BoosterType? _freeUse;   // lần dùng trong tutorial mở khóa: không trừ lượt (Reveal: tới khi chọn số)
+    /// <summary>Người chơi bấm đúng nút tutorial đang chỉ (BoosterTutorial mở khóa, rồi booster chạy luôn).</summary>
+    public event Action<BoosterType> TutorialPressed;
+
+    private readonly Dictionary<BoosterType, BoosterEffect> _effects = new Dictionary<BoosterType, BoosterEffect>();
+    private Sequence _placing;      // đang tự đặt lần lượt từng khối (Reveal)
+    private BoosterType? _freeUse;  // lần dùng trong tutorial mở khóa: không trừ lượt (Reveal: tới khi chọn số)
 
     public BoosterDatabase Database => database;
-    public bool IsRevealMode => _revealMode;
-    public bool IsBusy => _revealPlacing != null;
+    public bool IsBusy => _placing != null;
 
-    private void Start()
+    /// <summary>Booster tutorial đang chỉ vào (chỉ nút này bấm được), null nếu không có tutorial.</summary>
+    public BoosterType? TutorialTarget { get; private set; }
+
+    // IBoosterHost
+    public GridManager Grid => GridManager.Instance;
+    public LivesManager Lives => LivesManager.Instance;
+
+    protected override void Awake()
     {
-        if (LevelManager.Instance != null)
+        base.Awake();
+        foreach (BoosterType type in Enum.GetValues(typeof(BoosterType)))
         {
-            LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
-            LevelManager.Instance.onStateChanged.AddListener(OnStateChanged);
+            BoosterEffect effect = BoosterEffectFactory.Create(type);
+            if (effect == null) continue;
+            effect.Bind(this);
+            _effects[type] = effect;
         }
+    }
+
+    private void OnEnable()
+    {
+        EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
+        EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
     }
 
     private void OnDisable()
     {
-        KillRevealPlacing();
-    }
-
-    private void OnDestroy()
-    {
-        if (LevelManager.Instance == null) return;
-        LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
-        LevelManager.Instance.onStateChanged.RemoveListener(OnStateChanged);
+        EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+        KillPlacing();
     }
 
     // ---------- Trạng thái nút ----------
 
     public BoosterData Get(BoosterType type) => database != null ? database.Get(type) : null;
 
-    /// <summary>Đã qua tutorial mở khóa (BoosterTutorial), hoặc đang trong tutorial của chính booster này.</summary>
+    /// <summary>Đã qua tutorial mở khóa, hoặc đang trong tutorial của chính booster này.</summary>
     public bool IsUnlocked(BoosterType type)
     {
         if (Get(type) == null) return false;
-        return SaveSystem.Data.IsBoosterUnlocked(type) || (BoosterTutorial.Active && BoosterTutorial.Target == type);
+        return SaveSystem.Data.IsBoosterUnlocked(type) || TutorialTarget == type;
     }
 
     public int Count(BoosterType type)
@@ -68,43 +81,50 @@ public class BoosterManager : Singleton<BoosterManager>
         return data != null ? BoosterInventory.Get(data) : 0;
     }
 
-    public bool IsActive(BoosterType type) =>
-        type == BoosterType.Shield ? LivesManager.Instance != null && LivesManager.Instance.HasShield
-        : type == BoosterType.Reveal && _revealMode;
+    public bool IsActive(BoosterType type) => _effects.TryGetValue(type, out BoosterEffect e) && e.IsActive;
 
     /// <summary>Bấm nút booster trên HUD.</summary>
     public void Press(BoosterType type)
     {
-        // Tutorial mở khóa: chỉ nhận đúng nút đang chỉ; bấm -> mở khóa, lần dùng này miễn phí
-        if (BoosterTutorial.Active)
+        if (TutorialTarget.HasValue)
         {
-            if (type != BoosterTutorial.Target || BoosterTutorial.Instance == null) return;
-            BoosterTutorial.Instance.Complete();
-            _freeUse = type;
+            if (type != TutorialTarget.Value) return;
+            TutorialTarget = null;
+            _freeUse = type; // dùng được cả khi hết lượt
+            onTutorialChanged?.Invoke();
+            TutorialPressed?.Invoke(type);
         }
-        if (!IsUnlocked(type) || !CanPlay()) return;
+        if (!IsUnlocked(type) || !CanPlay() || !_effects.TryGetValue(type, out BoosterEffect effect)) return;
 
-        // Bấm lại Reveal khi đang chọn số = hủy
-        if (type == BoosterType.Reveal && _revealMode)
+        if (effect.IsActive)
         {
-            SetRevealMode(false);
+            effect.PressWhileActive(); // vd bấm lại Reveal = hủy chọn số
             return;
         }
-        if (IsActive(type)) return;
 
-        if (Count(type) <= 0 && _freeUse != type) // lần miễn phí của tutorial dùng được cả khi hết lượt
+        CancelModes();
+        if (Count(type) <= 0 && _freeUse != type)
         {
-            SetRevealMode(false);
             onBuyRequested?.Invoke(type);
             return;
         }
+        effect.Activate();
+    }
 
-        switch (type)
+    /// <summary>Thoát mọi chế độ chờ (nút X trên banner Reveal...).</summary>
+    public void CancelModes()
+    {
+        foreach (BoosterEffect effect in _effects.Values) effect.Cancel();
+    }
+
+    /// <summary>DragAndDropController gọi khi chạm 1 ô. Trả về true nếu 1 booster đã xử lý chạm.</summary>
+    public bool HandleCellTap(Vector2Int pos)
+    {
+        foreach (BoosterEffect effect in _effects.Values)
         {
-            case BoosterType.Hint: UseHint(); break;
-            case BoosterType.Shield: UseShield(); break;
-            case BoosterType.Reveal: SetRevealMode(true); break;
+            if (effect.HandleCellTap(pos)) return true;
         }
+        return false;
     }
 
     /// <summary>Mua valueOneBuy lượt bằng coin.</summary>
@@ -116,93 +136,26 @@ public class BoosterManager : Singleton<BoosterManager>
         return true;
     }
 
-    // ---------- Hint ----------
+    // ---------- Tutorial mở khóa ----------
 
-    private void UseHint()
+    public void BeginTutorial(BoosterType type)
     {
-        SetRevealMode(false);
-        GridManager gm = GridManager.Instance;
-        if (gm == null || gm.Board == null || !gm.Board.TrySolveRemaining(out List<RectInt> remaining)) return;
-
-        // Chọn khối nhỏ nhất đang đặt được (ô số không còn khóa) cho dễ thấy
-        RectInt? pick = null;
-        foreach (RectInt rect in remaining)
-        {
-            if (!gm.Board.Check(rect).IsReady) continue;
-            if (pick == null || rect.width * rect.height < pick.Value.width * pick.Value.height) pick = rect;
-        }
-        if (pick == null || !gm.PlaceSolved(pick.Value)) return;
-
-        Consume(BoosterType.Hint);
+        CancelModes();
+        if (Grid != null) Grid.CancelSelection();
+        TutorialTarget = type;
+        onTutorialChanged?.Invoke();
     }
 
-    // ---------- Khiên ----------
-
-    private void UseShield()
+    public void EndTutorial()
     {
-        SetRevealMode(false);
-        if (LivesManager.Instance == null || !LivesManager.Instance.ActivateShield()) return;
-        Consume(BoosterType.Shield);
+        if (!TutorialTarget.HasValue) return;
+        TutorialTarget = null;
+        onTutorialChanged?.Invoke();
     }
 
-    // ---------- Reveal ----------
+    // ---------- IBoosterHost ----------
 
-    /// <summary>DragAndDropController gọi khi chạm 1 ô lúc đang ở chế độ Reveal. Trả về true nếu đã xử lý chạm.</summary>
-    public bool HandleCellTap(Vector2Int pos)
-    {
-        if (!_revealMode) return false;
-
-        GridManager gm = GridManager.Instance;
-        CellModel cell = gm != null && gm.Board != null ? gm.Board.GetCell(pos) : null;
-        // Chạm ô không phải số / đã có khối / còn khóa: giữ chế độ chọn, chờ chạm lại
-        // [MECHANIC] Reveal: ô số nào không được chọn (cơ chế che số / chặn chọn)
-        if (cell == null || !cell.HasClue || cell.IsOccupied || cell.Clue.IsLocked) return true;
-        if (!gm.Board.TrySolveRemaining(out List<RectInt> remaining)) return true;
-
-        int value = cell.Clue.Value;
-        List<RectInt> targets = new List<RectInt>();
-        foreach (RectInt rect in remaining)
-        {
-            PlacementCheck check = gm.Board.Check(rect);
-            if (check.IsReady && check.ClueCell.Clue.Value == value) targets.Add(rect);
-        }
-        if (targets.Count == 0) return true;
-
-        SetRevealMode(false);
-        Consume(BoosterType.Reveal);
-        PlaceInSequence(targets);
-        return true;
-    }
-
-    /// <summary>Đặt lần lượt các khối, cách nhau revealStagger; thao tác trên lưới bị khóa trong lúc đặt.</summary>
-    private void PlaceInSequence(List<RectInt> rects)
-    {
-        KillRevealPlacing();
-        Sequence seq = DOTween.Sequence().SetLink(gameObject);
-        for (int i = 0; i < rects.Count; i++)
-        {
-            RectInt rect = rects[i];
-            seq.InsertCallback(i * revealStagger, () =>
-            {
-                GridManager gm = GridManager.Instance;
-                if (gm != null) gm.PlaceSolved(rect);
-            });
-        }
-        seq.OnKill(() => { if (_revealPlacing == seq) _revealPlacing = null; });
-        _revealPlacing = seq;
-    }
-
-    private void SetRevealMode(bool on)
-    {
-        if (_revealMode == on) return;
-        _revealMode = on;
-        if (on && GridManager.Instance != null) GridManager.Instance.CancelSelection();
-        onRevealModeChanged?.Invoke(on);
-    }
-
-    // ---------- Chung ----------
-
-    private void Consume(BoosterType type)
+    public void Consume(BoosterType type)
     {
         BoosterData data = Get(type);
         if (_freeUse == type) _freeUse = null;
@@ -210,27 +163,59 @@ public class BoosterManager : Singleton<BoosterManager>
         onBoosterUsed?.Invoke(type);
     }
 
+    /// <summary>Đặt lần lượt các khối, cách nhau revealStagger; thao tác trên lưới bị khóa trong lúc đặt.</summary>
+    public void PlaceInSequence(List<RectInt> rects)
+    {
+        KillPlacing();
+        InputGate.Lock(this);
+        Sequence seq = DOTween.Sequence().SetLink(gameObject);
+        for (int i = 0; i < rects.Count; i++)
+        {
+            RectInt rect = rects[i];
+            seq.InsertCallback(i * revealStagger, () =>
+            {
+                if (Grid != null) Grid.PlaceSolved(rect);
+            });
+        }
+        seq.OnKill(() =>
+        {
+            if (_placing != seq) return;
+            _placing = null;
+            InputGate.Unlock(this);
+        });
+        _placing = seq;
+    }
+
+    public void NotifyModeChanged(BoosterType type, bool on)
+    {
+        if (on && Grid != null) Grid.CancelSelection();
+        onModeChanged?.Invoke(type, on);
+    }
+
+    // ---------- Chung ----------
+
     private bool CanPlay()
     {
-        GridManager gm = GridManager.Instance;
+        GridManager gm = Grid;
         return gm != null && gm.Board != null && !gm.IsInputLocked;
     }
 
-    private void KillRevealPlacing()
+    private void KillPlacing()
     {
-        _revealPlacing?.Kill();
-        _revealPlacing = null;
+        _placing?.Kill(); // OnKill mở khóa lưới
+        _placing = null;
+        InputGate.Unlock(this);
     }
 
-    private void OnLevelLoaded(int _)
+    private void OnLevelLoaded(LevelLoadedEvent _)
     {
         _freeUse = null;
-        KillRevealPlacing();
-        SetRevealMode(false);
+        KillPlacing();
+        CancelModes();
     }
 
-    private void OnStateChanged(GameState state)
+    private void OnStateChanged(GameStateChangedEvent e)
     {
-        if (state != GameState.Playing) SetRevealMode(false);
+        if (e.State != GameState.Playing) CancelModes();
     }
 }

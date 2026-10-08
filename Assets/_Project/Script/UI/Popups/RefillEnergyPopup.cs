@@ -29,6 +29,9 @@ public class RefillEnergyPopup : PopupView
 
     public bool IsRequired => IsOpen && _required;
 
+    // Popup chờ năng lượng (bắt buộc) giữ nguyên qua lần nạp level
+    protected override bool CloseOnLevelLoad => !_required;
+
     protected override void Awake()
     {
         base.Awake();
@@ -58,11 +61,8 @@ public class RefillEnergyPopup : PopupView
         LevelManager lm = LevelManager.Instance;
         _pausedByMe = lm != null && lm.IsPlaying;
         if (_pausedByMe) lm.Pause();
-        if (lm != null)
-        {
-            lm.onStateChanged.RemoveListener(OnGameState);
-            lm.onStateChanged.AddListener(OnGameState);
-        }
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnGameState); // Open lại khi đang mở: không đăng ký trùng
+        EventBus<GameStateChangedEvent>.Subscribe(OnGameState);
 
         if (closeButton != null) closeButton.gameObject.SetActive(!_required || _onCancel != null);
         if (coinCostText != null) coinCostText.SetText("{0}", GameConfig.Economy.refillCoinCost);
@@ -81,7 +81,7 @@ public class RefillEnergyPopup : PopupView
     protected override void OnDisable()
     {
         base.OnDisable();
-        if (LevelManager.Instance != null) LevelManager.Instance.onStateChanged.RemoveListener(OnGameState);
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnGameState);
         EnergyManager em = EnergyManager.Instance;
         if (em == null) return;
         em.onEnergyChanged.RemoveListener(OnEnergyChanged);
@@ -89,9 +89,9 @@ public class RefillEnergyPopup : PopupView
     }
 
     // Mở lúc vào game: LevelManager nạp level xong đặt lại Playing -> tạm dừng lại
-    private void OnGameState(GameState state)
+    private void OnGameState(GameStateChangedEvent e)
     {
-        if (!IsOpen || state != GameState.Playing || LevelManager.Instance == null) return;
+        if (!IsOpen || e.State != GameState.Playing || LevelManager.Instance == null) return;
         _pausedByMe = true;
         LevelManager.Instance.Pause();
     }

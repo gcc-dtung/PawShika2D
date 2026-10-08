@@ -95,16 +95,16 @@ public static class DebugCheats
         LevelManager lm = LevelManager.Instance;
         if (lm == null || lm.State != GameState.Playing) return;
         // LevelManager đổi sang OutOfLives sau stateChangeDelay: chờ đúng sự kiện đó rồi từ chối hồi mạng
-        UnityEngine.Events.UnityAction<GameState> onState = null;
-        onState = state =>
+        System.Action<GameStateChangedEvent> onState = null;
+        onState = e =>
         {
-            if (state != GameState.OutOfLives) return;
-            lm.onStateChanged.RemoveListener(onState);
+            if (e.State != GameState.OutOfLives) return;
+            EventBus<GameStateChangedEvent>.Unsubscribe(onState);
             ReviveLivesPopup revive = Object.FindFirstObjectByType<ReviveLivesPopup>();
             if (revive != null && revive.IsOpen) revive.CloseImmediate();
             lm.GiveUp();
         };
-        lm.onStateChanged.AddListener(onState);
+        EventBus<GameStateChangedEvent>.Subscribe(onState);
         OutOfLives();
     }
 
@@ -169,7 +169,7 @@ public static class DebugCheats
     {
         foreach (BoosterType type in System.Enum.GetValues(typeof(BoosterType))) SaveSystem.Data.UnlockBooster(type);
         SaveSystem.MarkDirty();
-        RefreshBoosterButtons();
+        RaiseLockChanged(true);
     }
 
     /// <summary>Khóa lại mọi booster: nạp level (>= level mở) để xem lại tutorial mở khóa.</summary>
@@ -177,12 +177,13 @@ public static class DebugCheats
     {
         SaveSystem.Data.unlockedBoosters.Clear();
         SaveSystem.MarkDirty();
-        RefreshBoosterButtons();
+        RaiseLockChanged(false);
     }
 
-    private static void RefreshBoosterButtons()
+    private static void RaiseLockChanged(bool unlocked)
     {
-        foreach (BoosterButton b in Object.FindObjectsByType<BoosterButton>(FindObjectsInactive.Include, FindObjectsSortMode.None)) b.Refresh();
+        foreach (BoosterType type in System.Enum.GetValues(typeof(BoosterType)))
+            EventBus<BoosterLockChangedEvent>.Raise(new BoosterLockChangedEvent(type, unlocked));
     }
 
     // ---------- Khác ----------

@@ -25,6 +25,9 @@ public class LivesManager : Singleton<LivesManager>
     public bool IsOutOfLives => _currentLives <= 0;
     public bool HasShield => _shield;
 
+    /// <summary>Màn luyện tập (tutorial lần đầu): nước đi sai chỉ báo, không trừ mạng, không tốn khiên. LevelManager đặt khi nạp màn.</summary>
+    public bool IsPractice { get; set; }
+
     protected override void Awake()
     {
         base.Awake();
@@ -66,7 +69,7 @@ public class LivesManager : Singleton<LivesManager>
 
     public void LoseLife()
     {
-        if (IsOutOfLives) return;
+        if (IsOutOfLives || IsPractice) return;
 
         if (_shield)
         {

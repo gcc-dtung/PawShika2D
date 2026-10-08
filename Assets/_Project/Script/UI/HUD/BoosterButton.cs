@@ -34,6 +34,16 @@ public class BoosterButton : MonoBehaviour
 
     public BoosterType Type => type;
 
+    /// <summary>Nút của booster <paramref name="boosterType"/> (kể cả đang ẩn), null nếu không có.</summary>
+    public static BoosterButton Find(BoosterType boosterType)
+    {
+        foreach (BoosterButton b in FindObjectsByType<BoosterButton>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+        {
+            if (b.Type == boosterType) return b;
+        }
+        return null;
+    }
+
     private void Awake()
     {
         _button = GetComponent<Button>();
@@ -46,10 +56,12 @@ public class BoosterButton : MonoBehaviour
         BoosterManager bm = BoosterManager.Instance;
         if (bm != null)
         {
-            bm.onRevealModeChanged.AddListener(OnRevealMode);
+            bm.onModeChanged.AddListener(OnModeChanged);
             bm.onBoosterUsed.AddListener(OnUsed);
+            bm.onTutorialChanged.AddListener(Refresh);
         }
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
+        EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
+        EventBus<BoosterLockChangedEvent>.Subscribe(OnLockChanged);
         if (LivesManager.Instance != null) LivesManager.Instance.onShieldChanged.AddListener(OnShield);
         Refresh();
     }
@@ -60,10 +72,12 @@ public class BoosterButton : MonoBehaviour
         BoosterManager bm = BoosterManager.Instance;
         if (bm != null)
         {
-            bm.onRevealModeChanged.RemoveListener(OnRevealMode);
+            bm.onModeChanged.RemoveListener(OnModeChanged);
             bm.onBoosterUsed.RemoveListener(OnUsed);
+            bm.onTutorialChanged.RemoveListener(Refresh);
         }
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
+        EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
+        EventBus<BoosterLockChangedEvent>.Unsubscribe(OnLockChanged);
         if (LivesManager.Instance != null) LivesManager.Instance.onShieldChanged.RemoveListener(OnShield);
 
         _glowTween?.Kill();
@@ -82,8 +96,12 @@ public class BoosterButton : MonoBehaviour
         if (changed == type) Refresh();
     }
 
-    private void OnLevelLoaded(int _) => Refresh();
-    private void OnRevealMode(bool _) => Refresh();
+    private void OnLevelLoaded(LevelLoadedEvent _) => Refresh();
+    private void OnModeChanged(BoosterType _, bool __) => Refresh();
+    private void OnLockChanged(BoosterLockChangedEvent e)
+    {
+        if (e.Type == type) Refresh();
+    }
     private void OnShield(bool _) => Refresh();
 
     private void OnUsed(BoosterType used)

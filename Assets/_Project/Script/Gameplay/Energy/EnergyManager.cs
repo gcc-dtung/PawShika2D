@@ -45,13 +45,13 @@ public class EnergyManager : Singleton<EnergyManager>
 
     private void Start()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onStateChanged.AddListener(OnStateChanged);
+        EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
         RefreshNow();
     }
 
     private void OnDestroy()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onStateChanged.RemoveListener(OnStateChanged);
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
     }
 
     private void Update()
@@ -96,9 +96,9 @@ public class EnergyManager : Singleton<EnergyManager>
 
     // ---------- Nội bộ ----------
 
-    private void OnStateChanged(GameState state)
+    private void OnStateChanged(GameStateChangedEvent e)
     {
-        if (state == GameState.Lost) ConsumeOne("Thua level");
+        if (e.State == GameState.Lost) ConsumeOne("Thua level");
     }
 
     private void RefreshNow()

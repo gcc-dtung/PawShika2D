@@ -23,7 +23,7 @@
 
 ## Luồng nạp level lúc chơi
 
-`LevelManager.LoadLevel(index)` → lưu `SaveData.currentLevel` → `GridSpawner.Spawn(level)` (sinh ô, phát `gridCellEvent`) → `GridManager` tạo `BoardModel` mới, `LivesManager` reset mạng → `FitCamera` → `onLevelLoaded(n)` (HUD, popup, booster tutorial, popup cơ chế, băng HARD cùng nghe).
+`LevelManager.LoadLevel(index)` → lưu `SaveData.currentLevel` → `GridSpawner.Spawn(level)` (sinh ô, phát `gridCellEvent`) → `GridManager` tạo `BoardModel` mới, `LivesManager` reset mạng, `BoardCameraFitter` căn camera → `EventBus<LevelLoadedEvent>` (HUD, popup tự đóng, `BoosterManager`, `LevelIntroSequencer` → băng HARD / popup cơ chế / tutorial booster cùng nghe).
 
 ## Công cụ Editor
 

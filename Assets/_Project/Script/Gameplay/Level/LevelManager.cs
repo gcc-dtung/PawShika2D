@@ -1,12 +1,13 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// Luồng 1 level và trạng thái ván chơi:
 /// Playing -> Won (WinPopup) -> level kế
 /// Playing -> OutOfLives (ReviveLivesPopup) -> hồi mạng: Playing / bỏ cuộc: Lost (LosePopup) -> chơi lại.
-/// Popup nghe onStateChanged; scene không có popup (GameFlowUI) thì tự chuyển như cũ sau autoAdvanceDelay.
+/// Phát LevelLoadedEvent / GameStateChangedEvent qua EventBus; ván không Playing thì khóa lưới (InputGate).
+/// Có bên xử lý luồng (GameFlowUI đặt AutoAdvance = false) thì chờ popup; không có thì tự chuyển sau autoAdvanceDelay.
+/// Căn camera theo lưới: BoardCameraFitter.
 /// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
@@ -14,30 +15,23 @@ public class LevelManager : Singleton<LevelManager>
     
     [SerializeField] private LevelDatabase database;
     [SerializeField] private GridSpawner gridSpawner;
-    [SerializeField] private float autoAdvanceDelay = 1.5f; // chỉ dùng khi không có GameFlowUI
+    [SerializeField] private float autoAdvanceDelay = 1.5f; // chỉ dùng khi AutoAdvance (không có GameFlowUI)
     [Tooltip("Chờ hiệu ứng đặt khối / mèo rung xong rồi mới đổi trạng thái (popup hiện sau khoảng này)")]
     [SerializeField] private float stateChangeDelay = 0.8f;
-
-    [Header("Camera fit")]
-    [Tooltip("Vùng chơi trong Canvas_HUD: lưới luôn nằm trọn trong vùng này. Không có (hoặc đang tắt) thì dùng tỉ lệ bên dưới.")]
-    [SerializeField] private PlayZone playZone;
-    [SerializeField] private Camera targetCamera;
-    [SerializeField, Range(0.3f, 1f)] private float boardHeightRatio = 0.62f;
-    [SerializeField, Range(0.5f, 1f)] private float boardWidthRatio = 0.92f;
-    [SerializeField, Range(-0.5f, 0.5f)] private float boardCenterOffset = 0.02f; // >0: lưới lệch lên trên
-
-    [Header("Events")]
-    public UnityEvent<int> onLevelLoaded = new UnityEvent<int>(); // số level hiển thị (bắt đầu từ 1)
-    public UnityEvent<GameState> onStateChanged = new UnityEvent<GameState>();
 
     private int _currentIndex;
     private Tween _pending; // hẹn giờ đổi trạng thái / tự chuyển level
     private GameState _state = GameState.Playing;
     private bool _hasRevived; // đã hồi mạng trong lượt chơi này (lượt sau hết mạng có thể giới hạn)
+    private bool _isPractice; // màn tutorial: thắng không sang WinPopup, sai không trừ mạng
 
     public GameState State => _state;
     public bool IsPlaying => _state == GameState.Playing;
     public bool HasRevived => _hasRevived;
+    public bool IsPractice => _isPractice;
+
+    /// <summary>Thắng / hết mạng thì tự sang level kế / chơi lại. GameFlowUI tắt đi để popup quyết định.</summary>
+    public bool AutoAdvance { get; set; } = true;
 
     public int CurrentIndex => _currentIndex;
     public int LevelCount => database != null ? database.Count : 0;
@@ -48,7 +42,6 @@ public class LevelManager : Singleton<LevelManager>
     {
         base.Awake();
         if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
-        if (targetCamera == null) targetCamera = Camera.main;
         _currentIndex = SaveSystem.Data.currentLevel;
     }
 
@@ -59,7 +52,11 @@ public class LevelManager : Singleton<LevelManager>
         if (!TutorialController.Pending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
     }
 
-    private void OnDisable() => CancelPending();
+    private void OnDisable()
+    {
+        CancelPending();
+        InputGate.Unlock(this);
+    }
 
     private void OnDestroy()
     {
@@ -84,24 +81,24 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         LevelDefinition level = database.Get(_currentIndex);
+        SetPractice(false);
         gridSpawner.Spawn(level);
-        FitCamera(level);
         _hasRevived = false;
         SetState(GameState.Playing);
-        onLevelLoaded?.Invoke(CurrentLevelNumber);
+        EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level));
         Debug.Log($"[LevelManager] Level {CurrentLevelNumber}/{database.Count}: {level.name} ({level.size}x{level.Height})");
     }
 
     /// <summary>
     /// Màn tutorial (TutorialController): dựng lưới như level thường nhưng không lưu level hiện tại,
-    /// không phát onLevelLoaded (HUD level / băng HARD / booster không đổi), thắng không sang WinPopup.
+    /// không phát LevelLoadedEvent (HUD level / intro / booster không đổi), thắng không sang WinPopup, sai không trừ mạng.
     /// </summary>
     public void LoadTutorial(LevelDefinition level)
     {
         if (level == null) return;
         CancelPending();
+        SetPractice(true);
         gridSpawner.Spawn(level);
-        FitCamera(level);
         _hasRevived = false;
         SetState(GameState.Playing);
     }
@@ -147,12 +144,12 @@ public class LevelManager : Singleton<LevelManager>
 
     private void OnWin()
     {
-        if (TutorialController.Active) return; // TutorialController tự sang bước kế
+        if (_isPractice) return; // TutorialController tự sang bước kế
         CancelPending();
         After(stateChangeDelay, () =>
         {
             SetState(GameState.Won);
-            if (!HasFlowUI) After(autoAdvanceDelay, NextLevel);
+            if (AutoAdvance) After(autoAdvanceDelay, NextLevel);
         });
     }
 
@@ -162,7 +159,7 @@ public class LevelManager : Singleton<LevelManager>
         After(stateChangeDelay, () =>
         {
             SetState(GameState.OutOfLives);
-            if (!HasFlowUI) After(autoAdvanceDelay, Retry);
+            if (AutoAdvance) After(autoAdvanceDelay, Retry);
         });
     }
 
@@ -171,10 +168,15 @@ public class LevelManager : Singleton<LevelManager>
         if (_state == state) return;
         _state = state;
         Debug.Log($"[LevelManager] State -> {state}");
-        onStateChanged?.Invoke(state);
+        InputGate.Set(this, state != GameState.Playing);
+        EventBus<GameStateChangedEvent>.Raise(new GameStateChangedEvent(state));
     }
 
-    private static bool HasFlowUI => FindFirstObjectByType<GameFlowUI>() != null;
+    private void SetPractice(bool practice)
+    {
+        _isPractice = practice;
+        if (LivesManager.Instance != null) LivesManager.Instance.IsPractice = practice;
+    }
 
     /// <summary>Hẹn gọi action sau delay giây (thay hẹn cũ nếu có). Manager tắt thì hủy, action không chạy.</summary>
     private void After(float delay, System.Action action)
@@ -196,35 +198,6 @@ public class LevelManager : Singleton<LevelManager>
         _pending = null;
     }
 
-    /// <summary>
-    /// Phóng camera cho lưới vừa vùng chơi. Có PlayZone: PlayZone căn (và tự căn lại khi màn hình đổi).
-    /// PlayZone đang tắt (ở Menu) thì căn tạm theo tỉ lệ màn hình; vào màn chơi PlayZone căn lại.
-    /// </summary>
-    private void FitCamera(LevelDefinition level)
-    {
-        if (level == null) return;
-        float gridW = level.size * GridSpawner.CellSpacing;
-        float gridH = level.Height * GridSpawner.CellSpacing;
-
-        if (playZone != null)
-        {
-            playZone.SetContent(new Vector2(gridW, gridH));
-            if (playZone.isActiveAndEnabled) return;
-        }
-
-        if (targetCamera == null || !targetCamera.orthographic) return;
-        float aspect = targetCamera.aspect;
-
-        float sizeByHeight = gridH / 2f / boardHeightRatio;
-        float sizeByWidth = gridW / 2f / (aspect * boardWidthRatio);
-        float ortho = Mathf.Max(PlayZone.DefaultMinOrthoSize, sizeByHeight, sizeByWidth);
-        targetCamera.orthographicSize = ortho;
-
-        // Dời camera xuống để lưới nằm hơi cao hơn giữa màn hình
-        Vector3 pos = targetCamera.transform.position;
-        targetCamera.transform.position = new Vector3(0f, -boardCenterOffset * 2f * ortho, pos.z);
-    }
-    
     [ContextMenu("Load Level")]
     public void GoToLevel()
     {

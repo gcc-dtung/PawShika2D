@@ -2,8 +2,9 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Nối trạng thái ván (LevelManager.onStateChanged) với các popup.
-/// Có component này trong scene thì LevelManager không tự chuyển level / chơi lại nữa.
+/// Nối trạng thái ván (GameStateChangedEvent) với các popup.
+/// Có component này trong scene thì LevelManager không tự chuyển level / chơi lại nữa (AutoAdvance = false).
+/// Đổi level thì popup tự đóng (PopupView nghe LevelLoadedEvent), ở đây không cần liệt kê lại.
 /// </summary>
 public class GameFlowUI : MonoBehaviour
 {
@@ -17,24 +18,35 @@ public class GameFlowUI : MonoBehaviour
     [SerializeField] private BuyBoosterPopup buyBoosterPopup;
     [SerializeField] private RefillEnergyPopup refillEnergyPopup;
 
+    private PopupView[] AllPopups => new PopupView[]
+    {
+        winPopup, revivePopup, losePopup, settingsPopup, quitLevelPopup,
+        noticePopup, dailyRewardPopup, buyBoosterPopup, refillEnergyPopup
+    };
+
+    private void Awake()
+    {
+        EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
+        if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = false; // popup quyết định sang level kế / chơi lại
+    }
+
     private void Start()
     {
-        CloseAll();
+        foreach (PopupView popup in AllPopups)
+        {
+            if (popup != null) popup.CloseImmediate();
+        }
         if (losePopup != null) losePopup.RetryHandler = RetryAfterLose;
         if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.AddListener(OnBuyBooster);
         IAPService.PurchaseFailed += OnPurchaseFailed;
-        if (LevelManager.Instance == null) return;
-        LevelManager.Instance.onStateChanged.AddListener(OnStateChanged);
-        LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
     }
 
     private void OnDestroy()
     {
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+        if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = true;
         if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.RemoveListener(OnBuyBooster);
         IAPService.PurchaseFailed -= OnPurchaseFailed;
-        if (LevelManager.Instance == null) return;
-        LevelManager.Instance.onStateChanged.RemoveListener(OnStateChanged);
-        LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
     }
 
     /// <summary>Nút cài đặt trên HUD / trên Menu. Trong ván chỉ mở khi đang chơi (không chồng lên popup khác).</summary>
@@ -97,9 +109,9 @@ public class GameFlowUI : MonoBehaviour
         if (buyBoosterPopup != null) buyBoosterPopup.Show(type);
     }
 
-    private void OnStateChanged(GameState state)
+    private void OnStateChanged(GameStateChangedEvent e)
     {
-        switch (state)
+        switch (e.State)
         {
             case GameState.Won: Open(winPopup); break;
             case GameState.OutOfLives: Open(revivePopup); break;
@@ -107,40 +119,8 @@ public class GameFlowUI : MonoBehaviour
         }
     }
 
-    // Đổi level (kể cả bằng menu debug) thì đóng popup còn mở; popup đang chạy hiệu ứng đóng thì để chạy nốt
-    private void OnLevelLoaded(int _)
-    {
-        CloseIfOpen(winPopup);
-        CloseIfOpen(revivePopup);
-        CloseIfOpen(losePopup);
-        CloseIfOpen(settingsPopup);
-        CloseIfOpen(quitLevelPopup);
-        CloseIfOpen(dailyRewardPopup);
-        CloseIfOpen(buyBoosterPopup);
-        // Popup chờ năng lượng (bắt buộc) giữ nguyên qua lần nạp level
-        if (refillEnergyPopup != null && !refillEnergyPopup.IsRequired) CloseIfOpen(refillEnergyPopup);
-    }
-
-    private static void CloseIfOpen(PopupView popup)
-    {
-        if (popup != null && popup.IsOpen) popup.CloseImmediate();
-    }
-
     private static void Open(PopupView popup)
     {
         if (popup != null) popup.Open();
-    }
-
-    private void CloseAll()
-    {
-        if (winPopup != null) winPopup.CloseImmediate();
-        if (revivePopup != null) revivePopup.CloseImmediate();
-        if (losePopup != null) losePopup.CloseImmediate();
-        if (settingsPopup != null) settingsPopup.CloseImmediate();
-        if (quitLevelPopup != null) quitLevelPopup.CloseImmediate();
-        if (noticePopup != null) noticePopup.CloseImmediate();
-        if (dailyRewardPopup != null) dailyRewardPopup.CloseImmediate();
-        if (buyBoosterPopup != null) buyBoosterPopup.CloseImmediate();
-        if (refillEnergyPopup != null) refillEnergyPopup.CloseImmediate();
     }
 }

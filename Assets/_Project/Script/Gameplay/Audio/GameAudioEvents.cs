@@ -14,14 +14,12 @@ public class GameAudioEvents : MonoBehaviour
 
     private GridManager _grid;
     private GridSpawner _spawner;
-    private LevelManager _level;
     private LivesManager _lives;
     private BoosterManager _booster;
 
     private void Start()
     {
         _grid = GridManager.Instance;
-        _level = LevelManager.Instance;
         _lives = LivesManager.Instance;
         _booster = BoosterManager.Instance;
         _spawner = FindFirstObjectByType<GridSpawner>();
@@ -32,7 +30,7 @@ public class GameAudioEvents : MonoBehaviour
             _grid.onMistake.AddListener(OnMistake);
             _grid.onClueUnlocked.AddListener(OnClueUnlocked);
         }
-        if (_level != null) _level.onStateChanged.AddListener(OnStateChanged);
+        EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
         if (_spawner != null) _spawner.gridCellEvent.AddListener(OnGridSpawned);
         if (_lives != null)
         {
@@ -51,7 +49,7 @@ public class GameAudioEvents : MonoBehaviour
             _grid.onMistake.RemoveListener(OnMistake);
             _grid.onClueUnlocked.RemoveListener(OnClueUnlocked);
         }
-        if (_level != null) _level.onStateChanged.RemoveListener(OnStateChanged);
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
         if (_spawner != null) _spawner.gridCellEvent.RemoveListener(OnGridSpawned);
         if (_lives != null)
         {
@@ -76,9 +74,9 @@ public class GameAudioEvents : MonoBehaviour
 
     private void OnClueUnlocked(CellModel cell) => AudioManager.Play(SoundId.Unlock);
 
-    private void OnStateChanged(GameState state)
+    private void OnStateChanged(GameStateChangedEvent e)
     {
-        switch (state)
+        switch (e.State)
         {
             case GameState.Won: AudioManager.Play(SoundId.Win); break;
             case GameState.OutOfLives: AudioManager.Play(SoundId.OutOfLives); break;

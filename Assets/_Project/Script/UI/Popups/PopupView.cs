@@ -5,6 +5,7 @@ using UnityEngine;
 /// Base popup: nền tối mờ dần + bảng bật lên (scale 0.6 -> vượt nhẹ -> 1, Ease.OutBack). Tween chạy theo thời gian thực
 /// nên không phụ thuộc timeScale. Popup tắt thì hủy tween.
 /// Cấu trúc: root (CanvasGroup) / Dim (Image chắn raycast) / Panel.
+/// Nạp level mới (LevelLoadedEvent) thì popup đang mở tự đóng ngay, trừ khi lớp con đặt CloseOnLevelLoad = false.
 /// </summary>
 [RequireComponent(typeof(CanvasGroup))]
 public class PopupView : MonoBehaviour
@@ -23,9 +24,23 @@ public class PopupView : MonoBehaviour
         _group = GetComponent<CanvasGroup>();
     }
 
+    protected virtual void OnEnable()
+    {
+        EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
+    }
+
     protected virtual void OnDisable()
     {
+        EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
         KillAnim();
+    }
+
+    /// <summary>Đổi level (kể cả bằng menu debug) thì đóng ngay; popup đang chạy hiệu ứng đóng thì để chạy nốt.</summary>
+    protected virtual bool CloseOnLevelLoad => true;
+
+    private void OnLevelLoaded(LevelLoadedEvent _)
+    {
+        if (IsOpen && CloseOnLevelLoad) CloseImmediate();
     }
 
     public void Open()

@@ -55,6 +55,10 @@ public static class TutorialBuilder
         BoosterTutorial boosterTutorial = lm.GetComponent<BoosterTutorial>();
         if (boosterTutorial == null) boosterTutorial = Undo.AddComponent<BoosterTutorial>(lm.gameObject);
         PopupBuilder.Assign(boosterTutorial, "view", boosterView);
+        ShieldTutorialDemo shieldDemo = lm.GetComponent<ShieldTutorialDemo>();
+        if (shieldDemo == null) shieldDemo = Undo.AddComponent<ShieldTutorialDemo>(lm.gameObject);
+        PopupBuilder.Assign(shieldDemo, "view", boosterView);
+        if (lm.GetComponent<LevelIntroSequencer>() == null) Undo.AddComponent<LevelIntroSequencer>(lm.gameObject);
 
         MechanicIntro mechanicIntro = lm.GetComponent<MechanicIntro>();
         if (mechanicIntro == null) mechanicIntro = Undo.AddComponent<MechanicIntro>(lm.gameObject);

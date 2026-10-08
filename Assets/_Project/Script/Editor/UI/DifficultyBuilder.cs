@@ -222,7 +222,6 @@ public static class DifficultyBuilder
         DifficultyIntro intro = root.gameObject.AddComponent<DifficultyIntro>();
         SerializedObject so = new SerializedObject(intro);
         so.FindProperty("theme").objectReferenceValue = theme;
-        so.FindProperty("gridSpawner").objectReferenceValue = Object.FindFirstObjectByType<GridSpawner>(FindObjectsInactive.Include);
         so.FindProperty("group").objectReferenceValue = group;
         so.FindProperty("dim").objectReferenceValue = dim;
         so.FindProperty("tape").objectReferenceValue = tape.rectTransform;

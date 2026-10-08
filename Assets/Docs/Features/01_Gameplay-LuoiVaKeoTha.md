@@ -52,9 +52,19 @@ Solver có giới hạn `MaxNodes = 500000`; vượt giới hạn thì coi như 
 
 ## Khi nào lưới bị khóa thao tác
 
-`GridManager.IsInputLocked` = đúng khi bất kỳ điều sau đúng: đã thắng, hết mạng, đang chờ khung giãn sau khi thả, `LevelManager` không ở `Playing` (popup đang mở), Reveal đang tự đặt khối, lưới đang hiện, băng HARD đang chạy, tutorial mở khóa booster đang chạy.
+`GridManager.IsInputLocked` = đúng khi bất kỳ điều sau đúng: đã thắng, hết mạng, đang chờ khung giãn sau khi thả, lưới đang hiện, hoặc **`InputGate.IsLocked`**.
 
-> Thêm một màn che / hiệu ứng mới cần chặn kéo thả: thêm điều kiện vào `IsInputLocked`, đừng tự chặn trong input.
+`InputGate` (`Gameplay/Input/InputGate`) là khóa theo "chủ khóa": ai cần chặn thì `InputGate.Lock(this)`, xong thì `Unlock(this)`. Đang khóa bởi:
+
+| Chủ khóa | Khi nào |
+| --- | --- |
+| `LevelManager` | Ván không ở `Playing` (popup đang mở, Menu, thắng / thua) |
+| `LevelIntroSequencer` | Từ lúc nạp level tới khi các intro (băng HARD, popup cơ chế, tutorial booster) chạy xong |
+| `BoosterManager` | Reveal đang tự đặt lần lượt từng khối |
+
+`InputGate.Describe()` in ra ai đang khóa (tiện khi debug lưới "bị đơ").
+
+> Thêm một màn che / hiệu ứng mới cần chặn kéo thả: gọi `InputGate.Lock(this)` / `Unlock(this)` (nhớ Unlock trong `OnDisable`), không sửa `GridManager`.
 
 ## Event
 

@@ -32,6 +32,9 @@ public class NoticePopup : PopupView
         Open();
     }
 
+    // Thông báo (vd mua thất bại) giữ qua lần nạp level
+    protected override bool CloseOnLevelLoad => false;
+
     protected override void OnOpen()
     {
         LevelManager lm = LevelManager.Instance;

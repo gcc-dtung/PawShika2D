@@ -31,6 +31,18 @@ public class ShopProduct
     public string saleTag;         // vd "90%\nOff" (thẻ Starter)
 
     public string PriceText => priceVnd + " VND";
+
+    /// <summary>Số lượt booster <paramref name="type"/> trong gói. Thêm booster mới: thêm field + 1 dòng ở đây.</summary>
+    public int BoosterAmount(BoosterType type)
+    {
+        switch (type)
+        {
+            case BoosterType.Hint: return hint;
+            case BoosterType.Shield: return shield;
+            case BoosterType.Reveal: return reveal;
+            default: return 0;
+        }
+    }
 }
 
 /// <summary>Danh sách gói trong Shop (thứ tự trong list = thứ tự hiện trong từng mục).</summary>

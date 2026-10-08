@@ -2430,6 +2430,9 @@ GameObject:
   - component: {fileID: 82617389}
   - component: {fileID: 82617390}
   - component: {fileID: 82617391}
+  - component: {fileID: 82617394}
+  - component: {fileID: 82617393}
+  - component: {fileID: 82617392}
   m_Layer: 0
   m_Name: Manager
   m_TagString: Untagged
@@ -2552,17 +2555,6 @@ MonoBehaviour:
   gridSpawner: {fileID: 1117016762}
   autoAdvanceDelay: 1.5
   stateChangeDelay: 0.8
-  playZone: {fileID: 567406614}
-  targetCamera: {fileID: 519420031}
-  boardHeightRatio: 0.6
-  boardWidthRatio: 0.86
-  boardCenterOffset: 0.02
-  onLevelLoaded:
-    m_PersistentCalls:
-      m_Calls: []
-  onStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &82617383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2620,10 +2612,13 @@ MonoBehaviour:
   onBuyRequested:
     m_PersistentCalls:
       m_Calls: []
-  onRevealModeChanged:
+  onModeChanged:
     m_PersistentCalls:
       m_Calls: []
   onBoosterUsed:
+    m_PersistentCalls:
+      m_Calls: []
+  onTutorialChanged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!114 &82617386
@@ -2661,9 +2656,6 @@ MonoBehaviour:
   navigator: {fileID: 1335649106}
   gameFlow: {fileID: 622904678}
   startInMenu: 1
-  onScreenChanged:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &82617388
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2714,9 +2706,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 181314146}
   startDelay: 0.3
-  wrongMoveMessage: Now make a wrong move like this - the Shield will block it!
-  savedMessage: The Shield saved you - no life lost!
-  savedMessageTime: 2
 --- !u!114 &82617391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2734,6 +2723,54 @@ MonoBehaviour:
   lockSprite: {fileID: 21300000, guid: 9897a0dcb5277bf4a810dcf0055522c9, type: 3}
   hiddenSprite: {fileID: 21300000, guid: 79f8e3661d429c047b0707f5e007c947, type: 3}
   startDelay: 0.15
+--- !u!114 &82617392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82617376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0148ed4396edd3349952525a4e9e4ce3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSpawner: {fileID: 1117016762}
+  playZone: {fileID: 567406614}
+  targetCamera: {fileID: 519420031}
+  boardHeightRatio: 0.6
+  boardWidthRatio: 0.86
+  boardCenterOffset: 0.02
+--- !u!114 &82617393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82617376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4be21dbaa61351544a2b06f16bf3a6ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  view: {fileID: 181314146}
+  wrongMoveMessage: Now make a wrong move like this - the Shield will block it!
+  savedMessage: The Shield saved you - no life lost!
+  startDelay: 0.2
+  savedMessageTime: 2
+--- !u!114 &82617394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82617376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d95e1a5279e0da4e86e1722e855034b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridSpawner: {fileID: 0}
 --- !u!1 &82839743
 GameObject:
   m_ObjectHideFlags: 0
@@ -39358,7 +39395,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1078517822}
   - component: {fileID: 1078517821}
-  - component: {fileID: 1078517820}
+  - component: {fileID: 1078517823}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -39366,26 +39403,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1078517820
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1078517819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_SendPointerHoverToParent: 1
-  m_HorizontalAxis: Horizontal
-  m_VerticalAxis: Vertical
-  m_SubmitButton: Submit
-  m_CancelButton: Cancel
-  m_InputActionsPerSecond: 10
-  m_RepeatDelay: 0.5
-  m_ForceModuleActive: 0
 --- !u!114 &1078517821
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39416,6 +39433,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1078517823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1078517819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01614664b831546d2ae94a42149d80ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
+  m_MoveRepeatDelay: 0.5
+  m_MoveRepeatRate: 0.1
+  m_XRTrackingOrigin: {fileID: 0}
+  m_ActionsAsset: {fileID: -944628639613478452, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_PointAction: {fileID: -1654692200621890270, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MoveAction: {fileID: -8784545083839296357, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_SubmitAction: {fileID: 392368643174621059, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_CancelAction: {fileID: 7727032971491509709, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_LeftClickAction: {fileID: 3001919216989983466, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_MiddleClickAction: {fileID: -2185481485913320682, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_RightClickAction: {fileID: -4090225696740746782, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_ScrollWheelAction: {fileID: 6240969308177333660, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDevicePositionAction: {fileID: 6564999863303420839, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_TrackedDeviceOrientationAction: {fileID: 7970375526676320489, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
+  m_DeselectOnBackgroundClick: 1
+  m_PointerBehavior: 0
+  m_CursorLockBehavior: 0
+  m_ScrollDeltaPerTick: 6
 --- !u!1 &1078993873
 GameObject:
   m_ObjectHideFlags: 0
@@ -57041,7 +57089,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   theme: {fileID: 11400000, guid: 9c43f5254f3e5394b94ae972ce64a7d3, type: 2}
-  gridSpawner: {fileID: 1117016762}
   group: {fileID: 1463359283}
   dim: {fileID: 517931501}
   tape: {fileID: 1986741708}

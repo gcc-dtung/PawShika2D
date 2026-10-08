@@ -34,7 +34,7 @@ Mọi popup kế thừa **`PopupView`**: `Open()` / `Close()` / `CloseImmediate(
 
 | Nguồn | Popup |
 | --- | --- |
-| `LevelManager.onStateChanged`: Won / OutOfLives / Lost | `WinPopup` / `ReviveLivesPopup` / `LosePopup` |
+| `EventBus<GameStateChangedEvent>`: Won / OutOfLives / Lost | `WinPopup` / `ReviveLivesPopup` / `LosePopup` |
 | `BoosterManager.onBuyRequested` | `BuyBoosterPopup` |
 | `IAPService.PurchaseFailed` | `NoticePopup` |
 | Nút bánh răng → `OpenSettings` | `SettingsPopup` (→ Home trong ván → `QuitLevelPopup`) |
@@ -44,12 +44,14 @@ Mọi popup kế thừa **`PopupView`**: `Open()` / `Close()` / `CloseImmediate(
 
 Popup mở giữa ván phải gọi `LevelManager.Pause()` khi mở và `Resume()` khi đóng (để lưới khóa).
 
+Nạp level mới thì mọi popup đang mở **tự đóng** (`PopupView` nghe `LevelLoadedEvent`). Popup cần giữ lại thì override `CloseOnLevelLoad` (`NoticePopup` = false, `RefillEnergyPopup` = false khi đang bắt buộc).
+
 ## Thành phần UI dùng chung
 
 | Component | Việc |
 | --- | --- |
 | `SafeAreaZone` | Neo vùng UI tránh tai thỏ / thanh home |
-| `PlayZone` | Vùng lưới phải nằm trọn; `LevelManager.FitCamera` căn camera theo vùng này |
+| `PlayZone` | Vùng lưới phải nằm trọn; `BoardCameraFitter` căn camera theo vùng này |
 | `BackgroundCover` | Ảnh nền phủ kín, không méo |
 | `ButtonPress` + `UIButtonPress` | Cảm giác nhấn lún (tự gắn cho mọi Button trong canvas) |
 | `UIButtonSounds` | Âm Click cho mọi Button (`NoClickSound` để bỏ) |

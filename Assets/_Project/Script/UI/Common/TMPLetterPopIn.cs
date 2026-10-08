@@ -39,8 +39,14 @@ public class TMPLetterPopIn : MonoBehaviour
 
     private TMP_Text Text => _text != null ? _text : (_text = GetComponent<TMP_Text>());
 
+    private void OnEnable()
+    {
+        TMPro_EventManager.TEXT_CHANGED_EVENT.Add(OnTextChanged);
+    }
+
     private void OnDisable()
     {
+        TMPro_EventManager.TEXT_CHANGED_EVENT.Remove(OnTextChanged);
         _playing = false;
         _hidden = false;
         if (_text != null) _text.ForceMeshUpdate(); // về trạng thái chữ bình thường
@@ -60,7 +66,7 @@ public class TMPLetterPopIn : MonoBehaviour
         Prepare();
         _playing = false;
         _hidden = true;
-        Apply(-1f); // mọi chữ chưa tới lượt: trong suốt
+        HideAll(); // mọi chữ chưa tới lượt: trong suốt
     }
 
     /// <summary>Hiện ngay đủ chữ (vd bỏ qua hiệu ứng).</summary>
@@ -82,14 +88,15 @@ public class TMPLetterPopIn : MonoBehaviour
         _duration = (Mathf.Max(1, n) - 1) * letterDelay + letterDuration;
     }
 
+    // Đang ẩn: TMP dựng lại lưới chữ (đổi text, layout...) thì ẩn lại; không đẩy lưới lên GPU mỗi frame
+    private void OnTextChanged(Object obj)
+    {
+        if (_hidden && obj == _text) HideAll();
+    }
+
     // LateUpdate: sau mọi thay đổi layout trong frame, trước khi canvas vẽ
     private void LateUpdate()
     {
-        if (_hidden)
-        {
-            Apply(-1f);
-            return;
-        }
         if (!_playing) return;
         _time += Time.unscaledDeltaTime;
         if (_time >= _duration)
@@ -132,6 +139,20 @@ public class TMPLetterPopIn : MonoBehaviour
             }
         }
         Text.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices | TMP_VertexDataUpdateFlags.Colors32);
+    }
+
+    /// <summary>Mọi chữ trong suốt, đọc thẳng từ lưới hiện tại (không cần _source khớp số chữ).</summary>
+    private void HideAll()
+    {
+        TMP_TextInfo info = Text.textInfo;
+        for (int i = 0; i < info.characterCount; i++)
+        {
+            TMP_CharacterInfo ch = info.characterInfo[i];
+            if (!ch.isVisible) continue;
+            Color32[] col = info.meshInfo[ch.materialReferenceIndex].colors32;
+            for (int k = 0; k < 4; k++) col[ch.vertexIndex + k].a = 0;
+        }
+        Text.UpdateVertexData(TMP_VertexDataUpdateFlags.Colors32);
     }
 
     private float OutBack(float p)

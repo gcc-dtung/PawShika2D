@@ -49,21 +49,24 @@ Script/
 ├── Gameplay/
 │   ├── Core/       GridManager, GridSpawner, GridGeometry, BoardModel, CellModel, CellView, ClueCell
 │   ├── Config/     GameConfig (Resources), EconomyConfig, LivesEnergyConfig
+│   ├── Events/     EventBus, GameEvents (kênh sự kiện toàn game)
+│   ├── Intro/      ILevelIntro, LevelIntroSequencer (hàng đợi intro sau khi nạp level)
 │   ├── Level/      LevelManager, GameState, LevelDefinition, LevelDatabase
 │   ├── Lives/      LivesManager
 │   ├── Economy/    CoinWallet, RewardedAds, IAPService, ShopDatabase, ShopService
-│   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager, BoosterTutorial
+│   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager, BoosterTutorial, ShieldTutorialDemo
+│   │   └── Effects/  BoosterEffect (+ IBoosterHost), BoosterEffectFactory, HintBooster, ShieldBooster, RevealBooster
 │   ├── Cheats/     DebugCheats
 │   ├── Daily/      DailyRewardDatabase, DailyRewardModel, DailyRewardManager
 │   ├── Energy/     EnergyModel, EnergyManager
-│   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, ColorType
-│   ├── Input/      InputManager, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
+│   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, CatFaceTicker, ColorType
+│   ├── Input/      InputManager, InputGate, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
 │   ├── Tutorial/   TutorialController, TutorialLevels, TutorialHand, MechanicIntro
 │   ├── Feedback/   GameplayFeedback
 │   ├── Audio/      SoundId, AudioDatabase, AudioManager, GameAudioEvents
 │   ├── Save/       SaveData, SaveSystem, SaveRunner
-│   ├── Visuals/    GameplayVisuals, BackgroundFitter, PlayZone
+│   ├── Visuals/    GameplayVisuals, BackgroundFitter, PlayZone, BoardCameraFitter
 │   └── Util/       Singleton
 ├── UI/
 │   ├── Common/     SafeAreaZone, BackgroundCover, UIButtonSounds, NoClickSound, UIButtonPress, ButtonPress, SettingsButton, UIConfetti, TMPLetterPopIn, ButtonPressIgnore, NestedScrollRect
@@ -83,6 +86,7 @@ Quy tắc đặt file mới:
 - Công cụ Editor → `Editor/<tính năng>/`.
 - Dự án chưa dùng `.asmdef`, mọi script nằm chung `Assembly-CSharp`; di chuyển file không cần sửa `using`.
 - **Animation dùng DOTween, không dùng coroutine.** Mỗi tween được giữ trong field (`Tween` / `Sequence`), gắn `SetLink(gameObject)`, và bị `Kill()` trong `OnDisable` (kèm khi phát lại / trả về pool). Callback `OnKill` chỉ xóa field nếu field vẫn trỏ đúng tween đó (Kill gọi trong callback có thể bị DOTween hoãn). Cái gì cần trả về trạng thái gốc khi bị hủy (camera, tim, chữ khen về pool) thì làm trong `OnKill`. Popup dùng `SetUpdate(true)` để chạy theo thời gian thực.
+- **Giao tiếp giữa hệ thống:** sự kiện nhiều nơi nghe đi qua `EventBus<T>` (struct trong `Gameplay/Events/GameEvents.cs`), không bắt bên nghe gọi `.Instance` của bên phát; UnityEvent giữ cho nối Inspector / sự kiện nội bộ. Chặn kéo thả bằng `InputGate.Lock(owner)`; lớp phủ sau khi nạp level implement `ILevelIntro`; luật theo loại (booster) dùng Strategy + Factory thay vì `switch`. Không thêm cờ tĩnh `Active` để hệ thống khác đọc.
 - **Tách logic và view:** dữ liệu và luật là class C# thuần tên `…Model` (không biết gì về SpriteRenderer / transform); phần hiển thị là MonoBehaviour tên `…View` (chỉ đọc model để vẽ, không tự quyết định luật). `GridManager` nối hai bên. Polish chỉ cần sửa file `…View`.
 
 ### Gameplay/Core
@@ -97,11 +101,20 @@ Quy tắc đặt file mới:
 | `CellView` | **View**: bật/tắt object con có sẵn trong prefab (số, ổ khóa, ô nền điều hướng); là đích raycast khi kéo; `PlayIntro` / `StopIntro` (nảy + hiện dần, DOTween) |
 | `ClueCell` | **Logic** C# thuần: giá trị, số bước khóa, ẩn/hiện, hướng |
 
+### Gameplay/Events, Intro
+
+| File | Vai trò |
+| --- | --- |
+| `EventBus` | `EventBus<T>` static theo kiểu sự kiện (`T : struct, IGameEvent`): `Subscribe` / `Unsubscribe` / `Raise`. Raise trên bản chụp danh sách (nghe / gỡ trong lúc phát an toàn), 1 listener lỗi chỉ log. `EventBusRegistry` xóa mọi kênh khi vào Play (tắt Domain Reload) |
+| `GameEvents` | `LevelLoadedEvent(Number, Level)`, `GameStateChangedEvent(State)`, `ScreenChangedEvent(IsMenu)`, `BoosterLockChangedEvent(Type, Unlocked)`, `BoosterTutorialCompletedEvent(Type)` |
+| `ILevelIntro` | `Order`, `StartDelay`, `ShouldPlay(level)`, `Play(level, onDone)`, `Cancel()` |
+| `LevelIntroSequencer` | Trên `Manager`. Tự tìm mọi `ILevelIntro` trong scene; nạp level → khóa lưới (`InputGate`) nếu có intro cần chạy → mỗi intro chờ Playing + lưới hiện xong + không kéo + không tutorial lần đầu + `StartDelay` → `Play`; `onDone` mở khóa ngay trong frame. Nạp level khác giữa chừng → `Cancel` intro đang chạy |
+
 ### Gameplay/Level, Lives, Solver
 
 | File | Vai trò |
 | --- | --- |
-| `LevelManager` | Nạp level từ `LevelDatabase`, lưu tiến độ, chuyển level, zoom camera; giữ `GameState` (`Pause`/`Resume`, `Revive`, `GiveUp`), phát `onStateChanged` sau `stateChangeDelay` 0.8 s. Scene không có `GameFlowUI` thì tự chuyển như cũ |
+| `LevelManager` | Nạp level từ `LevelDatabase`, lưu tiến độ, chuyển level; giữ `GameState` (`Pause`/`Resume`, `Revive`, `GiveUp`), đổi state sau `stateChangeDelay` 0.8 s. Phát `LevelLoadedEvent` / `GameStateChangedEvent` (EventBus); ván không Playing → `InputGate.Lock`. `LoadTutorial` bật `IsPractice` (đặt cả `LivesManager.IsPractice`). `AutoAdvance` (mặc định true, `GameFlowUI` tắt): không có popup thì tự chuyển level / chơi lại |
 | `GameState` | Enum: Playing, Paused, Won, OutOfLives, Lost. Chỉ Playing nhận thao tác kéo |
 | `LevelDefinition` | ScriptableObject level: kích thước, ô Void, clue, lời giải, luật |
 | `LevelDatabase` | ScriptableObject chứa danh sách level |
@@ -116,7 +129,7 @@ Quy tắc đặt file mới:
 | `RewardedAds` | Quảng cáo có thưởng, đặt trên `Manager`. Hiện giả lập: chờ 0.5 s rồi trả thành công. Thay thân `ShowRoutine` khi gắn SDK |
 | `IAPService` | Mua bằng tiền thật (VND). Chưa có SDK: `Purchase(productId, onDone)` luôn thất bại, phát `PurchaseFailed` (popup "Purchase Failed!" như bản gốc). Tích hợp Google Play / App Store: thay thân `Purchase`, nơi gọi giữ nguyên |
 | `ShopDatabase` | ScriptableObject `Configs/ShopDatabase.asset` + `ShopProduct` (mã IAP, tên, mục `ShopSection`, giá VND, hình, coin / Hint / Shield / Reveal / phút năng lượng vô hạn / removeAds, tem giảm giá). Số chép từ `*PackShop.asset` gốc (freeze = Shield), giá theo video |
-| `ShopService` | `Buy(product)` → `IAPService.Purchase`; thành công thì `Grant` (coin, booster, năng lượng vô hạn, `SaveData.noAds`), phát `Purchased` |
+| `ShopService` | `Buy(product)` → `IAPService.Purchase`; thành công thì `Grant` (coin, mọi `BoosterType` qua `ShopProduct.BoosterAmount`, năng lượng vô hạn, `SaveData.noAds`), phát `Purchased` |
 
 ### Gameplay/Booster
 
@@ -124,8 +137,12 @@ Quy tắc đặt file mới:
 | --- | --- |
 | `BoosterDatabase` | ScriptableObject + `BoosterType` (Hint 0, Shield 1, Reveal 2) + `BoosterData`. Tên field giữ như bản gốc; asset ở `Configs/BoosterDatabase.asset` |
 | `BoosterInventory` | Static, số lượt lưu `SaveData.boosters` (theo tên loại); lần đầu tặng `valueStart`; event `Changed` |
-| `BoosterManager` | Trên `Manager`. `IsUnlocked`: đã lưu trong `SaveData.unlockedBoosters` (qua tutorial mở khóa) hoặc đang là đích của tutorial. `Press(type)`: đang tutorial mở khóa → chỉ nhận đúng nút, gọi `BoosterTutorial.Complete`, lần dùng này miễn phí (`_freeUse`; Reveal miễn phí tới khi chọn số); chưa mở → bỏ qua; hết lượt → `onBuyRequested`; Hint đặt khối nhỏ nhất của lời giải; Khiên bật `LivesManager`; Reveal vào chế độ chọn số (`HandleCellTap` từ `DragAndDropController`), đặt lần lượt mọi khối cùng số (DOTween, cách 0.12 s, `IsBusy` khóa lưới). Chỉ trừ lượt khi có tác dụng. `Buy(type)` trừ coin |
-| `BoosterTutorial` | Trên `Manager`. Sau mỗi lần nạp level, chờ đang chơi thật (không Menu / popup / tutorial lần đầu / lưới đang hiện / băng HARD) thêm 0.3 s → booster chưa mở có `levelUnlock` nhỏ nhất mà level hiện tại đã tới: `Active`, `Target`, `BoosterTutorialView.Show` (lời nhắc = `BoosterData.detail`). Mỗi lần nạp level tối đa 1 tutorial. `Active` khóa lưới (`GridManager.IsInputLocked`). `Complete` (bấm đúng nút): lưu `unlockedBoosters`, đóng lớp tối. Khiên: bước 2 "kéo sai thử" (`Demonstrating`): nền tối tắt, `TutorialHand` chỉ 1 vùng đúng số ô nhưng sai lời giải, chờ `onShieldBlocked` rồi khen 2 s |
+| `BoosterManager` | Trên `Manager`, implement `IBoosterHost`. Tạo luật từng booster bằng `BoosterEffectFactory` (Strategy). `IsUnlocked`: đã lưu trong `SaveData.unlockedBoosters` hoặc là `TutorialTarget`. `Press(type)`: đang tutorial → chỉ nhận đúng nút, phát `TutorialPressed`, lần dùng này miễn phí (`_freeUse`; Reveal miễn phí tới khi chọn số); chưa mở / lưới khóa → bỏ qua; `effect.IsActive` → `PressWhileActive`; hết lượt → `onBuyRequested`; còn lại `effect.Activate()`. `PlaceInSequence` đặt lần lượt (DOTween, cách 0.12 s, `InputGate` khóa lưới). `HandleCellTap` chuyển cho các booster. Chỉ trừ lượt khi có tác dụng (`Consume`). `Buy(type)` trừ coin. Event: `onBuyRequested`, `onModeChanged(type, on)`, `onBoosterUsed`, `onTutorialChanged` |
+| `Effects/BoosterEffect` | Lớp cha luật booster: `Type`, `IsActive`, `Activate`, `PressWhileActive`, `Cancel`, `HandleCellTap`; dùng manager qua `IBoosterHost` (`Grid`, `Lives`, `Consume`, `PlaceInSequence`, `NotifyModeChanged`) |
+| `Effects/HintBooster`, `ShieldBooster`, `RevealBooster` | Hint: đặt khối nhỏ nhất của lời giải. Khiên: `LivesManager.ActivateShield`. Reveal: chế độ chọn số, chạm ô số → đặt mọi khối cùng số |
+| `Effects/BoosterEffectFactory` | `Create(BoosterType)`: chỗ duy nhất thêm dòng khi có booster mới |
+| `BoosterTutorial` | Trên `Manager`, 1 `ILevelIntro` (Order 20, chờ 0.3 s): booster chưa mở có `levelUnlock` nhỏ nhất mà level vừa nạp đã tới → `BoosterManager.BeginTutorial`, `BoosterTutorialView.Show` (lời nhắc = `BoosterData.detail`). Mỗi lần nạp level tối đa 1 tutorial. Bấm đúng nút (`TutorialPressed`): lưu `unlockedBoosters`, phát `BoosterLockChangedEvent` + `BoosterTutorialCompletedEvent`, đóng lớp tối |
+| `ShieldTutorialDemo` | Trên `Manager`. Nghe `BoosterTutorialCompletedEvent` (Khiên): bước 2 "kéo sai thử" (`Demonstrating`): `TutorialHand` chỉ 1 vùng đúng số ô nhưng sai lời giải, chờ `onShieldBlocked` rồi khen 2 s |
 
 ### Gameplay/Cheats
 
@@ -139,9 +156,9 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 
 | File | Vai trò |
 | --- | --- |
-| `TutorialController` | Trên `Manager`. `Pending` (tĩnh): save chưa có `tutorialDone` và đang ở level 1 → `ScreenFlow` vào thẳng tutorial khi mở game, `LevelManager` không nạp level. 4 bước nạp bằng `LevelManager.LoadTutorial`; thắng bước (`GridManager.onGameWin`) → chờ 1.1 s sang bước kế; đặt khối → bàn tay chuyển sang số kế. Xong / Skip: lưu `tutorialDone`, `LoadLevel` level hiện tại. `Active` (tĩnh): `GridManager` không trừ mạng, `LevelManager` không sang WinPopup |
+| `TutorialController` | Trên `Manager`. `Pending` (tĩnh): save chưa có `tutorialDone` và đang ở level 1 → `ScreenFlow` vào thẳng tutorial khi mở game, `LevelManager` không nạp level. 4 bước nạp bằng `LevelManager.LoadTutorial` (`IsPractice`: không trừ mạng, không sang WinPopup); thắng bước (`GridManager.onGameWin`) → chờ 1.1 s sang bước kế; đặt khối → bàn tay chuyển sang số kế. Xong / Skip: lưu `tutorialDone`, `LoadLevel` level hiện tại. `Active` (tĩnh): `LevelIntroSequencer` chờ |
 | `TutorialLevels` | 4 bước như bản gốc, dựng `LevelDefinition` trong code: 3 ô ngang, 3 ô dọc, 3x3 (3 + 6), 3x3 (2 + 4 + 3); lời nhắc tiếng Anh; gợi ý bàn tay (số, ô bắt đầu, ô kết thúc) |
-| `MechanicIntro` | Trên `Manager`. Sau mỗi lần nạp level (lưới hiện xong, băng HARD xong, không tutorial khác) + 0.15 s: level có cơ chế chưa xem (Hướng → Khóa → "?") thì mở `MechanicIntroPopup` lần lượt; Ok lưu `SaveData.seenMechanics`. Popup tạm dừng ván nên `BoosterTutorial` chờ popup xong. Void không có popup |
+| `MechanicIntro` | Trên `Manager`, 1 `ILevelIntro` (Order 10, chờ 0.15 s): level có cơ chế chưa xem (Hướng → Khóa → "?") thì mở `MechanicIntroPopup` lần lượt; Ok lưu `SaveData.seenMechanics`; hết popup → `onDone`. Void không có popup |
 | `TutorialHand` | Object `TutorialHand` (world, sprite `tutorial_hand`, order 80): hiện → nhấn → trượt tới ô cuối → nhấc → mờ, lặp; ẩn khi người chơi đang kéo (`GridManager.IsSelecting`) |
 
 ### Gameplay/Daily
@@ -166,7 +183,8 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `BlockModel` | **Logic** C# thuần: vùng, các ô chiếm, ô số, màu (= màu khung chọn của lượt kéo tạo ra khối) |
 | `DifficultyTheme` | ScriptableObject `Configs/DifficultyTheme.asset` + `LevelDifficulty` (Normal / Hard / VeryHard) + `DifficultyStyle`: chữ tab, mặt nút PLAY + màu chữ + viền chữ PLAY, khung HUD + viền chữ tab, đầu lâu, băng chữ; dùng chung khung PLAY `khung_home_hard`, dải sọc. `LevelDefinition.difficulty` (sửa trong Level Editor) |
 | `PlacedBlockView` | **View** khối mèo: thân 9-slice, tai, số, mặt, viền `Ring`. Trạng thái: xem trước (đặc ngay, viền màu mèo thu bên trong 0.2 s) → `Confirm` (bật) hoặc `PlayReject` (rung, co nhỏ + mờ; `rejectStyle`: `GrayOut` mèo xám – mặc định / `RedRing` viền đỏ ngoài mép / `GrayAndRedRing`). `PlayWinFlash`: thắng thì thân + tai phủ trắng 0.6 rồi tan (lớp sprite đè lên dùng `flashMaterial` = `BlockFlash.mat`, GUI/Text Shader) |
-| `CatFaceAnimator` | Chạy chuỗi khung hình mặt mèo trên SpriteRenderer |
+| `CatFaceAnimator` | Chạy chuỗi khung hình mặt mèo trên SpriteRenderer (không Update riêng) |
+| `CatFaceTicker` | Object ẩn, 1 Update chạy khung hình cho mọi `CatFaceAnimator` |
 | `ColorType` | Enum 10 màu + bảng màu RGB |
 
 ### Gameplay/Input, Feedback
@@ -174,6 +192,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | File | Vai trò |
 | --- | --- |
 | `InputManager` | Đọc chuột/chạm, chuyển cho `DragAndDropController` |
+| `InputGate` | Static: khóa kéo thả theo chủ khóa (`Lock(owner)` / `Unlock(owner)`, `IsLocked`, `Describe()`); chủ khóa Unity đã bị hủy tự bị bỏ. `GridManager.IsInputLocked` đọc |
 | `DragAndDropController` | Raycast tìm ô lúc bắt đầu kéo; khi kéo đổi vị trí ngón tay sang world rồi chuyển cho `GridManager`; cập nhật bong bóng |
 | `DragSelection` | **Logic** C# thuần của vùng đang kéo: không bao giờ phủ lên khối đã đặt / ô Void (bị chặn thì giữ vùng hợp lệ trước đó), vuốt nhanh thì đi qua từng ô ở giữa; `BlockDir` = mép nào đang bị ngón tay đẩy vào vật cản |
 | `SelectionBoxView` | Khung màu mờ phủ vùng đang kéo, random 1 `ColorType` mỗi lượt kéo (mèo xem trước và khối đặt ra dùng đúng màu này); đổi ô thì giãn / co tới vùng mới trong `resizeDuration` 0.15 s (`resizeEase` OutQuad, tween DOTween, chỉnh trong Inspector), giãn xong báo `WhenSettled`; mờ đi khi đang hiện mèo xem trước. Bình thường ôm sát ô (`inset` 0.1); bị chặn (khối, Void, mép lưới) thì mép phía đó trượt sang lấp khe, dừng ngay trước vật cản (`blockedExtend` 0.1) |
@@ -187,7 +206,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `SoundId` | Enum các âm: UI (Click, PopupOpen/Close, Coin), màn chơi (LevelStart, BlockPlace, Mistake, Unlock, Win, Lose, OutOfLives), booster (Booster, ShieldOn, ShieldBlock), tiếng mèo (CatHappy, CatSad) |
 | `AudioDatabase` | ScriptableObject `Configs/AudioDatabase.asset`: mỗi âm → nhiều clip (phát ngẫu nhiên), âm lượng, khoảng cao độ, cooldown; nhạc nền + âm lượng |
 | `AudioManager` | Trên object `AudioManager`. Nhạc nền lặp, đổi / bật / tắt có fade (DOTween, thời gian thực); pool `sfxVoices` AudioSource 2D, hết thì dùng lại nguồn phát lâu nhất; cooldown từng âm. `Play(id)`, `PlayChance(id, p)`, `Vibrate()`; `MusicOn` / `SoundOn` / `VibrateOn` lưu `SaveData.settings`, sự kiện `SettingsChanged` |
-| `GameAudioEvents` | Nối âm vào sự kiện có sẵn: `GridManager` (đặt khối + mèo vui 35 %, sai + mèo buồn 80 %, mở khóa), `LevelManager.onStateChanged` (Won / OutOfLives / Lost), `GridSpawner.gridCellEvent` (LevelStart, bỏ qua khi ở Menu), `LivesManager` (khiên bật / chặn), `BoosterManager.onBoosterUsed`, `CoinWallet.Changed` (nhận coin) |
+| `GameAudioEvents` | Nối âm vào sự kiện có sẵn: `GridManager` (đặt khối + mèo vui 35 %, sai + mèo buồn 80 %, mở khóa), `GameStateChangedEvent` (Won / OutOfLives / Lost), `GridSpawner.gridCellEvent` (LevelStart, bỏ qua khi ở Menu), `LivesManager` (khiên bật / chặn), `BoosterManager.onBoosterUsed`, `CoinWallet.Changed` (nhận coin) |
 
 ### Gameplay/Save
 
@@ -202,18 +221,19 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | File | Vai trò |
 | --- | --- |
 | `GameplayVisuals` | ScriptableObject gom sprite; nạp qua `Resources.Load("GameplayVisuals")` |
+| `BoardCameraFitter` | Trên `Manager`. Nghe `GridSpawner.gridCellEvent` → căn camera vừa lưới: có `PlayZone` bật thì giao `PlayZone`, không thì theo tỉ lệ `boardHeightRatio` / `boardWidthRatio` / `boardCenterOffset` (tách từ `LevelManager`) |
 | `BackgroundFitter` | Nền world (`bg`) đi theo camera; scale trong scene là tối thiểu: đã phủ kín camera thì giữ, chưa kín thì phóng vừa đủ |
-| `Singleton` | Base class `Singleton<T>` và `DontDestroyOnLoadSingleton<T>` |
+| `Singleton` | Base class `Singleton<T>` (bản trùng chỉ hủy component, không hủy GameObject `Manager` chứa nhiều manager) và `DontDestroyOnLoadSingleton<T>` |
 
 ### UI/HUD
 
 | File | Vai trò |
 | --- | --- |
 | `LevelHUD` | Chữ `LEVEL n`; level Hard / Very Hard: khung có tab ghi mức khó (`khung_hard1` / `khung_expert1`, chữ tab viền theo mức khó) bao ô LEVEL, nền ô đổi sang `rounded_white` bo góc |
-| `DifficultyIntro` | Trên `Canvas_HUD/DifficultyIntro`. Vào ván level Hard / Very Hard: chờ lưới hiện xong → nền tối, dải sọc `khung_expert_4` + băng chữ (`khung_hard_3` HARD LEVEL / `khung_expert_3` EXTREME LEVEL) trượt chéo từ góc trên trái vào, mèo đầu lâu (`khung_hard_2` / `khung_expert_2`) bật ra + nhịp, giữ 1.3 s, đầu lâu thu lại, băng trượt ra, nền sáng lại; âm `HardLevel`. `Playing` (tĩnh) khóa thao tác trên lưới |
+| `DifficultyIntro` | Trên `Canvas_HUD/DifficultyIntro`, 1 `ILevelIntro` (Order 0). Level Hard / Very Hard: nền tối, dải sọc `khung_expert_4` + băng chữ (`khung_hard_3` HARD LEVEL / `khung_expert_3` EXTREME LEVEL) trượt chéo từ góc trên trái vào, mèo đầu lâu (`khung_hard_2` / `khung_expert_2`) bật ra + nhịp, giữ 1.3 s, đầu lâu thu lại, băng trượt ra, nền sáng lại; âm `HardLevel`. Chờ lưới hiện / khóa lưới do `LevelIntroSequencer` lo |
 | `LivesUI` | Hàng tim trên Canvas |
-| `BoosterButton` | 1 nút booster: icon, số lượt (`btn_number`), dấu `+` (`btn_add_0`), ổ khóa "LV n", quầng sáng xoay khi đang bật; bấm → `BoosterManager.Press` |
-| `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số |
+| `BoosterButton` | 1 nút booster: icon, số lượt (`btn_number`), dấu `+` (`btn_add_0`), ổ khóa "LV n", quầng sáng xoay khi đang bật; bấm → `BoosterManager.Press`. Vẽ lại theo `onModeChanged`, `onTutorialChanged`, `onBoosterUsed`, `BoosterLockChangedEvent`, `LevelLoadedEvent`. `BoosterButton.Find(type)` |
+| `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số (`onModeChanged` lọc Reveal); X → `BoosterManager.CancelModes` |
 | `ShieldIndicator` | Khung băng `ice_effect_2` phủ hàng tim khi có khiên; khiên chặn lỗi thì phồng to rồi mờ |
 | `TutorialView` | `Canvas_HUD/UIZone/TutorialPanel` (tắt sẵn): tiêu đề Tutorial, nút Skip, vạch tiến độ `tutorial_dot` (bước hiện tại sáng), khung lời nhắc `popup_tutorial` 9-slice (nảy nhẹ khi đổi bước). Hiện thì ẩn `TopPanel`, `DownPanel`, ẩn thì trả lại |
 | `BoosterTutorialView` | `Canvas_HUD/BoosterTutorial` (Canvas riêng sortingOrder 5, tắt sẵn): nền tối chặn thao tác, khung lời nhắc `khung_reveal2` đè khung LEVEL, bàn tay nhấn lặp lên nút. Nút booster được nhấc trên nền tối bằng Canvas override sorting (+ GraphicRaycaster, thêm lúc chạy) và bật quầng sáng (`BoosterButton.SetHighlight`) |
@@ -226,8 +246,8 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `MainMenuNavigator` | Trên `Canvas_Menu`. Panel xếp ngang theo thứ tự tab, đổi tab thì trượt (`duration` 0.3 s, `ease` OutCubic); tab chọn rộng `selectedWidth` 408, nền `home_tab1` trượt theo, tab khác chia đều; xong thì tắt panel khuất màn hình. Tab / nền tab chọn neo bottom center. `Select(index)`, `onTabChanged`; vuốt: `BeginSwipe` / `Swipe(dx)` / `EndSwipe(v)` (panel theo ngón tay, đang ở tab đầu / cuối thì không kéo ra ngoài được; thả: quá `swipeThreshold` 20% bề rộng hoặc nhanh hơn `swipeVelocity` 900/s thì sang tab kề, thời gian trượt theo quãng còn lại, tối thiểu `minReleaseRatio`); `LayoutInEditor` (chuột phải component) xếp sẵn trong Editor |
 | `ShopCardView` | 1 thẻ / dòng / ô Shop: đọc `ShopProduct` lúc chạy (tên, giá, hình, coin, ô vật phẩm 2x2 cố định Hint / Shield / Reveal / vô hạn, ẩn món = 0); bấm giá → `ShopService.Buy`; dòng Remove Ads ẩn khi đã `noAds` |
 | `MenuSwipe` | Trên `Canvas_Menu/Panels`: nhận kéo từ mọi thứ trong panel, kéo dọc thì bỏ qua; vận tốc làm mượt, dừng tay > 0.08 s rồi thả = vận tốc 0. Kéo quá ngưỡng thì EventSystem hủy click của nút đang ấn |
-| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua / Cài đặt → HOME). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `MainMenuNavigator.ShopTab` (Nạp năng lượng thiếu coin). `onScreenChanged` |
-| `PlayButtonView` | Nút PLAY: "Level n" theo `onLevelLoaded`, thở nhẹ (DOTween lặp, kill khi tắt) → `ScreenFlow.Play` |
+| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua / Cài đặt → HOME). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `MainMenuNavigator.ShopTab` (Nạp năng lượng thiếu coin). Phát `ScreenChangedEvent` |
+| `PlayButtonView` | Nút PLAY: "Level n" theo `LevelLoadedEvent`, thở nhẹ (DOTween lặp, kill khi tắt) → `ScreenFlow.Play` |
 | `CoinHUD` | Số coin (nghe `CoinWallet.Changed`, icon nảy); bấm → tab Shop |
 | `SafeAreaZone` | UI Zone: neo RectTransform theo `Screen.safeArea` (chọn cạnh trên / dưới / trái / phải) để UI tránh tai thỏ, thanh home; chỉ chạy khi Play, tự cập nhật khi màn hình đổi |
 | `BackgroundCover` | Ảnh nền UI phủ kín RectTransform cha: kích thước trong scene là tối thiểu, chưa kín thì phóng đều vừa đủ (tính cả lệch tâm) |
@@ -239,11 +259,11 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | File | Vai trò |
 | --- | --- |
 | `MechanicIntroPopup` | `Canvas_Popup/Popups/MechanicIntroPopup` như popup "Orientation" bản gốc: khung `popup_tutorial`, tiêu đề, 1 dòng giải thích, ảnh `popup_tutorial_4` (Hướng) / `_2` (Khóa) / `_3` ("?"), nút xanh Ok. Mở thì tạm dừng ván |
-| `PopupView` | Base: CanvasGroup, nền tối `Dim` chắn bấm, `Panel` bật lên (scale 0.6 → 1), dùng thời gian thực; âm PopupOpen / PopupClose |
+| `PopupView` | Base: CanvasGroup, nền tối `Dim` chắn bấm, `Panel` bật lên (scale 0.6 → 1), dùng thời gian thực; âm PopupOpen / PopupClose. Đang mở mà nạp level mới (`LevelLoadedEvent`) thì tự `CloseImmediate`, trừ khi override `CloseOnLevelLoad` (Notice: không; Refill: không khi bắt buộc) |
 | `UIButtonSounds` | Trên Canvas_Menu / Canvas_HUD / Canvas_Popup: mọi Button bên trong (kể cả đang tắt) phát Click; nút có `NoClickSound` thì bỏ qua |
 | `UIButtonPress` | Trên Canvas_Menu / Canvas_HUD / Canvas_Popup: gắn `ButtonPress` cho mọi Button bên trong (kể cả đang tắt); nút đã có `ButtonPress` thì giữ nguyên |
 | `ButtonPress` | Cảm giác nhấn như bản gốc (chỉ khi nút tương tác được). Nút có khung + mặt riêng (con `Face` / `Fill`: PLAY, Refill, Free live): khung đứng yên, mọi con lún `insetScale` 0.94 quanh tâm nút và tối `pressedTint` 0.78 → lộ viền tối quanh mặt như bị nhấn xuống; Button đang tô khung thì chuyển `targetGraphic` sang mặt. Nút 1 ảnh: cả nút lún `pressScale` 0.93 và tối (tạm dừng tween scale khác trên nút). Thả: nảy nhẹ về (OutBack `releaseOvershoot` 3, 0.18 s); kéo ra ngoài / vuốt: về luôn. Thời gian thực. Tắt cho 1 nút: gắn sẵn `ButtonPress` rồi bỏ tick |
-| `GameFlowUI` | Trên `Canvas_Popup/Popups`. Nghe `onStateChanged`: Won → Win, OutOfLives → Hồi mạng, Lost → Thua; `OpenSettings` cho nút bánh răng (HUD / Menu; trong ván chỉ mở khi đang chơi); `RequestPlay` cho nút PLAY; `OpenEnergyRefill` (Menu). Hết năng lượng mà PLAY / Retry → `RefillEnergyPopup.ShowRequired` (X: PLAY → ở lại Menu, Retry → mở lại popup Thua) |
+| `GameFlowUI` | Trên `Canvas_Popup/Popups`. Đặt `LevelManager.AutoAdvance = false`. Nghe `GameStateChangedEvent`: Won → Win, OutOfLives → Hồi mạng, Lost → Thua; `OpenSettings` cho nút bánh răng (HUD / Menu; trong ván chỉ mở khi đang chơi); `RequestPlay` cho nút PLAY; `OpenEnergyRefill` (Menu). Hết năng lượng mà PLAY / Retry → `RefillEnergyPopup.ShowRequired` (X: PLAY → ở lại Menu, Retry → mở lại popup Thua) |
 | `WinPopup` | Màn thắng như bản gốc (không bảng, nền tối 0.95, không có sao): ô coin trên cùng, chữ "WELL DONE!" to (156, tự co) ngay trên huy hiệu mèo (`khung_win1` + `cat_1`) với quầng sáng + tia sáng xoay, `UIConfetti`. Mở: chữ đi vào từng ký tự (`TMPLetterPopIn`) cùng lúc huy hiệu + tia bật, confetti bắn 2 bên rồi mưa → chữ cuối đáp xuống thì Continue / x2 Coin bật. Nhận: huy hiệu thu lại, coin (≤ 12) bung ra rồi bay vào ô coin, số đếm lên → `NextLevel` |
 | `TMPLetterPopIn` | Chữ TMP hiện lần lượt từng ký tự: mỗi chữ bắt đầu to `startScale` 2.4, lệch ±`startRotation` 16°, trong suốt → thu về cỡ chuẩn (OutBack `overshoot` 1.7), hiện dần (`fadeRatio`), xoay về thẳng; chữ sau trễ `letterDelay` 0.06 s, mỗi chữ `letterDuration` 0.38 s. Sửa đỉnh lưới chữ (không tách object), giữ màu / gradient / viền. `Play`, `Hide`, `Finish`, `Duration` |
 | `UIConfetti` | Confetti bằng ParticleSystem vẽ lên uGUI qua **UIParticle** (package `com.coffee.ui-particle` 4.14.1): UIParticle scale 100 (1 đơn vị particle = 100 đơn vị canvas) + 3 ParticleSystem con `BurstLeft` / `BurstRight` (60 mảnh, bắn chéo lên 55–85°) / `Rain` (22 mảnh / giây từ mép trên). Dùng chung `ConfettiUI.mat` (UI/Default – UIParticle chỉ hỗ trợ shader UI) + atlas `confetti_sheet` 2x2 qua Texture Sheet Animation → 1 mesh, 1 draw call. Trọng lực, lực cản 1.6, Noise (lắc), xoay + lật trục X, mờ 20 % cuối. Vị trí phát tính theo rect lúc gọi (màn cao / thấp đều đúng mép) |
@@ -363,11 +383,15 @@ InputManager ─► DragAndDropController ─► GridManager.BeginSelection (ch�
 | `GridManager` | `onGameWin` | `LevelManager` |
 | `LivesManager` | `onLivesChanged(current, max)`, `onLifeLost(current)` | `LivesUI` |
 | `LivesManager` | `onOutOfLives` | `LevelManager` |
-| `LevelManager` | `onLevelLoaded(number)` | `LevelHUD`, `GameFlowUI` |
-| `LevelManager` | `onStateChanged(GameState)` | `GameFlowUI`, `BoosterManager`, `EnergyManager` (Lost → −1), `RefillEnergyPopup` |
+| `LevelManager` | `EventBus<LevelLoadedEvent>` | `LevelHUD`, `PlayButtonView`, `ScreenFlow`, `BoosterManager`, `BoosterButton`, `PopupView` (tự đóng), `LevelIntroSequencer`, `ShieldTutorialDemo` |
+| `LevelManager` | `EventBus<GameStateChangedEvent>` | `GameFlowUI`, `BoosterManager`, `EnergyManager` (Lost → −1), `RefillEnergyPopup`, `GameAudioEvents` |
+| `ScreenFlow` | `EventBus<ScreenChangedEvent>` | (dành cho hệ thống mới) |
 | `LivesManager` | `onShieldChanged(bool)`, `onShieldBlocked` | `BoosterButton`, `ShieldIndicator` |
 | `BoosterManager` | `onBuyRequested(type)` | `GameFlowUI` → `BuyBoosterPopup` |
-| `BoosterManager` | `onRevealModeChanged(bool)`, `onBoosterUsed(type)` | `BoosterButton`, `RevealBanner` |
+| `BoosterManager` | `onModeChanged(type, bool)`, `onBoosterUsed(type)`, `onTutorialChanged` | `BoosterButton`, `RevealBanner` |
+| `BoosterManager` | `TutorialPressed(type)` (event C#) | `BoosterTutorial` |
+| `BoosterTutorial`, `DebugCheats` | `EventBus<BoosterLockChangedEvent>` | `BoosterButton` |
+| `BoosterTutorial` | `EventBus<BoosterTutorialCompletedEvent>` | `ShieldTutorialDemo` |
 | `BoosterInventory` | `Changed(type, count)` (event C#) | `BoosterButton` |
 | `EnergyManager` | `onEnergyChanged(current, max)`, `onTick` | `EnergyHUD`, `RefillEnergyPopup` |
 

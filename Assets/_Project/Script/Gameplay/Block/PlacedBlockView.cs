@@ -222,7 +222,14 @@ public class PlacedBlockView : MonoBehaviour
             // Chưa cấu hình sprite màu: giữ sprite trắng của prefab và tô màu
             _bodyBaseColor = color.ToColor();
         }
-        _numberBaseColor = Color.Lerp(color.ToColor(), new Color(0.12f, 0.1f, 0.3f), 0.6f);
+        _numberBaseColor = NumberColor(color);
+    }
+
+    /// <summary>Số trên khối: cùng tông màu khối, đậm và tối hơn (như bản gốc: khối đỏ số đỏ sẫm, khối xanh số xanh sẫm).</summary>
+    private static Color NumberColor(ColorType color)
+    {
+        Color.RGBToHSV(color.ToColor(), out float h, out float s, out float v);
+        return TextColor.Display(Color.HSVToRGB(h, Mathf.Clamp01(s * 1.15f + 0.1f), v * 0.55f));
     }
 
     /// <summary>Đổi thân, tai, số sang bộ sprite màu khác (giữ nguyên kích thước). Dùng cho mèo xám khi sai.</summary>

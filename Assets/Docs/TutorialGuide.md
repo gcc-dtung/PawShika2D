@@ -24,9 +24,9 @@ Những chỗ trong code có hỏi `TutorialController`:
 | --- | --- |
 | `ScreenFlow.Start` | `TutorialController.Pending` → `EnterTutorial()` thay cho Main Menu |
 | `LevelManager.Start` | `Pending` → không nạp level (tutorial tự nạp) |
-| `LevelManager.LoadTutorial(level)` | Dựng lưới + căn camera + state Playing; **không** lưu level hiện tại, **không** phát `onLevelLoaded` (HUD level, băng HARD, booster không đổi) |
-| `LevelManager.OnWin` | `TutorialController.Active` → bỏ qua (không sang WinPopup) |
-| `GridManager.DeductLife` | `Active` → chỉ báo sai, không trừ mạng |
+| `LevelManager.LoadTutorial(level)` | Dựng lưới (camera tự căn) + state Playing + `IsPractice` (sai không trừ mạng, thắng không sang WinPopup); **không** lưu level hiện tại, **không** phát `LevelLoadedEvent` (HUD level, intro, booster không đổi) |
+| `LevelManager.OnWin` | `IsPractice` → bỏ qua (không sang WinPopup) |
+| `LivesManager.LoseLife` | `IsPractice` → chỉ báo sai, không trừ mạng (không tốn khiên) |
 | `SaveData.tutorialDone` | Đã xong / Skip tutorial |
 
 Luồng:
@@ -163,7 +163,7 @@ Hợp với cơ chế nhìn là hiểu. Project đã có sẵn ảnh minh họa:
    ```
 
 2. **Popup**: class kế thừa `PopupView` (như `NoticePopup`): ảnh minh họa, 1 dòng giải thích, nút OK. Dựng trong `PopupBuilder` (hoặc builder riêng) để nằm trong `Canvas_Popup/Popups`.
-3. **Điểm kích hoạt**: nghe `LevelManager.onLevelLoaded`, xem level hiện tại có cơ chế nào mà chưa xem:
+3. **Điểm kích hoạt**: `MechanicIntro` là 1 `ILevelIntro` (Order 10); `ShouldPlay` xem level vừa nạp có cơ chế nào mà chưa xem:
 
    ```csharp
    LevelDefinition level = LevelManager.Instance.CurrentLevel;
@@ -171,7 +171,7 @@ Hợp với cơ chế nhìn là hiểu. Project đã có sẵn ảnh minh họa:
    if (hasLock && !SaveSystem.Data.seenLockTutorial) { /* LevelManager.Pause(); mở popup */ }
    ```
 
-   Chờ lưới hiện xong (`GridSpawner.IsIntroPlaying`), và với level khó thì chờ cả băng HARD (`DifficultyIntro.Playing`), rồi mới mở popup.
+   `LevelIntroSequencer` chờ lưới hiện xong và chạy băng HARD (Order 0) trước, rồi mới gọi `Play` mở popup.
 4. **Đóng popup**: đặt cờ = true, `SaveSystem.MarkDirty()`, `LevelManager.Resume()`.
 5. Level giới thiệu cơ chế đã có sẵn lịch trong **Mechanic Injector** (cột "Giới thiệu …"): popup sẽ rơi đúng vào các level đó.
 
@@ -191,7 +191,7 @@ Hợp với cơ chế cần thao tác mới dạy được, vd. khóa phải đ�
    - `Finish()` đặt cờ đã xem tương ứng thay cho `tutorialDone` cố định.
 3. **Kích hoạt**: như bước 3 Cách A, nhưng thay vì mở popup thì gọi `Begin(...)` trước khi người chơi kéo (vd. ngay khi bấm PLAY vào level đó).
 4. **Giao diện**: dùng lại `TutorialView` (tiêu đề, Skip, vạch, lời nhắc). Muốn tiêu đề khác ("Locked numbers") thì thêm field `title` vào `TutorialView` và tham số vào `Begin`.
-5. Nhờ `TutorialController.Active`, các ngoại lệ có sẵn vẫn đúng: không trừ mạng, không WinPopup.
+5. Nhờ `LoadTutorial` bật `IsPractice`, các ngoại lệ có sẵn vẫn đúng: không trừ mạng, không WinPopup.
 
 ### Checklist cho tutorial mới
 
@@ -210,13 +210,15 @@ Booster (Hint, Khiên, Reveal) **khóa** tới khi người chơi qua tutorial c
 
 | File | Vai trò |
 | --- | --- |
-| `Script/Gameplay/Booster/BoosterTutorial.cs` | Trên `Manager`: chọn lúc hiện, booster nào, mở khóa (`SaveData.unlockedBoosters`) |
+| `Script/Gameplay/Booster/BoosterTutorial.cs` | Trên `Manager`, 1 `ILevelIntro` (Order 20): booster nào, mở khóa (`SaveData.unlockedBoosters`), phát `BoosterTutorialCompletedEvent` |
+| `Script/Gameplay/Booster/ShieldTutorialDemo.cs` | Trên `Manager`: bước 2 "kéo sai thử" của Khiên |
+| `Script/Gameplay/Intro/LevelIntroSequencer.cs` | Trên `Manager`: chạy lần lượt các `ILevelIntro` sau khi nạp level, khóa lưới trong lúc chạy |
 | `Script/UI/HUD/BoosterTutorialView.cs` | `Canvas_HUD/BoosterTutorial`: nền tối, lời nhắc, bàn tay; nhấc nút booster lên trên nền tối |
-| `BoosterManager` | `IsUnlocked` đọc save; `Press` trong lúc tutorial chỉ nhận đúng nút, gọi `BoosterTutorial.Complete`, lần dùng miễn phí |
+| `BoosterManager` | `IsUnlocked` đọc save (hoặc `TutorialTarget`); `BeginTutorial(type)` / `EndTutorial`; `Press` trong lúc tutorial chỉ nhận đúng nút, phát `TutorialPressed`, lần dùng miễn phí |
 | `BoosterButton.SetHighlight` | Bật quầng sáng xoay cho nút đang được chỉ |
 | `Configs/BoosterDatabase.asset` | `levelUnlock` (level mở), `detail` (lời nhắc), `valueStart` (lượt tặng) |
 
-**Khi nào hiện:** sau mỗi lần nạp level, `BoosterTutorial` chờ tới khi đang chơi thật (không ở Menu, không popup, không tutorial lần đầu), lưới đã hiện xong và băng HARD đã chạy xong, thêm 0.3 s. Lúc đó nó chọn booster **chưa mở** có `levelUnlock` nhỏ nhất mà level hiện tại đã tới. Mỗi lần nạp level chỉ hiện **1** tutorial. Người chơi cũ đã qua nhiều level sẽ được giới thiệu lần lượt ở các lần vào level kế tiếp.
+**Khi nào hiện:** sau mỗi lần nạp level, `LevelIntroSequencer` chờ tới khi đang chơi thật (không ở Menu, không popup, không tutorial lần đầu), lưới đã hiện xong và băng HARD đã chạy xong, thêm 0.3 s. Lúc đó nó chọn booster **chưa mở** có `levelUnlock` nhỏ nhất mà level hiện tại đã tới. Mỗi lần nạp level chỉ hiện **1** tutorial. Người chơi cũ đã qua nhiều level sẽ được giới thiệu lần lượt ở các lần vào level kế tiếp.
 
 **Đổi level mở / lời nhắc:** sửa `levelUnlock` / `detail` trong `BoosterDatabase.asset` (Inspector). Ổ khóa trên nút tự hiện "LV n" theo `levelUnlock`.
 
@@ -224,15 +226,15 @@ Booster (Hint, Khiên, Reveal) **khóa** tới khi người chơi qua tutorial c
 
 1. Thêm giá trị vào `BoosterType`, dòng mới trong `BoosterDatabase.asset` (`levelUnlock`, `detail`, `icon`, `valueStart`...).
 2. Thêm nút trên thanh booster (Build Boosters) với `BoosterButton.type` đúng loại.
-3. Viết tác dụng trong `BoosterManager.Press` và gọi `Consume(type)` khi booster thực sự có tác dụng (để lần miễn phí được tính đúng).
+3. Viết tác dụng trong 1 class `XBooster : BoosterEffect` (+ 1 dòng trong `BoosterEffectFactory`) và gọi `Host.Consume(Type)` khi booster thực sự có tác dụng (để lần miễn phí được tính đúng).
 4. Không cần sửa `BoosterTutorial`: nó đọc danh sách từ database và tìm nút theo `BoosterButton.Type`.
 
 **Khiên – bước 2 "kéo sai thử"** (khiên bật thì chỉ thấy lớp băng, chưa hiểu tác dụng):
 
 1. Bấm Khiên xong 0.2 s: nền tối tắt, lưới mở, khung lời nhắc xuống dưới hàng tim (`BoosterTutorialView.messageOnlyY`) để thấy lớp băng: "Now make a wrong move like this - the Shield will block it!".
-2. Bàn tay (`TutorialHand`, dùng chung với tutorial lần đầu) kéo mẫu 1 vùng **đúng số ô nhưng làm lưới hết lời giải** (`BoosterTutorial.FindWrongMove`, chọn số nhỏ nhất cho dễ kéo). Người chơi đặt đúng thay vì sai thì bàn tay chỉ lại cách sai trên lưới mới.
+2. Bàn tay (`TutorialHand`, dùng chung với tutorial lần đầu) kéo mẫu 1 vùng **đúng số ô nhưng làm lưới hết lời giải** (`ShieldTutorialDemo.FindWrongMove`, chọn số nhỏ nhất cho dễ kéo). Người chơi đặt đúng thay vì sai thì bàn tay chỉ lại cách sai trên lưới mới.
 3. Kéo sai → khiên chặn (`LivesManager.onShieldBlocked`) → "The Shield saved you - no life lost!" 2 s rồi tắt. Thắng / nạp level khác thì bỏ bước này.
-4. Chữ ở 2 bước: Inspector `Manager` → `BoosterTutorial` (`wrongMoveMessage`, `savedMessage`, `savedMessageTime`).
+4. Chữ ở 2 bước: Inspector `Manager` → `ShieldTutorialDemo` (`wrongMoveMessage`, `savedMessage`, `savedMessageTime`). Booster khác muốn có bước riêng: component mới nghe `EventBus<BoosterTutorialCompletedEvent>`.
 
 **Chỉnh giao diện:** vị trí / cỡ khung lời nhắc, độ tối nền, bàn tay trong `TutorialBuilder.BuildBoosterPanel` → chạy lại **Build Tutorial** → lưu scene. Độ lệch đầu ngón tay so với tâm nút: Inspector `BoosterTutorial` → `BoosterTutorialView.handOffset`. Thời gian chờ trước khi tối màn: `BoosterTutorial.startDelay`.
 

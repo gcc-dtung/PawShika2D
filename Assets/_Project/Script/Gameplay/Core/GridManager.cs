@@ -40,12 +40,13 @@ public class GridManager : Singleton<GridManager>
     public BoardModel Board => _board;
     public bool IsGameWon => _isGameWon;
     public bool IsGameOver => LivesManager.Instance != null && LivesManager.Instance.IsOutOfLives;
+    /// <summary>
+    /// Khóa kéo thả: trạng thái riêng của lưới + InputGate (ván không Playing, intro / tutorial, Reveal đang tự đặt khối...).
+    /// Lớp phủ mới chỉ cần InputGate.Lock(this), không sửa ở đây.
+    /// </summary>
     public bool IsInputLocked => _isGameWon || IsGameOver || _finishing
-        || (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying)
-        || (BoosterManager.Instance != null && BoosterManager.Instance.IsBusy) // Reveal đang tự đặt khối
-        || (gridSpawner != null && gridSpawner.IsIntroPlaying)                  // lưới đang xuất hiện
-        || DifficultyIntro.Playing                                               // băng "HARD / EXTREME LEVEL" đang chạy
-        || BoosterTutorial.Active;                                               // tutorial mở khóa booster: chỉ bấm được nút booster
+        || (gridSpawner != null && gridSpawner.IsIntroPlaying) // lưới đang xuất hiện
+        || InputGate.IsLocked;
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
 
     protected override void Awake()
@@ -303,10 +304,7 @@ public class GridManager : Singleton<GridManager>
         GridGeometry geometry = _board.Geometry;
         onMistake?.Invoke(geometry.RectCenter(rect), geometry.RectSize(rect));
 
-        if (LivesManager.Instance != null && !TutorialController.Active) // tutorial: chỉ báo sai, không trừ mạng
-        {
-            LivesManager.Instance.LoseLife();
-        }
+        if (LivesManager.Instance != null) LivesManager.Instance.LoseLife(); // màn luyện tập (tutorial): LivesManager tự bỏ qua
     }
 
     private void HandleGameWin()

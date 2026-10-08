@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-/// <summary>Banner "TAP A NUMBER" + nút X khi đang chọn số cho booster Reveal. Trượt lên từ dưới khi hiện.</summary>
+/// <summary>Banner "TAP A NUMBER" + nút X khi đang chọn số cho booster Reveal (BoosterManager.onModeChanged). Trượt lên từ dưới khi hiện.</summary>
 [RequireComponent(typeof(CanvasGroup))]
 public class RevealBanner : MonoBehaviour
 {
@@ -25,12 +25,12 @@ public class RevealBanner : MonoBehaviour
 
     private void Start()
     {
-        if (BoosterManager.Instance != null) BoosterManager.Instance.onRevealModeChanged.AddListener(OnRevealMode);
+        if (BoosterManager.Instance != null) BoosterManager.Instance.onModeChanged.AddListener(OnModeChanged);
     }
 
     private void OnDestroy()
     {
-        if (BoosterManager.Instance != null) BoosterManager.Instance.onRevealModeChanged.RemoveListener(OnRevealMode);
+        if (BoosterManager.Instance != null) BoosterManager.Instance.onModeChanged.RemoveListener(OnModeChanged);
     }
 
     private void OnDisable()
@@ -39,12 +39,14 @@ public class RevealBanner : MonoBehaviour
         _anim = null;
     }
 
-    private void OnRevealMode(bool on) => Apply(on, false);
+    private void OnModeChanged(BoosterType type, bool on)
+    {
+        if (type == BoosterType.Reveal) Apply(on, false);
+    }
 
     private void OnCancel()
     {
-        BoosterManager bm = BoosterManager.Instance;
-        if (bm != null && bm.IsRevealMode) bm.Press(BoosterType.Reveal); // bấm lại Reveal = hủy
+        if (BoosterManager.Instance != null) BoosterManager.Instance.CancelModes();
     }
 
     private void Apply(bool on, bool instant)

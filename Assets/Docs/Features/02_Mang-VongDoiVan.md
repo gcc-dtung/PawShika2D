@@ -11,10 +11,11 @@
 
 | File | Việc |
 | --- | --- |
-| `Gameplay/Lives/LivesManager` | Số mạng (`LivesEnergyConfig.maxLives` = 3), `LoseLife`, `AddLives`, `ActivateShield`; reset mỗi khi lưới mới sinh |
+| `Gameplay/Lives/LivesManager` | Số mạng (`LivesEnergyConfig.maxLives` = 3), `LoseLife`, `AddLives`, `ActivateShield`; reset mỗi khi lưới mới sinh; `IsPractice` (màn tutorial: sai không trừ mạng, do `LevelManager` đặt) |
 | `Gameplay/Level/GameState` | `Playing`, `Paused`, `Won`, `OutOfLives`, `Lost` |
-| `Gameplay/Level/LevelManager` | Giữ `GameState`; `LoadLevel`, `Retry`, `NextLevel`, `Pause` / `Resume`, `Revive(lives)`, `GiveUp`; zoom camera vừa lưới |
-| `UI/Popups/GameFlowUI` | Nghe `onStateChanged` → mở popup tương ứng |
+| `Gameplay/Level/LevelManager` | Giữ `GameState`; `LoadLevel`, `Retry`, `NextLevel`, `Pause` / `Resume`, `Revive(lives)`, `GiveUp`; phát `LevelLoadedEvent` / `GameStateChangedEvent` (EventBus); ván không Playing thì `InputGate.Lock` |
+| `Gameplay/Visuals/BoardCameraFitter` | Căn camera vừa lưới mỗi khi `GridSpawner` dựng lưới mới |
+| `UI/Popups/GameFlowUI` | Nghe `GameStateChangedEvent` → mở popup tương ứng; đặt `LevelManager.AutoAdvance = false` |
 | `UI/Popups/WinPopup`, `ReviveLivesPopup`, `LosePopup`, `QuitLevelPopup` | Các popup cuối ván |
 | `UI/HUD/LivesUI`, `ShieldIndicator` | Hàng tim, lớp băng khi có khiên |
 

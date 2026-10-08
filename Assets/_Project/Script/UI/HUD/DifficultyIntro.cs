@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,13 +7,12 @@ using UnityEngine.UI;
 /// Hiệu ứng vào level Hard / Very Hard (như bản gốc "EXTREME LEVEL"): lưới hiện xong thì nền tối dần,
 /// dải băng cảnh báo sọc và băng chữ (HARD LEVEL / EXTREME LEVEL) trượt chéo từ góc trên trái vào giữa, mèo đầu lâu bật ra
 /// phía trên băng, giữ một lúc (đầu lâu nhịp nhẹ) rồi đầu lâu thu lại, 2 băng trượt ngược ra, nền sáng lại.
-/// Đang chạy thì khóa thao tác trên lưới (Playing tĩnh, GridManager đọc). Chỉ chạy khi vào ván (không ở Main Menu).
+/// Là 1 ILevelIntro (Order 0, chạy đầu tiên): LevelIntroSequencer chờ lưới hiện xong, khóa lưới trong lúc chạy.
 /// Sprite theo độ khó lấy từ DifficultyTheme.
 /// </summary>
-public class DifficultyIntro : MonoBehaviour
+public class DifficultyIntro : MonoBehaviour, ILevelIntro
 {
     [SerializeField] private DifficultyTheme theme;
-    [SerializeField] private GridSpawner gridSpawner;
     [SerializeField] private CanvasGroup group;
     [SerializeField] private Image dim;
     [SerializeField] private RectTransform tape;
@@ -30,12 +29,8 @@ public class DifficultyIntro : MonoBehaviour
     [Tooltip("Tỉ lệ hiện băng chữ so với kích thước ảnh (băng dài quá 2 mép màn, chữ giữ cỡ)")]
     [SerializeField] private float bannerScale = 0.8f;
 
-    /// <summary>Đang chạy hiệu ứng: khóa thao tác trên lưới.</summary>
-    public static bool Playing { get; private set; }
-
     private Vector2 _tapePos, _bannerPos, _skullPos;
     private Sequence _seq;
-    private Coroutine _wait;
 
     private void Awake()
     {
@@ -45,41 +40,38 @@ public class DifficultyIntro : MonoBehaviour
         Hide();
     }
 
-    private void OnEnable()
+    private void OnDisable() => Stop();
+
+    // ---------- ILevelIntro ----------
+
+    public int Order => 0;
+    public float StartDelay => 0f;
+
+    public bool ShouldPlay(LevelLoadedEvent level) => StyleOf(level.Level) != null;
+
+    public void Play(LevelLoadedEvent level, Action onDone)
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
+        DifficultyStyle style = StyleOf(level.Level);
+        if (style == null)
+        {
+            onDone?.Invoke();
+            return;
+        }
+        Play(style, onDone);
     }
 
-    private void OnDisable()
-    {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
-        Stop();
-    }
+    public void Cancel() => Stop();
 
-    private void OnLevelLoaded(int _)
+    private DifficultyStyle StyleOf(LevelDefinition level)
     {
-        Stop();
-        if (ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu) return;
-        LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
         DifficultyStyle style = theme != null && level != null ? theme.Get(level.difficulty) : null;
-        if (style == null || style.banner == null) return;
-
-        Playing = true; // khóa luôn từ lúc lưới còn đang hiện
-        _wait = StartCoroutine(PlayAfterGrid(style));
-    }
-
-    private IEnumerator PlayAfterGrid(DifficultyStyle style)
-    {
-        while (gridSpawner != null && gridSpawner.IsIntroPlaying) yield return null;
-        _wait = null;
-        Play(style);
+        return style != null && style.banner != null ? style : null;
     }
 
     /// <summary>Chạy hiệu ứng với kiểu <paramref name="style"/> (Debug / thử).</summary>
-    public void Play(DifficultyStyle style)
+    public void Play(DifficultyStyle style, Action onDone = null)
     {
         _seq?.Kill();
-        Playing = true;
         gameObject.SetActive(true);
         if (group != null)
         {
@@ -118,25 +110,23 @@ public class DifficultyIntro : MonoBehaviour
         s.Insert(outAt + 0.1f, banner.rectTransform.DOAnchorPos(_bannerPos + offscreen, slideOut).SetEase(Ease.InCubic));
         s.Insert(outAt + 0.14f, tape.DOAnchorPos(_tapePos + offscreen, slideOut).SetEase(Ease.InCubic));
         s.Insert(outAt + 0.15f, DOVirtual.Float(dimAlpha, 0f, 0.3f, SetDim));
-        s.OnComplete(Hide);
+        s.OnComplete(() =>
+        {
+            Hide();
+            onDone?.Invoke();
+        });
         s.OnKill(() => { if (_seq == s) _seq = null; });
         _seq = s;
     }
 
     private void Stop()
     {
-        if (_wait != null)
-        {
-            StopCoroutine(_wait);
-            _wait = null;
-        }
         _seq?.Kill();
         Hide();
     }
 
     private void Hide()
     {
-        Playing = false;
         if (group != null)
         {
             group.alpha = 0f;

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -16,17 +17,22 @@ public class SaveRunner : MonoBehaviour
     {
         if (_instance == null)
         {
-            GameObject go = new GameObject("[SaveRunner]") { hideFlags = HideFlags.HideInHierarchy | HideFlags.DontSave };
+            // Không DontSave: Editor không hủy object DontSave khi thoát Play (rò sang Edit mode)
+            GameObject go = new GameObject("[SaveRunner]") { hideFlags = HideFlags.HideInHierarchy };
             DontDestroyOnLoad(go);
             _instance = go.AddComponent<SaveRunner>();
         }
-        if (_instance._dirtySince < 0f) _instance._dirtySince = Time.unscaledTime;
+        if (_instance._dirtySince < 0f)
+        {
+            _instance._dirtySince = Time.unscaledTime;
+            _instance.StartCoroutine(_instance.FlushLater()); // chỉ chạy khi có thay đổi, không cần Update mỗi frame
+        }
     }
 
-    private void Update()
+    private IEnumerator FlushLater()
     {
-        if (_dirtySince < 0f || Time.unscaledTime - _dirtySince < FlushDelay) return;
-        Flush();
+        yield return new WaitForSecondsRealtime(FlushDelay);
+        if (_dirtySince >= 0f) Flush();
     }
 
     private void OnApplicationPause(bool paused)
@@ -49,6 +55,7 @@ public class SaveRunner : MonoBehaviour
 
     private void Flush()
     {
+        StopAllCoroutines(); // đã ghi sớm (vào nền / thoát): bỏ lượt chờ cũ
         _dirtySince = -1f;
         SaveSystem.Save();
     }

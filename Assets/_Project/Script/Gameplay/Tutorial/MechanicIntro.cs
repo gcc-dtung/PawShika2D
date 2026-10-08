@@ -1,14 +1,14 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Popup giới thiệu cơ chế lần đầu người chơi gặp (Hướng, Khóa, "?"), ảnh minh họa có sẵn của bản gốc.
-/// Sau mỗi lần nạp level, khi lưới đã hiện xong (và băng HARD đã chạy xong): level có cơ chế chưa xem thì mở popup
-/// (ván tạm dừng), Ok thì lưu SaveData.seenMechanics; level có nhiều cơ chế mới thì lần lượt từng popup.
-/// Chạy trước BoosterTutorial (chờ ngắn hơn; popup tạm dừng ván nên tutorial booster đợi popup đóng).
+/// Là 1 ILevelIntro (Order 10: sau băng HARD, trước tutorial booster). LevelIntroSequencer chờ lưới hiện xong rồi gọi Play:
+/// level có cơ chế chưa xem thì mở popup (ván tạm dừng), Ok thì lưu SaveData.seenMechanics; nhiều cơ chế mới thì lần lượt từng popup.
 /// Level giới thiệu cơ chế do Mechanic Injector xếp lịch, nên popup rơi đúng vào các level đó.
 /// </summary>
-public class MechanicIntro : Singleton<MechanicIntro>
+public class MechanicIntro : MonoBehaviour, ILevelIntro
 {
     // [MECHANIC] Popup giới thiệu: thêm Kind + sprite + nhánh trong NewMechanics / ShowNext (TutorialBuilder gán sprite)
     public enum Kind
@@ -25,60 +25,29 @@ public class MechanicIntro : Singleton<MechanicIntro>
     [Tooltip("Chờ thêm sau khi lưới hiện xong rồi mới mở popup")]
     [SerializeField] private float startDelay = 0.15f;
 
-    private GridSpawner _spawner;
-    private bool _armed;
-    private float _readyTime;
     private readonly Queue<Kind> _queue = new Queue<Kind>();
+    private Action _onDone;
 
-    /// <summary>Đang hiện (hoặc còn chờ hiện) popup cơ chế.</summary>
-    public static bool Active { get; private set; }
+    // ---------- ILevelIntro ----------
 
-    private void Start()
-    {
-        _spawner = FindFirstObjectByType<GridSpawner>();
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
-    }
+    public int Order => 10;
+    public float StartDelay => startDelay;
 
-    private void OnDestroy()
-    {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
-        Active = false;
-    }
+    public bool ShouldPlay(LevelLoadedEvent level) => popup != null && NewMechanics(level.Level).Count > 0;
 
-    private void OnLevelLoaded(int _)
+    public void Play(LevelLoadedEvent level, Action onDone)
     {
         _queue.Clear();
-        if (popup != null && popup.IsOpen) popup.CloseImmediate();
-        Active = false;
-        _armed = true;
-        _readyTime = -1f;
-    }
-
-    private void Update()
-    {
-        if (!_armed || Active) return;
-        if (!CanStartNow())
-        {
-            _readyTime = -1f;
-            return;
-        }
-        if (_readyTime < 0f) _readyTime = Time.time + startDelay;
-        if (Time.time < _readyTime) return;
-
-        _armed = false;
-        foreach (Kind kind in NewMechanics(GridManager.Instance.CurrentLevel)) _queue.Enqueue(kind);
+        foreach (Kind kind in NewMechanics(level.Level)) _queue.Enqueue(kind);
+        _onDone = onDone;
         ShowNext();
     }
 
-    private bool CanStartNow()
+    public void Cancel()
     {
-        LevelManager lm = LevelManager.Instance;
-        GridManager gm = GridManager.Instance;
-        if (lm == null || gm == null || gm.Board == null || gm.CurrentLevel == null || !lm.IsPlaying) return false;
-        if (ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu) return false;
-        if (TutorialController.Active || BoosterTutorial.Active || DifficultyIntro.Playing || gm.IsSelecting) return false;
-        if (_spawner != null && _spawner.IsIntroPlaying) return false;
-        return true;
+        _queue.Clear();
+        _onDone = null;
+        if (popup != null && popup.IsOpen) popup.CloseImmediate();
     }
 
     /// <summary>Cơ chế có trong level mà người chơi chưa xem, theo thứ tự Mechanic Injector giới thiệu.</summary>
@@ -105,11 +74,12 @@ public class MechanicIntro : Singleton<MechanicIntro>
     {
         if (_queue.Count == 0 || popup == null)
         {
-            Active = false;
+            Action done = _onDone;
+            _onDone = null;
+            done?.Invoke();
             return;
         }
         Kind kind = _queue.Dequeue();
-        Active = true;
         switch (kind)
         {
             case Kind.Constraint:

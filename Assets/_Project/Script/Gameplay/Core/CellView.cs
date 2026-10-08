@@ -35,6 +35,7 @@ public class CellView : MonoBehaviour
     private void Awake()
     {
         if (spriteRenderer != null) _bodyColor = spriteRenderer.color;
+        if (lockText != null) lockText.color = TextColor.Display(lockText.color); // số trên khóa không bị nhạt (Linear)
         // Nội dung hiện sau ô nền: số, khóa (chữ + hình), ô hướng
         if (valueText != null) _contentTexts.Add(valueText);
         if (lockText != null) _contentTexts.Add(lockText);

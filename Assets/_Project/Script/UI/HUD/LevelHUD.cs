@@ -18,17 +18,16 @@ public class LevelHUD : MonoBehaviour
 
     private void Start()
     {
-        if (LevelManager.Instance != null)
-        {
-            LevelManager.Instance.onLevelLoaded.AddListener(SetLevel);
-            SetLevel(LevelManager.Instance.CurrentLevelNumber);
-        }
+        EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
+        if (LevelManager.Instance != null) SetLevel(LevelManager.Instance.CurrentLevelNumber);
     }
 
     private void OnDestroy()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(SetLevel);
+        EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
     }
+
+    private void OnLevelLoaded(LevelLoadedEvent e) => SetLevel(e.Number);
 
     private void SetLevel(int number)
     {

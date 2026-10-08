@@ -1,12 +1,11 @@
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// Chuyển giữa Main Menu và màn chơi.
 /// - Menu: bật Canvas_Menu, tắt Canvas_HUD, ván đang nạp ở nền bị tạm dừng (không kéo được).
 /// - PLAY: kiểm tra năng lượng (GameFlowUI.RequestPlay), tắt menu, bật HUD, nạp lại level hiện tại từ đầu.
 /// - Lần đầu mở game (TutorialController.Pending): vào thẳng tutorial thay cho Menu.
-/// Popup nằm ở Canvas_Popup riêng nên dùng được ở cả 2 màn.
+/// Popup nằm ở Canvas_Popup riêng nên dùng được ở cả 2 màn. Đổi màn thì phát ScreenChangedEvent (EventBus).
 /// </summary>
 public class ScreenFlow : Singleton<ScreenFlow>
 {
@@ -16,14 +15,11 @@ public class ScreenFlow : Singleton<ScreenFlow>
     [SerializeField] private GameFlowUI gameFlow;
     [SerializeField] private bool startInMenu = true;
 
-    [Header("Events")]
-    public UnityEvent<bool> onScreenChanged = new UnityEvent<bool>(); // true = đang ở Menu
-
     public bool IsMenu { get; private set; }
 
     private void Start()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.AddListener(OnLevelLoaded);
+        EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
         if (TutorialController.Pending) EnterTutorial(); // lần đầu mở game: vào thẳng tutorial, xong thì vào level 1
         else if (startInMenu) ShowMenu();
         else EnterGame();
@@ -37,12 +33,12 @@ public class ScreenFlow : Singleton<ScreenFlow>
         if (menuCanvas != null) menuCanvas.SetActive(false);
         if (hudCanvas != null) hudCanvas.SetActive(true);
         TutorialController.Instance.Begin();
-        onScreenChanged?.Invoke(false);
+        EventBus<ScreenChangedEvent>.Raise(new ScreenChangedEvent(false));
     }
 
     private void OnDestroy()
     {
-        if (LevelManager.Instance != null) LevelManager.Instance.onLevelLoaded.RemoveListener(OnLevelLoaded);
+        EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
     }
 
     /// <summary>Về Main Menu (tab Home).</summary>
@@ -54,7 +50,7 @@ public class ScreenFlow : Singleton<ScreenFlow>
         if (hudCanvas != null) hudCanvas.SetActive(false);
         if (menuCanvas != null) menuCanvas.SetActive(true);
         if (navigator != null) navigator.Select(1, false);
-        onScreenChanged?.Invoke(true);
+        EventBus<ScreenChangedEvent>.Raise(new ScreenChangedEvent(true));
     }
 
     /// <summary>Về Main Menu (nếu đang trong ván) rồi chuyển sang tab Shop (vd thiếu coin khi nạp năng lượng).</summary>
@@ -82,11 +78,11 @@ public class ScreenFlow : Singleton<ScreenFlow>
         if (menuCanvas != null) menuCanvas.SetActive(false);
         if (hudCanvas != null) hudCanvas.SetActive(true);
         if (LevelManager.Instance != null) LevelManager.Instance.Retry(); // nạp lại level hiện tại từ đầu, state Playing
-        onScreenChanged?.Invoke(false);
+        EventBus<ScreenChangedEvent>.Raise(new ScreenChangedEvent(false));
     }
 
     // Level nạp lúc đang ở Menu (lúc mở game) -> tạm dừng lại
-    private void OnLevelLoaded(int _)
+    private void OnLevelLoaded(LevelLoadedEvent _)
     {
         if (IsMenu && LevelManager.Instance != null) LevelManager.Instance.Pause();
     }

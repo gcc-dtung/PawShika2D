@@ -25,7 +25,7 @@
 | `GridManager.onBlockPlaced` | BlockPlace + CatHappy (35 %) |
 | `GridManager.onMistake` | Mistake + CatSad (80 %) |
 | `GridManager.onClueUnlocked` | Unlock |
-| `LevelManager.onStateChanged` | Win / OutOfLives / Lose |
+| `EventBus<GameStateChangedEvent>` | Win / OutOfLives / Lose |
 | `GridSpawner.gridCellEvent` | LevelStart (không phát khi ở Menu) |
 | `LivesManager.onShieldChanged / onShieldBlocked` | ShieldOn / ShieldBlock |
 | `BoosterManager.onBoosterUsed` | Booster |
