@@ -4,12 +4,11 @@ using UnityEngine.Events;
 
 /// <summary>
 /// Cơ chế MẠNG thay cho cơ chế THỜI GIAN của bản gốc.
-/// Mọi level có cùng số mạng (mặc định 3). Nước đi sai -> mất 1 mạng. Hết mạng -> thua.
+/// Mọi level có cùng số mạng (LivesEnergyConfig.maxLives). Nước đi sai -> mất 1 mạng. Hết mạng -> thua.
 /// </summary>
 public class LivesManager : Singleton<LivesManager>
 {
     [SerializeField] private GridSpawner gridSpawner;
-    [SerializeField] private int maxLives = 3;
 
     [Header("Events")]
     public UnityEvent<int, int> onLivesChanged = new UnityEvent<int, int>(); // (current, max)
@@ -21,7 +20,7 @@ public class LivesManager : Singleton<LivesManager>
     private int _currentLives;
     private bool _shield; // booster Khiên: chặn lần trừ mạng kế tiếp
 
-    public int MaxLives => maxLives;
+    public int MaxLives => GameConfig.LivesEnergy.maxLives;
     public int CurrentLives => _currentLives;
     public bool IsOutOfLives => _currentLives <= 0;
     public bool HasShield => _shield;
@@ -29,7 +28,7 @@ public class LivesManager : Singleton<LivesManager>
     protected override void Awake()
     {
         base.Awake();
-        _currentLives = maxLives;
+        _currentLives = MaxLives;
         if (gridSpawner == null)
         {
             gridSpawner = FindFirstObjectByType<GridSpawner>();
@@ -61,8 +60,8 @@ public class LivesManager : Singleton<LivesManager>
     public void ResetLives()
     {
         SetShield(false);
-        _currentLives = maxLives;
-        onLivesChanged?.Invoke(_currentLives, maxLives);
+        _currentLives = MaxLives;
+        onLivesChanged?.Invoke(_currentLives, MaxLives);
     }
 
     public void LoseLife()
@@ -78,10 +77,10 @@ public class LivesManager : Singleton<LivesManager>
         }
 
         _currentLives--;
-        Debug.LogWarning($"<color=red>[LivesManager] -1 mạng! Còn {_currentLives}/{maxLives}</color>");
+        Debug.LogWarning($"<color=red>[LivesManager] -1 mạng! Còn {_currentLives}/{MaxLives}</color>");
 
         onLifeLost?.Invoke(_currentLives);
-        onLivesChanged?.Invoke(_currentLives, maxLives);
+        onLivesChanged?.Invoke(_currentLives, MaxLives);
 
         if (_currentLives <= 0)
         {
@@ -109,7 +108,7 @@ public class LivesManager : Singleton<LivesManager>
     public void AddLives(int amount = 1)
     {
         if (amount <= 0) return;
-        _currentLives = Mathf.Min(_currentLives + amount, maxLives);
-        onLivesChanged?.Invoke(_currentLives, maxLives);
+        _currentLives = Mathf.Min(_currentLives + amount, MaxLives);
+        onLivesChanged?.Invoke(_currentLives, MaxLives);
     }
 }

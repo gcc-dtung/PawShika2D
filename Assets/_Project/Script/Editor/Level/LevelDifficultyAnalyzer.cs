@@ -62,6 +62,7 @@ public static class LevelDifficultyAnalyzer
         HashSet<int> hidden = new HashSet<int>();
         for (int i = 0; i < count; i++)
         {
+            // [MECHANIC] Đếm cơ chế cho báo cáo độ khó (thêm field vào Report + trọng số LevelDifficultySettings nếu cần)
             ClueMechanic m = level.clues[i].mechanic;
             lockSteps[i] = m.lockSteps;
             if (m.lockSteps > 0) { rep.locks++; rep.lockSteps += m.lockSteps; }

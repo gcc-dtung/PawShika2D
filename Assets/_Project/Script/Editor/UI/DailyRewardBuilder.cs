@@ -14,7 +14,7 @@ using UnityEngine.UI;
 /// </summary>
 public static class DailyRewardBuilder
 {
-    private const string DatabasePath = "Assets/_Project/GameAssets/10_Data_Configs/DailyRewardDatabase.asset";
+    private const string DatabasePath = GameConfigSetup.Folder + "DailyRewardDatabase.asset";
     private const string UI = PopupBuilder.UI;
     private const string SlotFrame = UI + "Frames_Borders/khung_popup_4.png";
 

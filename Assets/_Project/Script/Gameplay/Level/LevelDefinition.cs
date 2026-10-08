@@ -19,6 +19,7 @@ public class LevelDefinition : ScriptableObject
     public LevelDifficulty difficulty;
 }
 
+// [MECHANIC] Cơ chế theo Ô (như Void): thêm giá trị enum, ô đặt qua cellOverrides. Xem Docs/Features/HowTo_ThemMechanic.md
 public enum CellType
 {
     Playable = 0,
@@ -60,6 +61,7 @@ public struct ClueData
 }
 
 [Serializable]
+// [MECHANIC] Cơ chế theo Ô số: thêm field ở đây, mặc định = tắt (asset cũ không cần sửa). Xem Docs/Features/HowTo_ThemMechanic.md
 public struct ClueMechanic
 {
     public ClueConstraint constraint;

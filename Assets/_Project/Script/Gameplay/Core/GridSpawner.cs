@@ -148,6 +148,7 @@ public class GridSpawner : MonoBehaviour
         {
             foreach (CellOverrideData o in data.cellOverrides)
             {
+                // [MECHANIC] Cơ chế theo Ô (CellType mới) đọc ở đây
                 if (o.type == CellType.Void) _voidLookup.Add(new Vector2Int(o.x, o.y));
             }
         }

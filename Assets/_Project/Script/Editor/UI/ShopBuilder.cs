@@ -18,8 +18,8 @@ public static class ShopBuilder
     private const string Frames = UI + "Frames_Borders/";
     private const string Icons = UI + "Icons/";
     private const string Packs = UI + "Shop_Packs/";
-    private const string DatabasePath = "Assets/_Project/GameAssets/10_Data_Configs/ShopDatabase.asset";
-    private const string BoosterDbPath = "Assets/_Project/GameAssets/10_Data_Configs/BoosterDatabase.asset";
+    private const string DatabasePath = GameConfigSetup.Folder + "ShopDatabase.asset";
+    private const string BoosterDbPath = GameConfigSetup.Folder + "BoosterDatabase.asset";
     private const string Prefix = "com.phoenix.pawblock.puzzle.";
 
     private static readonly Vector2 CardSize = new Vector2(1008, 521);

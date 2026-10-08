@@ -10,7 +10,6 @@ public class BuyBoosterPopup : PopupView
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text amountText;
     [SerializeField] private TMP_Text priceText;
-    [SerializeField] private TMP_Text balanceText;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button closeButton;
 
@@ -40,7 +39,6 @@ public class BuyBoosterPopup : PopupView
         if (icon != null && data.icon != null) icon.sprite = data.icon;
         if (amountText != null) amountText.SetText("x{0}", data.valueOneBuy);
         if (priceText != null) priceText.SetText("{0}", data.priceOneBuy);
-        if (balanceText != null) balanceText.SetText("{0}", CoinWallet.Balance);
         if (buyButton != null) buyButton.interactable = CoinWallet.CanAfford(data.priceOneBuy);
     }
 

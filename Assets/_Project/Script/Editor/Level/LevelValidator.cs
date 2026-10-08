@@ -91,6 +91,7 @@ public static class LevelValidator
         bool hasHiddenInfo = false;
         foreach (ClueData c in level.clues)
         {
+            // [MECHANIC] Cơ chế giấu thông tin -> bật kiểm tra "không cần đoán"
             if (c.mechanic.hidden || c.mechanic.lockSteps > 0) hasHiddenInfo = true;
         }
         if (hasHiddenInfo || alwaysCheckGuessing) CheckNoGuessing(level, report);
@@ -131,6 +132,7 @@ public static class LevelValidator
             if (!cluePositions.Add(p)) report.errors.Add($"{name}: trùng vị trí với clue khác");
             if (c.value <= 0) report.errors.Add($"{name}: số phải > 0");
 
+            // [MECHANIC] Luật dữ liệu của cơ chế (kết hợp cấm, giá trị hợp lệ)
             ClueMechanic m = c.mechanic;
             if (m.hidden && m.lockSteps > 0) report.errors.Add($"{name}: vừa khóa vừa \"?\" (mở khóa xong vẫn không biết số)");
             if (m.lockSteps >= level.clues.Length) report.errors.Add($"{name}: khóa {m.lockSteps} bước nhưng chỉ có {level.clues.Length - 1} khối khác");
@@ -173,6 +175,7 @@ public static class LevelValidator
 
         while (placed.Count < count)
         {
+            // [MECHANIC] Mô phỏng người chơi: cơ chế che số / hướng thì thêm vào unknownValue / unknownConstraint (giống LevelDifficultyAnalyzer)
             // Người chơi chưa biết: số của ô "?" và ô còn khóa; hướng của ô còn khóa
             HashSet<int> unknownValue = new HashSet<int>(hidden);
             HashSet<int> unknownConstraint = new HashSet<int>();

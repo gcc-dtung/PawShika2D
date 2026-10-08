@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-05 18:59 |
+| Trạng thái | Đã push |
+| Commit | `ed5b3b2` "Xếp lại level theo độ khó, cơ chế sớm hơn, Khiên kéo sai thử" (nhánh `Day-4`) |
+| Thời gian push | 2026-10-05 19:04 |
+| Cập nhật lần cuối | 2026-10-05 19:04 |
 
 ## Tóm tắt
 

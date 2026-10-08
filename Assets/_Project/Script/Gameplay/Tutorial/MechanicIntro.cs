@@ -10,6 +10,7 @@ using UnityEngine;
 /// </summary>
 public class MechanicIntro : Singleton<MechanicIntro>
 {
+    // [MECHANIC] Popup giới thiệu: thêm Kind + sprite + nhánh trong NewMechanics / ShowNext (TutorialBuilder gán sprite)
     public enum Kind
     {
         Constraint,

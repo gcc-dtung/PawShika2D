@@ -97,6 +97,7 @@ public static class MechanicInjector
         return plans;
     }
 
+    // [MECHANIC] Level gốc nào hợp để giới thiệu cơ chế
     /// <summary>Level gốc có hợp để giới thiệu cơ chế không (để level giới thiệu chắc chắn gắn được).</summary>
     private static bool Suits(MechanicInjectorSettings s, MechanicKind kind, LevelDefinition source, bool needsGuessing)
     {
@@ -260,6 +261,7 @@ public static class MechanicInjector
             string part;
             switch (kind)
             {
+                // [MECHANIC] Gọi hàm gắn cơ chế mới (TryX: chọn chỗ, gắn, LevelValidator, sai thì Snapshot.Restore)
                 case MechanicKind.Void: part = TryVoid(ctx); break;
                 case MechanicKind.Constraint: part = TryConstraint(ctx); break;
                 case MechanicKind.Lock: part = TryLock(ctx); break;

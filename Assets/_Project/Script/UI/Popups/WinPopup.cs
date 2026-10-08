@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Màn thắng như bản gốc (full màn hình trên nền tối, không có bảng):
 /// ô coin trên cùng, chữ "WELL DONE!" to ngay trên huy hiệu mèo (tia sáng xoay), confetti,
-/// nút Continue (+coinReward) và x2 Coin (quảng cáo, +coinReward x2). Game không có sao nên không hiện sao.
+/// nút Continue (+EconomyConfig.winCoinReward) và x2 Coin (quảng cáo, +winCoinReward x2). Game không có sao nên không hiện sao.
 /// Mở: chữ đi vào từng ký tự (TMPLetterPopIn) cùng lúc huy hiệu bật + confetti bắn 2 bên rồi rơi liên tục -> chữ cuối đáp xuống -> 2 nút bật.
 /// Nhận coin: huy hiệu thu lại, coin bung ra rồi bay vào ô coin (số đếm lên), xong thì sang level kế.
 /// panel của PopupView để trống: không phóng cả màn, các phần tự diễn theo thứ tự.
@@ -31,7 +31,6 @@ public class WinPopup : PopupView
     [SerializeField] private Sprite coinSprite;
 
     [Header("Thưởng")]
-    [SerializeField] private int coinReward = 10; // gamePlay_CoinWinLevelNormal trong RemoteConfig gốc
     [SerializeField] private int maxFlyingCoins = 12;
 
     [Header("Nhịp")]
@@ -67,8 +66,8 @@ public class WinPopup : PopupView
         _claimed = false;
         _shownCoins = CoinWallet.Balance;
         SetCoinText(_shownCoins);
-        if (nextAmountText != null) nextAmountText.SetText("{0}", coinReward);
-        if (doubleAmountText != null) doubleAmountText.SetText("{0}", coinReward * 2);
+        if (nextAmountText != null) nextAmountText.SetText("{0}", CoinReward);
+        if (doubleAmountText != null) doubleAmountText.SetText("{0}", CoinReward * 2);
         PlayIntro();
     }
 
@@ -116,14 +115,16 @@ public class WinPopup : PopupView
 
     // ---------- Nhận thưởng ----------
 
-    private void OnNext() => Claim(coinReward);
+    private static int CoinReward => GameConfig.Economy.winCoinReward;
+
+    private void OnNext() => Claim(CoinReward);
 
     private void OnDouble()
     {
         SetButtons(false);
         RewardedAds.Show("win_x2", ok =>
         {
-            if (ok) Claim(coinReward * 2);
+            if (ok) Claim(CoinReward * 2);
             else SetButtons(true);
         });
     }

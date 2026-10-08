@@ -14,7 +14,7 @@ using UnityEngine.UI;
 /// </summary>
 public static class DifficultyBuilder
 {
-    private const string ThemePath = "Assets/_Project/GameAssets/10_Data_Configs/DifficultyTheme.asset";
+    private const string ThemePath = GameConfigSetup.Folder + "DifficultyTheme.asset";
     private const string UI = PopupBuilder.UI;
     private const string Frames = UI + "Frames_Borders/";
     private const string Buttons = UI + "Buttons/";

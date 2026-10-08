@@ -214,7 +214,7 @@ Booster (Hint, Khiên, Reveal) **khóa** tới khi người chơi qua tutorial c
 | `Script/UI/HUD/BoosterTutorialView.cs` | `Canvas_HUD/BoosterTutorial`: nền tối, lời nhắc, bàn tay; nhấc nút booster lên trên nền tối |
 | `BoosterManager` | `IsUnlocked` đọc save; `Press` trong lúc tutorial chỉ nhận đúng nút, gọi `BoosterTutorial.Complete`, lần dùng miễn phí |
 | `BoosterButton.SetHighlight` | Bật quầng sáng xoay cho nút đang được chỉ |
-| `GameAssets/10_Data_Configs/BoosterDatabase.asset` | `levelUnlock` (level mở), `detail` (lời nhắc), `valueStart` (lượt tặng) |
+| `Configs/BoosterDatabase.asset` | `levelUnlock` (level mở), `detail` (lời nhắc), `valueStart` (lượt tặng) |
 
 **Khi nào hiện:** sau mỗi lần nạp level, `BoosterTutorial` chờ tới khi đang chơi thật (không ở Menu, không popup, không tutorial lần đầu), lưới đã hiện xong và băng HARD đã chạy xong, thêm 0.3 s. Lúc đó nó chọn booster **chưa mở** có `levelUnlock` nhỏ nhất mà level hiện tại đã tới. Mỗi lần nạp level chỉ hiện **1** tutorial. Người chơi cũ đã qua nhiều level sẽ được giới thiệu lần lượt ở các lần vào level kế tiếp.
 

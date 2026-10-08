@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+// [MECHANIC] Thêm loại để Mechanic Injector gắn tự động (+ MechanicRule mặc định bên dưới, + TryX trong MechanicInjector)
 public enum MechanicKind
 {
     Void = 0,

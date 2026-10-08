@@ -20,6 +20,7 @@ public static class ShikakuSolver
         public int y;
         public int value;
         public ClueConstraint constraint;
+        // [MECHANIC] Thông tin solver cần về clue (luật hình dạng / người chơi chưa biết gì)
         public bool unknownValue; // chưa biết số: khối có thể rộng bất kỳ
     }
 
@@ -233,6 +234,7 @@ public static class ShikakuSolver
             for (int w = 1; w <= s.width; w++)
             {
                 if (!c.unknownValue && w * h != c.value) continue;
+                // [MECHANIC] Luật hình dạng mới: lọc ứng viên ở đây (phải khớp đúng luật trong BoardModel.Check)
                 if (!MatchesConstraint(c.constraint, w, h)) continue;
 
                 for (int x0 = c.x - w + 1; x0 <= c.x; x0++)

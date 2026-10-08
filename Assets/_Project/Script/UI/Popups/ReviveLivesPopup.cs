@@ -13,9 +13,6 @@ public class ReviveLivesPopup : PopupView
     [SerializeField] private Button closeButton;
     [SerializeField] private TMP_Text coinCostText;
     [SerializeField] private TMP_Text balanceText;
-    [SerializeField] private int adsLives = 1;
-    [SerializeField] private int coinLives = 3;
-    [SerializeField] private int coinCost = 900;
 
     protected override void Awake()
     {
@@ -27,7 +24,7 @@ public class ReviveLivesPopup : PopupView
 
     protected override void OnOpen()
     {
-        if (coinCostText != null) coinCostText.SetText(coinCost.ToString());
+        if (coinCostText != null) coinCostText.SetText(GameConfig.Economy.reviveCoinCost.ToString());
         Refresh();
     }
 
@@ -42,21 +39,21 @@ public class ReviveLivesPopup : PopupView
         SetButtons(false);
         RewardedAds.Show("revive_lives", ok =>
         {
-            if (ok) Revive(adsLives);
+            if (ok) Revive(GameConfig.Economy.reviveAdsLives);
             else Refresh();
         });
     }
 
     private void OnCoin()
     {
-        if (!CoinWallet.TrySpend(coinCost))
+        if (!CoinWallet.TrySpend(GameConfig.Economy.reviveCoinCost))
         {
             // Chưa có Shop (Giai đoạn 6): chỉ báo thiếu coin
-            Debug.Log($"[ReviveLivesPopup] Không đủ coin: {CoinWallet.Balance}/{coinCost}");
+            Debug.Log($"[ReviveLivesPopup] Không đủ coin: {CoinWallet.Balance}/{GameConfig.Economy.reviveCoinCost}");
             Refresh();
             return;
         }
-        Revive(coinLives);
+        Revive(GameConfig.Economy.reviveCoinLives);
     }
 
     private void OnClose()
@@ -74,7 +71,7 @@ public class ReviveLivesPopup : PopupView
     private void SetButtons(bool interactable)
     {
         if (adsButton != null) adsButton.interactable = interactable;
-        if (coinButton != null) coinButton.interactable = interactable && CoinWallet.CanAfford(coinCost);
+        if (coinButton != null) coinButton.interactable = interactable && CoinWallet.CanAfford(GameConfig.Economy.reviveCoinCost);
         if (closeButton != null) closeButton.interactable = interactable;
     }
 }

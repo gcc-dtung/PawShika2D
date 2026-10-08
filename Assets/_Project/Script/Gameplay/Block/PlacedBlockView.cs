@@ -234,6 +234,7 @@ public class PlacedBlockView : MonoBehaviour
         if (ear != null) ears.sprite = ear;
     }
 
+    // [MECHANIC] Số hiện trên khối mèo (ô "?" hiện "?" khi xem trước)
     private void SetNumber(CellModel clueCell)
     {
         ClueCell clue = clueCell.Clue;

@@ -15,7 +15,7 @@ public static class BoosterBuilder
 {
     private const string Boosters = "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Boosters_Obstacles/";
     private const string Ice = "Assets/_Project/GameAssets/05_VFX_Particles/Ice_Effects/";
-    private const string DatabasePath = "Assets/_Project/GameAssets/10_Data_Configs/BoosterDatabase.asset";
+    private const string DatabasePath = GameConfigSetup.Folder + "BoosterDatabase.asset";
     private static readonly string[] ButtonParts = { "Glow", "Icon", "Count", "Add", "Lock" };
 
     [MenuItem("Tools/PawBlock/Builders/Build Boosters", priority = 101)]

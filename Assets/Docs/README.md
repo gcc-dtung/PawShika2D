@@ -5,6 +5,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 - Unity **2022.3.62f3**, URP 2D, TextMeshPro, uGUI, DOTween (`Assets/Plugins/Demigiant`)
 - Scene chính: `Assets/Scenes/SampleScene.unity`
 - Kế hoạch chi tiết và các quyết định: [TaskBreakdown.md](TaskBreakdown.md)
+- **Tài liệu theo từng tính năng + hướng dẫn mở rộng (thêm cơ chế, booster, popup…)**: [Features/](Features/00_README.md)
 - Cấu trúc thư mục, script, luồng dữ liệu: [ProjectStructure.md](ProjectStructure.md)
 - Nhật ký thay đổi theo thứ tự thời gian: [RoadMap/](RoadMap/00_README.md)
 - Công thức độ khó level: [DifficultyFormula.md](DifficultyFormula.md)

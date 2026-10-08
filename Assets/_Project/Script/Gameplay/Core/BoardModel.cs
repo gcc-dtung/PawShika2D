@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// [MECHANIC] Luật mới chặn thao tác (không trừ mạng) thì thêm 1 kết quả ở đây
 /// <summary>Kết quả kiểm tra 1 vùng chọn (chưa xét lời giải).</summary>
 public enum PlacementResult
 {
@@ -116,6 +117,7 @@ public class BoardModel
 
         ClueCell clue = clueCell.Clue;
 
+        // [MECHANIC] Luật đặt khối của từng cơ chế (thứ tự: chặn cứng trước, kiểm tra số ô cuối cùng)
         // 3. Ô số còn khóa
         if (clue.IsLocked) return new PlacementCheck(PlacementResult.Locked, rect, cells, clueCell);
 
@@ -164,6 +166,7 @@ public class BoardModel
         block.Occupy();
         _blocks.Add(block);
 
+        // [MECHANIC] Cơ chế phản ứng khi 1 khối được đặt đúng (đếm bước, lộ số...)
         // Mỗi khối đặt đúng làm mọi ổ khóa giảm 1
         foreach (CellModel cell in _cells.Values)
         {

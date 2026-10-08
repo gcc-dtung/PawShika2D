@@ -20,8 +20,6 @@ public class RefillEnergyPopup : PopupView
     [SerializeField] private Button adsButton;
     [SerializeField] private Button coinButton;
     [SerializeField] private Button closeButton;
-    [SerializeField] private int adsEnergy = 1;
-    [SerializeField] private int refillCost = 900;
 
     private Action _onReady;
     private Action _onCancel;
@@ -67,7 +65,7 @@ public class RefillEnergyPopup : PopupView
         }
 
         if (closeButton != null) closeButton.gameObject.SetActive(!_required || _onCancel != null);
-        if (coinCostText != null) coinCostText.SetText("{0}", refillCost);
+        if (coinCostText != null) coinCostText.SetText("{0}", GameConfig.Economy.refillCoinCost);
 
         EnergyManager em = EnergyManager.Instance;
         if (em != null)
@@ -128,7 +126,7 @@ public class RefillEnergyPopup : PopupView
         RewardedAds.Show("refill_energy", ok =>
         {
             _waitingAd = false;
-            if (ok && EnergyManager.Instance != null) EnergyManager.Instance.Add(adsEnergy);
+            if (ok && EnergyManager.Instance != null) EnergyManager.Instance.Add(GameConfig.Economy.refillAdsEnergy);
             Refresh();
         });
     }
@@ -137,9 +135,9 @@ public class RefillEnergyPopup : PopupView
     {
         EnergyManager em = EnergyManager.Instance;
         if (em == null || em.IsFull) return;
-        if (!CoinWallet.TrySpend(refillCost))
+        if (!CoinWallet.TrySpend(GameConfig.Economy.refillCoinCost))
         {
-            Debug.Log($"[RefillEnergyPopup] Không đủ coin: {CoinWallet.Balance}/{refillCost} -> Shop");
+            Debug.Log($"[RefillEnergyPopup] Không đủ coin: {CoinWallet.Balance}/{GameConfig.Economy.refillCoinCost} -> Shop");
             GoShop();
             return;
         }

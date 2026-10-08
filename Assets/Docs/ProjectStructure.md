@@ -5,7 +5,7 @@
 ```text
 
 Assets/
-├── Docs/                               Tài liệu (README, TaskBreakdown, file này)
+├── Docs/                               Tài liệu (README, TaskBreakdown, file này; Features/ = docs theo tính năng + HowTo mở rộng)
 ├── Scenes/
 │   └── SampleScene.unity               Scene chơi duy nhất
 ├── Settings/                           URP 2D (Renderer2D, UniversalRP)
@@ -26,7 +26,10 @@ Assets/
     │   ├── ShikaCat/Level_001..205     LevelDefinition sinh từ JSON ShikaCat (bản gốc, không cơ chế)
     │   ├── Custom/                     Level tự làm (Level Editor); Level_Custom_Level01_4x4 = Level 1 (thay ShikaCat/Level_001)
     │   └── Mechanic/Level_NNN          Bản có cơ chế do Mechanic Injector sinh, thay bản gốc trong database
+    ├── Configs/                        Config dự án đang dùng (sửa số liệu ở đây): EconomyConfig, LivesEnergyConfig, BoosterDatabase,
+    │                                   ShopDatabase, DailyRewardDatabase, AudioDatabase, DifficultyTheme (chuyển từ 10_Data_Configs, bản cũ giữ lại làm lưu trữ)
     ├── Resources/
+    │   ├── GameConfig.asset            Config gốc: trỏ tới mọi asset trong Configs/ + GameplayVisuals (Setup Game Config)
     │   └── GameplayVisuals.asset       Sprite khối, tai, mặt mèo, ổ khóa, chữ khen...
     ├── SO_LevelDefinition.asset        Level mẫu 4x4, chỉ dùng khi scene không có LevelManager
     ├── GameAssets/                     Asset trích từ Paw Block (xem README.md trong đó)
@@ -45,6 +48,7 @@ Assets/
 Script/
 ├── Gameplay/
 │   ├── Core/       GridManager, GridSpawner, GridGeometry, BoardModel, CellModel, CellView, ClueCell
+│   ├── Config/     GameConfig (Resources), EconomyConfig, LivesEnergyConfig
 │   ├── Level/      LevelManager, GameState, LevelDefinition, LevelDatabase
 │   ├── Lives/      LivesManager
 │   ├── Economy/    CoinWallet, RewardedAds, IAPService, ShopDatabase, ShopService
@@ -67,6 +71,7 @@ Script/
 │   ├── Menu/       ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
 │   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
+    ├── Config/     GameConfigSetup (Setup Game Config: tạo Configs/ + Resources/GameConfig)
     ├── Level/      ShikaCatLevelImporter, LevelEditorWindow, LevelValidator, MechanicInjector*, LevelDifficulty*
     ├── UI/         PopupBuilder, ShopBuilder, SettingsBuilder, DifficultyBuilder, DailyRewardBuilder, WinScreenBuilder, BoosterBuilder, MainMenuBuilder, TutorialBuilder
     └── Visuals/    GameplayVisualsSetup
@@ -110,14 +115,14 @@ Quy tắc đặt file mới:
 | `CoinWallet` | Static, coin lưu `SaveData.coins`: `Add`, `TrySpend`, event `Changed` |
 | `RewardedAds` | Quảng cáo có thưởng, đặt trên `Manager`. Hiện giả lập: chờ 0.5 s rồi trả thành công. Thay thân `ShowRoutine` khi gắn SDK |
 | `IAPService` | Mua bằng tiền thật (VND). Chưa có SDK: `Purchase(productId, onDone)` luôn thất bại, phát `PurchaseFailed` (popup "Purchase Failed!" như bản gốc). Tích hợp Google Play / App Store: thay thân `Purchase`, nơi gọi giữ nguyên |
-| `ShopDatabase` | ScriptableObject `10_Data_Configs/ShopDatabase.asset` + `ShopProduct` (mã IAP, tên, mục `ShopSection`, giá VND, hình, coin / Hint / Shield / Reveal / phút năng lượng vô hạn / removeAds, tem giảm giá). Số chép từ `*PackShop.asset` gốc (freeze = Shield), giá theo video |
+| `ShopDatabase` | ScriptableObject `Configs/ShopDatabase.asset` + `ShopProduct` (mã IAP, tên, mục `ShopSection`, giá VND, hình, coin / Hint / Shield / Reveal / phút năng lượng vô hạn / removeAds, tem giảm giá). Số chép từ `*PackShop.asset` gốc (freeze = Shield), giá theo video |
 | `ShopService` | `Buy(product)` → `IAPService.Purchase`; thành công thì `Grant` (coin, booster, năng lượng vô hạn, `SaveData.noAds`), phát `Purchased` |
 
 ### Gameplay/Booster
 
 | File | Vai trò |
 | --- | --- |
-| `BoosterDatabase` | ScriptableObject + `BoosterType` (Hint 0, Shield 1, Reveal 2) + `BoosterData`. Tên field giữ như bản gốc; asset ở `GameAssets/10_Data_Configs/BoosterDatabase.asset` |
+| `BoosterDatabase` | ScriptableObject + `BoosterType` (Hint 0, Shield 1, Reveal 2) + `BoosterData`. Tên field giữ như bản gốc; asset ở `Configs/BoosterDatabase.asset` |
 | `BoosterInventory` | Static, số lượt lưu `SaveData.boosters` (theo tên loại); lần đầu tặng `valueStart`; event `Changed` |
 | `BoosterManager` | Trên `Manager`. `IsUnlocked`: đã lưu trong `SaveData.unlockedBoosters` (qua tutorial mở khóa) hoặc đang là đích của tutorial. `Press(type)`: đang tutorial mở khóa → chỉ nhận đúng nút, gọi `BoosterTutorial.Complete`, lần dùng này miễn phí (`_freeUse`; Reveal miễn phí tới khi chọn số); chưa mở → bỏ qua; hết lượt → `onBuyRequested`; Hint đặt khối nhỏ nhất của lời giải; Khiên bật `LivesManager`; Reveal vào chế độ chọn số (`HandleCellTap` từ `DragAndDropController`), đặt lần lượt mọi khối cùng số (DOTween, cách 0.12 s, `IsBusy` khóa lưới). Chỉ trừ lượt khi có tác dụng. `Buy(type)` trừ coin |
 | `BoosterTutorial` | Trên `Manager`. Sau mỗi lần nạp level, chờ đang chơi thật (không Menu / popup / tutorial lần đầu / lưới đang hiện / băng HARD) thêm 0.3 s → booster chưa mở có `levelUnlock` nhỏ nhất mà level hiện tại đã tới: `Active`, `Target`, `BoosterTutorialView.Show` (lời nhắc = `BoosterData.detail`). Mỗi lần nạp level tối đa 1 tutorial. `Active` khóa lưới (`GridManager.IsInputLocked`). `Complete` (bấm đúng nút): lưu `unlockedBoosters`, đóng lớp tối. Khiên: bước 2 "kéo sai thử" (`Demonstrating`): nền tối tắt, `TutorialHand` chỉ 1 vùng đúng số ô nhưng sai lời giải, chờ `onShieldBlocked` rồi khen 2 s |
@@ -143,7 +148,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 
 | File | Vai trò |
 | --- | --- |
-| `DailyRewardDatabase` | ScriptableObject `10_Data_Configs/DailyRewardDatabase.asset`: quà 7 ngày (mỗi ngày nhiều món: Coin / Booster / InfiniteEnergy – phút), icon coin / năng lượng vô hạn, `recoverMissedWithAd` |
+| `DailyRewardDatabase` | ScriptableObject `Configs/DailyRewardDatabase.asset`: quà 7 ngày (mỗi ngày nhiều món: Coin / Booster / InfiniteEnergy – phút), icon coin / năng lượng vô hạn, `recoverMissedWithAd` |
 | `DailyRewardModel` | **Logic** C# thuần: chu kỳ 7 ngày theo lịch máy từ `cycleStart`; ô i = ngày `cycleStart + i`; trạng thái Claimed / Today / Missed / Future; quá 7 ngày thì chu kỳ mới; đồng hồ lùi thì coi như ngày đầu. Lưu `SaveData.daily` (`cycleStart`, `claimedMask`) |
 | `DailyRewardManager` | Trên `Manager`. `Claim(day)`: hôm nay nhận luôn, ngày lỡ xem quảng cáo (không chờ nếu đang có quảng cáo khác); trao quà (CoinWallet / BoosterInventory / EnergyManager.AddInfinite); kiểm tra sang ngày mới mỗi 5 s và khi quay lại app; `autoOpen`: vào game lần đầu trong ngày còn quà thì mở popup. `onChanged`, `onClaimed`. Context menu Debug: Next Day / Reset |
 
@@ -159,7 +164,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | File | Vai trò |
 | --- | --- |
 | `BlockModel` | **Logic** C# thuần: vùng, các ô chiếm, ô số, màu (= màu khung chọn của lượt kéo tạo ra khối) |
-| `DifficultyTheme` | ScriptableObject `10_Data_Configs/DifficultyTheme.asset` + `LevelDifficulty` (Normal / Hard / VeryHard) + `DifficultyStyle`: chữ tab, mặt nút PLAY + màu chữ + viền chữ PLAY, khung HUD + viền chữ tab, đầu lâu, băng chữ; dùng chung khung PLAY `khung_home_hard`, dải sọc. `LevelDefinition.difficulty` (sửa trong Level Editor) |
+| `DifficultyTheme` | ScriptableObject `Configs/DifficultyTheme.asset` + `LevelDifficulty` (Normal / Hard / VeryHard) + `DifficultyStyle`: chữ tab, mặt nút PLAY + màu chữ + viền chữ PLAY, khung HUD + viền chữ tab, đầu lâu, băng chữ; dùng chung khung PLAY `khung_home_hard`, dải sọc. `LevelDefinition.difficulty` (sửa trong Level Editor) |
 | `PlacedBlockView` | **View** khối mèo: thân 9-slice, tai, số, mặt, viền `Ring`. Trạng thái: xem trước (đặc ngay, viền màu mèo thu bên trong 0.2 s) → `Confirm` (bật) hoặc `PlayReject` (rung, co nhỏ + mờ; `rejectStyle`: `GrayOut` mèo xám – mặc định / `RedRing` viền đỏ ngoài mép / `GrayAndRedRing`). `PlayWinFlash`: thắng thì thân + tai phủ trắng 0.6 rồi tan (lớp sprite đè lên dùng `flashMaterial` = `BlockFlash.mat`, GUI/Text Shader) |
 | `CatFaceAnimator` | Chạy chuỗi khung hình mặt mèo trên SpriteRenderer |
 | `ColorType` | Enum 10 màu + bảng màu RGB |
@@ -180,7 +185,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | File | Vai trò |
 | --- | --- |
 | `SoundId` | Enum các âm: UI (Click, PopupOpen/Close, Coin), màn chơi (LevelStart, BlockPlace, Mistake, Unlock, Win, Lose, OutOfLives), booster (Booster, ShieldOn, ShieldBlock), tiếng mèo (CatHappy, CatSad) |
-| `AudioDatabase` | ScriptableObject `10_Data_Configs/AudioDatabase.asset`: mỗi âm → nhiều clip (phát ngẫu nhiên), âm lượng, khoảng cao độ, cooldown; nhạc nền + âm lượng |
+| `AudioDatabase` | ScriptableObject `Configs/AudioDatabase.asset`: mỗi âm → nhiều clip (phát ngẫu nhiên), âm lượng, khoảng cao độ, cooldown; nhạc nền + âm lượng |
 | `AudioManager` | Trên object `AudioManager`. Nhạc nền lặp, đổi / bật / tắt có fade (DOTween, thời gian thực); pool `sfxVoices` AudioSource 2D, hết thì dùng lại nguồn phát lâu nhất; cooldown từng âm. `Play(id)`, `PlayChance(id, p)`, `Vibrate()`; `MusicOn` / `SoundOn` / `VibrateOn` lưu `SaveData.settings`, sự kiện `SettingsChanged` |
 | `GameAudioEvents` | Nối âm vào sự kiện có sẵn: `GridManager` (đặt khối + mèo vui 35 %, sai + mèo buồn 80 %, mở khóa), `LevelManager.onStateChanged` (Won / OutOfLives / Lost), `GridSpawner.gridCellEvent` (LevelStart, bỏ qua khi ở Menu), `LivesManager` (khiên bật / chặn), `BoosterManager.onBoosterUsed`, `CoinWallet.Changed` (nhận coin) |
 
@@ -221,7 +226,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `MainMenuNavigator` | Trên `Canvas_Menu`. Panel xếp ngang theo thứ tự tab, đổi tab thì trượt (`duration` 0.3 s, `ease` OutCubic); tab chọn rộng `selectedWidth` 408, nền `home_tab1` trượt theo, tab khác chia đều; xong thì tắt panel khuất màn hình. Tab / nền tab chọn neo bottom center. `Select(index)`, `onTabChanged`; vuốt: `BeginSwipe` / `Swipe(dx)` / `EndSwipe(v)` (panel theo ngón tay, đang ở tab đầu / cuối thì không kéo ra ngoài được; thả: quá `swipeThreshold` 20% bề rộng hoặc nhanh hơn `swipeVelocity` 900/s thì sang tab kề, thời gian trượt theo quãng còn lại, tối thiểu `minReleaseRatio`); `LayoutInEditor` (chuột phải component) xếp sẵn trong Editor |
 | `ShopCardView` | 1 thẻ / dòng / ô Shop: đọc `ShopProduct` lúc chạy (tên, giá, hình, coin, ô vật phẩm 2x2 cố định Hint / Shield / Reveal / vô hạn, ẩn món = 0); bấm giá → `ShopService.Buy`; dòng Remove Ads ẩn khi đã `noAds` |
 | `MenuSwipe` | Trên `Canvas_Menu/Panels`: nhận kéo từ mọi thứ trong panel, kéo dọc thì bỏ qua; vận tốc làm mượt, dừng tay > 0.08 s rồi thả = vận tốc 0. Kéo quá ngưỡng thì EventSystem hủy click của nút đang ấn |
-| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua / Cài đặt → HOME). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `shopTab` (Nạp năng lượng thiếu coin). `onScreenChanged` |
+| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua / Cài đặt → HOME). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `MainMenuNavigator.ShopTab` (Nạp năng lượng thiếu coin). `onScreenChanged` |
 | `PlayButtonView` | Nút PLAY: "Level n" theo `onLevelLoaded`, thở nhẹ (DOTween lặp, kill khi tắt) → `ScreenFlow.Play` |
 | `CoinHUD` | Số coin (nghe `CoinWallet.Changed`, icon nảy); bấm → tab Shop |
 | `SafeAreaZone` | UI Zone: neo RectTransform theo `Screen.safeArea` (chọn cạnh trên / dưới / trái / phải) để UI tránh tai thỏ, thanh home; chỉ chạy khi Play, tự cập nhật khi màn hình đổi |
@@ -402,4 +407,4 @@ Canvas_HUD (order 0) < BoosterTutorial (Canvas override, order 5) < nút booster
 | `cellOverrides` | Ô `Void` (không chơi được) |
 | `clues[]` | `x`, `y`, `value`, `color`, `mechanic { constraint, lockSteps, hidden }` |
 | `solution[]` | Lời giải tham khảo (`clueId`, `x`, `y`, `width`, `height`) – solver không phụ thuộc vào nó |
-| `rules.mistakeLimit` | Hiện không dùng; số mạng lấy từ `LivesManager.maxLives` |
+| `rules.mistakeLimit` | Hiện không dùng; số mạng lấy từ `LivesEnergyConfig.maxLives` |

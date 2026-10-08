@@ -15,7 +15,6 @@ public class ScreenFlow : Singleton<ScreenFlow>
     [SerializeField] private MainMenuNavigator navigator;
     [SerializeField] private GameFlowUI gameFlow;
     [SerializeField] private bool startInMenu = true;
-    [SerializeField] private int shopTab = 0;
 
     [Header("Events")]
     public UnityEvent<bool> onScreenChanged = new UnityEvent<bool>(); // true = đang ở Menu
@@ -63,7 +62,7 @@ public class ScreenFlow : Singleton<ScreenFlow>
     {
         bool wasMenu = IsMenu;
         if (!wasMenu) ShowMenu();
-        if (navigator != null) navigator.Select(shopTab, wasMenu); // đang ở Menu thì trượt sang, vừa từ ván ra thì nhảy luôn
+        if (navigator != null) navigator.Select(MainMenuNavigator.ShopTab, wasMenu); // đang ở Menu thì trượt sang, vừa từ ván ra thì nhảy luôn
     }
 
     /// <summary>Nút PLAY trên Home.</summary>

@@ -10,7 +10,6 @@ public class CoinHUD : MonoBehaviour
     [SerializeField] private RectTransform icon;
     [SerializeField] private Button button;
     [SerializeField] private MainMenuNavigator navigator;
-    [SerializeField] private int shopTab = 0;
 
     private Tween _punch;
 
@@ -34,7 +33,7 @@ public class CoinHUD : MonoBehaviour
 
     private void OnClick()
     {
-        if (navigator != null) navigator.Select(shopTab);
+        if (navigator != null) navigator.Select(MainMenuNavigator.ShopTab);
     }
 
     private void OnChanged(int balance, int delta)

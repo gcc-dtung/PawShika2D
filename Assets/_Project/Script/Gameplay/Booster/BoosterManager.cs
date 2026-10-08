@@ -155,6 +155,7 @@ public class BoosterManager : Singleton<BoosterManager>
         GridManager gm = GridManager.Instance;
         CellModel cell = gm != null && gm.Board != null ? gm.Board.GetCell(pos) : null;
         // Chạm ô không phải số / đã có khối / còn khóa: giữ chế độ chọn, chờ chạm lại
+        // [MECHANIC] Reveal: ô số nào không được chọn (cơ chế che số / chặn chọn)
         if (cell == null || !cell.HasClue || cell.IsOccupied || cell.Clue.IsLocked) return true;
         if (!gm.Board.TrySolveRemaining(out List<RectInt> remaining)) return true;
 

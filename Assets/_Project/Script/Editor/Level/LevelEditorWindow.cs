@@ -303,6 +303,7 @@ public class LevelEditorWindow : EditorWindow
                 Rect r = CellRect(area, cell, c.x, c.y);
                 if (i == _selectedClue) DrawOutline(Inset(r, 1f), new Color(1f, 0.85f, 0.2f), 3f);
                 GUI.Label(r, ClueLabel(c), CenterStyle(cell * 0.42f, Color.white));
+                // [MECHANIC] Ký hiệu cơ chế trên lưới Level Editor
                 string mark = ConstraintMark(c.mechanic.constraint);
                 if (mark != null) GUI.Label(new Rect(r.x + 2, r.y, r.width, r.height * 0.45f), mark, CornerStyle(cell * 0.26f));
                 if (c.mechanic.lockSteps > 0)
@@ -409,6 +410,7 @@ public class LevelEditorWindow : EditorWindow
         EditorGUILayout.LabelField($"Số #{_selectedClue} tại ({c.x}, {c.y})  ·  id {c.id}", EditorStyles.boldLabel);
 
         EditorGUI.BeginChangeCheck();
+        // [MECHANIC] Trường sửa cơ chế của ô số đang chọn (nhớ gán lại vào c.mechanic bên dưới)
         int value = Mathf.Max(1, EditorGUILayout.IntField("Giá trị", c.value));
         ClueConstraint constraint = (ClueConstraint)EditorGUILayout.EnumPopup(new GUIContent("Hướng", "Ngang / dọc / vuông (ô nền sau số)"), c.mechanic.constraint);
         int lockSteps = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Khóa (bước)", "Mở sau khi đặt đủ số khối khác"), c.mechanic.lockSteps));
@@ -776,6 +778,7 @@ public class LevelEditorWindow : EditorWindow
 
     private int ClueCount() => _level.clues != null ? _level.clues.Length : 0;
 
+    // [MECHANIC] Cơ chế giấu thông tin (như khóa / "?") thì thêm vào đây
     private bool HasHiddenInfo() => _level.clues != null && _level.clues.Any(c => c.mechanic.hidden || c.mechanic.lockSteps > 0);
 
     private int ClueIndexAt(Vector2Int pos)

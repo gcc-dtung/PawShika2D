@@ -339,40 +339,69 @@ public static class PopupBuilder
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 
-    private static BuyBoosterPopup BuildBuyBooster(Transform root)
+    /// <summary>
+    /// Hết booster như ref "REVEAL": khung như popup cài đặt (tab tiêu đề = tên booster); trong khung trắng: icon booster to
+    /// + "x1" đè góc dưới phải, mô tả tím 2 dòng; dưới: nút xanh viền kem coin + giá. Dùng chung cho cả 3 booster.
+    /// Số đo từ ảnh ref (màn 858 px rộng = canvas 1080, x1.259).
+    /// </summary>
+    internal static BuyBoosterPopup BuildBuyBooster(Transform root)
     {
         RectTransform panel;
-        BuyBoosterPopup popup = NewPopup<BuyBoosterPopup>(root, "BuyBoosterPopup", out panel);
-        TMP_Text title = Title(panel, "HINT");
+        Button close;
+        BuyBoosterPopup popup = FramedPopup<BuyBoosterPopup>(root, "BuyBoosterPopup", "HINT", new Vector2(920, 812), 150, out panel, out close);
+        RectTransform box = WhiteBox(panel, "Content", new Vector2(0, 38), new Vector2(778, 426));
 
-        Button close = NewButton(panel, "CloseButton", UI + "Buttons/btn_X_1.png", new Vector2(405, 255), null, null, null);
-        ((RectTransform)close.transform).sizeDelta = new Vector2(120, 120);
-
-        RectTransform iconRow = Row(panel, "Item", new Vector2(0, -20), 170);
-        Image icon = Icon(iconRow, "Icon", "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Boosters_Obstacles/btn_hint.png", 160);
-        TMP_Text amount = Text(iconRow, "Amount", "x3", Vector2.zero, new Vector2(150, 100), 72, Color.white);
+        Image icon = Icon(box, "Icon", "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Boosters_Obstacles/btn_hint.png", 220);
+        icon.rectTransform.anchoredPosition = new Vector2(10, 58);
+        TMP_Text amount = GameText(icon.transform, "Amount", "x1", new Vector2(52, -78), new Vector2(160, 100), 84, Color.white);
+        amount.fontSharedMaterial = GameFontSetup.OutlinePurple();
         Fit(amount);
 
-        TMP_Text detail = Text(panel, "Detail", "Detail", new Vector2(0, -190), new Vector2(720, 130), 40, Color.white);
-        detail.fontStyle = FontStyles.Normal;
+        TMP_Text detail = GameText(box, "Detail", "Detail", new Vector2(0, -128), new Vector2(680, 120), 42, SettingLabel);
+        detail.lineSpacing = -8;
+        detail.enableAutoSizing = true;
+        detail.fontSizeMin = 30;
+        detail.fontSizeMax = 42;
 
-        Button buy = NewButton(panel, "BuyButton", UI + "Buttons/btn_green_1.png", new Vector2(0, -470), "1200", UI + "Icons/coin.png", null);
-        TMP_Text price = buy.transform.Find("Content/Label").GetComponent<TMP_Text>();
+        // Nút xanh: coin + giá
+        RectTransform face;
+        Button buy = FramedButton(panel, "BuyButton", UI + "Buttons/btn_green_2.png", UI + "Buttons/btn_green_1.png",
+            new Vector2(0, -276), new Vector2(395, 160), out face);
+        RectTransform priceRow = Row(face, "Price", new Vector2(0, 0), 90);
+        priceRow.GetComponent<HorizontalLayoutGroup>().spacing = 10;
+        Icon(priceRow, "Coin", UI + "Icons/coin.png", 70);
+        TMP_Text price = GameText(priceRow, "Amount", "1000", Vector2.zero, new Vector2(200, 90), 74, Color.white);
+        price.fontSharedMaterial = GameFontSetup.OutlineGreen();
+        Fit(price);
+        GrayWhenDisabled(buy);
 
-        RectTransform balanceRow = Row(panel, "Balance", new Vector2(0, -590), 80);
-        Icon(balanceRow, "Coin", UI + "Icons/coin.png", 60);
-        TMP_Text balance = Text(balanceRow, "Amount", "0", Vector2.zero, new Vector2(160, 70), 48, Yellow);
-        Fit(balance);
-
-        Assign(popup, "titleText", title);
+        Assign(popup, "titleText", panel.Find("TitleTab/Title").GetComponent<TMP_Text>());
         Assign(popup, "detailText", detail);
         Assign(popup, "icon", icon);
         Assign(popup, "amountText", amount);
         Assign(popup, "priceText", price);
-        Assign(popup, "balanceText", balance);
         Assign(popup, "buyButton", buy);
         Assign(popup, "closeButton", close);
         return popup;
+    }
+
+    /// <summary>Thay riêng popup mua booster trong scene (không dựng lại popup khác).</summary>
+    [MenuItem("Tools/PawBlock/Builders/Build Buy Booster Popup", priority = 105)]
+    public static void BuildBuyBoosterOnly()
+    {
+        GameObject canvas = FindRoot("Canvas_Popup");
+        Transform popups = canvas != null ? canvas.transform.Find("Popups") : null;
+        GameFlowUI flow = popups != null ? popups.GetComponent<GameFlowUI>() : null;
+        if (flow == null)
+        {
+            Debug.LogError("[PopupBuilder] Không tìm thấy Canvas_Popup/Popups (GameFlowUI). Chạy Build Popups trước.");
+            return;
+        }
+        DestroyChild(popups, "BuyBoosterPopup");
+        BuyBoosterPopup buy = BuildBuyBooster(popups);
+        buy.gameObject.SetActive(false);
+        Assign(flow, "buyBoosterPopup", buy);
+        EditorSceneManager.MarkSceneDirty(canvas.scene);
     }
 
     /// <summary>
@@ -521,6 +550,26 @@ public static class PopupBuilder
         colors.disabledColor = new Color(0.55f, 0.55f, 0.55f, 1f);
         button.colors = colors;
         return button;
+    }
+
+    private const string GrayMaterialPath = "Assets/_Project/GameAssets/09_Shaders_Materials/Materials/UI_Grayscale.mat";
+    private const string GrayShaderPath = "Assets/_Project/GameAssets/09_Shaders_Materials/Shaders/UI_Grayscale.shader";
+
+    /// <summary>Nút tắt thì xám (sprite + chữ viền xám) thay vì tối đi: gắn UIGrayscaleWhenDisabled, disabledColor = trắng.</summary>
+    internal static void GrayWhenDisabled(Button button)
+    {
+        Material mat = AssetDatabase.LoadAssetAtPath<Material>(GrayMaterialPath);
+        if (mat == null)
+        {
+            mat = new Material(AssetDatabase.LoadAssetAtPath<Shader>(GrayShaderPath)) { name = "UI_Grayscale" };
+            AssetDatabase.CreateAsset(mat, GrayMaterialPath);
+        }
+        ColorBlock colors = button.colors;
+        colors.disabledColor = Color.white;
+        button.colors = colors;
+        UIGrayscaleWhenDisabled gray = button.gameObject.AddComponent<UIGrayscaleWhenDisabled>();
+        Assign(gray, "grayMaterial", mat);
+        Assign(gray, "grayTextMaterial", GameFontSetup.OutlineGray());
     }
 
     /// <summary>Chữ font game (Fredoka), không in đậm giả.</summary>

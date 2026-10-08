@@ -36,7 +36,7 @@ public class InputManager : MonoBehaviour
     private static bool IsPointerOverUI()
     {
         EventSystem es = EventSystem.current;
-        if (es == null) return false;
+        if (!es) return false;
         if (Input.touchCount > 0) return es.IsPointerOverGameObject(Input.GetTouch(0).fingerId);
         return es.IsPointerOverGameObject();
     }

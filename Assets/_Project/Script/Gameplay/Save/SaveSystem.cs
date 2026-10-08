@@ -129,6 +129,7 @@ public static class SaveSystem
         if (data.boosters == null) data.boosters = new System.Collections.Generic.List<BoosterSave>();
         if (data.energy == null) data.energy = new EnergySave();
         if (data.settings == null) data.settings = new SettingsSave();
+        if (data.daily == null) data.daily = new DailySave();
 
         // if (data.version < 2) { ... chuyển đổi ...; data.version = 2; }
         data.version = SaveData.CurrentVersion;

@@ -25,7 +25,6 @@ public class LevelManager : Singleton<LevelManager>
     [SerializeField, Range(0.3f, 1f)] private float boardHeightRatio = 0.62f;
     [SerializeField, Range(0.5f, 1f)] private float boardWidthRatio = 0.92f;
     [SerializeField, Range(-0.5f, 0.5f)] private float boardCenterOffset = 0.02f; // >0: lưới lệch lên trên
-    [SerializeField] private float minOrthoSize = 5f;
 
     [Header("Events")]
     public UnityEvent<int> onLevelLoaded = new UnityEvent<int>(); // số level hiển thị (bắt đầu từ 1)
@@ -218,7 +217,7 @@ public class LevelManager : Singleton<LevelManager>
 
         float sizeByHeight = gridH / 2f / boardHeightRatio;
         float sizeByWidth = gridW / 2f / (aspect * boardWidthRatio);
-        float ortho = Mathf.Max(minOrthoSize, sizeByHeight, sizeByWidth);
+        float ortho = Mathf.Max(PlayZone.DefaultMinOrthoSize, sizeByHeight, sizeByWidth);
         targetCamera.orthographicSize = ortho;
 
         // Dời camera xuống để lưới nằm hơi cao hơn giữa màn hình

@@ -114,6 +114,7 @@ public class CellView : MonoBehaviour
         Model = null;
     }
 
+    // [MECHANIC] Hiển thị cơ chế trên ô: object con trong Cell.prefab, bật / tắt theo ClueCell; nhớ thêm vào _contentSprites (Awake) để hiện dần
     private void Refresh()
     {
         ClueCell clue = Model != null ? Model.Clue : null;

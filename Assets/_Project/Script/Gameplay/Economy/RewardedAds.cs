@@ -3,13 +3,11 @@ using DG.Tweening;
 using UnityEngine;
 
 /// <summary>
-/// Quảng cáo có thưởng. Chưa có SDK (Giai đoạn 6): giả lập xem xong sau simulatedDuration giây, luôn thành công.
+/// Quảng cáo có thưởng. Chưa có SDK (Giai đoạn 6): giả lập xem xong sau EconomyConfig.adsSimulatedDuration giây, luôn thành công.
 /// Thay thân ShowAd bằng MAX / AdMob khi tích hợp; nơi gọi giữ nguyên.
 /// </summary>
 public class RewardedAds : Singleton<RewardedAds>
 {
-    [SerializeField] private float simulatedDuration = 0.5f;
-
     private Tween _simulated;
 
     public bool IsShowing { get; private set; }
@@ -40,7 +38,7 @@ public class RewardedAds : Singleton<RewardedAds>
     {
         IsShowing = true;
         Debug.Log($"[RewardedAds] Giả lập quảng cáo: {placement}");
-        _simulated = DOVirtual.DelayedCall(simulatedDuration, () =>
+        _simulated = DOVirtual.DelayedCall(GameConfig.Economy.adsSimulatedDuration, () =>
             {
                 _simulated = null;
                 IsShowing = false;

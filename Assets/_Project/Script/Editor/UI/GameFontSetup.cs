@@ -24,6 +24,7 @@ public static class GameFontSetup
     public static readonly Color GreenOutline = new Color32(0x1C, 0x62, 0x10, 0xFF);
     public static readonly Color BrownOutline = new Color32(0x7A, 0x2E, 0x12, 0xFF);
     public static readonly Color RedOutline = new Color32(0x8E, 0x0E, 0x14, 0xFF);
+    public static readonly Color GrayOutline = new Color32(0x4A, 0x4A, 0x4A, 0xFF);
 
     public static TMP_FontAsset Font => AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
 
@@ -67,6 +68,7 @@ public static class GameFontSetup
         OutlineGreen();
         OutlineBrown();
         OutlineRed();
+        OutlineGray();
 
         // Scene đang mở
         int count = 0;
@@ -99,6 +101,7 @@ public static class GameFontSetup
     public static Material OutlineGreen() => Preset("Outline Green", GreenOutline, 0.3f, 1.1f);
     public static Material OutlineRed() => Preset("Outline Red", RedOutline, 0.28f, 0.8f);
     public static Material OutlineBrown() => Preset("Outline Brown", BrownOutline, 0.28f, 0.8f);
+    public static Material OutlineGray() => Preset("Outline Gray", GrayOutline, 0.3f, 1.1f);
 
     /// <summary>
     /// Material preset từ material gốc của font: viền đậm + bóng đổ cùng màu phía dưới (như chữ bản gốc).

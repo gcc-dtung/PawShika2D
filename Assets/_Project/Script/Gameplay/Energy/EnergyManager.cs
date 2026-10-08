@@ -9,12 +9,11 @@ using UnityEngine.Events;
 /// </summary>
 public class EnergyManager : Singleton<EnergyManager>
 {
-    [SerializeField] private int maxEnergy = 5;
-    [SerializeField] private int refillSeconds = 1800;
-
     [Header("Events")]
     public UnityEvent<int, int> onEnergyChanged = new UnityEvent<int, int>(); // (hiện tại, tối đa)
     public UnityEvent onTick = new UnityEvent();                              // mỗi giây, để UI cập nhật đồng hồ
+
+    private static LivesEnergyConfig Config => GameConfig.LivesEnergy;
 
     private EnergyModel _model;
     private float _tickTimer;
@@ -111,8 +110,8 @@ public class EnergyManager : Singleton<EnergyManager>
     {
         EnergySave save = SaveSystem.Data.energy;
         _model = new EnergyModel(
-            maxEnergy, refillSeconds,
-            save.energy < 0 ? maxEnergy : save.energy, // -1: lần đầu chơi, đầy
+            Config.maxEnergy, Config.refillSeconds,
+            save.energy < 0 ? Config.maxEnergy : save.energy, // -1: lần đầu chơi, đầy
             save.refillStart,
             save.infiniteUntil);
         _model.Refresh(Now);
@@ -145,7 +144,7 @@ public class EnergyManager : Singleton<EnergyManager>
     public void DebugFull() { Model.DebugSet(Max, Now); SaveAndNotify(); }
 
     [ContextMenu("Debug/Skip 1 refill")]
-    public void DebugSkip() { Model.DebugSkip(refillSeconds); RefreshNow(); onTick?.Invoke(); }
+    public void DebugSkip() { Model.DebugSkip(Config.refillSeconds); RefreshNow(); onTick?.Invoke(); }
 
     [ContextMenu("Debug/Infinite 5 min")]
     public void DebugInfinite() => AddInfinite(300);

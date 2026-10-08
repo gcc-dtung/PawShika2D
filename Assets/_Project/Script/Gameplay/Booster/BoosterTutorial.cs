@@ -202,6 +202,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
         int bestValue = int.MaxValue;
         foreach (CellModel cell in board.Cells)
         {
+            // [MECHANIC] Tutorial Khiên chỉ mẫu kéo sai trên ô số người chơi đọc được
             if (!cell.HasClue || cell.IsOccupied || cell.Clue.IsLocked || cell.Clue.IsHidden) continue;
             int value = cell.Clue.Value;
             if (value >= bestValue || value < 2) continue;

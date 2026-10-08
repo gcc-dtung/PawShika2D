@@ -54,7 +54,7 @@ E:\PawBlock\GameAssets\
 │   ├── Shaders/                        -> Shaders UI Dissolve, SoftMask, Spine, TextMeshPro, HSV...
 │   └── Materials/                      -> 38 vật liệu hiển thị đồ họa
 │
-├── 📄 10_Data_Configs/                 -> Dữ liệu cấu hình & ScriptableObject Databases
+├── 📄 10_Data_Configs/                 -> Dữ liệu cấu hình & ScriptableObject Databases (bản gốc lưu trữ; game dùng bản trong Assets/_Project/Configs)
 │   └── DailyChallengeData, Databases (Audio, Color, Booster, Shop Packs, Remote Config...)
 │
 └── 🗃️ 11_Original_Atlases_Textures/    -> 90 Texture gốc & Sprite Atlas nguyên bản

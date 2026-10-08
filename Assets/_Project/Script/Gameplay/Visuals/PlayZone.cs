@@ -10,10 +10,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RectTransform))]
 public class PlayZone : MonoBehaviour
 {
+    public const float DefaultMinOrthoSize = 5f;
+
     [SerializeField] private Camera targetCamera;
     [SerializeField] private bool respectSafeArea = true;
     [Tooltip("Lưới nhỏ không bị phóng quá to: nửa chiều cao camera tối thiểu (world)")]
-    [SerializeField] private float minOrthoSize = 5f;
+    [SerializeField] private float minOrthoSize = DefaultMinOrthoSize;
     [Tooltip("Tô màu vùng chơi để căn chỉnh (chỉ để debug)")]
     [SerializeField] private bool showZone;
     [SerializeField] private Color zoneColor = new Color(0f, 1f, 0.4f, 0.2f);

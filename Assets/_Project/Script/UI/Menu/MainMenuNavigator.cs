@@ -21,6 +21,9 @@ public class MainMenuNavigator : MonoBehaviour
     [SerializeField] private RectTransform selectedBackground;
     [SerializeField] private int startIndex = 1;       // Home
 
+    /// <summary>Thứ tự tab Shop trong thanh tab (CoinHUD, ScreenFlow mở Shop bằng số này).</summary>
+    public const int ShopTab = 0;
+
     [Header("Chuyển động")]
     [SerializeField] private float selectedWidth = 408f;
     [SerializeField] private float duration = 0.3f;

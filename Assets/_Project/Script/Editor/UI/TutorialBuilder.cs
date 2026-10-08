@@ -62,6 +62,7 @@ public static class TutorialBuilder
         Transform popups = popupCanvas != null ? popupCanvas.transform.Find("Popups") : null;
         if (popups != null) PopupBuilder.Assign(mechanicIntro, "popup", BuildMechanicPopup(popups));
         else Debug.LogError("[TutorialBuilder] Không thấy Canvas_Popup/Popups (chạy Build Popups trước): chưa dựng popup cơ chế.");
+        // [MECHANIC] Ảnh popup giới thiệu cơ chế
         foreach (string p in new[] { ConstraintPicture, LockPicture, HiddenPicture }) PopupBuilder.EnsureSprite(p);
         PopupBuilder.Assign(mechanicIntro, "constraintSprite", PopupBuilder.LoadSprite(ConstraintPicture));
         PopupBuilder.Assign(mechanicIntro, "lockSprite", PopupBuilder.LoadSprite(LockPicture));

@@ -5,14 +5,14 @@ using UnityEngine;
 
 /// <summary>
 /// Tools → PawBlock → Builders → Setup Audio:
-/// - Tạo / bổ sung AudioDatabase (10_Data_Configs) với clip có sẵn trong 01_Audio (game gốc) và ShikaCat.
+/// - Tạo / bổ sung AudioDatabase (Assets/_Project/Configs) với clip có sẵn trong 01_Audio (game gốc) và ShikaCat.
 ///   Chạy lại chỉ thêm âm còn thiếu, không ghi đè âm đã chỉnh trong Inspector.
 /// - Nhạc nền nhập kiểu Streaming (không nạp cả bài vào RAM).
 /// - Scene: object AudioManager (AudioManager + GameAudioEvents), UIButtonSounds trên Canvas_Menu / Canvas_HUD / Canvas_Popup.
 /// </summary>
 public static class AudioSetup
 {
-    private const string DatabasePath = "Assets/_Project/GameAssets/10_Data_Configs/AudioDatabase.asset";
+    private const string DatabasePath = GameConfigSetup.Folder + "AudioDatabase.asset";
     private const string A = "Assets/_Project/GameAssets/01_Audio/";
     private const string S = "Assets/_Project/ShikaCat_GameAssets/01_Audio/";
     private const string MusicPath = A + "BGM/BGM.ogg";

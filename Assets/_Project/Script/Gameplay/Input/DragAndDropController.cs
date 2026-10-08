@@ -33,24 +33,12 @@ public class DragAndDropController : MonoBehaviour
     private CellView GetCellAtPosition(Vector2 screenPos)
     {
         Vector3 worldPos = cam.ScreenToWorldPoint(screenPos);
-
-        // 1. Thử Physics2D (nếu dùng BoxCollider2D)
+        
         Collider2D hit2D = Physics2D.OverlapPoint(worldPos, cellLayer);
         if (hit2D != null && hit2D.TryGetComponent(out CellView cell2D))
         {
             return cell2D;
         }
-
-        // 2. Thử Physics 3D (nếu CellView đang gắn BoxCollider 3D)
-        Ray ray = cam.ScreenPointToRay(screenPos);
-        if (Physics.Raycast(ray, out RaycastHit hit3D, Mathf.Infinity, cellLayer))
-        {
-            if (hit3D.collider.TryGetComponent(out CellView cell3D))
-            {
-                return cell3D;
-            }
-        }
-
         return null;
     }
 
@@ -58,15 +46,15 @@ public class DragAndDropController : MonoBehaviour
     {
         if (_isDragging) return;
         GridManager gm = GridManager.Instance;
-        if (gm == null || gm.IsInputLocked) return;
+        if (!gm || gm.IsInputLocked) return;
 
         // Bắt đầu phải chạm trúng 1 ô; ô đã có khối thì GridManager từ chối
         CellView cell = GetCellAtPosition(pos);
-        if (cell == null) return;
+        if (!cell) return;
 
         // Đang chọn số cho booster Reveal: chạm ô là chọn, không kéo
         BoosterManager booster = BoosterManager.Instance;
-        if (booster != null && booster.HandleCellTap(cell.Position)) return;
+        if (booster && booster.HandleCellTap(cell.Position)) return;
 
         if (!gm.BeginSelection(cell.Position)) return;
 
@@ -78,7 +66,7 @@ public class DragAndDropController : MonoBehaviour
     {
         if (!_isDragging) return;
         GridManager gm = GridManager.Instance;
-        if (gm == null || gm.IsInputLocked)
+        if (!gm || gm.IsInputLocked)
         {
             CancelDrag();
             return;
@@ -123,7 +111,7 @@ public class DragAndDropController : MonoBehaviour
 
     private void UpdateBubble(Vector2 screenPos)
     {
-        if (countBubble == null || GridManager.Instance == null) return;
+        if (!countBubble || !GridManager.Instance) return;
         countBubble.Show(ScreenToWorld(screenPos), GridManager.Instance.SelectionCellCount);
     }
 }
