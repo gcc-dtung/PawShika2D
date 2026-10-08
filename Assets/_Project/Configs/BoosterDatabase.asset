@@ -35,5 +35,5 @@ MonoBehaviour:
     levelUnlock: 9
     valueStart: 1
     valueOneBuy: 1
-    priceOneBuy: 1000
+    priceOneBuy: 2000
     icon: {fileID: 21300000, guid: a38cdab1a8625fa4fa82d019898ab4c2, type: 3}

@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-07 00:27 |
+| Trạng thái | Đã push |
+| Commit | `9e99a2c` "Docs theo tính năng, popup hết booster mới, nút xám, GameConfig SO" (nhánh `Day-5`) |
+| Thời gian push | 2026-10-08 11:11 |
+| Cập nhật lần cuối | 2026-10-08 11:11 |
 
 ## Tóm tắt
 
