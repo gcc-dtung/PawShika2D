@@ -54,15 +54,19 @@ public class TMPLetterPopIn : MonoBehaviour
 
     public void Play()
     {
+        // Bỏ cờ ẩn TRƯỚC Prepare: ForceMeshUpdate phát TEXT_CHANGED ngay lập tức, còn _hidden thì OnTextChanged
+        // làm trong suốt lưới trước khi chép -> chép nhầm alpha 0, chữ vô hình suốt hiệu ứng rồi hiện cả cụm lúc Finish
+        _hidden = false;
+        _playing = false;
         Prepare();
         _time = 0f;
         _playing = true;
-        _hidden = false;
         Apply(0f);
     }
 
     public void Hide()
     {
+        _hidden = false; // như Play: chép lưới gốc lúc chữ còn hiện đủ
         Prepare();
         _playing = false;
         _hidden = true;

@@ -17,7 +17,7 @@
 | `Gameplay/Visuals/BoardCameraFitter` | Căn camera vừa lưới mỗi khi `GridSpawner` dựng lưới mới |
 | `UI/Popups/GameFlowUI` | Nghe `GameStateChangedEvent` → mở popup tương ứng; đặt `LevelManager.AutoAdvance = false` |
 | `UI/Popups/WinPopup`, `ReviveLivesPopup`, `LosePopup`, `QuitLevelPopup` | Các popup cuối ván |
-| `UI/HUD/LivesUI`, `ShieldIndicator` | Hàng tim, lớp băng khi có khiên |
+| `UI/HUD/LivesUI`, `ShieldIndicator` | Hàng tim, lớp băng khi có khiên (viền băng toàn màn, bông tuyết lấp lánh, vỡ khi chặn lỗi) |
 
 ## Máy trạng thái
 
@@ -47,10 +47,10 @@
 | --- | --- |
 | Số mạng mỗi level | `Configs/LivesEnergyConfig.asset` → `maxLives`. `LevelDefinition.rules.mistakeLimit` hiện **chưa dùng** – muốn mạng theo từng level thì đọc field này trong `LivesManager.ResetLives` |
 | Giá / số mạng khi hồi | `Configs/EconomyConfig.asset` (`reviveCoinCost`, `reviveCoinLives`, `reviveAdsLives`) |
-| Coin thưởng khi thắng | `Configs/EconomyConfig.asset` → `winCoinReward` |
+| Coin thưởng khi thắng | `Configs/EconomyConfig.asset` → `winCoinReward` (Normal 10) / `winCoinRewardHard` (20) / `winCoinRewardVeryHard` (30), lấy qua `WinCoinReward(difficulty)` |
 | Giới hạn số lần hồi mạng | `LevelManager.HasRevived` đã có sẵn – kiểm tra trong `ReviveLivesPopup.OnOpen` |
 | Thêm trạng thái ván mới (vd. "Hết giờ") | Thêm giá trị vào `GameState`, set trong `LevelManager`, thêm `case` trong `GameFlowUI.OnStateChanged`. Kiểm tra lại mọi chỗ so `== GameState.Playing` |
-| Hết level thì làm gì | `LevelManager.NextLevel` (hiện quay vòng về level 1) |
+| Hết level thì làm gì | `LevelManager.NextLevel`: level cuối → `AllLevelsCompletedEvent` → `GameFlowUI` hiện "COMING SOON" (chữ ở `comingSoonTitle / comingSoonMessage`), Continue → `RestartFromFirst`; không có `GameFlowUI` thì quay vòng luôn |
 
 ## Lưu ý
 

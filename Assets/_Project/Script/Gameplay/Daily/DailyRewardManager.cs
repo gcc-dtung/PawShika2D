@@ -60,13 +60,29 @@ public class DailyRewardManager : Singleton<DailyRewardManager>
         if (focus && _model != null) RefreshDay(true);
     }
 
+    private void OnEnable() => TrustedClock.Synced += OnClockSynced;
+    private void OnDisable() => TrustedClock.Synced -= OnClockSynced;
+
+    // Vừa có giờ server: ngày có thể khác ngày theo giờ máy
+    private void OnClockSynced()
+    {
+        if (_model != null) RefreshDay(true);
+    }
+
     public DailySlotState StateOf(int day) => Model.StateOf(day);
 
     /// <summary>Ô đã lỡ có bù được không (bằng quảng cáo).</summary>
     public bool CanRecover(int day) => database != null && database.recoverMissedWithAd && Model.StateOf(day) == DailySlotState.Missed;
 
     /// <summary>Thời gian tới ngày mới (đồng hồ "quay lại sau").</summary>
-    public TimeSpan TimeToTomorrow => DateTime.Now.Date.AddDays(1) - DateTime.Now;
+    public TimeSpan TimeToTomorrow
+    {
+        get
+        {
+            DateTime now = TrustedClock.LocalNow;
+            return now.Date.AddDays(1) - now;
+        }
+    }
 
     /// <summary>Nhận quà ô <paramref name="day"/>. onDone(true) khi đã trao quà.</summary>
     public void Claim(int day, Action<bool> onDone = null)
@@ -131,7 +147,7 @@ public class DailyRewardManager : Singleton<DailyRewardManager>
 
     private void RefreshDay(bool notify)
     {
-        long today = DailyRewardModel.DayNumber(DateTime.Now);
+        long today = DailyRewardModel.DayNumber(TrustedClock.LocalNow); // giờ server nếu có mạng, chặn chỉnh giờ máy
         bool newDay = today != _today;
         _today = today;
         if (_model == null) return;

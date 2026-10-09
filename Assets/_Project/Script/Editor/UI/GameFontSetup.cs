@@ -99,6 +99,8 @@ public static class GameFontSetup
 
     public static Material OutlinePurple() => Preset("Outline Purple", PurpleOutline, 0.3f, 1.1f);
     public static Material OutlineGreen() => Preset("Outline Green", GreenOutline, 0.3f, 1.1f);
+    /// <summary>Chữ nhỏ trên nút xanh (vd EDIT): viền dày hơn + bóng sâu hơn để không chìm vào nền xanh sáng.</summary>
+    public static Material OutlineGreenBold() => Preset("Outline Green Bold", GreenOutline, 0.45f, 1.6f);
     public static Material OutlineRed() => Preset("Outline Red", RedOutline, 0.28f, 0.8f);
     public static Material OutlineBrown() => Preset("Outline Brown", BrownOutline, 0.28f, 0.8f);
     public static Material OutlineGray() => Preset("Outline Gray", GrayOutline, 0.3f, 1.1f);

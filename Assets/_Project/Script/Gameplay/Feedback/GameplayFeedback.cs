@@ -6,7 +6,7 @@ using UnityEngine.Pool;
 /// <summary>
 /// Phản hồi trong màn chơi:
 /// - Đặt đúng: chữ khen (NICE / AMAZING...) bật lên ở giữa khối.
-/// - Đặt sai: camera rung, điện thoại rung (mèo rung đỏ do PlacedBlockView tự chạy).
+/// - Đặt sai: camera rung (mèo rung đỏ do PlacedBlockView tự chạy; rung điện thoại do GameHapticEvents).
 /// Chữ khen lấy từ pool (prefab), không tạo GameObject mới.
 /// </summary>
 public class GameplayFeedback : MonoBehaviour
@@ -23,7 +23,6 @@ public class GameplayFeedback : MonoBehaviour
     [Header("Sai")]
     [SerializeField] private float shakeDuration = 0.25f;
     [SerializeField] private float shakeStrength = 0.15f;
-    [SerializeField] private bool vibrate = true;
 
     private Camera _cam;
     private Tween _shake;
@@ -116,7 +115,6 @@ public class GameplayFeedback : MonoBehaviour
     private void OnMistake(Vector3 center, Vector2 size)
     {
         ShakeCamera();
-        if (vibrate) AudioManager.Vibrate(); // theo cài đặt Rung của người chơi
     }
 
     /// <summary>Rung ngang, biên độ giảm dần; bị hủy giữa chừng thì camera vẫn về đúng vị trí gốc.</summary>

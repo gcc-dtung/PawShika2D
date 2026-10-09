@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-09 00:30 |
+| Trạng thái | Đã push |
+| Commit | `c327340` "Rà SOLID: EventBus, InputGate, hàng đợi intro, Booster Strategy" (nhánh `Day-6`) |
+| Thời gian push | 2026-10-09 00:38 |
+| Cập nhật lần cuối | 2026-10-09 00:39 |
 
 ## Tóm tắt
 

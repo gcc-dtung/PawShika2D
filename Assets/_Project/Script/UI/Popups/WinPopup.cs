@@ -7,7 +7,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Màn thắng như bản gốc (full màn hình trên nền tối, không có bảng):
 /// ô coin trên cùng, chữ "WELL DONE!" to ngay trên huy hiệu mèo (tia sáng xoay), confetti,
-/// nút Continue (+EconomyConfig.winCoinReward) và x2 Coin (quảng cáo, +winCoinReward x2). Game không có sao nên không hiện sao.
+/// nút Continue (+coin theo độ khó, EconomyConfig.WinCoinReward) và x2 Coin (quảng cáo, gấp đôi). Game không có sao nên không hiện sao.
 /// Mở: chữ đi vào từng ký tự (TMPLetterPopIn) cùng lúc huy hiệu bật + confetti bắn 2 bên rồi rơi liên tục -> chữ cuối đáp xuống -> 2 nút bật.
 /// Nhận coin: huy hiệu thu lại, coin bung ra rồi bay vào ô coin (số đếm lên), xong thì sang level kế.
 /// panel của PopupView để trống: không phóng cả màn, các phần tự diễn theo thứ tự.
@@ -115,7 +115,15 @@ public class WinPopup : PopupView
 
     // ---------- Nhận thưởng ----------
 
-    private static int CoinReward => GameConfig.Economy.winCoinReward;
+    // Theo độ khó level vừa thắng: Normal 10 / Hard 20 / Very Hard 30 (EconomyConfig)
+    private static int CoinReward
+    {
+        get
+        {
+            LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+            return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal);
+        }
+    }
 
     private void OnNext() => Claim(CoinReward);
 

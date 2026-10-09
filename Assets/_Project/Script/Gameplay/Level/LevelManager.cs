@@ -105,12 +105,32 @@ public class LevelManager : Singleton<LevelManager>
 
     public void Retry() => LoadLevel(_currentIndex);
 
+    /// <summary>Đang ở level cuối của database.</summary>
+    public bool IsLastLevel => database != null && _currentIndex >= database.Count - 1;
+
+    /// <summary>
+    /// Sang level kế. Level cuối: phát AllLevelsCompletedEvent; có bên xử lý (GameFlowUI hiện "Coming soon")
+    /// thì chờ bên đó gọi RestartFromFirst, không có thì quay vòng về level 1 luôn.
+    /// </summary>
     public void NextLevel()
     {
-        // Hết level thì quay vòng về level 1 (tạm thời, chưa có màn "Coming soon")
-        int next = _currentIndex + 1 >= database.Count ? 0 : _currentIndex + 1;
-        LoadLevel(next);
+        if (database == null || database.Count == 0) return;
+        if (!IsLastLevel)
+        {
+            LoadLevel(_currentIndex + 1);
+            return;
+        }
+        if (!SaveSystem.Data.allLevelsCleared)
+        {
+            SaveSystem.Data.allLevelsCleared = true;
+            SaveSystem.MarkDirty();
+        }
+        EventBus<AllLevelsCompletedEvent>.Raise(new AllLevelsCompletedEvent(database.Count));
+        if (AutoAdvance) RestartFromFirst();
     }
+
+    /// <summary>Chơi lại từ level 1 sau khi đã qua hết level.</summary>
+    public void RestartFromFirst() => LoadLevel(0);
 
     public void PreviousLevel() => LoadLevel(Mathf.Max(0, _currentIndex - 1));
 

@@ -41,6 +41,7 @@ Mọi popup kế thừa **`PopupView`**: `Open()` / `Close()` / `CloseImmediate(
 | PLAY / Retry thiếu năng lượng, nút tim | `RefillEnergyPopup` |
 | Nút Daily / tự mở | `DailyRewardPopup` |
 | `ShowNotice(msg, title, onClose)` | `NoticePopup` dùng chung |
+| Avatar Menu (`AvatarButton`) → `OpenProfile()`; BXH sau này → `ShowProfile(PlayerProfile)` | `ProfilePopup` (hồ sơ của mình: đổi tên / avatar; người khác: chỉ xem) |
 
 Popup mở giữa ván phải gọi `LevelManager.Pause()` khi mở và `Resume()` khi đóng (để lưới khóa).
 

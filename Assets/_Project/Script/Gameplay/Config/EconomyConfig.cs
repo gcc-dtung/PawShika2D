@@ -8,9 +8,13 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "PawBlock/Config/Economy Config", fileName = "EconomyConfig")]
 public class EconomyConfig : ScriptableObject
 {
-    [Header("Thắng level")]
-    [Tooltip("Coin nút Continue; nút x2 Coin (quảng cáo) nhận gấp đôi. gamePlay_CoinWinLevelNormal trong RemoteConfig gốc")]
+    [Header("Thắng level (nút Continue; nút x2 Coin xem quảng cáo nhận gấp đôi)")]
+    [Tooltip("Level Normal. gamePlay_CoinWinLevelNormal trong RemoteConfig gốc")]
     [Min(0)] public int winCoinReward = 10;
+    [Tooltip("Level Hard. gamePlay_CoinWinLevelHard trong RemoteConfig gốc")]
+    [Min(0)] public int winCoinRewardHard = 20;
+    [Tooltip("Level Very Hard. gamePlay_CoinWinLevelExpert trong RemoteConfig gốc")]
+    [Min(0)] public int winCoinRewardVeryHard = 30;
 
     [Header("Hồi mạng (hết mạng trong màn)")]
     [Min(1)] public int reviveAdsLives = 1;
@@ -24,4 +28,15 @@ public class EconomyConfig : ScriptableObject
 
     [Header("Quảng cáo (giả lập khi chưa có SDK)")]
     [Min(0)] public float adsSimulatedDuration = 0.5f;
+
+    /// <summary>Coin thưởng khi thắng level có độ khó <paramref name="difficulty"/>.</summary>
+    public int WinCoinReward(LevelDifficulty difficulty)
+    {
+        switch (difficulty)
+        {
+            case LevelDifficulty.Hard: return winCoinRewardHard;
+            case LevelDifficulty.VeryHard: return winCoinRewardVeryHard;
+            default: return winCoinReward;
+        }
+    }
 }

@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 6291f12e502cc514cb1f42c0b847796a, type: 3}
-  m_Color: {r: 0.62, g: 0.6, b: 0.9, a: 0.3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
@@ -767,6 +767,9 @@ MonoBehaviour:
   lockRoot: {fileID: 4323124751147739855}
   lockText: {fileID: 3436699085437174217}
   orientationBadge: {fileID: 7338406764727423489}
+  badgeSquareSprite: {fileID: 21300000, guid: 99135026b687f194fb66006c315fbaee, type: 3}
+  badgeTallSprite: {fileID: 21300000, guid: d9c32d60a7977b7438f503973331d54a, type: 3}
+  badgeWideSprite: {fileID: 21300000, guid: 97b272c4917373745b7070fbbc3fd95b, type: 3}
 --- !u!61 &751636190205843187
 BoxCollider2D:
   m_ObjectHideFlags: 0

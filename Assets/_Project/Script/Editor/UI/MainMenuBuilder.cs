@@ -263,15 +263,15 @@ public static class MainMenuBuilder
         DifficultyBuilder.BuildPlayParts(view, DifficultyBuilder.EnsureTheme()); // level Hard / Very Hard
     }
 
-    /// <summary>Avatar góc trên trái (khung + mặt khối xanh có sẵn trong khung_avatar).</summary>
+    /// <summary>Avatar góc trên trái: khung + mèo đang chọn (AvatarDatabase), bấm mở hồ sơ (ProfileBuilder.SetupMenuAvatar).</summary>
     private static void BuildAvatar(Transform topBar)
     {
         RectTransform root = TopCenter(PopupBuilder.NewUI("Avatar", topBar), new Vector2(-432f, -132f), new Vector2(150f, 152f));
         Image img = root.gameObject.AddComponent<Image>();
-        img.sprite = PopupBuilder.LoadSprite(Frames + "khung_avatar.png");
         img.preserveAspect = true;
         Button b = root.gameObject.AddComponent<Button>();
         b.targetGraphic = img;
+        ProfileBuilder.SetupMenuAvatar(root, ProfileBuilder.EnsureAvatarDatabase(), null); // GameFlowUI tự tìm lúc chạy
     }
 
     /// <summary>Nút cài đặt góc trên phải: ô tím nhạt + bánh răng; bấm mở popup cài đặt.</summary>

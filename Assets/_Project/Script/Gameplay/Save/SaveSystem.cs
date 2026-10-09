@@ -130,6 +130,9 @@ public static class SaveSystem
         if (data.energy == null) data.energy = new EnergySave();
         if (data.settings == null) data.settings = new SettingsSave();
         if (data.daily == null) data.daily = new DailySave();
+        if (data.clock == null) data.clock = new ClockSave();
+        if (data.profile == null) data.profile = new ProfileSave();
+        if (data.levelStats == null) data.levelStats = new System.Collections.Generic.List<LevelStatSave>();
 
         // if (data.version < 2) { ... chuyển đổi ...; data.version = 2; }
         data.version = SaveData.CurrentVersion;

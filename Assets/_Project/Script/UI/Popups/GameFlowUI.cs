@@ -17,16 +17,22 @@ public class GameFlowUI : MonoBehaviour
     [SerializeField] private DailyRewardPopup dailyRewardPopup;
     [SerializeField] private BuyBoosterPopup buyBoosterPopup;
     [SerializeField] private RefillEnergyPopup refillEnergyPopup;
+    [SerializeField] private ProfilePopup profilePopup;
 
     private PopupView[] AllPopups => new PopupView[]
     {
         winPopup, revivePopup, losePopup, settingsPopup, quitLevelPopup,
-        noticePopup, dailyRewardPopup, buyBoosterPopup, refillEnergyPopup
+        noticePopup, dailyRewardPopup, buyBoosterPopup, refillEnergyPopup, profilePopup
     };
+
+    [Header("Hết level")]
+    [SerializeField] private string comingSoonTitle = "COMING SOON";
+    [SerializeField, TextArea] private string comingSoonMessage = "You cleared all {0} levels!\nNew levels are on the way.\nPlay again from Level 1.";
 
     private void Awake()
     {
         EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
+        EventBus<AllLevelsCompletedEvent>.Subscribe(OnAllLevelsCompleted);
         if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = false; // popup quyết định sang level kế / chơi lại
     }
 
@@ -44,6 +50,7 @@ public class GameFlowUI : MonoBehaviour
     private void OnDestroy()
     {
         EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+        EventBus<AllLevelsCompletedEvent>.Unsubscribe(OnAllLevelsCompleted);
         if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = true;
         if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.RemoveListener(OnBuyBooster);
         IAPService.PurchaseFailed -= OnPurchaseFailed;
@@ -63,6 +70,17 @@ public class GameFlowUI : MonoBehaviour
     {
         if (dailyRewardPopup == null || dailyRewardPopup.IsOpen) return;
         dailyRewardPopup.Open();
+    }
+
+    /// <summary>Nút avatar trên Menu: hồ sơ của mình.</summary>
+    public void OpenProfile() => ShowProfile(PlayerProfileService.Local());
+
+    /// <summary>Hồ sơ bất kỳ (của mình, hoặc người khác khi bấm vào 1 dòng bảng xếp hạng).</summary>
+    public void ShowProfile(PlayerProfile profile)
+    {
+        if (profilePopup == null || profile == null) return;
+        if (profilePopup.IsOpen && profilePopup.Current != null && profilePopup.Current.PlayerId == profile.PlayerId) return;
+        profilePopup.Show(profile);
     }
 
     /// <summary>Thông báo chung (popup NOTICE).</summary>
@@ -102,6 +120,15 @@ public class GameFlowUI : MonoBehaviour
         if (EnergyManager.Instance == null || EnergyManager.Instance.CanPlay) lm.Retry();
         else if (refillEnergyPopup != null) refillEnergyPopup.ShowRequired(lm.Retry, () => Open(losePopup)); // X -> về lại popup Thua
         else lm.Retry();
+    }
+
+    /// <summary>Thắng level cuối: báo "Coming soon", đóng thì chơi lại từ level 1.</summary>
+    private void OnAllLevelsCompleted(AllLevelsCompletedEvent e)
+    {
+        ShowNotice(string.Format(comingSoonMessage, e.LevelCount), comingSoonTitle, () =>
+        {
+            if (LevelManager.Instance != null) LevelManager.Instance.RestartFromFirst();
+        });
     }
 
     private void OnBuyBooster(BoosterType type)

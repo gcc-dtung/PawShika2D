@@ -17,6 +17,11 @@ public class CellView : MonoBehaviour
     [SerializeField] private TextMeshPro lockText;
     [SerializeField] private SpriteRenderer orientationBadge; // ô nền sau con số: cao = dọc, vuông = vuông, dẹt = ngang
 
+    [Header("Art ô hướng (bản gốc khung_direc_1/2/3). Để trống thì dùng sprite 9-slice có sẵn của badge")]
+    [SerializeField] private Sprite badgeSquareSprite;
+    [SerializeField] private Sprite badgeTallSprite;
+    [SerializeField] private Sprite badgeWideSprite;
+
     // Kích thước ô nền (đơn vị world). Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
     private static readonly Vector2 BadgeTall = new Vector2(0.5f, 0.74f);
     private static readonly Vector2 BadgeSquare = new Vector2(0.64f, 0.64f);
@@ -115,6 +120,25 @@ public class CellView : MonoBehaviour
         Model = null;
     }
 
+    /// <summary>
+    /// Có art riêng: vẽ Simple, phóng sprite (giữ tỉ lệ) cho vừa trong <paramref name="size"/> (world).
+    /// Không có: sprite 9-slice của prefab, vẽ to rồi thu nhỏ transform.
+    /// </summary>
+    private void SetBadge(Sprite art, Vector2 size)
+    {
+        if (art != null)
+        {
+            orientationBadge.sprite = art;
+            orientationBadge.drawMode = SpriteDrawMode.Simple;
+            Vector2 bounds = art.bounds.size;
+            float k = Mathf.Min(size.x / bounds.x, size.y / bounds.y); // giữ tỉ lệ ảnh (góc bo không méo)
+            orientationBadge.transform.localScale = new Vector3(k, k, 1f);
+            return;
+        }
+        orientationBadge.transform.localScale = new Vector3(BadgeScale, BadgeScale, 1f);
+        orientationBadge.size = size / BadgeScale;
+    }
+
     // [MECHANIC] Hiển thị cơ chế trên ô: object con trong Cell.prefab, bật / tắt theo ClueCell; nhớ thêm vào _contentSprites (Awake) để hiện dần
     private void Refresh()
     {
@@ -152,8 +176,13 @@ public class CellView : MonoBehaviour
                     ClueConstraint.Horizontal => BadgeWide,
                     _ => BadgeSquare
                 };
-                orientationBadge.transform.localScale = new Vector3(BadgeScale, BadgeScale, 1f);
-                orientationBadge.size = size / BadgeScale;
+                Sprite art = clue.Constraint switch
+                {
+                    ClueConstraint.Vertical => badgeTallSprite,
+                    ClueConstraint.Horizontal => badgeWideSprite,
+                    _ => badgeSquareSprite
+                };
+                SetBadge(art, size);
             }
         }
     }

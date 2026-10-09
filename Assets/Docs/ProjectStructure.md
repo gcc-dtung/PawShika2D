@@ -56,23 +56,26 @@ Script/
 │   ├── Economy/    CoinWallet, RewardedAds, IAPService, ShopDatabase, ShopService
 │   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager, BoosterTutorial, ShieldTutorialDemo
 │   │   └── Effects/  BoosterEffect (+ IBoosterHost), BoosterEffectFactory, HintBooster, ShieldBooster, RevealBooster
-│   ├── Cheats/     DebugCheats
+│   ├── Analytics/  LevelStatsRecorder (số liệu chơi thật từng level)
+│   ├── Cheats/     DebugCheats, CheatPanel (panel cheat trong bản build: bấm 10 lần góc trên trái / F1)
+│   ├── Profile/    PlayerProfile, PlayerProfileService, ProfileStatsRecorder, AvatarDatabase
+│   ├── Clock/      TrustedClock, TrustedClockModel (giờ server, chống chỉnh giờ máy)
 │   ├── Daily/      DailyRewardDatabase, DailyRewardModel, DailyRewardManager
 │   ├── Energy/     EnergyModel, EnergyManager
 │   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, CatFaceTicker, ColorType
 │   ├── Input/      InputManager, InputGate, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
 │   ├── Solver/     ShikakuSolver
 │   ├── Tutorial/   TutorialController, TutorialLevels, TutorialHand, MechanicIntro
-│   ├── Feedback/   GameplayFeedback
+│   ├── Feedback/   GameplayFeedback, Haptics (rung haptic Android / iOS), GameHapticEvents
 │   ├── Audio/      SoundId, AudioDatabase, AudioManager, GameAudioEvents
 │   ├── Save/       SaveData, SaveSystem, SaveRunner
 │   ├── Visuals/    GameplayVisuals, BackgroundFitter, PlayZone, BoardCameraFitter
-│   └── Util/       Singleton
+│   └── Util/       Singleton, TextColor, FrameRateSetup (mobile 60 FPS)
 ├── UI/
 │   ├── Common/     SafeAreaZone, BackgroundCover, UIButtonSounds, NoClickSound, UIButtonPress, ButtonPress, SettingsButton, UIConfetti, TMPLetterPopIn, ButtonPressIgnore, NestedScrollRect
 │   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD, TutorialView, BoosterTutorialView
-│   ├── Menu/       ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
-│   └── Popups/     PopupView, GameFlowUI, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
+│   ├── Menu/       AvatarButton, ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
+│   └── Popups/     PopupView, GameFlowUI, ProfilePopup, ProfileStatTile, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
     ├── Config/     GameConfigSetup (Setup Game Config: tạo Configs/ + Resources/GameConfig)
     ├── Level/      ShikaCatLevelImporter, LevelEditorWindow, LevelValidator, MechanicInjector*, LevelDifficulty*
@@ -98,7 +101,7 @@ Quy tắc đặt file mới:
 | `GridGeometry` | Struct C# thuần: tọa độ ô / vùng → world; `WorldToCell` (kẹp trong lưới) |
 | `BoardModel` | **Logic** C# thuần: các ô, các khối đã đặt, `Check(rect)` → `PlacementResult`, gọi solver, đặt khối, giảm khóa, kiểm tra kín lưới |
 | `CellModel` | **Logic** C# thuần: vị trí, `ClueCell`, khối đang chiếm; event `Changed` khi ô số đổi |
-| `CellView` | **View**: bật/tắt object con có sẵn trong prefab (số, ổ khóa, ô nền điều hướng); là đích raycast khi kéo; `PlayIntro` / `StopIntro` (nảy + hiện dần, DOTween) |
+| `CellView` | **View** (ô hướng dùng art `khung_direc_1/2/3` gán ở `badgeSquare/Tall/WideSprite`): bật/tắt object con có sẵn trong prefab (số, ổ khóa, ô nền điều hướng); là đích raycast khi kéo; `PlayIntro` / `StopIntro` (nảy + hiện dần, DOTween) |
 | `ClueCell` | **Logic** C# thuần: giá trị, số bước khóa, ẩn/hiện, hướng |
 
 ### Gameplay/Events, Intro
@@ -143,6 +146,23 @@ Quy tắc đặt file mới:
 | `Effects/BoosterEffectFactory` | `Create(BoosterType)`: chỗ duy nhất thêm dòng khi có booster mới |
 | `BoosterTutorial` | Trên `Manager`, 1 `ILevelIntro` (Order 20, chờ 0.3 s): booster chưa mở có `levelUnlock` nhỏ nhất mà level vừa nạp đã tới → `BoosterManager.BeginTutorial`, `BoosterTutorialView.Show` (lời nhắc = `BoosterData.detail`). Mỗi lần nạp level tối đa 1 tutorial. Bấm đúng nút (`TutorialPressed`): lưu `unlockedBoosters`, phát `BoosterLockChangedEvent` + `BoosterTutorialCompletedEvent`, đóng lớp tối |
 | `ShieldTutorialDemo` | Trên `Manager`. Nghe `BoosterTutorialCompletedEvent` (Khiên): bước 2 "kéo sai thử" (`Demonstrating`): `TutorialHand` chỉ 1 vùng đúng số ô nhưng sai lời giải, chờ `onShieldBlocked` rồi khen 2 s |
+
+### Gameplay/Clock, Analytics
+
+| File | Vai trò |
+| --- | --- |
+| `TrustedClockModel` | Luật C# thuần: có giờ server → giờ server lúc đồng bộ + thời gian đơn điệu; offline → giờ máy nhưng không nhỏ hơn mốc tin cậy đã lưu; `IsDeviceClockOff` (lệch > 5 phút) |
+| `TrustedClock` | Static: `UtcNowSeconds`, `LocalNow`, `IsSynced`, `Synced`. Lấy header `Date` của HEAD HTTPS (Google → Cloudflare → Microsoft, bù nửa khứ hồi) khi mở game và khi quay lại app (≥ 120 s). Mốc lưu `SaveData.clock.lastTrustedUtc`. `EnergyManager`, `DailyRewardManager` dùng |
+| `LevelStatsRecorder` | Trên `Manager`. Ghi `SaveData.levelStats` theo tên asset level: lượt (chỉ tính khi người chơi thao tác), thắng, thua, bỏ dở, hết mạng, nước sai, booster, thời gian `Playing`, lượt thắng nhanh nhất. Xuất CSV: Tools → PawBlock → Level Stats (`Editor/Level/LevelStatsExporter`, gộp được nhiều `save.json`), nạp vào Level Difficulty → "Nạp dữ liệu thực tế" |
+
+### Gameplay/Profile
+
+| File | Vai trò |
+| --- | --- |
+| `PlayerProfile` | Hồ sơ để hiển thị (chỉ đọc): ID, tên, avatar, ngày bắt đầu, level, `ProfileStat[]`, `IsLocal`. `ProfileStatType` + `ProfileStats.Label / Format`. BXH sau này tạo từ dữ liệu server |
+| `PlayerProfileService` | Static, hồ sơ máy này (`SaveData.profile`): tạo lần đầu (ID 8 số, "Player xxxx", ngày bắt đầu), `Local()`, `Rename` (2–16 ký tự), `SetAvatar`, `Changed` |
+| `ProfileStatsRecorder` | Trên `Manager`: thắng lượt đầu, level cao nhất, thắng Hard, chuỗi thắng + kỷ lục, coin nhận, booster dùng |
+| `AvatarDatabase` | ScriptableObject `Configs/AvatarDatabase.asset`: 12 mèo ShikaCat, thứ tự = AvatarId |
 
 ### Gameplay/Cheats
 
@@ -197,7 +217,9 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `DragSelection` | **Logic** C# thuần của vùng đang kéo: không bao giờ phủ lên khối đã đặt / ô Void (bị chặn thì giữ vùng hợp lệ trước đó), vuốt nhanh thì đi qua từng ô ở giữa; `BlockDir` = mép nào đang bị ngón tay đẩy vào vật cản |
 | `SelectionBoxView` | Khung màu mờ phủ vùng đang kéo, random 1 `ColorType` mỗi lượt kéo (mèo xem trước và khối đặt ra dùng đúng màu này); đổi ô thì giãn / co tới vùng mới trong `resizeDuration` 0.15 s (`resizeEase` OutQuad, tween DOTween, chỉnh trong Inspector), giãn xong báo `WhenSettled`; mờ đi khi đang hiện mèo xem trước. Bình thường ôm sát ô (`inset` 0.1); bị chặn (khối, Void, mép lưới) thì mép phía đó trượt sang lấp khe, dừng ngay trước vật cản (`blockedExtend` 0.1) |
 | `DragCountBubble` | Bong bóng số ô bám ngón tay |
-| `GameplayFeedback` | Chữ khen khi đúng; rung camera, rung máy khi sai (qua `AudioManager.Vibrate`, theo cài đặt Rung) |
+| `GameplayFeedback` | Chữ khen khi đúng; rung camera khi sai |
+| `Haptics` | Rung ngắn có cường độ (`HapticType` Light / Medium / Heavy / Success / Failure): Android `VibrationEffect`, iOS `Plugins/iOS/HapticsIOS.mm` |
+| `GameHapticEvents` | Trên object `AudioManager`. Nối rung vào event game (đặt khối, sai, mở khóa, booster, khiên, thắng / thua) qua `AudioManager.Vibrate(type)` |
 
 ### Gameplay/Audio
 
@@ -205,7 +227,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | --- | --- |
 | `SoundId` | Enum các âm: UI (Click, PopupOpen/Close, Coin), màn chơi (LevelStart, BlockPlace, Mistake, Unlock, Win, Lose, OutOfLives), booster (Booster, ShieldOn, ShieldBlock), tiếng mèo (CatHappy, CatSad) |
 | `AudioDatabase` | ScriptableObject `Configs/AudioDatabase.asset`: mỗi âm → nhiều clip (phát ngẫu nhiên), âm lượng, khoảng cao độ, cooldown; nhạc nền + âm lượng |
-| `AudioManager` | Trên object `AudioManager`. Nhạc nền lặp, đổi / bật / tắt có fade (DOTween, thời gian thực); pool `sfxVoices` AudioSource 2D, hết thì dùng lại nguồn phát lâu nhất; cooldown từng âm. `Play(id)`, `PlayChance(id, p)`, `Vibrate()`; `MusicOn` / `SoundOn` / `VibrateOn` lưu `SaveData.settings`, sự kiện `SettingsChanged` |
+| `AudioManager` | Trên object `AudioManager`. Nhạc nền lặp, đổi / bật / tắt có fade (DOTween, thời gian thực); pool `sfxVoices` AudioSource 2D, hết thì dùng lại nguồn phát lâu nhất; cooldown từng âm. `Play(id)`, `PlayChance(id, p)`, `Vibrate(HapticType)`; `MusicOn` / `SoundOn` / `VibrateOn` lưu `SaveData.settings`, sự kiện `SettingsChanged` |
 | `GameAudioEvents` | Nối âm vào sự kiện có sẵn: `GridManager` (đặt khối + mèo vui 35 %, sai + mèo buồn 80 %, mở khóa), `GameStateChangedEvent` (Won / OutOfLives / Lost), `GridSpawner.gridCellEvent` (LevelStart, bỏ qua khi ở Menu), `LivesManager` (khiên bật / chặn), `BoosterManager.onBoosterUsed`, `CoinWallet.Changed` (nhận coin) |
 
 ### Gameplay/Save
@@ -234,7 +256,7 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `LivesUI` | Hàng tim trên Canvas |
 | `BoosterButton` | 1 nút booster: icon, số lượt (`btn_number`), dấu `+` (`btn_add_0`), ổ khóa "LV n", quầng sáng xoay khi đang bật; bấm → `BoosterManager.Press`. Vẽ lại theo `onModeChanged`, `onTutorialChanged`, `onBoosterUsed`, `BoosterLockChangedEvent`, `LevelLoadedEvent`. `BoosterButton.Find(type)` |
 | `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số (`onModeChanged` lọc Reveal); X → `BoosterManager.CancelModes` |
-| `ShieldIndicator` | Khung băng `ice_effect_2` phủ hàng tim khi có khiên; khiên chặn lỗi thì phồng to rồi mờ |
+| `ShieldIndicator` | Khung băng `ice_effect_2` phủ hàng tim khi có khiên. Bật: `ShieldFrost` (viền băng `ice_effect` toàn `Canvas_HUD`) lóe rồi tan, lớp băng đóng lại rồi thở, bông tuyết (`snowflake`, pool tạo 1 lần) lấp lánh, vệt sáng lướt định kỳ. Chặn lỗi: rung, phồng, vỡ, mảnh băng văng 4 phía |
 | `TutorialView` | `Canvas_HUD/UIZone/TutorialPanel` (tắt sẵn): tiêu đề Tutorial, nút Skip, vạch tiến độ `tutorial_dot` (bước hiện tại sáng), khung lời nhắc `popup_tutorial` 9-slice (nảy nhẹ khi đổi bước). Hiện thì ẩn `TopPanel`, `DownPanel`, ẩn thì trả lại |
 | `BoosterTutorialView` | `Canvas_HUD/BoosterTutorial` (Canvas riêng sortingOrder 5, tắt sẵn): nền tối chặn thao tác, khung lời nhắc `khung_reveal2` đè khung LEVEL, bàn tay nhấn lặp lên nút. Nút booster được nhấc trên nền tối bằng Canvas override sorting (+ GraphicRaycaster, thêm lúc chạy) và bật quầng sáng (`BoosterButton.SetHighlight`) |
 | `EnergyHUD` | Icon tim (`icon_hear_2`), số năng lượng, đồng hồ / FULL / ∞; có `infiniteSprite` (ô ở Home) thì khi vô hạn đổi sang tim ∞ (`icon_hear_infinity2`) và ẩn số; bấm khi chưa đầy → `GameFlowUI.OpenEnergyRefill` |

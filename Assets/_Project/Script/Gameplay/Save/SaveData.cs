@@ -20,11 +20,16 @@ public class SaveData
     public EnergySave energy = new EnergySave();
     public SettingsSave settings = new SettingsSave();
     public DailySave daily = new DailySave();
+    public ClockSave clock = new ClockSave();
+    public ProfileSave profile = new ProfileSave();
     public bool noAds; // đã mua Remove Ads / No Ads Bundle
     public bool tutorialDone; // đã xong / bỏ qua tutorial lần đầu
+    public bool allLevelsCleared; // đã thắng level cuối ít nhất 1 lần (màn "Coming soon")
     public List<string> unlockedBoosters = new List<string>(); // booster đã qua tutorial mở khóa (tên BoosterType)
 
     public List<string> seenMechanics = new List<string>(); // cơ chế đã xem popup giới thiệu (tên MechanicIntro.Kind)
+
+    public List<LevelStatSave> levelStats = new List<LevelStatSave>(); // số liệu chơi thật từng level (LevelStatsRecorder)
 
     public bool IsBoosterUnlocked(BoosterType type) => unlockedBoosters.Contains(type.ToString());
 
@@ -70,6 +75,46 @@ public class SettingsSave
     public bool music = true;
     public bool sound = true;
     public bool vibrate = true;
+}
+
+/// <summary>Số liệu chơi thật của 1 level (LevelStatsRecorder), khóa theo tên asset level.</summary>
+[Serializable]
+public class LevelStatSave
+{
+    public string id;            // tên asset LevelDefinition
+    public int level;            // số thứ tự lúc chơi gần nhất
+    public int attempts;         // số lượt bắt đầu
+    public int wins;
+    public int losses;           // thua hẳn (từ chối hồi mạng)
+    public int quits;            // bỏ dở (chơi lại / đổi level / về Menu rồi chơi lại)
+    public int outOfLives;       // số lần hết mạng (kể cả lần hồi mạng chơi tiếp)
+    public int mistakes;         // nước đi sai
+    public int boosters;         // booster đã dùng
+    public float playSeconds;    // tổng thời gian ở trạng thái Playing
+    public float bestWinSeconds; // lượt thắng nhanh nhất (0 = chưa thắng)
+}
+
+/// <summary>Hồ sơ người chơi máy này (PlayerProfileService) + chỉ số (ProfileStatsRecorder).</summary>
+[Serializable]
+public class ProfileSave
+{
+    public string playerId;    // 8 số ngẫu nhiên, tạo lần đầu
+    public string name;        // tên hiển thị (đổi được)
+    public int avatar;         // chỉ số trong AvatarDatabase
+    public long createdAt;     // unix giây, lần đầu mở game (từ lúc có hồ sơ)
+    public int firstTryWins;
+    public long coinsEarned;
+    public int levelsCleared;  // level cao nhất đã thắng
+    public int hardWins;
+    public int boostersUsed;
+    public int winStreak;      // chuỗi thắng hiện tại
+    public int bestWinStreak;
+}
+
+[Serializable]
+public class ClockSave
+{
+    public long lastTrustedUtc; // mốc giờ tin cậy lớn nhất đã thấy (unix giây), TrustedClock chặn lùi giờ dưới mốc này
 }
 
 [Serializable]

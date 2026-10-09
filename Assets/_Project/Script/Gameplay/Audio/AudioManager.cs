@@ -98,13 +98,11 @@ public class AudioManager : Singleton<AudioManager>
         if (UnityEngine.Random.value <= chance) Play(id);
     }
 
-    /// <summary>Rung máy (Android / iOS) nếu bật Rung.</summary>
-    public static void Vibrate()
+    /// <summary>Rung máy (Android / iOS) nếu bật Rung. Mặc định rung vừa; xem HapticType.</summary>
+    public static void Vibrate(HapticType type = HapticType.Medium)
     {
         if (!VibrateOn) return;
-#if UNITY_ANDROID || UNITY_IOS
-        Handheld.Vibrate();
-#endif
+        Haptics.Play(type);
     }
 
     // ---------- Nhạc nền ----------

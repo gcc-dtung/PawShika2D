@@ -2,7 +2,7 @@
 
 ## Tính năng làm gì
 
-- Nhạc nền lặp (fade khi đổi / bật / tắt), hiệu ứng âm (SFX) theo sự kiện game, rung máy khi sai.
+- Nhạc nền lặp (fade khi đổi / bật / tắt), hiệu ứng âm (SFX) theo sự kiện game, rung máy kiểu haptic (nhẹ / vừa / mạnh / nhịp thắng - thua) theo sự kiện game.
 - Cài đặt Nhạc / Âm / Rung lưu trong save.
 - Phản hồi hình ảnh: chữ khen khi đặt đúng, rung camera + chớp đỏ khi sai.
 
@@ -12,9 +12,11 @@
 | --- | --- |
 | `Gameplay/Audio/SoundId` | Enum các âm (có số cố định, nhóm theo hàng chục) |
 | `Gameplay/Audio/AudioDatabase` (+ asset `Configs/AudioDatabase.asset`) | Mỗi `SoundId` → nhiều clip (phát ngẫu nhiên), âm lượng, cao độ, cooldown; nhạc nền |
-| `Gameplay/Audio/AudioManager` | `AudioManager.Play(id)`, `PlayChance(id, p)`, `Vibrate()`; pool AudioSource; `MusicOn` / `SoundOn` / `VibrateOn` |
+| `Gameplay/Audio/AudioManager` | `AudioManager.Play(id)`, `PlayChance(id, p)`, `Vibrate(HapticType)`; pool AudioSource; `MusicOn` / `SoundOn` / `VibrateOn` |
 | `Gameplay/Audio/GameAudioEvents` | **Nối âm vào event có sẵn** – không script gameplay nào gọi âm trực tiếp (trừ UI chung) |
-| `Gameplay/Feedback/GameplayFeedback` | Chữ khen (pool), rung camera, rung máy |
+| `Gameplay/Feedback/GameplayFeedback` | Chữ khen (pool), rung camera |
+| `Gameplay/Feedback/Haptics` (+ `Plugins/iOS/HapticsIOS.mm`) | Rung ngắn có cường độ: Android `Vibrator` + `VibrationEffect` (API 26+; máy cũ chỉ chỉnh thời gian), iOS `UIImpactFeedbackGenerator`; Editor không rung |
+| `Gameplay/Feedback/GameHapticEvents` | **Nối rung vào event có sẵn** (trên object `AudioManager`), đi qua `AudioManager.Vibrate` nên theo cài đặt Rung |
 | `UI/Common/UIButtonSounds` | Âm Click cho mọi nút |
 | `Editor/Audio/AudioSetup` | **Setup Audio**: tạo / bổ sung database (chỉ thêm âm thiếu), object `AudioManager` |
 
@@ -30,6 +32,18 @@
 | `LivesManager.onShieldChanged / onShieldBlocked` | ShieldOn / ShieldBlock |
 | `BoosterManager.onBoosterUsed` | Booster |
 | `CoinWallet.Changed` (tăng) | Coin |
+
+## Rung được nối ở đâu (`GameHapticEvents`)
+
+| Event | Rung |
+| --- | --- |
+| `GridManager.onBlockPlaced` / `onClueUnlocked` | Light (tắt được bằng checkbox trên component) |
+| `BoosterManager.onBoosterUsed`, `LivesManager.onShieldBlocked` | Medium |
+| `GridManager.onMistake` | Heavy |
+| `GameStateChangedEvent` Won | Success (2 nhịp nhẹ → mạnh) |
+| `GameStateChangedEvent` OutOfLives / Lost | Failure (2 nhịp mạnh) |
+
+`Haptics` bỏ qua lần rung cách lần trước < 0.03 s (nhiều sự kiện cùng frame). Thử từng kiểu: Cheat Panel → tab Khác → Thử rung.
 
 ## Thêm âm mới
 

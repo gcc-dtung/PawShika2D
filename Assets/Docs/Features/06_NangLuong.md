@@ -43,3 +43,4 @@ Lưu: `SaveData.energy { energy, refillStart, infiniteUntil }` (unix giây). `en
 
 - Đồng hồ máy bị lùi: `EnergyModel` không cộng âm. Muốn chống gian lận đổi giờ cần giờ server – thay `EnergyManager.Now`.
 - `onTick` chạy theo `unscaledDeltaTime` nên đồng hồ vẫn chạy khi game tạm dừng.
+- Thời gian hồi lấy từ `TrustedClock.UtcNowSeconds` (giờ server khi có mạng, chặn lùi giờ khi offline), không dùng giờ máy trực tiếp: chỉnh giờ máy không hồi năng lượng. Đồng bộ xong thì `RefreshNow`.

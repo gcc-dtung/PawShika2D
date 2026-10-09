@@ -27,6 +27,17 @@ public readonly struct GameStateChangedEvent : IGameEvent
     }
 }
 
+/// <summary>Thắng level cuối cùng của database (màn "Coming soon").</summary>
+public readonly struct AllLevelsCompletedEvent : IGameEvent
+{
+    public readonly int LevelCount;
+
+    public AllLevelsCompletedEvent(int levelCount)
+    {
+        LevelCount = levelCount;
+    }
+}
+
 /// <summary>ScreenFlow chuyển giữa Main Menu và màn chơi.</summary>
 public readonly struct ScreenChangedEvent : IGameEvent
 {

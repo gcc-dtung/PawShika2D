@@ -30,4 +30,4 @@
 ## Lưu ý
 
 - `claimedMask` là bitmask 32 bit → chu kỳ tối đa 32 ngày.
-- Dùng giờ máy (`DateTime.Now`) – người chơi đổi giờ máy được. Cần chống gian lận thì lấy giờ server.
+- Ngày lấy từ `TrustedClock.LocalNow`: có mạng thì theo giờ server (header `Date` HTTPS) + đồng hồ đơn điệu, đổi giờ máy không có tác dụng; offline thì giờ máy nhưng không lùi dưới mốc đã lưu (`SaveData.clock`). Đồng bộ xong (`TrustedClock.Synced`) thì tính lại ngày. Đổi múi giờ máy vẫn lệch được tối đa ±1 ngày.

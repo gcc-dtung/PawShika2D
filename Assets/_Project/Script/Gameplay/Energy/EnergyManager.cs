@@ -26,7 +26,7 @@ public class EnergyManager : Singleton<EnergyManager>
     public int SecondsToNext => Model.SecondsToNext(Now);
     public int InfiniteSecondsLeft => (int)Math.Max(0, Model.InfiniteUntil - Now);
 
-    private static long Now => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    private static long Now => TrustedClock.UtcNowSeconds; // giờ server nếu có mạng, chặn chỉnh giờ máy
 
     private EnergyModel Model
     {
@@ -46,12 +46,14 @@ public class EnergyManager : Singleton<EnergyManager>
     private void Start()
     {
         EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
+        TrustedClock.Synced += RefreshNow;
         RefreshNow();
     }
 
     private void OnDestroy()
     {
         EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+        TrustedClock.Synced -= RefreshNow;
     }
 
     private void Update()
