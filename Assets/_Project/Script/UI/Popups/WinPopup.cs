@@ -38,6 +38,7 @@ public class WinPopup : PopupView
     [SerializeField] private float bannerDelay = 0.05f;
 
     private bool _claimed;
+    private bool _ready; // intro xong mới nhận bấm (không tắt interactable lúc intro để nút không bị xám)
     private Sequence _intro;
     private Sequence _claim;
     private Tween _raysSpin;
@@ -83,7 +84,8 @@ public class WinPopup : PopupView
         SetScale(rays, 0f);
         SetScale(nextButton != null ? (RectTransform)nextButton.transform : null, 0f);
         SetScale(doubleButton != null ? (RectTransform)doubleButton.transform : null, 0f);
-        SetButtons(false);
+        SetButtons(true);
+        _ready = false;
 
         _raysSpin?.Kill();
         if (rays != null)
@@ -109,7 +111,7 @@ public class WinPopup : PopupView
         float t = bannerDelay + (banner != null ? banner.Duration : 0.4f) + 0.05f;
         if (nextButton != null) seq.Insert(t, Pop((RectTransform)nextButton.transform, 0.3f, 2f));
         if (doubleButton != null) seq.Insert(t + 0.15f, Pop((RectTransform)doubleButton.transform, 0.3f, 2f));
-        seq.InsertCallback(t + 0.2f, () => SetButtons(true));
+        seq.InsertCallback(t + 0.2f, () => _ready = true);
         _intro = seq;
     }
 
@@ -125,10 +127,15 @@ public class WinPopup : PopupView
         }
     }
 
-    private void OnNext() => Claim(CoinReward);
+    private void OnNext()
+    {
+        if (_ready) Claim(CoinReward);
+    }
 
+    // Bấm xong 2 nút chuyển xám (UIGrayscaleWhenDisabled) như nút Mua booster khi thiếu coin
     private void OnDouble()
     {
+        if (!_ready || _claimed) return;
         SetButtons(false);
         RewardedAds.Show("win_x2", ok =>
         {

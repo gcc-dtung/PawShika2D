@@ -374,13 +374,20 @@ public class CheatPanel : MonoBehaviour
             }
         }
 
-        Header($"Thử rung (cài đặt Rung: {(AudioManager.VibrateOn ? "bật" : "tắt")})");
+        Header("Thử rung");
+        GUILayout.Label($"{Haptics.Status}\nĐã gọi rung: {Haptics.PlayCount} lần" +
+                        (string.IsNullOrEmpty(Haptics.LastError) ? "" : $"\nLỗi: {Haptics.LastError}"), _small);
         using (new GUILayout.HorizontalScope())
         {
             foreach (HapticType type in System.Enum.GetValues(typeof(HapticType)))
             {
                 if (Btn(type.ToString())) Haptics.Play(type); // gọi thẳng, bỏ qua cài đặt Rung
             }
+        }
+        using (new GUILayout.HorizontalScope())
+        {
+            if (Btn("Rung dài (kiểu cũ)")) Haptics.PlayLegacy();
+            if (Btn($"Cài đặt Rung: {(AudioManager.VibrateOn ? "BẬT" : "TẮT")}")) AudioManager.VibrateOn = !AudioManager.VibrateOn;
         }
 
         Header("Điểm danh");

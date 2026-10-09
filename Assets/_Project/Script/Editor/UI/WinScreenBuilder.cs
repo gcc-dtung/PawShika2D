@@ -122,6 +122,10 @@ public static class WinScreenBuilder
         doubleLabel.fontSharedMaterial = GameFontSetup.OutlineBrown();
         TMP_Text doubleAmount = CoinRow(doubleFace, new Vector2(36, -20), GameFontSetup.OutlineBrown());
 
+        // Bấm xong (nhận thưởng / chờ quảng cáo) thì 2 nút xám
+        PopupBuilder.GrayWhenDisabled(next);
+        PopupBuilder.GrayWhenDisabled(doubleBtn);
+
         // Lớp coin bay (trên cùng)
         RectTransform fly = PopupBuilder.Stretch(PopupBuilder.NewUI("FlyLayer", rt));
 
