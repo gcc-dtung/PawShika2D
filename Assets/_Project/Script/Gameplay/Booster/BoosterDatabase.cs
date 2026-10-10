@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>Thứ tự giữ đúng boosterType của BoosterDatabase gốc (1 = Freeze Time, nay là Khiên).</summary>
+/// <summary>Thứ tự giữ đúng boosterType của BoosterDatabase gốc (1 = Freeze Time).</summary>
 public enum BoosterType
 {
     Hint = 0,
-    Shield = 1,
+    Freeze = 1,
     Reveal = 2
 }
 

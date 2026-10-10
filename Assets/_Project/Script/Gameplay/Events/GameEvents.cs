@@ -16,7 +16,7 @@ public readonly struct LevelLoadedEvent : IGameEvent
     }
 }
 
-/// <summary>Trạng thái ván đổi (Playing / Paused / Won / OutOfLives / Lost).</summary>
+/// <summary>Trạng thái ván đổi (Playing / Paused / Won / OutOfTime / Lost).</summary>
 public readonly struct GameStateChangedEvent : IGameEvent
 {
     public readonly GameState State;

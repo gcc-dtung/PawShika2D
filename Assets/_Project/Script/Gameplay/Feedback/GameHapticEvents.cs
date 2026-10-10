@@ -1,34 +1,49 @@
 using UnityEngine;
 
 /// <summary>
-/// Nối rung điện thoại vào các sự kiện có sẵn của game (giống GameAudioEvents cho âm thanh):
-/// đặt khối / mở khóa ô (nhẹ), booster / khiên đỡ (vừa), đặt sai (mạnh), thắng / hết mạng / thua (nhịp đôi).
-/// Đi qua AudioManager.Vibrate nên tắt "Rung" trong Cài đặt là tắt hết.
+/// Nối rung điện thoại vào các sự kiện có sẵn của game (giống GameAudioEvents cho âm thanh). Kiểu rung xem HapticType:
+/// - Thao tác liên tục rung rất nhẹ: ngón tay kéo sang ô khác (Selection), đặt khối (Light), gỡ khối (Soft), mở khóa ô (Rigid).
+/// - Coin bay vào ô coin ở màn thắng: mỗi đồng 1 tick (Coin, gọi trong WinPopup).
+/// - Booster (Medium); đóng băng bật (Rise, mạnh dần) / băng vỡ (Thud); lưới kín mà sai (Heavy).
+/// - Sắp hết giờ: vừa xuống dưới ngưỡng (Warning) rồi mỗi giây (Tick). Thắng (Success), hết giờ / thua (Failure).
+/// Đi qua AudioManager.Vibrate nên tắt "Rung" trong Cài đặt là tắt hết. Từng nhóm tắt riêng được ở Inspector.
 /// Đặt cùng AudioManager / GameAudioEvents trong scene.
 /// </summary>
 public class GameHapticEvents : MonoBehaviour
 {
     [SerializeField] private bool onBlockPlaced = true;
     [SerializeField] private bool onClueUnlocked = true;
+    [Tooltip("Tick rất nhẹ mỗi khi ngón tay đang kéo chạm sang ô khác")]
+    [SerializeField] private bool onSelection = true;
+    [Tooltip("Tick mỗi giây khi sắp hết giờ")]
+    [SerializeField] private bool onLowTimeTick = true;
 
     private GridManager _grid;
-    private LivesManager _lives;
+    private LevelTimer _timer;
     private BoosterManager _booster;
 
     private void Start()
     {
         _grid = GridManager.Instance;
-        _lives = LivesManager.Instance;
+        _timer = LevelTimer.Instance;
         _booster = BoosterManager.Instance;
 
         if (_grid != null)
         {
             _grid.onBlockPlaced.AddListener(OnBlockPlaced);
+            _grid.onBlockRemoved.AddListener(OnBlockRemoved);
             _grid.onMistake.AddListener(OnMistake);
             _grid.onClueUnlocked.AddListener(OnClueUnlocked);
+            _grid.onDragCellChanged.AddListener(OnDragCellChanged);
         }
         EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
-        if (_lives != null) _lives.onShieldBlocked.AddListener(OnShieldBlocked);
+        if (_timer != null)
+        {
+            _timer.onFreezeChanged.AddListener(OnFreezeChanged);
+            _timer.onFreezeEnded.AddListener(OnFreezeEnded);
+            _timer.onTimeWarning.AddListener(OnTimeWarning);
+            _timer.onLowTick.AddListener(OnLowTick);
+        }
         if (_booster != null) _booster.onBoosterUsed.AddListener(OnBoosterUsed);
     }
 
@@ -37,11 +52,19 @@ public class GameHapticEvents : MonoBehaviour
         if (_grid != null)
         {
             _grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
+            _grid.onBlockRemoved.RemoveListener(OnBlockRemoved);
             _grid.onMistake.RemoveListener(OnMistake);
             _grid.onClueUnlocked.RemoveListener(OnClueUnlocked);
+            _grid.onDragCellChanged.RemoveListener(OnDragCellChanged);
         }
         EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
-        if (_lives != null) _lives.onShieldBlocked.RemoveListener(OnShieldBlocked);
+        if (_timer != null)
+        {
+            _timer.onFreezeChanged.RemoveListener(OnFreezeChanged);
+            _timer.onFreezeEnded.RemoveListener(OnFreezeEnded);
+            _timer.onTimeWarning.RemoveListener(OnTimeWarning);
+            _timer.onLowTick.RemoveListener(OnLowTick);
+        }
         if (_booster != null) _booster.onBoosterUsed.RemoveListener(OnBoosterUsed);
     }
 
@@ -50,11 +73,18 @@ public class GameHapticEvents : MonoBehaviour
         if (onBlockPlaced) AudioManager.Vibrate(HapticType.Light);
     }
 
+    private void OnBlockRemoved(BlockModel block) => AudioManager.Vibrate(HapticType.Soft);
+
     private void OnMistake(Vector3 center, Vector2 size) => AudioManager.Vibrate(HapticType.Heavy);
 
     private void OnClueUnlocked(CellModel cell)
     {
-        if (onClueUnlocked) AudioManager.Vibrate(HapticType.Light);
+        if (onClueUnlocked) AudioManager.Vibrate(HapticType.Rigid);
+    }
+
+    private void OnDragCellChanged(Vector2Int cell)
+    {
+        if (onSelection) AudioManager.Vibrate(HapticType.Selection);
     }
 
     private void OnStateChanged(GameStateChangedEvent e)
@@ -62,12 +92,28 @@ public class GameHapticEvents : MonoBehaviour
         switch (e.State)
         {
             case GameState.Won: AudioManager.Vibrate(HapticType.Success); break;
-            case GameState.OutOfLives:
+            case GameState.OutOfTime:
             case GameState.Lost: AudioManager.Vibrate(HapticType.Failure); break;
         }
     }
 
-    private void OnShieldBlocked() => AudioManager.Vibrate(HapticType.Medium);
+    private void OnFreezeChanged(bool on)
+    {
+        if (on) AudioManager.Vibrate(HapticType.Rise);
+    }
 
-    private void OnBoosterUsed(BoosterType type) => AudioManager.Vibrate(HapticType.Medium);
+    private void OnFreezeEnded() => AudioManager.Vibrate(HapticType.Thud);
+
+    private void OnTimeWarning() => AudioManager.Vibrate(HapticType.Warning);
+
+    private void OnLowTick(int seconds)
+    {
+        if (onLowTimeTick) AudioManager.Vibrate(HapticType.Tick);
+    }
+
+    // Đóng băng đã có Rise (onFreezeChanged), không rung chồng thêm
+    private void OnBoosterUsed(BoosterType type)
+    {
+        if (type != BoosterType.Freeze) AudioManager.Vibrate(HapticType.Medium);
+    }
 }

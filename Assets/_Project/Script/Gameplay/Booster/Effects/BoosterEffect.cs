@@ -7,7 +7,7 @@ using UnityEngine;
 public interface IBoosterHost
 {
     GridManager Grid { get; }
-    LivesManager Lives { get; }
+    LevelTimer Timer { get; }
 
     /// <summary>Booster đã thực sự có tác dụng: trừ 1 lượt (hoặc dùng lượt miễn phí của tutorial), phát onBoosterUsed.</summary>
     void Consume(BoosterType type);
@@ -29,7 +29,7 @@ public abstract class BoosterEffect
 
     public abstract BoosterType Type { get; }
 
-    /// <summary>Đang bật (nút có quầng sáng): Khiên đang chờ chặn lỗi, Reveal đang chờ chọn số...</summary>
+    /// <summary>Đang bật (nút có quầng sáng): đồng hồ đang đóng băng, Reveal đang chờ chọn số...</summary>
     public virtual bool IsActive => false;
 
     public void Bind(IBoosterHost host) => Host = host;
@@ -37,7 +37,7 @@ public abstract class BoosterEffect
     /// <summary>Bấm nút khi đã còn lượt (hoặc lượt miễn phí). Chỉ gọi Host.Consume khi thực sự có tác dụng.</summary>
     public abstract void Activate();
 
-    /// <summary>Bấm lại nút khi đang IsActive. Mặc định bỏ qua (vd Khiên đã bật thì không bật lần nữa).</summary>
+    /// <summary>Bấm lại nút khi đang IsActive. Mặc định bỏ qua (vd đang đóng băng thì không bật lần nữa).</summary>
     public virtual void PressWhileActive() { }
 
     /// <summary>Thoát chế độ chờ (nạp level, ván dừng, dùng booster khác).</summary>

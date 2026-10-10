@@ -1,12 +1,25 @@
 using UnityEngine;
 
-/// <summary>Mạng trong màn (LivesManager) và năng lượng ngoài màn (EnergyManager). Lấy qua GameConfig.LivesEnergy.</summary>
+/// <summary>Đồng hồ trong màn (LevelTimer) và năng lượng ngoài màn (EnergyManager). Lấy qua GameConfig.LivesEnergy.</summary>
 [CreateAssetMenu(menuName = "PawBlock/Config/Lives Energy Config", fileName = "LivesEnergyConfig")]
 public class LivesEnergyConfig : ScriptableObject
 {
-    [Header("Mạng trong màn")]
-    [Tooltip("Số lần đi sai được phép mỗi level")]
-    [Min(1)] public int maxLives = 3;
+    [Header("Đồng hồ trong màn (số của GameplayController gốc)")]
+    [Tooltip("Thời gian nền mỗi level (giây)")]
+    [Min(0)] public float baseSeconds = 8f;
+    [Tooltip("Cộng thêm cho mỗi ô của lưới")]
+    [Min(0)] public float secondsPerCell = 0.25f;
+    [Tooltip("Cộng thêm cho mỗi khối (ô số), random trong khoảng min – max")]
+    [Min(0)] public float secondsPerBlockMin = 5.5f;
+    [Min(0)] public float secondsPerBlockMax = 6.5f;
+    [Tooltip("Tổng thời gian tối thiểu")]
+    [Min(1)] public float minSeconds = 45f;
+    [Tooltip("Còn dưới số giây này thì đồng hồ đỏ + đập")]
+    [Min(0)] public float warningSeconds = 10f;
+
+    [Header("Booster Đóng băng")]
+    [Tooltip("Số giây đồng hồ đứng yên (Freeze Time gốc: 20 s)")]
+    [Min(1)] public float freezeSeconds = 20f;
 
     [Header("Năng lượng")]
     [Min(1)] public int maxEnergy = 5;

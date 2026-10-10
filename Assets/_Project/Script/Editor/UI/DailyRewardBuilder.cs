@@ -72,10 +72,10 @@ public static class DailyRewardBuilder
         db.days.Add(Day(Coin(100)));
         db.days.Add(Day(Booster(BoosterType.Hint, 1)));
         db.days.Add(Day(Coin(200)));
-        db.days.Add(Day(Booster(BoosterType.Shield, 1)));
+        db.days.Add(Day(Booster(BoosterType.Freeze, 1)));
         db.days.Add(Day(Coin(300)));
         db.days.Add(Day(Booster(BoosterType.Reveal, 1)));
-        db.days.Add(Day(Coin(500), Booster(BoosterType.Hint, 1), Booster(BoosterType.Shield, 1), Booster(BoosterType.Reveal, 1),
+        db.days.Add(Day(Coin(500), Booster(BoosterType.Hint, 1), Booster(BoosterType.Freeze, 1), Booster(BoosterType.Reveal, 1),
             new DailyRewardItem { kind = DailyRewardKind.InfiniteEnergy, amount = 30 }));
         db.coinIcon = PopupBuilder.LoadSprite(UI + "Icons/coin.png");
         db.infiniteEnergyIcon = PopupBuilder.LoadSprite(PopupBuilder.EnergyInfiniteSprite);

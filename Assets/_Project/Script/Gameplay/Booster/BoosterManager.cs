@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 /// <summary>
 /// Phần chung của mọi booster: khóa / mở, đếm lượt, mua, lượt miễn phí của tutorial, khóa lưới khi tự đặt khối.
-/// Luật riêng từng booster nằm ở BoosterEffect (Strategy: HintBooster, ShieldBooster, RevealBooster), tạo bằng BoosterEffectFactory.
+/// Luật riêng từng booster nằm ở BoosterEffect (Strategy: HintBooster, FreezeBooster, RevealBooster), tạo bằng BoosterEffectFactory.
 /// Nút trên HUD chỉ gọi Press(type); popup mua nghe onBuyRequested. Lượt chỉ bị trừ khi booster thực sự có tác dụng.
 /// Tutorial mở khóa (BoosterTutorial): BeginTutorial(type) -> chỉ nút đó bấm được; bấm -> TutorialPressed, lần dùng này miễn phí.
 /// </summary>
@@ -37,7 +37,7 @@ public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
 
     // IBoosterHost
     public GridManager Grid => GridManager.Instance;
-    public LivesManager Lives => LivesManager.Instance;
+    public LevelTimer Timer => LevelTimer.Instance;
 
     protected override void Awake()
     {

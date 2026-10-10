@@ -11,7 +11,7 @@ public enum ShopSection
     Coin        // ô coin (lưới 3 cột)
 }
 
-/// <summary>1 gói trong Shop. Số lượng lấy từ *PackShop.asset của bản gốc (freeze = booster Shield).</summary>
+/// <summary>1 gói trong Shop. Số lượng lấy từ *PackShop.asset của bản gốc (freeze = booster Freeze; field vẫn tên shield để giữ số trong asset).</summary>
 [Serializable]
 public class ShopProduct
 {
@@ -38,7 +38,7 @@ public class ShopProduct
         switch (type)
         {
             case BoosterType.Hint: return hint;
-            case BoosterType.Shield: return shield;
+            case BoosterType.Freeze: return shield;
             case BoosterType.Reveal: return reveal;
             default: return 0;
         }

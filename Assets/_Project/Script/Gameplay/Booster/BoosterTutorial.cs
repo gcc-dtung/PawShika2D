@@ -6,7 +6,7 @@ using UnityEngine;
 /// Là 1 ILevelIntro (Order 20, sau băng HARD và popup cơ chế): màn hình tối lại, chỉ nút booster đó sáng + bàn tay chỉ vào,
 /// lời nhắc lấy từ BoosterData.detail. Người chơi phải bấm nút: BoosterManager báo TutorialPressed -> mở khóa
 /// (lưu SaveData.unlockedBoosters), lần dùng đầu tiên miễn phí. Mỗi lần nạp level chỉ chạy tối đa 1 tutorial (booster mở sớm nhất trước).
-/// Bước riêng sau khi mở khóa (vd Khiên: kéo sai thử) nghe BoosterTutorialCompletedEvent (ShieldTutorialDemo),
+/// Bước riêng sau khi mở khóa (vd Đóng băng: báo đồng hồ đứng yên) nghe BoosterTutorialCompletedEvent (FreezeTutorialDemo),
 /// nên thêm booster mới không phải sửa class này.
 /// </summary>
 public class BoosterTutorial : MonoBehaviour, ILevelIntro
@@ -83,13 +83,13 @@ public class BoosterTutorial : MonoBehaviour, ILevelIntro
     }
 
     /// <summary>
-    /// Lời nhắc = BoosterData.detail (dùng chung với popup mua). Nếu Khiên mở ở level Hard (đổi levelUnlock):
+    /// Lời nhắc = BoosterData.detail (dùng chung với popup mua). Nếu Đóng băng mở ở level Hard (đổi levelUnlock):
     /// nói rõ vì sao nên bật ngay ở level này.
     /// </summary>
     private static string Message(BoosterData data, LevelDefinition level)
     {
         bool hard = level != null && level.difficulty != LevelDifficulty.Normal;
-        return data.boosterType == BoosterType.Shield && hard ? "Tough level! " + data.detail : data.detail;
+        return data.boosterType == BoosterType.Freeze && hard ? "Tough level! " + data.detail : data.detail;
     }
 
     /// <summary>BoosterManager báo người chơi bấm đúng nút: mở khóa, đóng lớp tối (booster chạy ngay sau đó).</summary>

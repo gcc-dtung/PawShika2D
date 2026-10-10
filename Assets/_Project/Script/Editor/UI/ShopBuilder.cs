@@ -171,7 +171,7 @@ public static class ShopBuilder
         GameObject hint, shield, reveal, inf;
         TMP_Text hintT, shieldT, revealT, infT;
         Item(root, "Hint", BoosterIcon(boosters, BoosterType.Hint), P(737, 115), false, out hint, out hintT);
-        Item(root, "Shield", BoosterIcon(boosters, BoosterType.Shield), P(873, 115), false, out shield, out shieldT);
+        Item(root, "Shield", BoosterIcon(boosters, BoosterType.Freeze), P(873, 115), false, out shield, out shieldT);
         Item(root, "Reveal", BoosterIcon(boosters, BoosterType.Reveal), P(737, 235), false, out reveal, out revealT);
         Item(root, "Infinite", PopupBuilder.LoadSprite(PopupBuilder.EnergyInfiniteSprite), P(873, 235), true, out inf, out infT);
 

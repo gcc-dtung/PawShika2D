@@ -16,13 +16,15 @@ public enum SoundId
     Unlock = 13,
     Win = 14,
     Lose = 15,
-    OutOfLives = 16,
+    OutOfTime = 16,
     HardLevel = 17,   // vào level Hard / Very Hard (băng cảnh báo)
+    TimeWarning = 18, // đồng hồ vừa xuống dưới ngưỡng cảnh báo
+    BlockRemove = 19, // chạm khối để gỡ
 
     // Booster
     Booster = 20,
-    ShieldOn = 21,
-    ShieldBlock = 22,
+    FreezeOn = 21,
+    FreezeEnd = 22,
 
     // Tiếng mèo (phát kèm, xác suất)
     CatHappy = 30,

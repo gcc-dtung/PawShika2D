@@ -83,7 +83,7 @@ public static class LevelStatsExporter
         m.wins += s.wins;
         m.losses += s.losses;
         m.quits += s.quits;
-        m.outOfLives += s.outOfLives;
+        m.outOfTime += s.outOfTime;
         m.mistakes += s.mistakes;
         m.boosters += s.boosters;
         m.playSeconds += s.playSeconds;
@@ -105,7 +105,7 @@ public static class LevelStatsExporter
 
         CultureInfo inv = CultureInfo.InvariantCulture;
         StringBuilder sb = new StringBuilder();
-        sb.AppendLine("name,order,attempts,wins,losses,quits,win_rate,out_of_lives_per_attempt,mistakes_per_attempt,boosters_per_attempt,avg_seconds,best_win_seconds");
+        sb.AppendLine("name,order,attempts,wins,losses,quits,win_rate,out_of_time_per_attempt,mistakes_per_attempt,boosters_per_attempt,avg_seconds,best_win_seconds");
         foreach (LevelStatSave s in stats)
         {
             float n = Mathf.Max(1, s.attempts);
@@ -115,7 +115,7 @@ public static class LevelStatsExporter
                 Order(order, s).ToString(inv),
                 s.attempts.ToString(inv), s.wins.ToString(inv), s.losses.ToString(inv), s.quits.ToString(inv),
                 (s.wins / n).ToString("0.000", inv),
-                (s.outOfLives / n).ToString("0.000", inv),
+                (s.outOfTime / n).ToString("0.000", inv),
                 (s.mistakes / n).ToString("0.00", inv),
                 (s.boosters / n).ToString("0.00", inv),
                 (s.playSeconds / n).ToString("0.0", inv),

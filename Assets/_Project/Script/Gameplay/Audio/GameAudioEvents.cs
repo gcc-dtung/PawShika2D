@@ -3,7 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// Nối âm thanh vào các sự kiện có sẵn của game (không phải sửa từng script gameplay):
-/// đặt khối, sai, mở khóa, thắng / hết mạng / thua, lưới xuất hiện, booster, khiên, nhận coin.
+/// đặt / gỡ khối, sai, mở khóa, thắng / hết giờ / thua, sắp hết giờ, lưới xuất hiện, booster, đóng băng, nhận coin.
 /// Đặt cùng AudioManager. Popup tự phát âm mở / đóng (PopupView), nút UI do UIButtonSounds.
 /// </summary>
 public class GameAudioEvents : MonoBehaviour
@@ -14,28 +14,30 @@ public class GameAudioEvents : MonoBehaviour
 
     private GridManager _grid;
     private GridSpawner _spawner;
-    private LivesManager _lives;
+    private LevelTimer _timer;
     private BoosterManager _booster;
 
     private void Start()
     {
         _grid = GridManager.Instance;
-        _lives = LivesManager.Instance;
+        _timer = LevelTimer.Instance;
         _booster = BoosterManager.Instance;
         _spawner = FindFirstObjectByType<GridSpawner>();
 
         if (_grid != null)
         {
             _grid.onBlockPlaced.AddListener(OnBlockPlaced);
+            _grid.onBlockRemoved.AddListener(OnBlockRemoved);
             _grid.onMistake.AddListener(OnMistake);
             _grid.onClueUnlocked.AddListener(OnClueUnlocked);
         }
         EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
         if (_spawner != null) _spawner.gridCellEvent.AddListener(OnGridSpawned);
-        if (_lives != null)
+        if (_timer != null)
         {
-            _lives.onShieldChanged.AddListener(OnShieldChanged);
-            _lives.onShieldBlocked.AddListener(OnShieldBlocked);
+            _timer.onFreezeChanged.AddListener(OnFreezeChanged);
+            _timer.onFreezeEnded.AddListener(OnFreezeEnded);
+            _timer.onTimeWarning.AddListener(OnTimeWarning);
         }
         if (_booster != null) _booster.onBoosterUsed.AddListener(OnBoosterUsed);
         CoinWallet.Changed += OnCoinChanged;
@@ -46,15 +48,17 @@ public class GameAudioEvents : MonoBehaviour
         if (_grid != null)
         {
             _grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
+            _grid.onBlockRemoved.RemoveListener(OnBlockRemoved);
             _grid.onMistake.RemoveListener(OnMistake);
             _grid.onClueUnlocked.RemoveListener(OnClueUnlocked);
         }
         EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
         if (_spawner != null) _spawner.gridCellEvent.RemoveListener(OnGridSpawned);
-        if (_lives != null)
+        if (_timer != null)
         {
-            _lives.onShieldChanged.RemoveListener(OnShieldChanged);
-            _lives.onShieldBlocked.RemoveListener(OnShieldBlocked);
+            _timer.onFreezeChanged.RemoveListener(OnFreezeChanged);
+            _timer.onFreezeEnded.RemoveListener(OnFreezeEnded);
+            _timer.onTimeWarning.RemoveListener(OnTimeWarning);
         }
         if (_booster != null) _booster.onBoosterUsed.RemoveListener(OnBoosterUsed);
         CoinWallet.Changed -= OnCoinChanged;
@@ -65,6 +69,8 @@ public class GameAudioEvents : MonoBehaviour
         AudioManager.Play(SoundId.BlockPlace);
         AudioManager.PlayChance(SoundId.CatHappy, catHappyChance);
     }
+
+    private void OnBlockRemoved(BlockModel block) => AudioManager.Play(SoundId.BlockRemove);
 
     private void OnMistake(Vector3 center, Vector2 size)
     {
@@ -79,7 +85,7 @@ public class GameAudioEvents : MonoBehaviour
         switch (e.State)
         {
             case GameState.Won: AudioManager.Play(SoundId.Win); break;
-            case GameState.OutOfLives: AudioManager.Play(SoundId.OutOfLives); break;
+            case GameState.OutOfTime: AudioManager.Play(SoundId.OutOfTime); break;
             case GameState.Lost: AudioManager.Play(SoundId.Lose); break;
         }
     }
@@ -91,12 +97,14 @@ public class GameAudioEvents : MonoBehaviour
         AudioManager.Play(SoundId.LevelStart);
     }
 
-    private void OnShieldChanged(bool on)
+    private void OnFreezeChanged(bool on)
     {
-        if (on) AudioManager.Play(SoundId.ShieldOn);
+        if (on) AudioManager.Play(SoundId.FreezeOn);
     }
 
-    private void OnShieldBlocked() => AudioManager.Play(SoundId.ShieldBlock);
+    private void OnFreezeEnded() => AudioManager.Play(SoundId.FreezeEnd);
+
+    private void OnTimeWarning() => AudioManager.Play(SoundId.TimeWarning);
 
     private void OnBoosterUsed(BoosterType type) => AudioManager.Play(SoundId.Booster);
 

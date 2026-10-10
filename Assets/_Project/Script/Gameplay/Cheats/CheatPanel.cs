@@ -222,12 +222,10 @@ public class CheatPanel : MonoBehaviour
         string screen = DebugCheats.InMenu ? "Main Menu" : "Trong ván";
         LevelManager lm = LevelManager.Instance;
         string state = lm != null ? lm.State.ToString() : "-";
-        LivesManager l = LivesManager.Instance;
-        string lives = l != null ? $"{l.CurrentLives}/{l.MaxLives}" + (l.HasShield ? " +khiên" : "") : "-";
         EnergyManager en = EnergyManager.Instance;
         string energy = en != null ? (en.IsInfinite ? "∞" : $"{en.Current}/{en.Max}") : "-";
         return $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount} · {screen} · {state}\n" +
-               $"Coin {CoinWallet.Balance} · Mạng {lives} · Năng lượng {energy}";
+               $"Coin {CoinWallet.Balance} · Giờ {DebugCheats.TimerStatus} · Năng lượng {energy}";
     }
 
     // ---------- Tab: Level + thắng / thua ----------
@@ -269,8 +267,7 @@ public class CheatPanel : MonoBehaviour
         }
         using (new GUILayout.HorizontalScope())
         {
-            if (Btn("-1 mạng")) DebugCheats.LoseLife();
-            if (Btn("Hết mạng")) { DebugCheats.OutOfLives(); SetOpen(false); }
+            if (Btn("Hết giờ")) { DebugCheats.TimeUp(); SetOpen(false); }
             if (Btn("Thua hẳn")) { DebugCheats.LoseNow(); SetOpen(false); }
         }
         GUI.enabled = true;
@@ -285,7 +282,7 @@ public class CheatPanel : MonoBehaviour
         if (Btn("Xem lại popup cơ chế")) DebugCheats.ResetMechanicIntros();
     }
 
-    // ---------- Tab: Coin / mạng / năng lượng ----------
+    // ---------- Tab: Coin / đồng hồ / năng lượng ----------
 
     private void DrawResources()
     {
@@ -298,12 +295,18 @@ public class CheatPanel : MonoBehaviour
             if (Btn("= 0")) DebugCheats.SetCoins(0);
         }
 
-        Header("Mạng trong ván");
+        Header($"Đồng hồ trong ván · {DebugCheats.TimerStatus}");
         using (new GUILayout.HorizontalScope())
         {
-            if (Btn("+1 mạng")) DebugCheats.AddLives(1);
-            if (Btn("Đầy mạng")) DebugCheats.FullLives();
-            if (Btn("Bật khiên")) DebugCheats.Shield();
+            if (Btn("-10s")) DebugCheats.AddTime(-10f);
+            if (Btn("+10s")) DebugCheats.AddTime(10f);
+            if (Btn("+60s")) DebugCheats.AddTime(60f);
+            if (Btn("Đầy giờ")) DebugCheats.FullTime();
+        }
+        using (new GUILayout.HorizontalScope())
+        {
+            if (Btn(DebugCheats.TimerPaused ? "Chạy đồng hồ" : "Dừng đồng hồ")) DebugCheats.ToggleTimerPause();
+            if (Btn("Đóng băng")) DebugCheats.Freeze();
         }
 
         Header("Năng lượng");
@@ -375,13 +378,19 @@ public class CheatPanel : MonoBehaviour
         }
 
         Header("Thử rung");
-        GUILayout.Label($"{Haptics.Status}\nĐã gọi rung: {Haptics.PlayCount} lần" +
+        GUILayout.Label($"{Haptics.Status}\nĐã gọi rung: {Haptics.PlayCount} lần · cách rung lần cuối: {Haptics.LastMethod}" +
                         (string.IsNullOrEmpty(Haptics.LastError) ? "" : $"\nLỗi: {Haptics.LastError}"), _small);
-        using (new GUILayout.HorizontalScope())
+        // 3 nút 1 hàng cho vừa màn điện thoại
+        System.Array types = System.Enum.GetValues(typeof(HapticType));
+        for (int i = 0; i < types.Length; i += 3)
         {
-            foreach (HapticType type in System.Enum.GetValues(typeof(HapticType)))
+            using (new GUILayout.HorizontalScope())
             {
-                if (Btn(type.ToString())) Haptics.Play(type); // gọi thẳng, bỏ qua cài đặt Rung
+                for (int j = i; j < Mathf.Min(i + 3, types.Length); j++)
+                {
+                    HapticType type = (HapticType)types.GetValue(j);
+                    if (Btn(type.ToString())) Haptics.Play(type); // gọi thẳng, bỏ qua cài đặt Rung
+                }
             }
         }
         using (new GUILayout.HorizontalScope())

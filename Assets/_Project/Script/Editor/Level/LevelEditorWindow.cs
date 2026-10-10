@@ -214,15 +214,21 @@ public class LevelEditorWindow : EditorWindow
             Record("Difficulty");
             _level.difficulty = diff;
         }
-        EditorGUILayout.LabelField("Mạng", GUILayout.Width(36));
-        int limit = EditorGUILayout.IntField(_level.rules.mistakeLimit, GUILayout.Width(30));
-        if (limit != _level.rules.mistakeLimit)
+        int auto = LevelTimer.EstimateAutoSeconds(ClueCount(), _level.size * _level.Height - VoidSet().Count);
+        EditorGUILayout.LabelField(new GUIContent("Thời gian (s)",
+            $"Số giây của level. 0 = tự tính: 8 s + 0.25 s/ô + 5.5–6.5 s/khối, tối thiểu 45 s (hiện khoảng {auto} s)"), GUILayout.Width(80));
+        int limit = EditorGUILayout.IntField(_level.rules.timeLimit, GUILayout.Width(40));
+        if (limit != _level.rules.timeLimit)
         {
-            Record("Mistake Limit");
-            _level.rules.mistakeLimit = Mathf.Max(0, limit);
+            Record("Time Limit");
+            _level.rules.timeLimit = Mathf.Max(0, limit);
         }
+        EditorGUILayout.LabelField(_level.rules.timeLimit > 0 ? FormatTime(_level.rules.timeLimit) : $"tự động ~{FormatTime(auto)}",
+            EditorStyles.miniLabel, GUILayout.Width(90));
         EditorGUILayout.EndHorizontal();
     }
+
+    private static string FormatTime(int seconds) => $"{seconds / 60}:{seconds % 60:00}";
 
     private void DrawToolbar()
     {
@@ -709,7 +715,7 @@ public class LevelEditorWindow : EditorWindow
             level.clues = new ClueData[0];
             level.cellOverrides = new CellOverrideData[0];
             level.solution = new SolutionRectData[0];
-            level.rules = new LevelRules { mistakeLimit = 3 };
+            level.rules = new LevelRules(); // timeLimit 0 = tự tính theo số ô / khối
         }
         string stamp = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
         level.id = "custom_" + stamp;

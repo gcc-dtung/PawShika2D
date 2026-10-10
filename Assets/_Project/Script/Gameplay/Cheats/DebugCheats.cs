@@ -40,9 +40,9 @@ public static class DebugCheats
     {
         GridManager gm = GridManager.Instance;
         if (gm == null || gm.Board == null || gm.IsGameWon) return;
-        if (!gm.Board.TrySolveRemaining(out List<RectInt> rects) || rects == null)
+        if (!gm.Board.TrySolveHint(out List<RectInt> rects) || rects == null)
         {
-            Debug.LogWarning("[DebugCheats] Không tìm được lời giải khớp các khối đã đặt.");
+            Debug.LogWarning("[DebugCheats] Không tìm được lời giải.");
             return;
         }
         PlaceAll(gm, rects, int.MaxValue);
@@ -53,10 +53,10 @@ public static class DebugCheats
     {
         GridManager gm = GridManager.Instance;
         if (gm == null || gm.Board == null || gm.IsGameWon) return;
-        if (gm.Board.TrySolveRemaining(out List<RectInt> rects) && rects != null) PlaceAll(gm, rects, 1);
+        if (gm.Board.TrySolveHint(out List<RectInt> rects) && rects != null) PlaceAll(gm, rects, 1);
     }
 
-    // Ô số còn khóa thì chưa đặt được: lặp tới khi đặt hết (mỗi khối đặt đúng mở khóa dần)
+    // Ô số còn khóa thì chưa đặt được: lặp tới khi đặt hết (mỗi khối đặt mở khóa dần). Khối sai đè lên thì PlaceSolved tự gỡ
     private static void PlaceAll(GridManager gm, List<RectInt> rects, int max)
     {
         List<RectInt> left = new List<RectInt>(rects);
@@ -75,37 +75,33 @@ public static class DebugCheats
         }
     }
 
-    public static void LoseLife()
+    /// <summary>Hết giờ ngay -> popup Thêm giờ.</summary>
+    public static void TimeUp()
     {
-        if (LivesManager.Instance != null) LivesManager.Instance.LoseLife();
+        LevelTimer timer = LevelTimer.Instance;
+        if (timer == null) return;
+        timer.DebugPaused = false;
+        timer.ResetFreeze();
+        timer.SetRemaining(0f); // frame kế đồng hồ báo hết giờ
     }
 
-    /// <summary>Mất hết mạng -> popup Hồi mạng.</summary>
-    public static void OutOfLives()
-    {
-        LivesManager lives = LivesManager.Instance;
-        if (lives == null) return;
-        int guard = 10;
-        while (!lives.IsOutOfLives && guard-- > 0) lives.LoseLife(); // lần đầu có thể chỉ phá khiên
-    }
-
-    /// <summary>Thua hẳn (bỏ qua popup Hồi mạng) -> popup Thua, trừ 1 năng lượng.</summary>
+    /// <summary>Thua hẳn (bỏ qua popup Thêm giờ) -> popup Thua, trừ 1 năng lượng.</summary>
     public static void LoseNow()
     {
         LevelManager lm = LevelManager.Instance;
         if (lm == null || lm.State != GameState.Playing) return;
-        // LevelManager đổi sang OutOfLives sau stateChangeDelay: chờ đúng sự kiện đó rồi từ chối hồi mạng
+        // LevelManager đổi sang OutOfTime sau stateChangeDelay: chờ đúng sự kiện đó rồi từ chối thêm giờ
         System.Action<GameStateChangedEvent> onState = null;
         onState = e =>
         {
-            if (e.State != GameState.OutOfLives) return;
+            if (e.State != GameState.OutOfTime) return;
             EventBus<GameStateChangedEvent>.Unsubscribe(onState);
-            ReviveLivesPopup revive = Object.FindFirstObjectByType<ReviveLivesPopup>();
-            if (revive != null && revive.IsOpen) revive.CloseImmediate();
+            MoreTimePopup popup = Object.FindFirstObjectByType<MoreTimePopup>();
+            if (popup != null && popup.IsOpen) popup.CloseImmediate();
             lm.GiveUp();
         };
         EventBus<GameStateChangedEvent>.Subscribe(onState);
-        OutOfLives();
+        TimeUp();
     }
 
     // ---------- Tài nguyên ----------
@@ -118,21 +114,51 @@ public static class DebugCheats
 
     public static void SetCoins(int value) => AddCoins(Mathf.Max(0, value) - CoinWallet.Balance);
 
-    /// <summary>Mạng trong ván (tim trên HUD).</summary>
-    public static void AddLives(int amount)
+    // ---------- Đồng hồ trong ván ----------
+
+    /// <summary>Chuỗi trạng thái đồng hồ cho Debug / Cheat Panel, vd "1:05 (băng 12s)".</summary>
+    public static string TimerStatus
     {
-        if (LivesManager.Instance != null) LivesManager.Instance.AddLives(amount);
+        get
+        {
+            LevelTimer t = LevelTimer.Instance;
+            if (t == null) return "-";
+            int s = Mathf.CeilToInt(t.Remaining);
+            string res = $"{s / 60}:{s % 60:00}";
+            if (t.IsFrozen) res += $" (băng {Mathf.CeilToInt(t.FreezeLeft)}s)";
+            if (t.DebugPaused) res += " (dừng)";
+            return res;
+        }
     }
 
-    public static void FullLives()
+    /// <summary>Cộng (dương) / trừ (âm) giây trên đồng hồ trong ván. Trừ không làm hết giờ (dùng TimeUp).</summary>
+    public static void AddTime(float seconds)
     {
-        LivesManager lives = LivesManager.Instance;
-        if (lives != null) lives.AddLives(lives.MaxLives);
+        LevelTimer t = LevelTimer.Instance;
+        if (t == null) return;
+        if (seconds >= 0f) t.AddTime(seconds);
+        else t.SetRemaining(Mathf.Max(1f, t.Remaining + seconds));
     }
 
-    public static void Shield()
+    /// <summary>Về lại đủ thời gian của level.</summary>
+    public static void FullTime()
     {
-        if (LivesManager.Instance != null) LivesManager.Instance.ActivateShield();
+        LevelTimer t = LevelTimer.Instance;
+        if (t != null) t.SetRemaining(t.Total);
+    }
+
+    public static bool TimerPaused => LevelTimer.Instance != null && LevelTimer.Instance.DebugPaused;
+
+    /// <summary>Dừng / chạy tiếp đồng hồ (thử level không lo hết giờ).</summary>
+    public static void ToggleTimerPause()
+    {
+        if (LevelTimer.Instance != null) LevelTimer.Instance.DebugPaused = !LevelTimer.Instance.DebugPaused;
+    }
+
+    /// <summary>Bật đóng băng như booster (không tốn lượt).</summary>
+    public static void Freeze()
+    {
+        if (LevelTimer.Instance != null) LevelTimer.Instance.Freeze(GameConfig.LivesEnergy.freezeSeconds);
     }
 
     /// <summary>Năng lượng (tim ở Main Menu).</summary>

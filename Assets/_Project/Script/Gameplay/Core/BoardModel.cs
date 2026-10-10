@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// [MECHANIC] Luật mới chặn thao tác (không trừ mạng) thì thêm 1 kết quả ở đây
-/// <summary>Kết quả kiểm tra 1 vùng chọn (chưa xét lời giải).</summary>
+// [MECHANIC] Luật mới chặn thao tác thì thêm 1 kết quả ở đây
+/// <summary>Kết quả kiểm tra 1 vùng chọn (không xét lời giải: vùng hợp luật là đặt được, sai thì chạm khối để gỡ).</summary>
 public enum PlacementResult
 {
     Ignored,      // tap 1 ô trống không phải số: bỏ qua, không báo gì
-    Ready,        // đủ điều kiện đặt -> hiện mèo xem trước; thả tay mới kiểm tra lời giải
+    Ready,        // đủ điều kiện đặt -> hiện mèo xem trước; thả tay là đặt
     BlockedCell,  // vùng chứa ô Void hoặc ô đã có khối
     ClueCount,    // không có hoặc có nhiều hơn 1 ô số
     Locked,       // ô số còn khóa
@@ -33,7 +33,7 @@ public readonly struct PlacementCheck
 }
 
 /// <summary>
-/// Trạng thái và luật của cả lưới (class C# thuần): các ô, các khối đã đặt, kiểm tra vùng chọn, ổ khóa, thắng.
+/// Trạng thái và luật của cả lưới (class C# thuần): các ô, các khối đã đặt / gỡ, kiểm tra vùng chọn, ổ khóa, thắng.
 /// GridManager giữ instance này và nối nó với input / view.
 /// </summary>
 public class BoardModel
@@ -97,7 +97,7 @@ public class BoardModel
         List<CellModel> cells = GetCellsIn(rect);
         int area = rect.width * rect.height;
 
-        // Tap 1 ô trống không phải số -> bỏ qua. (Không có xóa khối: mọi khối đã đặt luôn đúng.)
+        // Tap 1 ô trống không phải số -> bỏ qua. (Chạm khối đã đặt để gỡ: DragAndDropController xử lý trước khi kéo.)
         if (area == 1 && (cells.Count == 0 || !cells[0].HasClue))
             return new PlacementCheck(PlacementResult.Ignored, rect, cells, null);
 
@@ -132,17 +132,6 @@ public class BoardModel
         return new PlacementCheck(PlacementResult.Ready, rect, cells, clueCell);
     }
 
-    /// <summary>Đặt thêm vùng này mà lưới vẫn còn lời giải thì là nước đi đúng.</summary>
-    public bool IsSolvableWith(RectInt rect)
-    {
-        if (Level == null || Level.clues == null || Level.clues.Length == 0) return true;
-
-        List<RectInt> rects = new List<RectInt>(_blocks.Count + 1);
-        foreach (BlockModel b in _blocks) rects.Add(b.Rect);
-        rects.Add(rect);
-        return ShikakuSolver.IsSolvable(Level, rects);
-    }
-
     /// <summary>
     /// Lời giải cho các ô số chưa có khối, khớp với các khối đã đặt (dùng cho Hint / Reveal).
     /// Solver dùng giá trị thật của ô ẩn "?" nên luôn ra 1 lời giải nhất quán.
@@ -157,6 +146,53 @@ public class BoardModel
         return ShikakuSolver.TrySolve(Level, rects, out remaining) && remaining != null;
     }
 
+    /// <summary>
+    /// Lời giải gợi ý cho Hint / Reveal / Cheat: ưu tiên lời giải khớp các khối đã đặt; khối đặt sai làm lưới hết lời giải
+    /// thì lấy lời giải từ lưới trống (bỏ qua mọi khối đã đặt) và chỉ trả về các vùng chưa có khối đúng y hệt.
+    /// Đặt vùng trả về bằng GridManager.PlaceSolved (tự gỡ khối sai đang đè lên).
+    /// </summary>
+    public bool TrySolveHint(out List<RectInt> missing)
+    {
+        if (TrySolveRemaining(out missing)) return true;
+
+        missing = null;
+        if (Level == null || Level.clues == null) return false;
+        if (!ShikakuSolver.TrySolve(Level, new List<RectInt>(), out List<RectInt> full) || full == null) return false;
+
+        missing = new List<RectInt>(full.Count);
+        foreach (RectInt rect in full)
+        {
+            if (!_blocks.Exists(b => b.Rect.Equals(rect))) missing.Add(rect);
+        }
+        return true;
+    }
+
+    /// <summary>Khối đang chiếm ô <paramref name="pos"/>, null nếu ô trống / không có ô.</summary>
+    public BlockModel GetBlockAt(Vector2Int pos)
+    {
+        CellModel cell = GetCell(pos);
+        return cell != null ? cell.Block : null;
+    }
+
+    /// <summary>Các khối đã đặt có chung ô với vùng <paramref name="rect"/>.</summary>
+    public List<BlockModel> GetBlocksOverlapping(RectInt rect)
+    {
+        List<BlockModel> res = new List<BlockModel>();
+        foreach (BlockModel b in _blocks)
+        {
+            if (b.Rect.Overlaps(rect)) res.Add(b);
+        }
+        return res;
+    }
+
+    /// <summary>Gỡ 1 khối (chạm khối / booster đặt đè). Ổ khóa đã mở và số "?" đã lộ giữ nguyên.</summary>
+    public bool Remove(BlockModel block)
+    {
+        if (block == null || !_blocks.Remove(block)) return false;
+        block.Release();
+        return true;
+    }
+
     /// <summary>Đặt khối từ 1 vùng đã Ready, tô màu <paramref name="color"/>. Các ô vừa mở khóa được thêm vào <paramref name="unlocked"/>.</summary>
     public BlockModel Place(PlacementCheck check, ColorType color, List<CellModel> unlocked)
     {
@@ -166,13 +202,30 @@ public class BoardModel
         block.Occupy();
         _blocks.Add(block);
 
-        // [MECHANIC] Cơ chế phản ứng khi 1 khối được đặt đúng (đếm bước, lộ số...)
-        // Mỗi khối đặt đúng làm mọi ổ khóa giảm 1
+        // [MECHANIC] Cơ chế phản ứng khi 1 khối được đặt (đếm bước, lộ số...)
+        // Mỗi khối đặt làm mọi ổ khóa giảm 1 (gỡ khối không khóa lại)
         foreach (CellModel cell in _cells.Values)
         {
             if (cell.StepLock()) unlocked?.Add(cell);
         }
         return block;
+    }
+
+    /// <summary>
+    /// Lưới kín và mọi khối đúng số ô. Vùng hợp luật luôn đúng số ô, trừ ô "?" (Check bỏ qua số ô vì người chơi không biết số):
+    /// khối "?" sai số ô được thêm vào <paramref name="wrong"/>.
+    /// </summary>
+    public bool IsSolved(List<BlockModel> wrong)
+    {
+        if (!IsFull()) return false;
+        bool ok = true;
+        foreach (BlockModel b in _blocks)
+        {
+            if (b.Area == b.ClueCell.Clue.Value) continue;
+            ok = false;
+            wrong?.Add(b);
+        }
+        return ok;
     }
 
     public bool IsFull()

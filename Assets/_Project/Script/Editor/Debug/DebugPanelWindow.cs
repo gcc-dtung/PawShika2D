@@ -11,7 +11,7 @@ public class DebugPanelWindow : EditorWindow
     private int _levelInput = 1;
     private int _coinInput = 1000;
     private Vector2 _scroll;
-    private bool _foldLevel = true, _foldResult = true, _foldCoin = true, _foldLives = true, _foldBooster = true, _foldOther = true;
+    private bool _foldLevel = true, _foldResult = true, _foldCoin = true, _foldTimer = true, _foldBooster = true, _foldOther = true;
 
     private static readonly float[] Speeds = { 0.25f, 0.5f, 1f, 2f, 4f };
 
@@ -42,7 +42,7 @@ public class DebugPanelWindow : EditorWindow
         DrawLevel();
         DrawResult();
         DrawCoins();
-        DrawLives();
+        DrawTimerEnergy();
         DrawBoosters();
         DrawOther();
         EditorGUILayout.EndScrollView();
@@ -55,12 +55,11 @@ public class DebugPanelWindow : EditorWindow
         LevelManager lm = LevelManager.Instance;
         string screen = DebugCheats.InMenu ? "Main Menu" : "Trong ván";
         string state = lm != null ? lm.State.ToString() : "-";
-        string lives = LivesManager.Instance != null ? $"{LivesManager.Instance.CurrentLives}/{LivesManager.Instance.MaxLives}" + (LivesManager.Instance.HasShield ? " +khiên" : "") : "-";
         string energy = EnergyManager.Instance != null ? (EnergyManager.Instance.IsInfinite ? "∞" : $"{EnergyManager.Instance.Current}/{EnergyManager.Instance.Max}") : "-";
 
         EditorGUILayout.HelpBox(
             $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount}   ·   {screen}   ·   {state}\n" +
-            $"Coin {CoinWallet.Balance}   ·   Mạng {lives}   ·   Năng lượng {energy}",
+            $"Coin {CoinWallet.Balance}   ·   Giờ {DebugCheats.TimerStatus}   ·   Năng lượng {energy}",
             MessageType.None);
     }
 
@@ -112,8 +111,7 @@ public class DebugPanelWindow : EditorWindow
             }
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("-1 mạng")) DebugCheats.LoseLife();
-                if (GUILayout.Button("Hết mạng (Hồi mạng)")) DebugCheats.OutOfLives();
+                if (GUILayout.Button("Hết giờ (Thêm giờ)")) DebugCheats.TimeUp();
                 if (GUILayout.Button("Thua hẳn")) DebugCheats.LoseNow();
             }
         }
@@ -140,18 +138,24 @@ public class DebugPanelWindow : EditorWindow
         }
     }
 
-    // ---------- Mạng / năng lượng ----------
+    // ---------- Đồng hồ / năng lượng ----------
 
-    private void DrawLives()
+    private void DrawTimerEnergy()
     {
-        if (!Section("Mạng (trong ván) / Năng lượng (Menu)", ref _foldLives)) return;
+        if (!Section("Đồng hồ (trong ván) / Năng lượng (Menu)", ref _foldTimer)) return;
 
-        EditorGUILayout.LabelField("Mạng trong ván", EditorStyles.miniBoldLabel);
+        EditorGUILayout.LabelField($"Đồng hồ trong ván · {DebugCheats.TimerStatus}", EditorStyles.miniBoldLabel);
         using (new EditorGUILayout.HorizontalScope())
         {
-            if (GUILayout.Button("+1 mạng")) DebugCheats.AddLives(1);
-            if (GUILayout.Button("Đầy mạng")) DebugCheats.FullLives();
-            if (GUILayout.Button("Bật khiên")) DebugCheats.Shield();
+            if (GUILayout.Button("-10s")) DebugCheats.AddTime(-10f);
+            if (GUILayout.Button("+10s")) DebugCheats.AddTime(10f);
+            if (GUILayout.Button("+60s")) DebugCheats.AddTime(60f);
+            if (GUILayout.Button("Đầy giờ")) DebugCheats.FullTime();
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button(DebugCheats.TimerPaused ? "Chạy đồng hồ" : "Dừng đồng hồ")) DebugCheats.ToggleTimerPause();
+            if (GUILayout.Button("Đóng băng")) DebugCheats.Freeze();
         }
 
         EditorGUILayout.LabelField("Năng lượng", EditorStyles.miniBoldLabel);

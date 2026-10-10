@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Số liệu kinh tế: coin thưởng thắng, giá / số lượng hồi mạng và nạp năng lượng, quảng cáo.
+/// Số liệu kinh tế: coin thưởng thắng, giá / số giây thêm giờ và nạp năng lượng, quảng cáo.
 /// Giá booster ở BoosterDatabase, gói Shop ở ShopDatabase, quà điểm danh ở DailyRewardDatabase.
 /// Lấy qua GameConfig.Economy.
 /// </summary>
@@ -16,10 +16,12 @@ public class EconomyConfig : ScriptableObject
     [Tooltip("Level Very Hard. gamePlay_CoinWinLevelExpert trong RemoteConfig gốc")]
     [Min(0)] public int winCoinRewardVeryHard = 30;
 
-    [Header("Hồi mạng (hết mạng trong màn)")]
-    [Min(1)] public int reviveAdsLives = 1;
-    [Min(1)] public int reviveCoinLives = 3;
-    [Min(0)] public int reviveCoinCost = 900;
+    [Header("Thêm giờ (hết giờ trong màn, MoreTimePopup)")]
+    [Tooltip("Số giây cộng khi xem quảng cáo")]
+    [Min(1)] public int moreTimeAdsSeconds = 30;
+    [Tooltip("Số giây cộng khi trả coin")]
+    [Min(1)] public int moreTimeCoinSeconds = 60;
+    [Min(0)] public int moreTimeCoinCost = 900;
 
     [Header("Nạp năng lượng")]
     [Min(1)] public int refillAdsEnergy = 1;

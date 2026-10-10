@@ -185,6 +185,7 @@ public class WinPopup : PopupView
                 coin.gameObject.SetActive(false);
                 SetCoinText(value);
                 AudioManager.Play(SoundId.Coin);
+                AudioManager.Vibrate(HapticType.Coin); // mỗi đồng chạm ô coin 1 tick nhẹ
                 if (coinPill != null)
                 {
                     coinPill.DOKill(true);

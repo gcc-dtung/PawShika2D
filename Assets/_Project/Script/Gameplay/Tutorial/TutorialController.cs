@@ -32,6 +32,7 @@ public class TutorialController : Singleton<TutorialController>
         {
             GridManager.Instance.onGameWin.AddListener(OnStepWon);
             GridManager.Instance.onBlockPlaced.AddListener(OnBlockPlaced);
+            GridManager.Instance.onBlockRemoved.AddListener(OnBlockPlaced);
         }
         if (view != null && view.SkipButton != null) view.SkipButton.onClick.AddListener(Skip);
     }
@@ -42,6 +43,7 @@ public class TutorialController : Singleton<TutorialController>
         {
             GridManager.Instance.onGameWin.RemoveListener(OnStepWon);
             GridManager.Instance.onBlockPlaced.RemoveListener(OnBlockPlaced);
+            GridManager.Instance.onBlockRemoved.RemoveListener(OnBlockPlaced);
         }
         if (view != null && view.SkipButton != null) view.SkipButton.onClick.RemoveListener(Skip);
         _pending?.Kill();
@@ -79,7 +81,7 @@ public class TutorialController : Singleton<TutorialController>
         if (Active) ShowHint();
     }
 
-    /// <summary>Bàn tay kéo mẫu cho số đầu tiên (theo thứ tự gợi ý) chưa có khối; hết gợi ý thì ẩn.</summary>
+    /// <summary>Bàn tay kéo mẫu cho số đầu tiên (theo thứ tự gợi ý) chưa có khối đúng; hết gợi ý thì ẩn.</summary>
     private void ShowHint()
     {
         if (!Active || hand == null || GridManager.Instance == null || GridManager.Instance.Board == null) return;
@@ -87,7 +89,7 @@ public class TutorialController : Singleton<TutorialController>
         foreach (var hint in _steps[_index].hints)
         {
             CellModel cell = board.GetCell(hint.clue);
-            if (cell == null || cell.IsOccupied) continue;
+            if (cell == null || (cell.Block != null && cell.Block.Rect.Equals(BoardModel.RectFrom(hint.from, hint.to)))) continue;
             hand.Play(board.Geometry.CellToWorld(hint.from), board.Geometry.CellToWorld(hint.to));
             return;
         }

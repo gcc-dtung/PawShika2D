@@ -87,6 +87,18 @@ MonoBehaviour:
     volume: 0.9
     pitch: {x: 1, y: 1}
     cooldown: 0.5
+  - id: 18
+    clips:
+    - {fileID: 8300000, guid: 262540f97a3e5b44882525a4ebf8120f, type: 3}
+    volume: 0.9
+    pitch: {x: 1, y: 1}
+    cooldown: 0.5
+  - id: 19
+    clips:
+    - {fileID: 8300000, guid: c766f0b1fe1599d41b3fcabdcef0ae4d, type: 3}
+    volume: 0.8
+    pitch: {x: 0.95, y: 1.08}
+    cooldown: 0.05
   - id: 20
     clips:
     - {fileID: 8300000, guid: 2bc88f56a945e024e872bb4977069e8d, type: 3}

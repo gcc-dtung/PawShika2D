@@ -10,19 +10,13 @@ using UnityEngine;
 ///
 /// Vòng đời 1 khối:
 ///   ShowPreview  -> đang kéo, vùng đủ value: mèo hiện ra đặc ngay, viền màu mèo thu bên trong khối
-///   Confirm      -> thả tay, nước đi đúng: mèo đặc lại và bật nhẹ
-///   PlayReject   -> thả tay, sai lời giải: rung rồi mờ đi; kiểu báo sai chọn bằng rejectStyle (mèo xám / viền đỏ / cả hai)
+///   Confirm      -> thả tay: mèo đặc lại và bật nhẹ
+///   PlayWrong    -> lưới kín mà khối sai số ô: rung + viền đỏ nháy, khối ở lại
+///   PlayRemove   -> chạm khối để gỡ: co nhỏ + mờ rồi về pool
 ///   PlayWinFlash -> thắng: thân + tai phủ trắng rồi tan (lớp sprite trắng đặc đè lên, tạo lúc cần)
 /// </summary>
 public class PlacedBlockView : MonoBehaviour
 {
-    public enum RejectStyle
-    {
-        GrayOut,        // B: thân + tai đổi sang mèo xám
-        RedRing,        // A: giữ màu mèo, viền đỏ ngoài mép nháy
-        GrayAndRedRing  // D: cả hai
-    }
-
     private const float BodyFill = 0.96f; // thân khối chiếm 96% ô, phần còn lại là khe hở
     private const float BlockZ = -0.05f;
 
@@ -50,17 +44,18 @@ public class PlacedBlockView : MonoBehaviour
     [SerializeField] private float ringEndThickness = 0.35f;    // độ dày nét lúc chạm mép
     [SerializeField, Range(0f, 1f)] private float ringWhiten = 0.45f; // màu mèo pha trắng để nổi trên thân cùng màu
 
-    [Header("Đặt sai")]
-    [SerializeField] private RejectStyle rejectStyle = RejectStyle.GrayOut;
+    [Header("Khối sai khi lưới kín")]
     [SerializeField] private Color rejectRingColor = new Color(1f, 0.25f, 0.3f, 1f);
     [SerializeField] private float rejectRingOutset = 0.05f;    // viền đỏ nằm ngoài mép khối bao nhiêu (world)
     [SerializeField] private float rejectRingThickness = 0.6f;  // độ dày nét (1 = 0.14 world)
     [SerializeField] private int rejectRingBlinks = 2;          // số nhịp nháy trong lúc rung
-    [SerializeField, Range(0.3f, 1f)] private float rejectShrinkTo = 0.75f; // co còn bao nhiêu khi mờ đi
     [SerializeField] private float rejectShakeDuration = 0.45f;
     [SerializeField] private float rejectShakeStrength = 0.12f;
     [SerializeField] private float rejectShakeFrequency = 45f;
-    [SerializeField] private float rejectFadeDuration = 0.15f;
+
+    [Header("Gỡ khối (chạm vào khối)")]
+    [SerializeField] private float removeDuration = 0.16f;
+    [SerializeField, Range(0.3f, 1f)] private float removeShrinkTo = 0.6f;
 
     private float _cellSize = GridSpawner.CellSpacing;
     private Color _bodyBaseColor = Color.white;
@@ -105,11 +100,28 @@ public class PlacedBlockView : MonoBehaviour
         PlayAnim(PopIn());
     }
 
-    /// <summary>Thả tay, sai lời giải: ngả đỏ, rung rồi mờ đi. Xong thì gọi onDone (trả về pool).</summary>
-    public void PlayReject(Action onDone)
+    /// <summary>Lưới kín mà khối này sai số ô: giữ màu mèo, rung + viền đỏ nháy, khối ở lại (chạm để gỡ).</summary>
+    public void PlayWrong()
     {
         IsPreview = false;
-        PlayAnim(RejectRoutine(onDone));
+        PlayAnim(ShakeRoutine());
+    }
+
+    /// <summary>Chạm khối để gỡ: co nhỏ + mờ nhanh. Xong thì gọi onDone (trả về pool).</summary>
+    public void PlayRemove(Action onDone)
+    {
+        IsPreview = false;
+        KillRing();
+        _flashAnim?.Kill();
+        transform.localScale = Vector3.one;
+        Tween tween = DOVirtual.Float(0f, 1f, removeDuration, p =>
+            {
+                transform.localScale = Vector3.one * Mathf.Lerp(1f, removeShrinkTo, p);
+                SetTint(Color.white, 1f - p);
+            })
+            .SetEase(Ease.InQuad)
+            .OnComplete(() => onDone?.Invoke());
+        PlayAnim(tween);
     }
 
     /// <summary>
@@ -232,15 +244,6 @@ public class PlacedBlockView : MonoBehaviour
         return TextColor.Display(Color.HSVToRGB(h, Mathf.Clamp01(s * 1.15f + 0.1f), v * 0.55f));
     }
 
-    /// <summary>Đổi thân, tai, số sang bộ sprite màu khác (giữ nguyên kích thước). Dùng cho mèo xám khi sai.</summary>
-    private void Recolor(ColorType color)
-    {
-        GameplayVisuals visuals = GameplayVisuals.Instance;
-        SetBodyColor(visuals, color);
-        Sprite ear = visuals != null ? visuals.GetEarSprite(color) : null;
-        if (ear != null) ears.sprite = ear;
-    }
-
     // [MECHANIC] Số hiện trên khối mèo (ô "?" hiện "?" khi xem trước)
     private void SetNumber(CellModel clueCell)
     {
@@ -309,7 +312,7 @@ public class PlacedBlockView : MonoBehaviour
 
     // ---------- Animation (DOTween) ----------
 
-    // Khối tắt (trả về pool, đổi level, thoát Play) thì hủy tween; callback onDone của PlayReject không chạy nữa
+    // Khối tắt (trả về pool, đổi level, thoát Play) thì hủy tween; callback onDone của PlayRemove không chạy nữa
     private void OnDisable()
     {
         KillAnim();
@@ -381,21 +384,15 @@ public class PlacedBlockView : MonoBehaviour
         return tween;
     }
 
-    /// <summary>
-    /// Sai lời giải: rung ngang (biên độ giảm dần) rồi co nhỏ + mờ đi. rejectStyle quyết định mèo xám và/hoặc
-    /// viền đỏ ngoài mép khối (viền là con của khối nên rung theo).
-    /// </summary>
-    private Tween RejectRoutine(Action onDone)
+    /// <summary>Khối sai khi lưới kín: giữ màu mèo, rung + viền đỏ nháy rồi tắt viền, khối ở lại.</summary>
+    private Tween ShakeRoutine()
     {
-        bool gray = rejectStyle != RejectStyle.RedRing;
-        bool useRing = rejectStyle != RejectStyle.GrayOut && ring != null;
-
+        bool useRing = ring != null;
         transform.localScale = Vector3.one;
-        if (gray) Recolor(ColorType.Gray);
         SetTint(Color.white, 1f);
         KillRing();
 
-        Color ringColor = rejectRingColor;
+        Color rc = rejectRingColor;
         if (useRing)
         {
             ring.gameObject.SetActive(true);
@@ -415,25 +412,15 @@ public class PlacedBlockView : MonoBehaviour
             transform.position = _basePosition + new Vector3(offset, 0f, 0f);
             if (useRing)
             {
-                ringColor.a = 0.35f + 0.65f * Mathf.Abs(Mathf.Cos(p * Mathf.PI * rejectRingBlinks));
-                ring.color = ringColor;
+                rc.a = 0.35f + 0.65f * Mathf.Abs(Mathf.Cos(p * Mathf.PI * rejectRingBlinks));
+                ring.color = rc;
             }
         }).SetEase(Ease.Linear));
-        seq.AppendCallback(() => transform.position = _basePosition);
-
-        // Co nhỏ và mờ dần rồi biến mất
-        seq.Append(DOVirtual.Float(0f, 1f, rejectFadeDuration, p =>
+        seq.AppendCallback(() =>
         {
-            transform.localScale = Vector3.one * Mathf.Lerp(1f, rejectShrinkTo, p * p);
-            SetTint(Color.white, 1f - p);
-            if (useRing)
-            {
-                ringColor.a = 1f - p;
-                ring.color = ringColor;
-            }
-        }).SetEase(Ease.Linear));
-
-        seq.OnComplete(() => onDone?.Invoke());
+            transform.position = _basePosition;
+            if (ring != null) ring.gameObject.SetActive(false);
+        });
         return seq;
     }
 }

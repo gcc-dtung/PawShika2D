@@ -7,13 +7,14 @@ using UnityEngine.UI;
 /// <summary>
 /// Dựng phần HUD của booster (Giai đoạn 4) trong scene đang mở:
 /// - 3 nút Canvas_HUD/DownPanel/Booster/Booster1..3: icon, số lượt, dấu "+", ổ khóa "LV n", quầng sáng khi bật
-/// - Banner chọn số của Reveal, lớp băng của Khiên trên hàng tim
+/// - Banner chọn số của Reveal, đồng hồ đếm ngược dưới chữ LEVEL + lớp băng khi đóng băng
 /// - BoosterManager trên Manager, trỏ tới BoosterDatabase
 /// Chạy lại được (xóa phần đã dựng rồi dựng mới). Popup mua nằm ở Build Popups.
 /// </summary>
 public static class BoosterBuilder
 {
     private const string Boosters = "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Boosters_Obstacles/";
+    private const string ClockIcon = "Assets/_Project/GameAssets/04_UI_Graphics/Buttons/btn_clock.png";
     private const string Ice = "Assets/_Project/GameAssets/05_VFX_Particles/Ice_Effects/";
     private const string DatabasePath = GameConfigSetup.Folder + "BoosterDatabase.asset";
     private static readonly string[] ButtonParts = { "Glow", "Icon", "Count", "Add", "Lock" };
@@ -33,10 +34,11 @@ public static class BoosterBuilder
         if (db == null) Debug.LogError($"[BoosterBuilder] Không đọc được {DatabasePath}");
 
         BuildButton(canvas.Find("DownPanel/Booster/Booster1"), BoosterType.Hint, db);
-        BuildButton(canvas.Find("DownPanel/Booster/Booster2"), BoosterType.Shield, db);
+        BuildButton(canvas.Find("DownPanel/Booster/Booster2"), BoosterType.Freeze, db);
         BuildButton(canvas.Find("DownPanel/Booster/Booster3"), BoosterType.Reveal, db);
         BuildRevealBanner(canvas);
-        BuildShieldIndicator(canvas.Find("TopPanel/LevelFrame"));
+        BuildTimer(canvas.Find("TopPanel/LevelFrame"));
+        BuildFreezeIndicator(canvas.Find("TopPanel/LevelFrame"));
 
         LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
         if (lm != null)
@@ -138,26 +140,86 @@ public static class BoosterBuilder
         PopupBuilder.Assign(banner, "cancelButton", b);
     }
 
-    /// <summary>Khung băng ice_effect_2 phủ hàng tim (sau Hearts để vẽ đè lên tim).</summary>
-    private static void BuildShieldIndicator(Transform levelFrame)
+    /// <summary>Chỉ dựng lại đồng hồ + lớp băng (không đụng nút booster) trong scene đang mở.</summary>
+    [MenuItem("Tools/PawBlock/Builders/Build Timer HUD", priority = 102)]
+    public static void BuildTimerHud()
+    {
+        GameObject canvasGo = PopupBuilder.FindRoot("Canvas_HUD");
+        if (canvasGo == null)
+        {
+            Debug.LogError("[BoosterBuilder] Không tìm thấy Canvas_HUD trong scene.");
+            return;
+        }
+        Transform levelFrame = PopupBuilder.HudRoot(canvasGo).Find("TopPanel/LevelFrame");
+        BuildTimer(levelFrame);
+        BuildFreezeIndicator(levelFrame);
+        EditorSceneManager.MarkSceneDirty(canvasGo.scene);
+    }
+
+    /// <summary>
+    /// Đồng hồ đếm ngược dưới chữ LEVEL (chỗ hàng tim cũ): icon đồng hồ + chữ "m:ss" (TimerUI).
+    /// Object cũ "Hearts" (LivesUI, cùng script GUID) được dựng lại thành "Timer".
+    /// </summary>
+    private static void BuildTimer(Transform levelFrame)
     {
         if (levelFrame == null) return;
-        PopupBuilder.DestroyChild(levelFrame, "Shield");
-        RectTransform hearts = levelFrame.Find("Hearts") as RectTransform;
+        PopupBuilder.DestroyChild(levelFrame, "Hearts");
+        PopupBuilder.DestroyChild(levelFrame, "Timer");
 
-        RectTransform rt = PopupBuilder.NewUI("Shield", levelFrame);
-        Image img = rt.gameObject.AddComponent<Image>();
-        img.sprite = PopupBuilder.LoadSprite(Ice + "ice_effect_2.png");
-        img.preserveAspect = true;
-        if (hearts != null)
+        RectTransform rt = PopupBuilder.NewUI("Timer", levelFrame);
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0f);
+        rt.pivot = new Vector2(0.5f, 0.5f);
+        rt.anchoredPosition = new Vector2(0, 25);
+        rt.sizeDelta = new Vector2(320, 100);
+        Transform levelText = levelFrame.Find("LevelText");
+        if (levelText != null) rt.SetSiblingIndex(levelText.GetSiblingIndex() + 1);
+
+        RectTransform row = PopupBuilder.Row(rt, "Row", Vector2.zero, 90);
+        Image icon = PopupBuilder.Icon(row, "Icon", ClockIcon, 84);
+        TMP_Text text = PopupBuilder.GameText(row, "Time", "0:00", Vector2.zero, new Vector2(200, 90), 72, Color.white);
+        PopupBuilder.Fit(text);
+        Material outline = GameFontSetup.OutlinePurple();
+        if (outline != null) text.fontSharedMaterial = outline;
+
+        TimerUI ui = rt.gameObject.AddComponent<TimerUI>();
+        PopupBuilder.Assign(ui, "icon", icon);
+        PopupBuilder.Assign(ui, "timeText", text);
+    }
+
+    /// <summary>
+    /// Khung băng ice_effect_2 phủ đồng hồ khi đóng băng (sau Timer để vẽ đè lên).
+    /// Đã có (kể cả object "Shield" cũ, cùng script GUID) thì giữ nguyên để không mất bông tuyết / viền băng gán tay, chỉ đổi tên + xếp lại.
+    /// </summary>
+    private static void BuildFreezeIndicator(Transform levelFrame)
+    {
+        if (levelFrame == null) return;
+        RectTransform timer = levelFrame.Find("Timer") as RectTransform;
+        Transform existing = levelFrame.Find("Freeze");
+        if (existing == null) existing = levelFrame.Find("Shield");
+
+        RectTransform rt;
+        if (existing != null)
         {
-            rt.anchorMin = hearts.anchorMin;
-            rt.anchorMax = hearts.anchorMax;
-            rt.pivot = hearts.pivot;
-            rt.anchoredPosition = hearts.anchoredPosition;
-            rt.SetSiblingIndex(hearts.GetSiblingIndex() + 1);
+            rt = (RectTransform)existing;
+            Undo.RecordObject(rt.gameObject, "Build Timer HUD");
+            rt.gameObject.name = "Freeze";
+        }
+        else
+        {
+            rt = PopupBuilder.NewUI("Freeze", levelFrame);
+            Image img = rt.gameObject.AddComponent<Image>();
+            img.sprite = PopupBuilder.LoadSprite(Ice + "ice_effect_2.png");
+            img.preserveAspect = true;
+            rt.gameObject.AddComponent<FreezeIndicator>();
+        }
+        if (timer != null)
+        {
+            rt.anchorMin = timer.anchorMin;
+            rt.anchorMax = timer.anchorMax;
+            rt.pivot = timer.pivot;
+            rt.anchoredPosition = timer.anchoredPosition;
+            rt.SetSiblingIndex(timer.GetSiblingIndex() + 1);
         }
         rt.sizeDelta = new Vector2(380, 112);
-        rt.gameObject.AddComponent<ShieldIndicator>();
     }
 }

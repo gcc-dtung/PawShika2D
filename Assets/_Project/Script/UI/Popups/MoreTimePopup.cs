@@ -3,16 +3,18 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Hết mạng (thay MoreTimePopup của bản gốc): xem quảng cáo +1 mạng, trả coin +3 mạng, đóng = thua.
-/// Hồi mạng thì chơi tiếp đúng lưới đang dở.
+/// Hết giờ (MoreTimePopup của bản gốc): xem quảng cáo +moreTimeAdsSeconds, trả coin +moreTimeCoinSeconds, đóng = thua.
+/// Thêm giờ thì chơi tiếp đúng lưới đang dở.
 /// </summary>
-public class ReviveLivesPopup : PopupView
+public class MoreTimePopup : PopupView
 {
     [SerializeField] private Button adsButton;
     [SerializeField] private Button coinButton;
     [SerializeField] private Button closeButton;
     [SerializeField] private TMP_Text coinCostText;
     [SerializeField] private TMP_Text balanceText;
+    [SerializeField] private TMP_Text adsLabel;  // "+30s"
+    [SerializeField] private TMP_Text coinLabel; // "+60s"
 
     protected override void Awake()
     {
@@ -24,7 +26,10 @@ public class ReviveLivesPopup : PopupView
 
     protected override void OnOpen()
     {
-        if (coinCostText != null) coinCostText.SetText(GameConfig.Economy.reviveCoinCost.ToString());
+        EconomyConfig eco = GameConfig.Economy;
+        if (coinCostText != null) coinCostText.SetText(eco.moreTimeCoinCost.ToString());
+        if (adsLabel != null) adsLabel.SetText("+{0}s", eco.moreTimeAdsSeconds);
+        if (coinLabel != null) coinLabel.SetText("+{0}s", eco.moreTimeCoinSeconds);
         Refresh();
     }
 
@@ -37,23 +42,22 @@ public class ReviveLivesPopup : PopupView
     private void OnAds()
     {
         SetButtons(false);
-        RewardedAds.Show("revive_lives", ok =>
+        RewardedAds.Show("more_time", ok =>
         {
-            if (ok) Revive(GameConfig.Economy.reviveAdsLives);
+            if (ok) Revive(GameConfig.Economy.moreTimeAdsSeconds);
             else Refresh();
         });
     }
 
     private void OnCoin()
     {
-        if (!CoinWallet.TrySpend(GameConfig.Economy.reviveCoinCost))
+        if (!CoinWallet.TrySpend(GameConfig.Economy.moreTimeCoinCost))
         {
-            // Chưa có Shop (Giai đoạn 6): chỉ báo thiếu coin
-            Debug.Log($"[ReviveLivesPopup] Không đủ coin: {CoinWallet.Balance}/{GameConfig.Economy.reviveCoinCost}");
+            Debug.Log($"[MoreTimePopup] Không đủ coin: {CoinWallet.Balance}/{GameConfig.Economy.moreTimeCoinCost}");
             Refresh();
             return;
         }
-        Revive(GameConfig.Economy.reviveCoinLives);
+        Revive(GameConfig.Economy.moreTimeCoinSeconds);
     }
 
     private void OnClose()
@@ -62,16 +66,16 @@ public class ReviveLivesPopup : PopupView
         if (LevelManager.Instance != null) LevelManager.Instance.GiveUp();
     }
 
-    private void Revive(int lives)
+    private void Revive(int seconds)
     {
         Close();
-        if (LevelManager.Instance != null) LevelManager.Instance.Revive(lives);
+        if (LevelManager.Instance != null) LevelManager.Instance.Revive(seconds);
     }
 
     private void SetButtons(bool interactable)
     {
         if (adsButton != null) adsButton.interactable = interactable;
-        if (coinButton != null) coinButton.interactable = interactable && CoinWallet.CanAfford(GameConfig.Economy.reviveCoinCost);
+        if (coinButton != null) coinButton.interactable = interactable && CoinWallet.CanAfford(GameConfig.Economy.moreTimeCoinCost);
         if (closeButton != null) closeButton.interactable = interactable;
     }
 }

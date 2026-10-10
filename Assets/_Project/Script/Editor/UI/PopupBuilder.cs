@@ -35,7 +35,6 @@ public static class PopupBuilder
         GameObject hudGo = FindRoot("Canvas_HUD");
         if (hudGo != null)
         {
-            DestroyChild(hudGo.transform, "LowLivesWarning");
             DestroyChild(hudGo.transform, "Popups"); // bản cũ nằm trong HUD
         }
 
@@ -47,7 +46,7 @@ public static class PopupBuilder
         GameFlowUI flow = root.gameObject.AddComponent<GameFlowUI>();
 
         WinPopup win = BuildWin(root);
-        ReviveLivesPopup revive = BuildRevive(root);
+        MoreTimePopup moreTime = BuildMoreTime(root);
         LosePopup lose = BuildLose(root);
         SettingsPopup settings = BuildSettings(root);
         QuitLevelPopup quit = BuildQuitLevel(root);
@@ -58,7 +57,7 @@ public static class PopupBuilder
         DailyRewardPopup daily = DailyRewardBuilder.BuildPopup(root);
 
         Assign(flow, "winPopup", win);
-        Assign(flow, "revivePopup", revive);
+        Assign(flow, "moreTimePopup", moreTime);
         Assign(flow, "losePopup", lose);
         Assign(flow, "settingsPopup", settings);
         Assign(flow, "quitLevelPopup", quit);
@@ -79,7 +78,7 @@ public static class PopupBuilder
         LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
         if (lm != null && lm.GetComponent<RewardedAds>() == null) lm.gameObject.AddComponent<RewardedAds>();
 
-        foreach (PopupView p in new PopupView[] { win, revive, lose, settings, quit, buy, refill, daily, notice }) p.gameObject.SetActive(false);
+        foreach (PopupView p in new PopupView[] { win, moreTime, lose, settings, quit, buy, refill, daily, notice }) p.gameObject.SetActive(false);
 
         EditorSceneManager.MarkSceneDirty(canvasGo.scene);
         Debug.Log("[PopupBuilder] Đã dựng popup trong Canvas_Popup/Popups.");
@@ -132,26 +131,27 @@ public static class PopupBuilder
     /// <summary>Màn thắng như bản gốc: dựng ở WinScreenBuilder.</summary>
     private static WinPopup BuildWin(Transform root) => WinScreenBuilder.BuildPopup(root);
 
-    private static ReviveLivesPopup BuildRevive(Transform root)
+    /// <summary>Hết giờ (MoreTimePopup gốc): đồng hồ + "Need more time?", nút ads +30s / coin +60s, X = thua.</summary>
+    private static MoreTimePopup BuildMoreTime(Transform root)
     {
         RectTransform panel;
-        ReviveLivesPopup popup = NewPopup<ReviveLivesPopup>(root, "ReviveLivesPopup", out panel);
-        Title(panel, "OUT OF LIVES");
+        MoreTimePopup popup = NewPopup<MoreTimePopup>(root, "MoreTimePopup", out panel);
+        Title(panel, "TIME'S UP!");
 
         Button close = NewButton(panel, "CloseButton", UI + "Buttons/btn_X_1.png", new Vector2(405, 255), null, null, null);
         ((RectTransform)close.transform).sizeDelta = new Vector2(120, 120);
 
-        RectTransform heartRow = Row(panel, "Heart", new Vector2(0, -40), 140);
-        Icon(heartRow, "BrokenHeart", UI + "Icons/heart_2.png", 130);
-        Fit(Text(heartRow, "Message", "Keep playing?", Vector2.zero, new Vector2(460, 100), 60, Color.white));
+        RectTransform clockRow = Row(panel, "Clock", new Vector2(0, -40), 140);
+        Icon(clockRow, "Clock", UI + "Buttons/btn_clock.png", 130);
+        Fit(Text(clockRow, "Message", "Need more time?", Vector2.zero, new Vector2(460, 100), 60, Color.white));
 
         RectTransform balanceRow = Row(panel, "Balance", new Vector2(0, -185), 90);
         Icon(balanceRow, "Coin", UI + "Icons/coin.png", 70);
         TMP_Text balance = Text(balanceRow, "Amount", "0", Vector2.zero, new Vector2(200, 80), 54, Yellow);
         Fit(balance);
 
-        Button ads = NewButton(panel, "AdsButton", UI + "Buttons/btn_green_1.png", new Vector2(-200, -470), "+1", UI + "Buttons/btn_video.png", UI + "Icons/heart_1.png");
-        Button coin = NewButton(panel, "CoinButton", UI + "Buttons/btn_yellow_1.png", new Vector2(200, -470), "+3", null, UI + "Icons/heart_1.png");
+        Button ads = NewButton(panel, "AdsButton", UI + "Buttons/btn_green_1.png", new Vector2(-200, -470), "+30s", UI + "Buttons/btn_video.png", null);
+        Button coin = NewButton(panel, "CoinButton", UI + "Buttons/btn_yellow_1.png", new Vector2(200, -470), "+60s", null, UI + "Buttons/btn_clock.png");
 
         // Giá coin ghi dưới nút
         RectTransform costRow = Row(panel, "Cost", new Vector2(200, -590), 80);
@@ -165,6 +165,8 @@ public static class PopupBuilder
         Assign(popup, "closeButton", close);
         Assign(popup, "coinCostText", cost);
         Assign(popup, "balanceText", balance);
+        Assign(popup, "adsLabel", ads.transform.Find("Content/Label").GetComponent<TMP_Text>());
+        Assign(popup, "coinLabel", coin.transform.Find("Content/Label").GetComponent<TMP_Text>());
         return popup;
     }
 

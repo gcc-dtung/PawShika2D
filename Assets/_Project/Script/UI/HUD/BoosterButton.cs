@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 1 nút booster trên thanh dưới. Hiện: icon + số lượt; hết lượt thì dấu "+"; chưa mở khóa (BoosterTutorial) thì ổ khóa + "LV n";
-/// đang bật (Khiên / đang chọn số Reveal) thì quầng sáng xoay sau nút. Bấm -> BoosterManager.Press.
+/// đang bật (đang đóng băng / đang chọn số Reveal) thì quầng sáng xoay sau nút. Bấm -> BoosterManager.Press.
 /// </summary>
 [RequireComponent(typeof(Button))]
 public class BoosterButton : MonoBehaviour
@@ -62,7 +62,7 @@ public class BoosterButton : MonoBehaviour
         }
         EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
         EventBus<BoosterLockChangedEvent>.Subscribe(OnLockChanged);
-        if (LivesManager.Instance != null) LivesManager.Instance.onShieldChanged.AddListener(OnShield);
+        if (LevelTimer.Instance != null) LevelTimer.Instance.onFreezeChanged.AddListener(OnFreeze);
         Refresh();
     }
 
@@ -78,7 +78,7 @@ public class BoosterButton : MonoBehaviour
         }
         EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
         EventBus<BoosterLockChangedEvent>.Unsubscribe(OnLockChanged);
-        if (LivesManager.Instance != null) LivesManager.Instance.onShieldChanged.RemoveListener(OnShield);
+        if (LevelTimer.Instance != null) LevelTimer.Instance.onFreezeChanged.RemoveListener(OnFreeze);
 
         _glowTween?.Kill();
         _glowTween = null;
@@ -102,7 +102,7 @@ public class BoosterButton : MonoBehaviour
     {
         if (e.Type == type) Refresh();
     }
-    private void OnShield(bool _) => Refresh();
+    private void OnFreeze(bool _) => Refresh();
 
     private void OnUsed(BoosterType used)
     {

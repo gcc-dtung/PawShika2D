@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Hiệu ứng Khiên trên hàng tim (Image ice_effect_2 phủ lên tim, không chắn bấm):
+/// Hiệu ứng Đóng băng trên đồng hồ (Image ice_effect_2 phủ lên đồng hồ, không chắn bấm):
 /// - Bật: viền băng toàn màn (frostOverlay, ice_effect) lóe lên rồi tan; lớp băng đóng lại (phóng 0.6 -> 1, OutBack),
 ///   rồi thở nhẹ; bông tuyết lấp lánh quanh lớp băng (xoay, hiện / tắt lần lượt), thỉnh thoảng 1 vệt sáng lướt qua.
-/// - Khiên chặn 1 lần sai: lớp băng rung, phồng to rồi vỡ (mờ đi), mảnh băng (bông tuyết) văng ra 4 phía, xoay và tan.
+/// - Hết thời gian đóng băng: lớp băng rung, phồng to rồi vỡ (mờ đi), mảnh băng (bông tuyết) văng ra 4 phía, xoay và tan.
 /// - Tắt (đổi level...): mờ đi.
 /// Bông tuyết / mảnh vỡ là pool Image con tạo 1 lần trong Awake, không tạo object lúc chơi.
 /// </summary>
 [RequireComponent(typeof(Image))]
-public class ShieldIndicator : MonoBehaviour
+public class FreezeIndicator : MonoBehaviour
 {
     [SerializeField, Range(0f, 1f)] private float alpha = 0.85f;
     [SerializeField] private float appearDuration = 0.25f;
@@ -62,29 +62,29 @@ public class ShieldIndicator : MonoBehaviour
 
     private void OnEnable()
     {
-        LivesManager lives = LivesManager.Instance;
-        if (lives == null) return;
-        lives.onShieldChanged.AddListener(OnShieldChanged);
-        lives.onShieldBlocked.AddListener(OnBlocked);
-        if (lives.HasShield) Appear(false);
+        LevelTimer timer = LevelTimer.Instance;
+        if (timer == null) return;
+        timer.onFreezeChanged.AddListener(OnFreezeChanged);
+        timer.onFreezeEnded.AddListener(OnBroken);
+        if (timer.IsFrozen) Appear(false);
     }
 
     private void OnDisable()
     {
-        LivesManager lives = LivesManager.Instance;
-        if (lives != null)
+        LevelTimer timer = LevelTimer.Instance;
+        if (timer != null)
         {
-            lives.onShieldChanged.RemoveListener(OnShieldChanged);
-            lives.onShieldBlocked.RemoveListener(OnBlocked);
+            timer.onFreezeChanged.RemoveListener(OnFreezeChanged);
+            timer.onFreezeEnded.RemoveListener(OnBroken);
         }
         KillAll();
         SetAlpha(_image, 0f);
         if (frostOverlay != null) SetAlpha(frostOverlay, 0f);
     }
 
-    private void OnShieldChanged(bool on)
+    private void OnFreezeChanged(bool on)
     {
-        // Tắt: mờ đi. Khi khiên chặn lỗi, LivesManager báo tắt trước rồi onShieldBlocked -> hiệu ứng vỡ đè lên
+        // Tắt: mờ đi. Hết giờ đóng băng: LevelTimer báo tắt trước rồi onFreezeEnded -> hiệu ứng vỡ đè lên
         if (on) Appear(true);
         else Hide();
     }
@@ -172,7 +172,7 @@ public class ShieldIndicator : MonoBehaviour
 
     // ---------- Vỡ ----------
 
-    private void OnBlocked()
+    private void OnBroken()
     {
         KillAll();
         SetAlpha(_image, alpha);

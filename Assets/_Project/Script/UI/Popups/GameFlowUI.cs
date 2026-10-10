@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// Nối trạng thái ván (GameStateChangedEvent) với các popup.
@@ -9,7 +10,7 @@ using UnityEngine;
 public class GameFlowUI : MonoBehaviour
 {
     [SerializeField] private WinPopup winPopup;
-    [SerializeField] private ReviveLivesPopup revivePopup;
+    [SerializeField, FormerlySerializedAs("revivePopup")] private MoreTimePopup moreTimePopup;
     [SerializeField] private LosePopup losePopup;
     [SerializeField] private SettingsPopup settingsPopup;
     [SerializeField] private QuitLevelPopup quitLevelPopup;
@@ -21,7 +22,7 @@ public class GameFlowUI : MonoBehaviour
 
     private PopupView[] AllPopups => new PopupView[]
     {
-        winPopup, revivePopup, losePopup, settingsPopup, quitLevelPopup,
+        winPopup, moreTimePopup, losePopup, settingsPopup, quitLevelPopup,
         noticePopup, dailyRewardPopup, buyBoosterPopup, refillEnergyPopup, profilePopup
     };
 
@@ -141,7 +142,7 @@ public class GameFlowUI : MonoBehaviour
         switch (e.State)
         {
             case GameState.Won: Open(winPopup); break;
-            case GameState.OutOfLives: Open(revivePopup); break;
+            case GameState.OutOfTime: Open(moreTimePopup); break;
             case GameState.Lost: Open(losePopup); break;
         }
     }

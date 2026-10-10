@@ -82,5 +82,6 @@ public struct SolutionRectData
 [Serializable]
 public struct LevelRules
 {
-    public int mistakeLimit;
+    [Tooltip("Thời gian của level (giây). 0 = tự tính: 8 s + 0.25 s/ô + 5.5–6.5 s/khối, tối thiểu 45 s (LivesEnergyConfig)")]
+    [Min(0)] public int timeLimit;
 }

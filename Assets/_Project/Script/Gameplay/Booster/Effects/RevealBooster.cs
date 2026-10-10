@@ -25,17 +25,20 @@ public class RevealBooster : BoosterEffect
 
         GridManager gm = Host.Grid;
         CellModel cell = gm != null && gm.Board != null ? gm.Board.GetCell(pos) : null;
-        // Chạm ô không phải số / đã có khối / còn khóa: giữ chế độ chọn, chờ chạm lại
+        // Chạm ô không phải số / còn khóa: giữ chế độ chọn, chờ chạm lại (ô số dưới khối đặt sai vẫn chọn được)
         // [MECHANIC] Reveal: ô số nào không được chọn (cơ chế che số / chặn chọn)
-        if (cell == null || !cell.HasClue || cell.IsOccupied || cell.Clue.IsLocked) return true;
-        if (!gm.Board.TrySolveRemaining(out List<RectInt> remaining)) return true;
+        if (cell == null || !cell.HasClue || cell.Clue.IsLocked) return true;
+        if (!gm.Board.TrySolveHint(out List<RectInt> remaining)) return true;
 
         int value = cell.Clue.Value;
         List<RectInt> targets = new List<RectInt>();
         foreach (RectInt rect in remaining)
         {
-            PlacementCheck check = gm.Board.Check(rect);
-            if (check.IsReady && check.ClueCell.Clue.Value == value) targets.Add(rect);
+            if (HintBooster.IsLocked(gm.Board, rect)) continue;
+            foreach (CellModel c in gm.Board.GetCellsIn(rect))
+            {
+                if (c.HasClue && c.Clue.Value == value) targets.Add(rect);
+            }
         }
         if (targets.Count == 0) return true;
 

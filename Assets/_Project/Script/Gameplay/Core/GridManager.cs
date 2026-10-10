@@ -6,6 +6,7 @@ using UnityEngine.Pool;
 /// <summary>
 /// Nối input kéo thả với luật chơi (BoardModel) và các view (SelectionBoxView, PlacedBlockView).
 /// Luật nằm ở BoardModel; script này chỉ điều phối và phát event.
+/// Cơ chế thời gian (như bản gốc): vùng hợp luật là đặt luôn, không hỏi lời giải; đặt sai thì chạm khối để gỡ.
 /// </summary>
 public class GridManager : Singleton<GridManager>
 {
@@ -23,23 +24,27 @@ public class GridManager : Singleton<GridManager>
     [Header("Events")]
     public UnityEvent onGameWin = new UnityEvent();
     public UnityEvent<BlockModel> onBlockPlaced = new UnityEvent<BlockModel>();
-    public UnityEvent<Vector3, Vector2> onMistake = new UnityEvent<Vector3, Vector2>();     // (tâm, kích thước) vùng sai
-    public UnityEvent<PlacementResult, Vector3, Vector2> onInvalidMove = new UnityEvent<PlacementResult, Vector3, Vector2>(); // thao tác bị hủy, không trừ mạng
+    public UnityEvent<BlockModel> onBlockRemoved = new UnityEvent<BlockModel>();             // chạm khối để gỡ / booster gỡ khối sai
+    public UnityEvent<Vector3, Vector2> onMistake = new UnityEvent<Vector3, Vector2>();     // (tâm, kích thước) khối sai khi lưới kín mà chưa đúng
+    public UnityEvent<PlacementResult, Vector3, Vector2> onInvalidMove = new UnityEvent<PlacementResult, Vector3, Vector2>(); // thao tác sai luật, chỉ hủy
     public UnityEvent<CellModel> onClueUnlocked = new UnityEvent<CellModel>();
+    public UnityEvent<Vector2Int> onDragCellChanged = new UnityEvent<Vector2Int>(); // ngón tay đang kéo sang ô khác – rung tick nhẹ
 
     private BoardModel _board;
     private readonly Dictionary<BlockModel, PlacedBlockView> _blockViews = new Dictionary<BlockModel, PlacedBlockView>();
     private readonly List<CellModel> _unlockedBuffer = new List<CellModel>();
+    private readonly List<BlockModel> _wrongBuffer = new List<BlockModel>();
     private ObjectPool<PlacedBlockView> _blockPool;
     private PlacedBlockView _preview; // mèo xem trước của lượt kéo hiện tại
     private ColorType _dragColor;     // màu khung chọn của lượt kéo -> màu khối mèo
     private readonly DragSelection _drag = new DragSelection();
     private bool _isGameWon = false;
     private bool _finishing; // đã thả tay, đang chờ khung giãn xong rồi mới đặt / báo sai
+    private Vector2Int _fingerCell; // ô dưới ngón tay ở lần kéo trước
 
     public BoardModel Board => _board;
     public bool IsGameWon => _isGameWon;
-    public bool IsGameOver => LivesManager.Instance != null && LivesManager.Instance.IsOutOfLives;
+    public bool IsGameOver => LevelTimer.Instance != null && LevelTimer.Instance.IsTimeUp;
     /// <summary>
     /// Khóa kéo thả: trạng thái riêng của lưới + InputGate (ván không Playing, intro / tutorial, Reveal đang tự đặt khối...).
     /// Lớp phủ mới chỉ cần InputGate.Lock(this), không sửa ở đây.
@@ -98,6 +103,7 @@ public class GridManager : Singleton<GridManager>
         if (cell == null || cell.IsOccupied) return false;
 
         _drag.Begin(anchor);
+        _fingerCell = anchor;
         RefreshSelection();
         return true;
     }
@@ -108,7 +114,13 @@ public class GridManager : Singleton<GridManager>
         if (!_drag.IsActive || _board == null) return;
 
         GridGeometry geometry = _board.Geometry;
-        if (_drag.MoveTo(geometry.WorldToCell(fingerWorld), _board)) RefreshSelection();
+        Vector2Int cell = geometry.WorldToCell(fingerWorld);
+        if (cell != _fingerCell)
+        {
+            _fingerCell = cell;
+            onDragCellChanged?.Invoke(cell);
+        }
+        if (_drag.MoveTo(cell, _board)) RefreshSelection();
 
         // Hướng bị chặn: đẩy vào khối đã đặt / ô Void, hoặc ngón tay ra ngoài lưới ở mép vùng chọn
         Vector2Int dir = _drag.BlockDir;
@@ -167,8 +179,8 @@ public class GridManager : Singleton<GridManager>
     }
 
     /// <summary>
-    /// Thả tay: đặt khối nếu đúng, mèo rung + trừ mạng nếu sai lời giải, hủy nếu chưa đủ điều kiện.
-    /// Đủ điều kiện mà khung chưa giãn xong thì chờ khung giãn hết, hiện mèo, rồi mới đặt / báo sai.
+    /// Thả tay: vùng đủ điều kiện thì đặt khối (không hỏi lời giải), chưa đủ thì hủy.
+    /// Đủ điều kiện mà khung chưa giãn xong thì chờ khung giãn hết, hiện mèo, rồi mới đặt.
     /// </summary>
     public void EndSelection()
     {
@@ -176,7 +188,7 @@ public class GridManager : Singleton<GridManager>
         RectInt rect = _drag.Rect;
         _drag.End();
 
-        // Khi đã win hoặc hết mạng -> Khóa toàn bộ thao tác
+        // Khi đã win hoặc hết giờ -> Khóa toàn bộ thao tác
         if (IsInputLocked || _board == null)
         {
             HideSelectionBox();
@@ -223,7 +235,7 @@ public class GridManager : Singleton<GridManager>
         if (selectionBox != null) selectionBox.Hide();
     }
 
-    /// <summary>Vùng đủ điều kiện sau khi thả tay: hiện mèo (nếu chưa) rồi kiểm tra lời giải.</summary>
+    /// <summary>Vùng đủ điều kiện sau khi thả tay: hiện mèo (nếu chưa) rồi đặt.</summary>
     private void CommitSelection(PlacementCheck check)
     {
         RectInt rect = check.Rect;
@@ -235,15 +247,6 @@ public class GridManager : Singleton<GridManager>
 
         PlacedBlockView view = _preview;
         _preview = null;
-
-        // Đặt xong mà lưới không còn lời giải -> NƯỚC ĐI SAI, trừ mạng
-        if (!_board.IsSolvableWith(rect))
-        {
-            view.PlayReject(() => _blockPool.Release(view));
-            DeductLife(rect);
-            return;
-        }
-
         PlaceBlock(check, view);
     }
 
@@ -269,17 +272,63 @@ public class GridManager : Singleton<GridManager>
         foreach (CellModel cell in _unlockedBuffer) onClueUnlocked?.Invoke(cell);
         onBlockPlaced?.Invoke(block);
 
-        // Kiểm tra sau khi đặt khối xem đã phủ kín toàn bộ grid chưa
-        if (_board.IsFull()) HandleGameWin();
+        // Phủ kín lưới: đúng hết -> thắng; còn khối "?" sai số ô -> mèo sai rung, người chơi chạm để gỡ
+        if (!_board.IsFull()) return;
+        _wrongBuffer.Clear();
+        if (_board.IsSolved(_wrongBuffer)) HandleGameWin();
+        else ShowWrongBlocks(_wrongBuffer);
+    }
+
+    private void ShowWrongBlocks(List<BlockModel> wrong)
+    {
+        Debug.LogWarning($"<color=red>[GridManager] Lưới kín nhưng {wrong.Count} khối sai số ô -> chạm để gỡ</color>");
+        GridGeometry geometry = _board.Geometry;
+        foreach (BlockModel block in wrong)
+        {
+            if (_blockViews.TryGetValue(block, out PlacedBlockView view) && view != null) view.PlayWrong();
+            onMistake?.Invoke(geometry.RectCenter(block.Rect), geometry.RectSize(block.Rect));
+        }
+    }
+
+    /// <summary>Chạm 1 ô đang có khối: gỡ khối đó. Trả về true nếu đã gỡ.</summary>
+    public bool TryRemoveBlockAt(Vector2Int pos)
+    {
+        if (IsInputLocked || _board == null || _drag.IsActive) return false;
+        BlockModel block = _board.GetBlockAt(pos);
+        if (block == null) return false;
+        RemoveBlock(block);
+        return true;
+    }
+
+    private void RemoveBlock(BlockModel block)
+    {
+        if (!_board.Remove(block)) return;
+        if (_blockViews.TryGetValue(block, out PlacedBlockView view))
+        {
+            _blockViews.Remove(block);
+            if (view != null) view.PlayRemove(() => _blockPool.Release(view));
+        }
+        onBlockRemoved?.Invoke(block);
     }
 
     /// <summary>
-    /// Booster (Hint / Reveal) đặt 1 khối của lời giải: không qua kéo thả, không kiểm tra lời giải lại.
-    /// Màu random như khung chọn. Trả về false nếu vùng không đặt được (đã có khối, ô còn khóa...).
+    /// Booster (Hint / Reveal) đặt 1 khối của lời giải: không qua kéo thả. Khối sai đang đè lên vùng thì gỡ trước.
+    /// Màu random như khung chọn. Trả về false nếu vùng không đặt được (ô số còn khóa...).
     /// </summary>
     public bool PlaceSolved(RectInt rect)
     {
         if (_board == null || _isGameWon || IsGameOver) return false;
+        List<BlockModel> overlapping = _board.GetBlocksOverlapping(rect);
+        if (overlapping.Count == 1 && overlapping[0].Rect.Equals(rect)) return false; // đã đúng sẵn
+        if (overlapping.Count > 0)
+        {
+            // Ô số còn khóa thì gỡ khối cũng không đặt được: giữ nguyên lưới
+            foreach (BlockModel b in overlapping) b.Release();
+            bool ready = _board.Check(rect).IsReady;
+            foreach (BlockModel b in overlapping) b.Occupy();
+            if (!ready) return false;
+            foreach (BlockModel b in overlapping) RemoveBlock(b);
+        }
         PlacementCheck check = _board.Check(rect);
         if (!check.IsReady) return false;
 
@@ -296,15 +345,6 @@ public class GridManager : Singleton<GridManager>
         Debug.Log($"[GridManager] Hủy thao tác: {check.Result}");
         GridGeometry geometry = _board.Geometry;
         onInvalidMove?.Invoke(check.Result, geometry.RectCenter(check.Rect), geometry.RectSize(check.Rect));
-    }
-
-    private void DeductLife(RectInt rect)
-    {
-        Debug.LogWarning("<color=red>[GridManager] Nước đi SAI! Đặt khối này thì lưới không còn lời giải -> TRỪ 1 MẠNG</color>");
-        GridGeometry geometry = _board.Geometry;
-        onMistake?.Invoke(geometry.RectCenter(rect), geometry.RectSize(rect));
-
-        if (LivesManager.Instance != null) LivesManager.Instance.LoseLife(); // màn luyện tập (tutorial): LivesManager tự bỏ qua
     }
 
     private void HandleGameWin()

@@ -98,7 +98,7 @@ public static class ShikaCatLevelImporter
         level.size = cols;
         level.height = rows;
         level.cellOverrides = new CellOverrideData[0];
-        level.rules = new LevelRules { mistakeLimit = 3 };
+        level.rules = new LevelRules(); // timeLimit 0 = tự tính theo số ô / khối
 
         level.clues = new ClueData[src._cats.Length];
         for (int c = 0; c < src._cats.Length; c++)

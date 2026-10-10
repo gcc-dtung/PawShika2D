@@ -15,9 +15,9 @@ MonoBehaviour:
   winCoinReward: 10
   winCoinRewardHard: 20
   winCoinRewardVeryHard: 30
-  reviveAdsLives: 1
-  reviveCoinLives: 3
-  reviveCoinCost: 900
+  moreTimeAdsSeconds: 30
+  moreTimeCoinSeconds: 60
+  moreTimeCoinCost: 900
   refillAdsEnergy: 1
   refillCoinCost: 900
   adsSimulatedDuration: 0.5

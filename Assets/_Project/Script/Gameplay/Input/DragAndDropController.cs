@@ -1,7 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Chạm / kéo trên lưới: kéo từ ô trống -> GridManager chọn vùng; chạm 1 khối đã đặt (thả tay trên chính khối đó) -> gỡ khối;
+/// đang Reveal thì chuyển chạm cho BoosterManager.
+/// </summary>
 public class DragAndDropController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
@@ -9,6 +11,8 @@ public class DragAndDropController : MonoBehaviour
     [SerializeField] private DragCountBubble countBubble;
 
     private bool _isDragging = false;
+    private bool _isTapping;           // chạm xuống 1 khối đã đặt: thả tay trên chính khối đó thì gỡ khối
+    private Vector2Int _tapCell;
 
     private void Awake()
     {
@@ -44,17 +48,25 @@ public class DragAndDropController : MonoBehaviour
 
     public void StartDrag(Vector2 pos)
     {
-        if (_isDragging) return;
+        if (_isDragging || _isTapping) return;
         GridManager gm = GridManager.Instance;
         if (!gm || gm.IsInputLocked) return;
 
-        // Bắt đầu phải chạm trúng 1 ô; ô đã có khối thì GridManager từ chối
+        // Bắt đầu phải chạm trúng 1 ô
         CellView cell = GetCellAtPosition(pos);
         if (!cell) return;
 
         // Đang chọn số cho booster Reveal: chạm ô là chọn, không kéo
         BoosterManager booster = BoosterManager.Instance;
         if (booster && booster.HandleCellTap(cell.Position)) return;
+
+        // Ô đã có khối: chờ thả tay để gỡ khối (kéo sang khối khác thì thôi)
+        if (gm.Board != null && gm.Board.GetBlockAt(cell.Position) != null)
+        {
+            _isTapping = true;
+            _tapCell = cell.Position;
+            return;
+        }
 
         if (!gm.BeginSelection(cell.Position)) return;
 
@@ -64,6 +76,14 @@ public class DragAndDropController : MonoBehaviour
 
     public void Drag(Vector2 pos)
     {
+        if (_isTapping)
+        {
+            GridManager g = GridManager.Instance;
+            CellView over = GetCellAtPosition(pos);
+            BlockModel tapped = g != null && g.Board != null ? g.Board.GetBlockAt(_tapCell) : null;
+            if (over == null || tapped == null || g.Board.GetBlockAt(over.Position) != tapped) _isTapping = false;
+            return;
+        }
         if (!_isDragging) return;
         GridManager gm = GridManager.Instance;
         if (!gm || gm.IsInputLocked)
@@ -79,6 +99,12 @@ public class DragAndDropController : MonoBehaviour
 
     public void EndDrag()
     {
+        if (_isTapping)
+        {
+            _isTapping = false;
+            if (GridManager.Instance != null) GridManager.Instance.TryRemoveBlockAt(_tapCell);
+            return;
+        }
         if (!_isDragging) return;
         GridManager gm = GridManager.Instance;
         if (gm == null || gm.IsInputLocked)
@@ -100,6 +126,7 @@ public class DragAndDropController : MonoBehaviour
     private void ResetDrag()
     {
         _isDragging = false;
+        _isTapping = false;
         if (countBubble != null) countBubble.Hide();
     }
 

@@ -8,7 +8,7 @@ public static class BoosterEffectFactory
         switch (type)
         {
             case BoosterType.Hint: return new HintBooster();
-            case BoosterType.Shield: return new ShieldBooster();
+            case BoosterType.Freeze: return new FreezeBooster();
             case BoosterType.Reveal: return new RevealBooster();
             default: return null;
         }

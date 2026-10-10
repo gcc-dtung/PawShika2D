@@ -5,9 +5,9 @@ using UnityEngine;
 /// Ghi số liệu chơi thật từng level vào SaveData.levelStats để chỉnh đường độ khó theo dữ liệu thật
 /// (Tools → PawBlock → Level Stats → Xuất CSV, rồi nạp vào cửa sổ Level Difficulty để so với độ khó lý thuyết).
 /// - 1 lượt = từ lúc nạp level (LevelLoadedEvent, không tính màn tutorial) tới Won / Lost; nạp lại giữa chừng = bỏ cuộc (quit).
-///   Lượt chỉ được tính khi người chơi thật sự thao tác (đặt khối / đi sai / dùng booster): level nạp sẵn ở nền Menu không bị đếm.
+///   Lượt chỉ được tính khi người chơi thật sự thao tác (đặt / gỡ khối / dùng booster): level nạp sẵn ở nền Menu không bị đếm.
 /// - Thời gian chỉ tính lúc ván ở Playing (không tính popup / Menu).
-/// - Đếm nước sai (GridManager.onMistake), booster dùng, lần hết mạng.
+/// - Đếm nước sai (khối bị gỡ: GridManager.onBlockRemoved), booster dùng, lần hết giờ.
 /// Khóa theo tên asset level nên đổi thứ tự level không lẫn số liệu.
 /// </summary>
 public class LevelStatsRecorder : MonoBehaviour
@@ -29,7 +29,7 @@ public class LevelStatsRecorder : MonoBehaviour
     {
         if (GridManager.Instance != null)
         {
-            GridManager.Instance.onMistake.AddListener(OnMistake);
+            GridManager.Instance.onBlockRemoved.AddListener(OnBlockRemoved);
             GridManager.Instance.onBlockPlaced.AddListener(OnBlockPlaced);
         }
         if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.AddListener(OnBoosterUsed);
@@ -46,7 +46,7 @@ public class LevelStatsRecorder : MonoBehaviour
     {
         if (GridManager.Instance != null)
         {
-            GridManager.Instance.onMistake.RemoveListener(OnMistake);
+            GridManager.Instance.onBlockRemoved.RemoveListener(OnBlockRemoved);
             GridManager.Instance.onBlockPlaced.RemoveListener(OnBlockPlaced);
         }
         if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.RemoveListener(OnBoosterUsed);
@@ -95,8 +95,8 @@ public class LevelStatsRecorder : MonoBehaviour
 
         switch (e.State)
         {
-            case GameState.OutOfLives:
-                _current.outOfLives++;
+            case GameState.OutOfTime:
+                _current.outOfTime++;
                 SaveSystem.MarkDirty();
                 break;
             case GameState.Won:
@@ -113,7 +113,7 @@ public class LevelStatsRecorder : MonoBehaviour
         }
     }
 
-    private void OnMistake(Vector3 center, Vector2 size)
+    private void OnBlockRemoved(BlockModel _)
     {
         if (!EnsureAttempt()) return;
         _current.mistakes++;

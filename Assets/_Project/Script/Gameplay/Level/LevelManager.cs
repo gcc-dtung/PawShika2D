@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// Luồng 1 level và trạng thái ván chơi:
 /// Playing -> Won (WinPopup) -> level kế
-/// Playing -> OutOfLives (ReviveLivesPopup) -> hồi mạng: Playing / bỏ cuộc: Lost (LosePopup) -> chơi lại.
+/// Playing -> OutOfTime (MoreTimePopup) -> thêm giờ: Playing / bỏ cuộc: Lost (LosePopup) -> chơi lại.
 /// Phát LevelLoadedEvent / GameStateChangedEvent qua EventBus; ván không Playing thì khóa lưới (InputGate).
 /// Có bên xử lý luồng (GameFlowUI đặt AutoAdvance = false) thì chờ popup; không có thì tự chuyển sau autoAdvanceDelay.
 /// Căn camera theo lưới: BoardCameraFitter.
@@ -22,15 +22,15 @@ public class LevelManager : Singleton<LevelManager>
     private int _currentIndex;
     private Tween _pending; // hẹn giờ đổi trạng thái / tự chuyển level
     private GameState _state = GameState.Playing;
-    private bool _hasRevived; // đã hồi mạng trong lượt chơi này (lượt sau hết mạng có thể giới hạn)
-    private bool _isPractice; // màn tutorial: thắng không sang WinPopup, sai không trừ mạng
+    private bool _hasRevived; // đã thêm giờ trong lượt chơi này (lượt sau hết giờ có thể giới hạn)
+    private bool _isPractice; // màn tutorial: thắng không sang WinPopup, đồng hồ không chạy
 
     public GameState State => _state;
     public bool IsPlaying => _state == GameState.Playing;
     public bool HasRevived => _hasRevived;
     public bool IsPractice => _isPractice;
 
-    /// <summary>Thắng / hết mạng thì tự sang level kế / chơi lại. GameFlowUI tắt đi để popup quyết định.</summary>
+    /// <summary>Thắng / hết giờ thì tự sang level kế / chơi lại. GameFlowUI tắt đi để popup quyết định.</summary>
     public bool AutoAdvance { get; set; } = true;
 
     public int CurrentIndex => _currentIndex;
@@ -48,7 +48,7 @@ public class LevelManager : Singleton<LevelManager>
     private void Start()
     {
         if (GridManager.Instance != null) GridManager.Instance.onGameWin.AddListener(OnWin);
-        if (LivesManager.Instance != null) LivesManager.Instance.onOutOfLives.AddListener(OnOutOfLives);
+        if (LevelTimer.Instance != null) LevelTimer.Instance.onTimeUp.AddListener(OnTimeUp);
         if (!TutorialController.Pending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
     }
 
@@ -61,7 +61,7 @@ public class LevelManager : Singleton<LevelManager>
     private void OnDestroy()
     {
         if (GridManager.Instance != null) GridManager.Instance.onGameWin.RemoveListener(OnWin);
-        if (LivesManager.Instance != null) LivesManager.Instance.onOutOfLives.RemoveListener(OnOutOfLives);
+        if (LevelTimer.Instance != null) LevelTimer.Instance.onTimeUp.RemoveListener(OnTimeUp);
     }
 
     public void LoadLevel(int index)
@@ -91,7 +91,7 @@ public class LevelManager : Singleton<LevelManager>
 
     /// <summary>
     /// Màn tutorial (TutorialController): dựng lưới như level thường nhưng không lưu level hiện tại,
-    /// không phát LevelLoadedEvent (HUD level / intro / booster không đổi), thắng không sang WinPopup, sai không trừ mạng.
+    /// không phát LevelLoadedEvent (HUD level / intro / booster không đổi), thắng không sang WinPopup, đồng hồ không chạy.
     /// </summary>
     public void LoadTutorial(LevelDefinition level)
     {
@@ -147,19 +147,19 @@ public class LevelManager : Singleton<LevelManager>
         if (_state == GameState.Paused) SetState(GameState.Playing);
     }
 
-    /// <summary>Popup Hồi mạng: cộng mạng rồi chơi tiếp đúng lưới đang dở.</summary>
-    public void Revive(int lives)
+    /// <summary>Popup Thêm giờ: cộng giây rồi chơi tiếp đúng lưới đang dở.</summary>
+    public void Revive(float seconds)
     {
-        if (_state != GameState.OutOfLives) return;
+        if (_state != GameState.OutOfTime) return;
         _hasRevived = true;
-        if (LivesManager.Instance != null) LivesManager.Instance.AddLives(lives);
+        if (LevelTimer.Instance != null) LevelTimer.Instance.AddTime(seconds);
         SetState(GameState.Playing);
     }
 
-    /// <summary>Đóng popup Hồi mạng -> thua.</summary>
+    /// <summary>Đóng popup Thêm giờ -> thua.</summary>
     public void GiveUp()
     {
-        if (_state == GameState.OutOfLives) SetState(GameState.Lost);
+        if (_state == GameState.OutOfTime) SetState(GameState.Lost);
     }
 
     private void OnWin()
@@ -173,12 +173,12 @@ public class LevelManager : Singleton<LevelManager>
         });
     }
 
-    private void OnOutOfLives()
+    private void OnTimeUp()
     {
         CancelPending();
         After(stateChangeDelay, () =>
         {
-            SetState(GameState.OutOfLives);
+            SetState(GameState.OutOfTime);
             if (AutoAdvance) After(autoAdvanceDelay, Retry);
         });
     }
@@ -195,7 +195,7 @@ public class LevelManager : Singleton<LevelManager>
     private void SetPractice(bool practice)
     {
         _isPractice = practice;
-        if (LivesManager.Instance != null) LivesManager.Instance.IsPractice = practice;
+        if (LevelTimer.Instance != null) LevelTimer.Instance.IsPractice = practice;
     }
 
     /// <summary>Hẹn gọi action sau delay giây (thay hẹn cũ nếu có). Manager tắt thì hủy, action không chạy.</summary>
