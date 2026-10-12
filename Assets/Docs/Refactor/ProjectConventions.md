@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-12 (P3) |
+| Cập nhật lần cuối | 2026-10-12 (P4) |
 
 ---
 
@@ -83,3 +83,16 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Công cụ Editor đọc save | `new JsonFileSaveService(JsonFileSaveService.DefaultPath)` ngoài Play mode; đang Play thì báo người dùng thoát Play trước khi ghi |
 | Test đụng save | `new JsonFileSaveService(null)` (chỉ bộ nhớ) truyền vào constructor / `Init` |
 | Quảng cáo / IAP / giờ | `IAdsService`, `IIAPService`, `IClock`; bản giả `FakeAdsService`, `FakeIAPService`. Tích hợp SDK: thêm class cài interface, đổi 1 dòng trong Bootstrap |
+
+## 9. Không Singleton cho game logic (từ P4)
+
+| Quy tắc | Cách làm |
+| --- | --- |
+| Không `.Instance` trong `Features/` / `Game/` | Chỉ `AudioManager` (hạ tầng) kế thừa `Singleton<T>`. Script mới nhận dependency qua `Init` từ `GameBootstrap` |
+| `Singleton<T>` bản an toàn | Đặt sẵn trong scene; không tự tìm / tự tạo; thiếu thì `Instance` báo `LogError`. Hỏi mà không muốn báo lỗi: `HasInstance` (vd lúc thoát Play, hủy object) |
+| Feature khác cần ra lệnh / hỏi Gameplay, màn hình | `IScreenNavigator` (ScreenFlow), `IGamePause` (LevelManager), `IBoosterCatalog`, `IRewardIcons` trong `Core/Contracts` |
+| View tạo lúc chạy (pool, prefab) cần config | Bên tạo gọi `Init(...)` ngay khi tạo (vd `PlacedBlockView.Init(visuals)` trong `createFunc` của pool) |
+| Config | `GameConfig` / `GameplayVisuals` ở `_Project/Configs/`, Bootstrap giữ `[SerializeField]`, truyền **config con** (`LivesEnergyConfig`, `EconomyConfig`...) qua `Init`. Không `Resources.Load` |
+| Hàm tính dùng config | Nhận config làm tham số (`LevelTimer.ComputeSeconds(level, cells, cfg)`), không đọc static |
+| Cờ trạng thái | Thuộc tính instance (`TutorialController.IsActive` / `IsPending`), không `static bool` |
+| Cheat / Debug Panel | `DebugCheats` (Game) dùng `GameServices` + `GameScene` do Bootstrap điền; feature không dùng `GameScene` |

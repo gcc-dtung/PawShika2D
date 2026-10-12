@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-12 15:32 |
+| Trạng thái | Đã push |
+| Commit | 5 commit `6c7b77a` … `8daa9a9` (P3.1 – P3.4 + tài liệu), cuối "Refactor P3: tài liệu P3, chốt RoadMap 21" (nhánh `Refactor-P3-ServiceSave`) |
+| Thời gian push | 2026-10-12 16:39 |
+| Cập nhật lần cuối | 2026-10-12 16:39 |
 
 ## Tóm tắt
 

@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0–P3 xong (2026-10-12), tiếp P4 |
+| Trạng thái | P0–P4 xong (2026-10-12), tiếp P5 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-12 |
@@ -313,17 +313,17 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | UI / Game cần object của feature | Bootstrap / Inspector |
 
 **Thứ tự** (mỗi mục 1 commit, chạy smoke test sau mỗi mục):
-1. [ ] `ScreenFlow` (41) – trước tiên vì đang bị Gameplay gọi ngược: Gameplay nghe `ScreenChangedEvent` thay cho `ScreenFlow.Instance.IsMenu`.
-2. [ ] `LevelManager` (101; 11 file ở popup) – popup màn chơi nằm cùng feature Gameplay → `[SerializeField]`; Profile / Daily / Analytics → event.
-3. [ ] `GridManager` (69).
-4. [ ] `BoosterManager` (48) – HUD cùng feature → `[SerializeField]`; Shop / Daily / Profile → `IBoosterInventory` + event.
-5. [ ] `LevelTimer` (41) – 7 file HUD → `[SerializeField]`.
-6. [ ] `EnergyManager` (36) → `IEnergyService` + `EnergyChangedEvent`.
-7. [ ] `DailyRewardManager` (18), `DailyChallengeManager` (6).
-8. [ ] `LevelStars` (7).
-9. [ ] `TutorialController` + bỏ `static Active` / `Pending` → thuộc tính instance; nơi khác hỏi qua tham chiếu (cùng Gameplay) hoặc event.
-10. [ ] `GameConfig.Instance`, `GameplayVisuals.Instance`: bỏ `Resources.Load`; Bootstrap giữ tham chiếu `[SerializeField]` và truyền config con cho từng feature.
-11. [ ] Cờ static: `ShopService.NoAds` → `IAdsFreeStatus`; `DebugCheats.InMenu` / `TimerPaused` → Cheats (ở Game) giữ tham chiếu.
+1. [x] `ScreenFlow` (41) – trước tiên vì đang bị Gameplay gọi ngược: Gameplay nghe `ScreenChangedEvent` thay cho `ScreenFlow.Instance.IsMenu`.
+2. [x] `LevelManager` (101; 11 file ở popup) – popup màn chơi nằm cùng feature Gameplay → `[SerializeField]`; Profile / Daily / Analytics → event.
+3. [x] `GridManager` (69).
+4. [x] `BoosterManager` (48) – HUD cùng feature → `[SerializeField]`; Shop / Daily / Profile → `IBoosterInventory` + event.
+5. [x] `LevelTimer` (41) – 7 file HUD → `[SerializeField]`.
+6. [x] `EnergyManager` (36) → `IEnergyService` + `EnergyChangedEvent`.
+7. [x] `DailyRewardManager` (18), `DailyChallengeManager` (6).
+8. [x] `LevelStars` (7).
+9. [x] `TutorialController` + bỏ `static Active` / `Pending` → thuộc tính instance; nơi khác hỏi qua tham chiếu (cùng Gameplay) hoặc event.
+10. [x] `GameConfig.Instance`, `GameplayVisuals.Instance`: bỏ `Resources.Load`; Bootstrap giữ tham chiếu `[SerializeField]` và truyền config con cho từng feature.
+11. [x] Cờ static: `ShopService.NoAds` → `IAdsFreeStatus`; `DebugCheats.InMenu` / `TimerPaused` → Cheats (ở Game) giữ tham chiếu.
 
 **Giữ lại (hạ tầng):** `AudioManager` → đổi sang Singleton bản an toàn (guide 3: không tự tạo object, `LogError` khi thiếu, xóa trong `OnDestroy`).
 
@@ -331,6 +331,25 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 
 **Kiểm tra:** grep `\.Instance` trong `Features/` và `Game/` chỉ còn `AudioManager`; smoke test đầy đủ; test xanh.
 **Xong khi:** 12 Singleton game logic + 2 config `.Instance` + 4 cờ static đã bỏ.
+
+**Kết quả P4** (11 mục, 9 commit trên nhánh `Refactor-P4-BoSingleton`):
+
+| Bước | Nội dung |
+| --- | --- |
+| 4.1 | `ScreenFlow` cài `IScreenNavigator` (`IsMenu`, `ShowMenu`, `Play`, `PlayDaily`), mở Shop qua `ShopOpenRequestedEvent` |
+| 4.2 | `LevelManager` cài `IGamePause` (`IsPlaying`, `Pause`, `Resume`, `CancelDrag`); popup cùng Gameplay nhận `LevelManager` qua `Init`; `DailyChallengeManager` nghe `LevelCompletedEvent` |
+| 4.3 | `GridManager`: popup Settings hủy kéo qua `IGamePause.CancelDrag` |
+| 4.4 | `BoosterManager` cài `IBoosterCatalog.ItemIcon`; `DailyRewardManager` cài `IRewardIcons.IconOf` (ô quà, bong bóng quà, Lucky Wheel lấy icon qua contract) |
+| 4.5 – 4.6 | `LevelTimer`, `EnergyManager` (`QuitLevelPopup` dùng `IEnergyService`) |
+| 4.7 – 4.9 | `DailyRewardManager`, `DailyChallengeManager`, `LevelStars`, `TutorialController`; cờ static `TutorialController.Active` / `Pending` → `IsActive` / `IsPending` của instance |
+| 4.10 | `GameConfig` / `GameplayVisuals` bỏ static, ra khỏi `Resources/` (sang `_Project/Configs/`, giữ GUID); Bootstrap giữ `[SerializeField]` và truyền config con qua `Init`; `LevelTimer.ComputeSeconds` / `EstimateAutoSeconds` nhận config; `PlacedBlockView.Init(visuals)` lúc pool tạo |
+| 4.11 | `Singleton<T>` bản an toàn (không Find / tự tạo, `LogError` khi thiếu, `HasInstance`, xóa ở `OnDestroy`, bản trùng chỉ hủy component); bỏ `DontDestroyOnLoadSingleton`; `CatFaceTicker` tự quản instance |
+
+- Khác plan: không thêm `EnergyChangedEvent` và `IAdsFreeStatus` (chưa có feature thứ hai cần; `ShopService.NoAds` đã thành instance từ P3); `DebugCheats` (Game, chỉ debug) giữ `GameServices` + `GameScene` thay cho các `.Instance`; `GameplayInstaller` / `MetaInstaller` chưa tách (`GameBootstrap` 214 dòng) – để P5 / P9.
+- `.Instance` còn lại: chỉ `AudioManager` (hạ tầng). Static còn lại: `EventBus`, `InputGate`, `Haptics`, cờ settings `AudioManager`, `DebugCheats`, class hàm thuần.
+- Kiểm tra: 160 / 160 test; compile sạch; Play với `save_v1_played.json` sau mỗi mục: menu, 5 popup, đổi nhạc, Shop, tab Daily, PLAY level 23, Time's up → quảng cáo +30 s, thắng → Continue (+coin), booster; Console 0 lỗi. Save thật của máy dev trả về bản gốc (md5 khớp).
+- `using` sai chiều: 75 → 80 ([Dependencies.md](Dependencies.md)): `LivesEnergyConfig` (namespace Economy) trước được lấy qua `GameConfig.LivesEnergy` nên không lộ, nay truyền thẳng vào 5 file Gameplay. Chuyển config về Gameplay / Contracts ở P6.
+- Ghi nhận (có sẵn, chưa sửa): DOTween nới sức chứa khi cheat WinNow trên lưới 10x10 (đỉnh tạm thời, không rò).
 
 ---
 
@@ -466,12 +485,12 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Ads / IAP / Clock service + Fake | 2 | 0.5 | 100% | |
 | | | Wallet / Inventory / Profile / Shop: static → instance | 3 | 0.5 | 100% | |
 | | | `GameBootstrap` + nối Init | 3 | 0.8 | 100% | Tự điền tham chiếu bằng Editor script |
-| P4 Bỏ Singleton | 12 Singleton + 4 cờ static | ScreenFlow (sửa phụ thuộc ngược) | 2 | | 0% | |
-| | | LevelManager (101 chỗ) | 5 | | 0% | Lớn nhất |
-| | | GridManager, BoosterManager | 5 | | 0% | |
-| | | LevelTimer, EnergyManager | 3.5 | | 0% | |
-| | | Daily*, LevelStars, TutorialController | 3 | | 0% | |
-| | | GameConfig / GameplayVisuals ra khỏi Resources; cờ static; Singleton an toàn | 2.5 | | 0% | |
+| P4 Bỏ Singleton | 12 Singleton + 4 cờ static | ScreenFlow (sửa phụ thuộc ngược) | 2 | 0.2 | 100% | |
+| | | LevelManager (101 chỗ) | 5 | 0.3 | 100% | Lớn nhất |
+| | | GridManager, BoosterManager | 5 | 0.3 | 100% | |
+| | | LevelTimer, EnergyManager | 3.5 | 0.2 | 100% | |
+| | | Daily*, LevelStars, TutorialController | 3 | 0.2 | 100% | |
+| | | GameConfig / GameplayVisuals ra khỏi Resources; cờ static; Singleton an toàn | 2.5 | 0.9 | 100% | |
 | P5 Bỏ Find / GetComponent | ~58 file | GetComponent → SerializeField + Reset, gán lại scene / prefab | 6 | | 0% | |
 | | | AddComponent → có sẵn trong prefab | 3 | | 0% | |
 | | | Find, Camera.main, transform.Find, registry raycast | 2 | | 0% | |
@@ -487,7 +506,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **8.9** | **33%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **11.0** | **52%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 
