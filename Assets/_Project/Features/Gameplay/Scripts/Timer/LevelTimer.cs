@@ -19,16 +19,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelTimer : MonoBehaviour
     {
+        private LivesEnergyConfig _lives;
         private GridManager _grid;
         private LevelManager _levels;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens, LevelManager levels, GridManager grid)
+        public void Init(IScreenNavigator screens, LevelManager levels, GridManager grid, LivesEnergyConfig lives)
         {
             _screens = screens;
             _levels = levels;
             _grid = grid;
+            _lives = lives;
         }
 
         [SerializeField] private GridSpawner gridSpawner;
@@ -61,7 +63,7 @@ namespace PawBlock.Features.Gameplay
         public bool IsWaitingForTouch => _waitingForTouch;
 
         /// <summary>Đang dưới ngưỡng cảnh báo (chữ đỏ, nhịp tim đồng hồ).</summary>
-        public bool IsLow => !_timeUp && _remaining <= GameConfig.LivesEnergy.warningSeconds;
+        public bool IsLow => !_timeUp && _lives != null && _remaining <= _lives.warningSeconds;
 
         /// <summary>Màn luyện tập (tutorial lần đầu): đồng hồ không chạy. LevelManager đặt khi nạp màn.</summary>
         public bool IsPractice
@@ -112,7 +114,7 @@ namespace PawBlock.Features.Gameplay
         {
             SetFrozen(0f);
             _timeUp = false;
-            _total = ComputeSeconds(level, cellCount);
+            _total = ComputeSeconds(level, cellCount, _lives);
             _remaining = _total;
             SetWaitingForTouch(waitForFirstTouch && !IsPractice);
             onTimeChanged?.Invoke(_remaining, _total);
@@ -132,10 +134,9 @@ namespace PawBlock.Features.Gameplay
         /// Thời gian của level: rules.timeLimit nếu > 0, không thì 8 s + 0.25 s/ô + 5.5–6.5 s/khối (mỗi ô số là 1 khối),
         /// tối thiểu 45 s – số của GameplayController gốc.
         /// </summary>
-        public static float ComputeSeconds(LevelDefinition level, int cellCount)
+        public static float ComputeSeconds(LevelDefinition level, int cellCount, LivesEnergyConfig cfg)
         {
             if (level != null && level.rules.timeLimit > 0) return level.rules.timeLimit;
-            LivesEnergyConfig cfg = GameConfig.LivesEnergy;
             int blocks = level != null && level.clues != null ? level.clues.Length : 0;
             float seconds = cfg.baseSeconds + cfg.secondsPerCell * cellCount;
             for (int i = 0; i < blocks; i++) seconds += Random.Range(cfg.secondsPerBlockMin, cfg.secondsPerBlockMax);
@@ -143,9 +144,8 @@ namespace PawBlock.Features.Gameplay
         }
 
         /// <summary>Thời gian tự tính trung bình (giây/khối lấy giữa min – max), cho Level Editor hiện khi timeLimit = 0.</summary>
-        public static int EstimateAutoSeconds(int blocks, int cellCount)
+        public static int EstimateAutoSeconds(int blocks, int cellCount, LivesEnergyConfig cfg)
         {
-            LivesEnergyConfig cfg = GameConfig.LivesEnergy;
             float perBlock = (cfg.secondsPerBlockMin + cfg.secondsPerBlockMax) * 0.5f;
             float seconds = cfg.baseSeconds + cfg.secondsPerCell * cellCount + perBlock * blocks;
             return Mathf.CeilToInt(Mathf.Max(cfg.minSeconds, seconds));

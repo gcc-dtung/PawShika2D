@@ -20,6 +20,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class PlacedBlockView : MonoBehaviour
     {
+        private GameplayVisuals _visuals;
+
+        /// <summary>GridManager (pool) gọi ngay sau khi tạo: sprite khối / mặt mèo.</summary>
+        public void Init(GameplayVisuals visuals)
+        {
+            _visuals = visuals;
+        }
+
         private const float BodyFill = 0.96f; // thân khối chiếm 96% ô, phần còn lại là khe hở
         private const float BlockZ = -0.05f;
 
@@ -208,7 +216,7 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Đổi sang 1 biểu cảm khác (mèo vừa đặt / mèo kề bên phản ứng).</summary>
         public void ReactFace()
         {
-            GameplayVisuals visuals = GameplayVisuals.Instance;
+            GameplayVisuals visuals = _visuals;
             if (visuals == null || face == null || !face.gameObject.activeSelf || _faceWidth <= 0f) return;
             CatFaceAnimation anim = visuals.GetRandomFace();
             for (int i = 0; i < 3 && anim == _faceAnim; i++) anim = visuals.GetRandomFace(); // tránh trùng mặt cũ
@@ -303,7 +311,7 @@ namespace PawBlock.Features.Gameplay
             float height = (rect.height - 1) * _cellSize + _cellSize * BodyFill;
             _bodySize = new Vector2(width, height);
 
-            GameplayVisuals visuals = GameplayVisuals.Instance;
+            GameplayVisuals visuals = _visuals;
             Vector3 clueWorld = geometry.CellToWorld(clueCell.Position);
             Vector3 faceWorld = geometry.CellToWorld(PickFaceCell(rect, clueCell.Position));
 

@@ -18,13 +18,15 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TimeStarBar : MonoBehaviour
     {
+        private LivesEnergyConfig _lives;
         private LevelStars _levelStars;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelTimer timer, LevelStars levelStars)
+        public void Init(LevelTimer timer, LevelStars levelStars, LivesEnergyConfig lives)
         {
             _timer = timer;
             _levelStars = levelStars;
+            _lives = lives;
         }
 
         [Tooltip("Vùng chạy của phần còn lại (bên trong viền nền), mốc sao đặt theo chiều rộng vùng này")]
@@ -81,7 +83,7 @@ namespace PawBlock.Features.Gameplay
         private void PlaceMarkers()
         {
             if (fillArea == null) return;
-            LivesEnergyConfig cfg = GameConfig.LivesEnergy;
+            LivesEnergyConfig cfg = _lives;
             float width = fillArea.rect.width;
             for (int i = 0; i < markers.Length; i++)
             {

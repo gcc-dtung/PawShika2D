@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -16,6 +17,7 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterManager : MonoBehaviour, IBoosterHost, IBoosterInventory, IBoosterCatalog
     {
+        private LivesEnergyConfig _lives;
         private LevelTimer _timer;
         private GridManager _grid;
         private ISaveService _save;
@@ -24,7 +26,7 @@ namespace PawBlock.Features.Gameplay
         private ICurrencyWallet _coins;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay" (booster đã mở), kho lượt, ví coin (mua lượt).</summary>
-        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins, GridManager grid, LevelTimer timer)
+        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins, GridManager grid, LevelTimer timer, LivesEnergyConfig lives)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
@@ -32,6 +34,7 @@ namespace PawBlock.Features.Gameplay
             _coins = coins;
             _grid = grid;
             _timer = timer;
+            _lives = lives;
         }
 
         /// <summary>Kho lượt booster (BoosterButton, Debug).</summary>
@@ -215,6 +218,8 @@ namespace PawBlock.Features.Gameplay
         }
 
         // ---------- IBoosterHost ----------
+
+        public float FreezeSeconds => _lives != null ? _lives.freezeSeconds : 0f;
 
         public void Consume(BoosterType type, Vector3? target = null)
         {

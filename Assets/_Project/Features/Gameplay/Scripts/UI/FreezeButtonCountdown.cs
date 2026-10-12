@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Foundation;
 using PawBlock.Game;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -14,11 +15,13 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class FreezeButtonCountdown : MonoBehaviour
     {
+        private LivesEnergyConfig _lives;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelTimer timer)
+        public void Init(LevelTimer timer, LivesEnergyConfig lives)
         {
             _timer = timer;
+            _lives = lives;
         }
 
         [SerializeField] private float discSize = 150f;
@@ -138,7 +141,7 @@ namespace PawBlock.Features.Gameplay
         private void Refresh()
         {
             if (_timer == null) return;
-            float total = Mathf.Max(0.01f, GameConfig.LivesEnergy.freezeSeconds);
+            float total = Mathf.Max(0.01f, _lives.freezeSeconds);
             float left = _timer.FreezeLeft;
             _fill.fillAmount = Mathf.Clamp01(left / total);
             int seconds = Mathf.CeilToInt(left);

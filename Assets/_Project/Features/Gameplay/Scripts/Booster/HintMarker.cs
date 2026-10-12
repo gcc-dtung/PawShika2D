@@ -16,12 +16,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class HintMarker : MonoBehaviour
     {
+        private GameplayVisuals _visuals;
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid)
+        public void Init(GridManager grid, GameplayVisuals visuals)
         {
             _grid = grid;
+            _visuals = visuals;
         }
 
         [SerializeField, Range(0f, 1f)] private float ghostAlphaMin = 0.25f;
@@ -148,7 +150,7 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Khung khung_reveal (9-slice) trên từng ô của vùng gợi ý; dùng lại SpriteRenderer giữa các lần gợi ý.</summary>
         private void ShowFrames(GridGeometry g)
         {
-            GameplayVisuals visuals = GameplayVisuals.Instance;
+            GameplayVisuals visuals = _visuals;
             Sprite sprite = visuals != null ? visuals.hintCellFrame : null;
             if (sprite == null) return;
             for (int x = _rect.xMin; x < _rect.xMax; x++)

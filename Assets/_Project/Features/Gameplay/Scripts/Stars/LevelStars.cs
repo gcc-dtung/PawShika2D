@@ -16,14 +16,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStars : MonoBehaviour
     {
+        private LivesEnergyConfig _lives;
         private LevelManager _levels;
         private ICurrencyWallet _stars;
 
         /// <summary>GameBootstrap gọi: ví sao (Economy, qua contract) – thắng thì cộng số sao của ván.</summary>
-        public void Init(ICurrencyWallet stars, LevelManager levels)
+        public void Init(ICurrencyWallet stars, LevelManager levels, LivesEnergyConfig lives)
         {
             _stars = stars;
             _levels = levels;
+            _lives = lives;
         }
 
         [SerializeField] private LevelTimer timer;
@@ -69,7 +71,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnTimeChanged(float remaining, float total)
         {
-            LivesEnergyConfig cfg = GameConfig.LivesEnergy;
+            LivesEnergyConfig cfg = _lives;
             if (!_tracker.Update(remaining, total, cfg.twoStarRatio, cfg.threeStarRatio)) return;
             EventBus<StarsChangedEvent>.Raise(new StarsChangedEvent(Stars, true));
         }

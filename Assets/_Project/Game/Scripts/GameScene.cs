@@ -17,5 +17,6 @@ namespace PawBlock.Game
         public LevelTimer Timer { get; set; }
         public EnergyManager Energy { get; set; }
         public DailyRewardManager DailyReward { get; set; }
+        public LivesEnergyConfig LivesEnergy { get; set; }
     }
 }

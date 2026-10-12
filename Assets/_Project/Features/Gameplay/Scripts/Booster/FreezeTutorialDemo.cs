@@ -3,6 +3,7 @@ using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 using PawBlock.Game;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -13,12 +14,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class FreezeTutorialDemo : MonoBehaviour
     {
+        private LivesEnergyConfig _lives;
         private LevelTimer _timer;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelTimer timer)
+        public void Init(LevelTimer timer, LivesEnergyConfig lives)
         {
             _timer = timer;
+            _lives = lives;
         }
 
         [SerializeField] private BoosterTutorialView view;
@@ -65,7 +68,7 @@ namespace PawBlock.Features.Gameplay
             _demoStart = null;
             LevelTimer timer = _timer;
             if (timer == null || !timer.IsFrozen || view == null) return; // không bật được: bỏ bước này
-            view.ShowMessage(string.Format(frozenMessage, Mathf.CeilToInt(GameConfig.LivesEnergy.freezeSeconds)));
+            view.ShowMessage(string.Format(frozenMessage, Mathf.CeilToInt(_lives.freezeSeconds)));
             _showingMessage = true;
             _demoEnd?.Kill();
             _demoEnd = DOVirtual.DelayedCall(messageTime, HideMessage).SetLink(gameObject);

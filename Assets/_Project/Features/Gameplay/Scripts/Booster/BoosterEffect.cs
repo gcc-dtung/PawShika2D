@@ -12,6 +12,9 @@ namespace PawBlock.Features.Gameplay
         GridManager Grid { get; }
         LevelTimer Timer { get; }
 
+        /// <summary>Số giây đóng băng (LivesEnergyConfig).</summary>
+        float FreezeSeconds { get; }
+
         /// <summary>
         /// Booster đã thực sự có tác dụng: trừ 1 lượt (hoặc dùng lượt miễn phí của tutorial), phát onBoosterUsed.
         /// <paramref name="target"/>: điểm world hiệu ứng nhắm tới (icon bay từ giữa màn hình tới đó); null = mặc định của booster.

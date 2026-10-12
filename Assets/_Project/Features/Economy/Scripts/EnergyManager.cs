@@ -4,6 +4,7 @@ using UnityEngine.Events;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 using PawBlock.Game;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Economy
 {
@@ -14,24 +15,26 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class EnergyManager : MonoBehaviour, IEnergyService
     {
+        private LivesEnergyConfig _lives;
         private ISaveService _save;
         private EnergySave _energy;
         private IClock _clock;
 
         /// <summary>GameBootstrap gọi trước Awake / Start: section "economy" (năng lượng).</summary>
-        public void Init(ISaveService save, IClock clock)
+        public void Init(ISaveService save, IClock clock, LivesEnergyConfig lives)
         {
             _save = save;
             _clock = clock;
             _energy = save.Get<EconomySave>(EconomySave.Key).energy;
             _model = null; // đọc lại theo save vừa nhận
+            _lives = lives;
         }
 
         [Header("Events")]
         public UnityEvent<int, int> onEnergyChanged = new UnityEvent<int, int>(); // (hiện tại, tối đa)
         public UnityEvent onTick = new UnityEvent();                              // mỗi giây, để UI cập nhật đồng hồ
 
-        private static LivesEnergyConfig Config => GameConfig.LivesEnergy;
+        private LivesEnergyConfig Config => _lives;
 
         private EnergyModel _model;
         private float _tickTimer;

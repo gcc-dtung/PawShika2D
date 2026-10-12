@@ -13,12 +13,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class GridManager : MonoBehaviour
     {
+        private GameplayVisuals _visuals;
         private LevelTimer _timer;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelTimer timer)
+        public void Init(LevelTimer timer, GameplayVisuals visuals)
         {
             _timer = timer;
+            _visuals = visuals;
         }
 
         [SerializeField] private GridSpawner gridSpawner;
@@ -85,7 +87,12 @@ namespace PawBlock.Features.Gameplay
             if (blockRoot == null) blockRoot = transform;
 
             _blockPool = new ObjectPool<PlacedBlockView>(
-                createFunc: () => Instantiate(blockPrefab, blockRoot),
+                createFunc: () =>
+                {
+                    PlacedBlockView b = Instantiate(blockPrefab, blockRoot);
+                    b.Init(_visuals); // pool truyền dependency ngay khi tạo (guide 8.3)
+                    return b;
+                },
                 actionOnGet: b => b.gameObject.SetActive(true),
                 actionOnRelease: b =>
                 {

@@ -8,7 +8,7 @@ using UnityEngine;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Dựng Resources/GameplayVisuals.asset từ asset PawBlock:
+    /// Dựng Configs/GameplayVisuals.asset từ asset PawBlock:
     /// - Đặt 9-slice cho sprite khối màu.
     /// - Cắt atlas Spine ingame_cat_face_03 thành các khung hình mặt mèo (không cần Spine runtime).
     /// - Gán sprite tai, ổ khóa, mũi tên, bong bóng, chữ khen.
@@ -24,7 +24,7 @@ namespace PawBlock.Features.Gameplay
         private const string Bubble = Root + "/03_Gameplay_Blocks_Grid/Grid_Cells/Circle.png";
         private const string HintFrame = Root + "/03_Gameplay_Blocks_Grid/Boosters_Obstacles/khung_reveal.png";
         private const int HintFrameBorder = 44;  // px, khung_reveal 169x169 bo góc
-        private const string OutputPath = "Assets/_Project/Resources/GameplayVisuals.asset";
+        private const string OutputPath = "Assets/_Project/Configs/GameplayVisuals.asset";
 
         private const int BlockBorder = 48;      // px, sprite khối 160x160
         private const float FacePixelsPerUnit = 100f;

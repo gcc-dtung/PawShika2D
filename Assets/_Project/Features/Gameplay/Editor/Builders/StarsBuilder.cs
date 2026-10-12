@@ -87,7 +87,7 @@ namespace PawBlock.Features.Gameplay
             fill.raycastTarget = false;
 
             // 3 mốc: sao 1 ở 0, sao 2 ở twoStarRatio, sao 3 ở threeStarRatio (TimeStarBar đặt x lúc chạy theo config)
-            LivesEnergyConfig cfg = GameConfig.LivesEnergy;
+            LivesEnergyConfig cfg = AssetDatabase.LoadAssetAtPath<LivesEnergyConfig>("Assets/_Project/Configs/LivesEnergyConfig.asset");
             RectTransform[] markers = new RectTransform[StarRating.Max];
             Image[] golds = new Image[StarRating.Max];
             for (int i = 0; i < markers.Length; i++)

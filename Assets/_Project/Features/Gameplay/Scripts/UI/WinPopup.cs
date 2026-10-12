@@ -7,6 +7,7 @@ using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -23,6 +24,7 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class WinPopup : PopupView
     {
+        private EconomyConfig _economy;
         private LevelStars _levelStars;
         private LevelManager _levels;
         private IScreenNavigator _screens;
@@ -30,13 +32,14 @@ namespace PawBlock.Features.Gameplay
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
-        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens, LevelManager levels, LevelStars levelStars)
+        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens, LevelManager levels, LevelStars levelStars, EconomyConfig economy)
         {
             _coins = coins;
             _ads = ads;
             _screens = screens;
             _levels = levels;
             _levelStars = levelStars;
+            _economy = economy;
         }
 
         [Header("Thành phần")]
@@ -192,7 +195,7 @@ namespace PawBlock.Features.Gameplay
                 rt.DOPunchScale(Vector3.one * starSlamPunch, 0.25f, 6, 0.6f).SetUpdate(true).SetLink(star.gameObject);
                 AudioManager.PlayPitched(SoundId.StarEarn, 1f + 0.12f * i);
                 AudioManager.Vibrate(HapticType.Light);
-                SetRewardText(_shownReward + GameConfig.Economy.coinsPerStar, true);
+                SetRewardText(_shownReward + _economy.coinsPerStar, true);
             });
         }
 
@@ -204,7 +207,7 @@ namespace PawBlock.Features.Gameplay
             get
             {
                 LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
-                return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal);
+                return _economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal);
             }
         }
 
@@ -215,7 +218,7 @@ namespace PawBlock.Features.Gameplay
             {
                 LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
                 int stars = _levelStars != null ? _levelStars.Stars : 0;
-                return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal, stars);
+                return _economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal, stars);
             }
         }
 

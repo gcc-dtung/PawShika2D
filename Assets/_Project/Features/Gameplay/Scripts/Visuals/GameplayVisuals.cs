@@ -5,7 +5,7 @@ using UnityEngine;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Gom các sprite dùng trong màn chơi. Đặt asset tại Resources/GameplayVisuals để mọi script lấy qua Instance.
+    /// Gom các sprite dùng trong màn chơi. Asset ở Configs/GameplayVisuals, GameBootstrap truyền vào component cần (Init).
     /// Mảng blockSprites / earSprites đánh index theo thứ tự enum ColorType.
     /// </summary>
     [CreateAssetMenu(fileName = "GameplayVisuals", menuName = "ScriptableObjects/GameplayVisuals")]
@@ -27,15 +27,6 @@ namespace PawBlock.Features.Gameplay
         [Tooltip("Khung xanh trên từng ô của vùng Hint đang gợi ý (khung_reveal, Cell/WaitSameHint gốc), 9-slice")]
         public Sprite hintCellFrame;
 
-        private static GameplayVisuals _instance;
-        public static GameplayVisuals Instance
-        {
-            get
-            {
-                if (_instance == null) _instance = Resources.Load<GameplayVisuals>("GameplayVisuals");
-                return _instance;
-            }
-        }
 
         public Sprite GetBlockSprite(ColorType color) => Pick(blockSprites, (int)color);
         public Sprite GetEarSprite(ColorType color) => Pick(earSprites, (int)color);

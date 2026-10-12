@@ -21,7 +21,7 @@ namespace PawBlock.Features.Gameplay
             Host.Consume(Type);
             Host.AfterEffect(Type, () =>
             {
-                if (Host.Timer != null) Host.Timer.Freeze(GameConfig.LivesEnergy.freezeSeconds);
+                if (Host.Timer != null) Host.Timer.Freeze(Host.FreezeSeconds);
             });
         }
     }

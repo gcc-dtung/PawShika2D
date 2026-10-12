@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using PawBlock.Core.Foundation;
 using PawBlock.Game;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -218,7 +219,7 @@ namespace PawBlock.Features.Gameplay
                 Record("Difficulty");
                 _level.difficulty = diff;
             }
-            int auto = LevelTimer.EstimateAutoSeconds(ClueCount(), _level.size * _level.Height - VoidSet().Count);
+            int auto = LevelTimer.EstimateAutoSeconds(ClueCount(), _level.size * _level.Height - VoidSet().Count, AssetDatabase.LoadAssetAtPath<LivesEnergyConfig>("Assets/_Project/Configs/LivesEnergyConfig.asset"));
             EditorGUILayout.LabelField(new GUIContent("Thời gian (s)",
                 $"Số giây của level. 0 = tự tính: 8 s + 0.25 s/ô + 5.5–6.5 s/khối, tối thiểu 45 s (hiện khoảng {auto} s)"), GUILayout.Width(80));
             int limit = EditorGUILayout.IntField(_level.rules.timeLimit, GUILayout.Width(40));

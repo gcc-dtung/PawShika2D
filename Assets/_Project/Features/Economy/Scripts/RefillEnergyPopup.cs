@@ -7,6 +7,7 @@ using PawBlock.Core.Foundation;
 using PawBlock.Features.Gameplay;
 using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Economy
 {
@@ -20,18 +21,20 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class RefillEnergyPopup : PopupView
     {
+        private EconomyConfig _economy;
         private EnergyManager _energy;
         private IGamePause _pause;
         private CoinWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (nạp bằng coin), quảng cáo có thưởng.</summary>
-        public void Init(CoinWallet coins, IAdsService ads, IGamePause pause, EnergyManager energy)
+        public void Init(CoinWallet coins, IAdsService ads, IGamePause pause, EnergyManager energy, EconomyConfig economy)
         {
             _coins = coins;
             _ads = ads;
             _pause = pause;
             _energy = energy;
+            _economy = economy;
         }
 
         [SerializeField] private TMP_Text countText;
@@ -86,7 +89,7 @@ namespace PawBlock.Features.Economy
             EventBus<GameStateChangedEvent>.Subscribe(OnGameState);
 
             if (closeButton != null) closeButton.gameObject.SetActive(!_required || _onCancel != null);
-            if (coinCostText != null) coinCostText.SetText("{0}", GameConfig.Economy.refillCoinCost);
+            if (coinCostText != null) coinCostText.SetText("{0}", _economy.refillCoinCost);
 
             EnergyManager em = _energy;
             if (em != null)
@@ -147,7 +150,7 @@ namespace PawBlock.Features.Economy
             _ads.Show("refill_energy", ok =>
             {
                 _waitingAd = false;
-                if (ok && _energy != null) _energy.Add(GameConfig.Economy.refillAdsEnergy);
+                if (ok && _energy != null) _energy.Add(_economy.refillAdsEnergy);
                 Refresh();
             });
         }
@@ -156,9 +159,9 @@ namespace PawBlock.Features.Economy
         {
             EnergyManager em = _energy;
             if (em == null || em.IsFull) return;
-            if (!_coins.TrySpend(GameConfig.Economy.refillCoinCost))
+            if (!_coins.TrySpend(_economy.refillCoinCost))
             {
-                Debug.Log($"[RefillEnergyPopup] Không đủ coin: {_coins.Balance}/{GameConfig.Economy.refillCoinCost} -> Shop");
+                Debug.Log($"[RefillEnergyPopup] Không đủ coin: {_coins.Balance}/{_economy.refillCoinCost} -> Shop");
                 GoShop();
                 return;
             }

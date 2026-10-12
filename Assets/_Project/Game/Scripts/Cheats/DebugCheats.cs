@@ -202,7 +202,7 @@ namespace PawBlock.Game
         /// <summary>Bật đóng băng như booster (không tốn lượt).</summary>
         public static void Freeze()
         {
-            if (Timer != null) Timer.Freeze(GameConfig.LivesEnergy.freezeSeconds);
+            if (Timer != null) Timer.Freeze(_scene.LivesEnergy != null ? _scene.LivesEnergy.freezeSeconds : 0f);
         }
 
         /// <summary>Năng lượng (tim ở Main Menu).</summary>

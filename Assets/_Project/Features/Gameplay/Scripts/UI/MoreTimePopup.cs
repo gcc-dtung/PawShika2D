@@ -15,16 +15,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class MoreTimePopup : PopupView
     {
+        private EconomyConfig _economy;
         private LevelManager _levels;
         private ICurrencyWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
-        public void Init(ICurrencyWallet coins, IAdsService ads, LevelManager levels)
+        public void Init(ICurrencyWallet coins, IAdsService ads, LevelManager levels, EconomyConfig economy)
         {
             _coins = coins;
             _ads = ads;
             _levels = levels;
+            _economy = economy;
         }
 
         [SerializeField] private Button adsButton;
@@ -45,7 +47,7 @@ namespace PawBlock.Features.Gameplay
 
         protected override void OnOpen()
         {
-            EconomyConfig eco = GameConfig.Economy;
+            EconomyConfig eco = _economy;
             if (coinCostText != null) coinCostText.SetText(eco.moreTimeCoinCost.ToString());
             if (adsLabel != null) adsLabel.SetText("+{0}s", eco.moreTimeAdsSeconds);
             if (coinLabel != null) coinLabel.SetText("+{0}s", eco.moreTimeCoinSeconds);
@@ -63,20 +65,20 @@ namespace PawBlock.Features.Gameplay
             SetButtons(false);
             _ads.Show("more_time", ok =>
             {
-                if (ok) Revive(GameConfig.Economy.moreTimeAdsSeconds);
+                if (ok) Revive(_economy.moreTimeAdsSeconds);
                 else Refresh();
             });
         }
 
         private void OnCoin()
         {
-            if (!_coins.TrySpend(GameConfig.Economy.moreTimeCoinCost))
+            if (!_coins.TrySpend(_economy.moreTimeCoinCost))
             {
-                Debug.Log($"[MoreTimePopup] Không đủ coin: {_coins.Balance}/{GameConfig.Economy.moreTimeCoinCost}");
+                Debug.Log($"[MoreTimePopup] Không đủ coin: {_coins.Balance}/{_economy.moreTimeCoinCost}");
                 Refresh();
                 return;
             }
-            Revive(GameConfig.Economy.moreTimeCoinSeconds);
+            Revive(_economy.moreTimeCoinSeconds);
         }
 
         private void OnClose()
@@ -94,7 +96,7 @@ namespace PawBlock.Features.Gameplay
         private void SetButtons(bool interactable)
         {
             if (adsButton != null) adsButton.interactable = interactable;
-            if (coinButton != null) coinButton.interactable = interactable && _coins.Balance >= GameConfig.Economy.moreTimeCoinCost;
+            if (coinButton != null) coinButton.interactable = interactable && _coins.Balance >= _economy.moreTimeCoinCost;
             if (closeButton != null) closeButton.interactable = interactable;
         }
     }

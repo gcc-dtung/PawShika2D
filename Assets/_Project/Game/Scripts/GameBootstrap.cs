@@ -23,6 +23,10 @@ namespace PawBlock.Game
     [DefaultExecutionOrder(-1000)]
     public class GameBootstrap : MonoBehaviour
     {
+        [Header("Config (asset)")]
+        [SerializeField] private GameConfig config;
+        [SerializeField] private GameplayVisuals visuals;
+
         [Header("Gameplay")]
         [SerializeField] private LevelManager levelManager;
         [SerializeField] private GridManager gridManager;
@@ -98,7 +102,10 @@ namespace PawBlock.Game
             AudioManager.InitSettings(save);
             var clock = new TrustedClockService(save);
             clock.RequestSync(true);
-            IAdsService ads = new FakeAdsService(GameConfig.Economy.adsSimulatedDuration); // chưa có SDK quảng cáo
+            EconomyConfig economy = ConfigOrDefault(config != null ? config.economy : null);
+            LivesEnergyConfig lives = ConfigOrDefault(config != null ? config.livesEnergy : null);
+            if (visuals == null) Debug.LogError("[GameBootstrap] Thiếu GameplayVisuals (Configs/GameplayVisuals)", this);
+            IAdsService ads = new FakeAdsService(economy.adsSimulatedDuration); // chưa có SDK quảng cáo
             IIAPService iap = new FakeIAPService(); // chưa có SDK thanh toán
 
             // Dữ liệu người chơi do feature sở hữu
@@ -108,8 +115,8 @@ namespace PawBlock.Game
             IScreenNavigator screens = Require(screenFlow);
 
             // Manager có dữ liệu riêng / lộ contract cho feature khác
-            Require(energyManager)?.Init(save, clock);
-            Require(boosterManager)?.Init(save, s.Boosters, s.Coins, gridManager, levelTimer);
+            Require(energyManager)?.Init(save, clock, lives);
+            Require(boosterManager)?.Init(save, s.Boosters, s.Coins, gridManager, levelTimer, lives);
             s.Shop = new ShopService(save, s.Coins, boosterManager, energyManager, iap);
 
             // Gameplay
@@ -118,38 +125,38 @@ namespace PawBlock.Game
             Require(levelStatsRecorder)?.Init(save, screens, levelManager, gridManager, boosterManager, levelStars);
             Require(mechanicIntro)?.Init(save);
             Require(tutorialController)?.Init(save, levelManager, gridManager);
-            Require(levelStars)?.Init(s.Stars, levelManager);
+            Require(levelStars)?.Init(s.Stars, levelManager, lives);
             Require(buyBoosterPopup)?.Init(s.Coins, levelManager, boosterManager);
-            Require(moreTimePopup)?.Init(s.Coins, ads, levelManager);
-            Require(winPopup)?.Init(s.Coins, ads, screens, levelManager, levelStars);
+            Require(moreTimePopup)?.Init(s.Coins, ads, levelManager, economy);
+            Require(winPopup)?.Init(s.Coins, ads, screens, levelManager, levelStars, economy);
             Require(losePopup)?.Init(screens, levelManager);
             Require(quitLevelPopup)?.Init(screens, levelManager, gridManager, energyManager);
-            Require(levelTimer)?.Init(screens, levelManager, gridManager);
+            Require(levelTimer)?.Init(screens, levelManager, gridManager, lives);
             Require(gridSpawner)?.Init(levelManager);
             Require(levelHud)?.Init(levelManager);
             Require(levelIntroSequencer)?.Init(levelManager, gridManager, tutorialController);
             Require(lowTimeVignette)?.Init(levelManager, levelTimer);
             Require(mechanicIntroPopup)?.Init(levelManager);
             Require(dragAndDrop)?.Init(gridManager, boosterManager);
-            Require(hintMarker)?.Init(gridManager);
+            Require(hintMarker)?.Init(gridManager, visuals);
             Require(tutorialHand)?.Init(gridManager);
             Require(blockFeedback)?.Init(gridManager, levelTimer);
             Require(dragFeedback)?.Init(gridManager);
-            Require(gameplayFeedback)?.Init(gridManager);
+            Require(gameplayFeedback)?.Init(gridManager, visuals);
             Require(gameHapticEvents)?.Init(gridManager, boosterManager, levelTimer);
             Require(boosterUseFx)?.Init(boosterManager);
             Require(freezeOverlayFx)?.Init(boosterManager, levelTimer);
             Require(revealBanner)?.Init(boosterManager);
-            Require(gridManager)?.Init(levelTimer);
-            Require(freezeTutorialDemo)?.Init(levelTimer);
-            Require(freezeButtonCountdown)?.Init(levelTimer);
+            Require(gridManager)?.Init(levelTimer, visuals);
+            Require(freezeTutorialDemo)?.Init(levelTimer, lives);
+            Require(freezeButtonCountdown)?.Init(levelTimer, lives);
             Require(freezeIndicator)?.Init(levelTimer);
-            Require(timeStarBar)?.Init(levelTimer, levelStars);
+            Require(timeStarBar)?.Init(levelTimer, levelStars, lives);
             Require(timerUI)?.Init(levelTimer);
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters, boosterManager, levelTimer);
 
             // Economy
-            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager);
+            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager, economy);
             foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
             foreach (EnergyHUD hud in energyHuds) Require(hud)?.Init(energyManager);
 
@@ -174,12 +181,23 @@ namespace PawBlock.Game
             Require(screenFlow)?.Init(levelManager, gridManager, tutorialController);
             Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer);
             Require(playButton)?.Init(screenFlow, levelManager);
-            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager, DailyReward = dailyRewardManager });
+            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager, DailyReward = dailyRewardManager, LivesEnergy = lives });
         }
 
         private void OnDestroy()
         {
             (Services?.Ads as IDisposable)?.Dispose(); // hủy quảng cáo giả lập đang chờ
+        }
+
+        /// <summary>Config con thiếu (GameConfig chưa gán) thì dùng giá trị mặc định trong code để game vẫn chạy.</summary>
+        private T ConfigOrDefault<T>(T value) where T : ScriptableObject
+        {
+            if (value != null)
+            {
+                return value;
+            }
+            Debug.LogError($"[GameBootstrap] Thiếu {typeof(T).Name} trong GameConfig (Tools/PawBlock/Builders/Setup Game Config): dùng mặc định", this);
+            return ScriptableObject.CreateInstance<T>();
         }
 
         /// <summary>Thiếu thì báo lỗi và trả về null thật (object Unity đã hủy là "null giả", ?. không chặn được).</summary>

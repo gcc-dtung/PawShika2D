@@ -14,14 +14,14 @@ namespace PawBlock.Game
     ///   Assets/_Project/Configs (giữ GUID nên scene / prefab vẫn trỏ đúng), rồi chép 1 bản lại chỗ cũ làm bản gốc lưu trữ.
     ///   Từ đây game và các builder dùng bản trong Configs.
     /// - Tạo EconomyConfig, LivesEnergyConfig trong Configs (nếu chưa có).
-    /// - Tạo Resources/GameConfig trỏ tới tất cả.
+    /// - Tạo Configs/GameConfig trỏ tới tất cả (GameBootstrap giữ tham chiếu).
     /// </summary>
     public static class GameConfigSetup
     {
         public const string Folder = "Assets/_Project/Configs/";
         private const string OldFolder = "Assets/_Project/GameAssets/10_Data_Configs/";
-        private const string GameConfigPath = "Assets/_Project/Resources/GameConfig.asset";
-        private const string VisualsPath = "Assets/_Project/Resources/GameplayVisuals.asset";
+        private const string GameConfigPath = "Assets/_Project/Configs/GameConfig.asset";
+        private const string VisualsPath = "Assets/_Project/Configs/GameplayVisuals.asset";
 
         private static readonly string[] Databases =
         {

@@ -17,12 +17,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class GameplayFeedback : MonoBehaviour
     {
+        private GameplayVisuals _visuals;
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid)
+        public void Init(GridManager grid, GameplayVisuals visuals)
         {
             _grid = grid;
+            _visuals = visuals;
         }
 
         [Header("Prefab")]
@@ -145,7 +147,7 @@ namespace PawBlock.Features.Gameplay
 
         private Sprite PickPraise(int tier)
         {
-            GameplayVisuals visuals = GameplayVisuals.Instance;
+            GameplayVisuals visuals = _visuals;
             if (visuals == null) return null;
             string[] names = tier >= 0 && tier < PraiseTiers.Length ? PraiseTiers[tier] : null;
             if (names == null || visuals.praiseSprites == null) return visuals.GetRandomPraise();

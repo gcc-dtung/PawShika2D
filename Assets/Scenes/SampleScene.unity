@@ -57478,6 +57478,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b0a02622aeef4d46a8b644f8ce85c22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: e50631488ebb91147b4a526138ef6be3, type: 2}
+  visuals: {fileID: 11400000, guid: e6eb500127d857249bbcc3c15e4cb0c9, type: 2}
   levelManager: {fileID: 82617382}
   gridManager: {fileID: 82617377}
   dragAndDrop: {fileID: 82617379}
