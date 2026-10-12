@@ -4,8 +4,6 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
-using PawBlock.Game;
 
 namespace PawBlock.Features.Gameplay
 {

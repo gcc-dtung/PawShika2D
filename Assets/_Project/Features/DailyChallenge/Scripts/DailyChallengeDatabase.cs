@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using PawBlock.Features.Gameplay;
 using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyChallenge
@@ -18,7 +17,7 @@ namespace PawBlock.Features.DailyChallenge
 
     /// <summary>
     /// Cấu hình Daily Challenge: mở từ level nào, quà 3 mốc (nhập từ 10_Data_Configs/DailyChallengeData.txt của bản gốc
-    /// bằng Tools/PawBlock/Builders/Build Daily Challenge), thông số sinh level mỗi ngày.
+    /// bằng Tools/PawBlock/Builders/Build Daily Challenge). Thông số sinh level mỗi ngày ở DailyLevelLoader (Gameplay).
     /// </summary>
     [CreateAssetMenu(menuName = "PawBlock/Daily Challenge Database", fileName = "DailyChallengeDatabase")]
     public class DailyChallengeDatabase : ScriptableObject
@@ -27,8 +26,6 @@ namespace PawBlock.Features.DailyChallenge
         [Min(1)] public int unlockLevel = 21;
         [Tooltip("Ngày đã lỡ chơi bù được bằng quảng cáo (nút Play vàng)")]
         public bool replayMissedWithAd = true;
-        [Tooltip("Thông số sinh level mỗi ngày (seed = ngày); gốc: lưới 10 x 10")]
-        public LevelGeneratorSettings generator = LevelGeneratorSettings.Preset(LevelGeneratorPreset.Daily);
         public List<DailyChallengeGift> gifts = new List<DailyChallengeGift>();
 
         public DailyChallengeGift GetGift(int milestone) => gifts.Find(g => g.milestone == milestone);

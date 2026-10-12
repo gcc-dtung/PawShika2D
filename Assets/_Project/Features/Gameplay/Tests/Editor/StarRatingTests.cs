@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay.Tests
 {

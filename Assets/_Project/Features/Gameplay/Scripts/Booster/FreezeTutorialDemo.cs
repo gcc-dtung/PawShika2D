@@ -2,8 +2,6 @@ using DG.Tweening;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Game;
-using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {

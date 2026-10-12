@@ -3,10 +3,10 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.Gameplay;
 
-namespace PawBlock.Features.Gameplay
+namespace PawBlock.Game
 {
     /// <summary>
     /// Tools → PawBlock → Builders → Build Tutorial (chạy lại được, dựng lại từ đầu):

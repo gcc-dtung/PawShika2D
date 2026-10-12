@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.DailyChallenge;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -89,6 +88,6 @@ namespace PawBlock.Features.Gameplay
 
         /// <summary>Nhãn level Daily: tháng (3 chữ) + ngày, vd "OCT 11".</summary>
         public static string DailyLabel(long day) =>
-            DailyChallengeModel.DateOf(day).ToString("MMM d", System.Globalization.CultureInfo.InvariantCulture).ToUpperInvariant();
+            DayNumber.ToDate(day).ToString("MMM d", System.Globalization.CultureInfo.InvariantCulture).ToUpperInvariant();
     }
 }

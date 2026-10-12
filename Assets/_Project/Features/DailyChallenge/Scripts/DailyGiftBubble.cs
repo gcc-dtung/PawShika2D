@@ -4,10 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using PawBlock.Features.DailyReward;
-using PawBlock.Features.Gameplay;
 using PawBlock.Core.Contracts;
-using PawBlock.Core.Foundation;
+using PawBlock.Shared;
 
 namespace PawBlock.Features.DailyChallenge
 {
@@ -87,14 +85,10 @@ namespace PawBlock.Features.DailyChallenge
                 GiftItemView item = _items[n];
                 item.gameObject.SetActive(true);
                 if (item.Icon != null) item.Icon.sprite = icons != null ? icons.IconOf(items[n]) : null;
-                if (item.Amount != null) item.Amount.SetText(AmountOf(items[n]));
+                if (item.Amount != null) item.Amount.SetText(RewardText.Amount(items[n]));
             }
         }
 
-
-        /// <summary>"15m" cho năng lượng vô hạn (phút), "x2" cho booster / coin.</summary>
-        public static string AmountOf(DailyRewardItem item) =>
-            item.kind == DailyRewardKind.InfiniteEnergy ? $"{item.amount}m" : $"x{item.amount}";
 
 #if UNITY_EDITOR
         // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)

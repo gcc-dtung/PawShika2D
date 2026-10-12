@@ -58,7 +58,6 @@ namespace PawBlock.Game
             SettingsPopup settings = BuildSettings(root);
             QuitLevelPopup quit = BuildQuitLevel(root);
             NoticePopup notice = BuildNotice(root);
-            Assign(settings, "quitPopup", quit);
             BuyBoosterPopup buy = BuildBuyBooster(root);
             RefillEnergyPopup refill = BuildRefillEnergy(root);
             DailyRewardPopup daily = DailyRewardBuilder.BuildPopup(root);
@@ -74,11 +73,8 @@ namespace PawBlock.Game
             Assign(flow, "dailyRewardPopup", daily);
 
             EnergyHUD energyHud = Object.FindFirstObjectByType<EnergyHUD>(FindObjectsInactive.Include);
-            if (energyHud != null) Assign(energyHud, "gameFlow", flow);
 
-            foreach (SettingsButton b in Object.FindObjectsByType<SettingsButton>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Assign(b, "gameFlow", flow);
 
-            foreach (EnergyHUD e in Object.FindObjectsByType<EnergyHUD>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Assign(e, "gameFlow", flow);
             ScreenFlow screenFlow = Object.FindFirstObjectByType<ScreenFlow>(FindObjectsInactive.Include);
             if (screenFlow != null) Assign(screenFlow, "gameFlow", flow);
 

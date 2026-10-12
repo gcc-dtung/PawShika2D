@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Game;
 using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Economy
@@ -15,26 +14,26 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class EnergyManager : MonoBehaviour, IEnergyService
     {
-        private LivesEnergyConfig _lives;
+        private int _maxEnergy = 5;
+        private int _refillSeconds = 1800;
         private ISaveService _save;
         private EnergySave _energy;
         private IClock _clock;
 
         /// <summary>GameBootstrap gọi trước Awake / Start: section "economy" (năng lượng).</summary>
-        public void Init(ISaveService save, IClock clock, LivesEnergyConfig lives)
+        public void Init(ISaveService save, IClock clock, int maxEnergy, int refillSeconds)
         {
             _save = save;
             _clock = clock;
             _energy = save.Get<EconomySave>(EconomySave.Key).energy;
             _model = null; // đọc lại theo save vừa nhận
-            _lives = lives;
+            _maxEnergy = maxEnergy;
+            _refillSeconds = refillSeconds;
         }
 
         [Header("Events")]
         public UnityEvent<int, int> onEnergyChanged = new UnityEvent<int, int>(); // (hiện tại, tối đa)
         public UnityEvent onTick = new UnityEvent();                              // mỗi giây, để UI cập nhật đồng hồ
-
-        private LivesEnergyConfig Config => _lives;
 
         private EnergyModel _model;
         private float _tickTimer;
@@ -132,8 +131,8 @@ namespace PawBlock.Features.Economy
         {
             EnergySave save = _energy ?? new EnergySave(); // chưa Init (lỗi nối): dùng tạm mặc định, không ghi
             _model = new EnergyModel(
-                Config.maxEnergy, Config.refillSeconds,
-                save.energy < 0 ? Config.maxEnergy : save.energy, // -1: lần đầu chơi, đầy
+                _maxEnergy, _refillSeconds,
+                save.energy < 0 ? _maxEnergy : save.energy, // -1: lần đầu chơi, đầy
                 save.refillStart,
                 save.infiniteUntil);
             _model.Refresh(Now);
@@ -167,7 +166,7 @@ namespace PawBlock.Features.Economy
         public void DebugFull() { Model.DebugSet(Max, Now); SaveAndNotify(); }
 
         [ContextMenu("Debug/Skip 1 refill")]
-        public void DebugSkip() { Model.DebugSkip(Config.refillSeconds); RefreshNow(); onTick?.Invoke(); }
+        public void DebugSkip() { Model.DebugSkip(_refillSeconds); RefreshNow(); onTick?.Invoke(); }
 
         [ContextMenu("Debug/Infinite 5 min")]
         public void DebugInfinite() => AddInfinite(300);

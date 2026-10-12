@@ -2,20 +2,19 @@ using System;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Gameplay;
 
 namespace PawBlock.Features.DailyChallenge
 {
     /// <summary>
     /// Daily Challenge (tab thứ 3 của Menu, như DailyChallengeUI bản gốc): giữ DailyChallengeModel (SaveData.challenge),
-    /// sinh level mỗi ngày bằng LevelGenerator (seed = ngày, cùng ngày mọi máy cùng level), nạp vào LevelManager.LoadDaily,
+    /// level mỗi ngày do Gameplay sinh và nạp (IDailyLevelLoader: seed = ngày, cùng ngày mọi máy cùng level),
     /// thắng thì đánh dấu ngày, trao quà mốc 7 / 14 / 21 ngày trong tháng.
     /// Ngày lấy theo IClock (giờ server nếu có mạng, chặn chỉnh giờ máy).
     /// Mở khóa khi tới DailyChallengeDatabase.unlockLevel; ngày mở khóa là ngày bắt đầu (ngày trước đó không tính lỡ).
     /// </summary>
     public class DailyChallengeManager : MonoBehaviour
     {
-        private LevelManager _levels;
+        private IDailyLevelLoader _levelLoader;
         private ISaveService _save;
         private DailyChallengeSave _data;
         private IRewardGranter _rewards;
@@ -26,7 +25,7 @@ namespace PawBlock.Features.DailyChallenge
         /// GameBootstrap gọi trước Start: section "dailyChallenge", nơi trao quà mốc (DailyReward, qua contract),
         /// <paramref name="reachedLevel"/> = số level thường đang tới (bắt đầu từ 1; đã qua hết = int.MaxValue) để mở khóa tab.
         /// </summary>
-        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel, IClock clock, LevelManager levels)
+        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel, IClock clock, IDailyLevelLoader levelLoader)
         {
             _clock = clock;
             _save = save;
@@ -34,7 +33,7 @@ namespace PawBlock.Features.DailyChallenge
             _rewards = rewards;
             _reachedLevel = reachedLevel;
             _model = null;
-            _levels = levels;
+            _levelLoader = levelLoader;
         }
 
         private DateTime LocalNow => _clock != null ? _clock.LocalNow : DateTime.Now;
@@ -48,7 +47,6 @@ namespace PawBlock.Features.DailyChallenge
         public event Action Changed;
 
         private DailyChallengeModel _model;
-        private LevelDefinition _level; // level Daily đang nạp (tạo trong bộ nhớ)
         private long _today = -1;
         private float _checkTimer;
 
@@ -150,31 +148,10 @@ namespace PawBlock.Features.DailyChallenge
             return s == DailyDayState.Today || s == DailyDayState.Missed;
         }
 
-        /// <summary>Sinh level của ngày <paramref name="day"/> rồi nạp vào LevelManager (gọi sau khi đã vào màn chơi).</summary>
+        /// <summary>Sinh level của ngày <paramref name="day"/> rồi nạp vào màn chơi (gọi sau khi đã vào màn chơi).</summary>
         public void Load(long day)
         {
-            LevelManager lm = _levels;
-            if (lm == null || database == null) return;
-            LevelDefinition level = CreateLevel(day);
-            if (level == null)
-            {
-                Debug.LogError($"[DailyChallenge] Không sinh được level ngày {DailyChallengeModel.DateOf(day):yyyy-MM-dd}.");
-                return;
-            }
-            LevelDefinition old = _level;
-            _level = level;
-            lm.LoadDaily(level, day);
-            if (old != null && old != level) Destroy(old);
-        }
-
-        /// <summary>Level của 1 ngày: cùng ngày luôn ra cùng level (seed = yyyyMMdd).</summary>
-        public LevelDefinition CreateLevel(long day)
-        {
-            if (database == null) return null;
-            int seed = LevelGenerator.SeedForDate(DailyChallengeModel.DateOf(day));
-            LevelDefinition level = LevelGenerator.Generate(database.generator, seed).level;
-            if (level != null) level.name = level.id = $"Daily_{DailyChallengeModel.DateOf(day):yyyyMMdd}";
-            return level;
+            _levelLoader?.LoadDaily(day);
         }
 
         private void OnLevelCompleted(LevelCompletedEvent e)

@@ -4,10 +4,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.Gameplay;
 
-namespace PawBlock.Features.Gameplay
+namespace PawBlock.Game
 {
     /// <summary>
     /// Dựng phần HUD của booster (Giai đoạn 4) trong scene đang mở:

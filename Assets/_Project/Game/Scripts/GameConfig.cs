@@ -1,7 +1,6 @@
 using UnityEngine;
 using PawBlock.Core.Foundation;
 using PawBlock.Features.DailyReward;
-using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
 using PawBlock.Features.Shop;
 

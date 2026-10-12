@@ -1,12 +1,10 @@
 using UnityEngine;
-using PawBlock.Features.Gameplay;
-
-namespace PawBlock.Features.Economy
+namespace PawBlock.Features.Gameplay
 {
     /// <summary>
     /// Số liệu kinh tế: coin thưởng thắng, giá / số giây thêm giờ và nạp năng lượng, quảng cáo.
     /// Giá booster ở BoosterDatabase, gói Shop ở ShopDatabase, quà điểm danh ở DailyRewardDatabase.
-    /// Lấy qua GameConfig.Economy.
+    /// Lấy qua GameConfig.economy; phần nạp năng lượng (Economy) GameBootstrap truyền dạng số cho RefillEnergyPopup.
     /// </summary>
     [CreateAssetMenu(menuName = "PawBlock/Config/Economy Config", fileName = "EconomyConfig")]
     public class EconomyConfig : ScriptableObject

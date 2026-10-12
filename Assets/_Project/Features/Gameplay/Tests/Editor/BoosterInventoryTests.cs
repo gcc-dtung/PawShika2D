@@ -4,7 +4,6 @@ using UnityEditor;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay.Tests
 {
@@ -33,7 +32,7 @@ namespace PawBlock.Features.Gameplay.Tests
             // EditMode: AddComponent không chạy Awake nên không đăng ký Singleton
             _go = new GameObject("BoosterManager (test)");
             BoosterManager manager = _go.AddComponent<BoosterManager>();
-            manager.Init(_save, new BoosterInventory(_save), new Economy.CoinWallet(_save), null, null, null, null);
+            manager.Init(_save, new BoosterInventory(_save), null, null, null, null, null); // không mua bằng coin: không cần ví
             var so = new SerializedObject(manager);
             so.FindProperty("database").objectReferenceValue = _db;
             so.ApplyModifiedPropertiesWithoutUndo();

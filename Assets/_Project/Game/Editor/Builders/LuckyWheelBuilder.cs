@@ -5,13 +5,12 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
-using PawBlock.Features.DailyChallenge;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.LuckyWheel;
 
-namespace PawBlock.Features.LuckyWheel
+namespace PawBlock.Game
 {
     /// <summary>
     /// Vòng quay may mắn (Tools → PawBlock → Builders → Build Lucky Wheel, chạy lại được):
@@ -191,7 +190,6 @@ namespace PawBlock.Features.LuckyWheel
 
             SerializedObject so = new SerializedObject(popup);
             so.FindProperty("database").objectReferenceValue = db;
-            so.FindProperty("rewardIcons").objectReferenceValue = rewards;
             so.FindProperty("wheel").objectReferenceValue = wheel;
             so.FindProperty("pointer").objectReferenceValue = prt;
             SerializedProperty sp = so.FindProperty("segmentImages");
@@ -228,7 +226,7 @@ namespace PawBlock.Features.LuckyWheel
             Image icon = PopupBuilder.Icon(rt, "Icon", null, 100f);
             icon.sprite = IconOf(item, rewards);
             icon.rectTransform.anchoredPosition = new Vector2(0f, 26f);
-            TMP_Text amount = PopupBuilder.GameText(rt, "Amount", DailyGiftBubble.AmountOf(item), new Vector2(0f, -50f), new Vector2(150f, 56f), 44f, Color.white);
+            TMP_Text amount = PopupBuilder.GameText(rt, "Amount", RewardText.Amount(item), new Vector2(0f, -50f), new Vector2(150f, 56f), 44f, Color.white);
             amount.fontSharedMaterial = GameFontSetup.OutlinePurple();
             PopupBuilder.Fit(amount);
         }

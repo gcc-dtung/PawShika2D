@@ -1,8 +1,11 @@
 using UnityEngine;
 
-namespace PawBlock.Features.Economy
+namespace PawBlock.Features.Gameplay
 {
-    /// <summary>Đồng hồ trong màn (LevelTimer) và năng lượng ngoài màn (EnergyManager). Lấy qua GameConfig.LivesEnergy.</summary>
+    /// <summary>
+    /// Đồng hồ trong màn (LevelTimer), sao, Freeze và năng lượng ngoài màn. Lấy qua GameConfig.livesEnergy;
+    /// năng lượng (Economy) không biết class này: GameBootstrap truyền maxEnergy / refillSeconds cho EnergyManager.
+    /// </summary>
     [CreateAssetMenu(menuName = "PawBlock/Config/Lives Energy Config", fileName = "LivesEnergyConfig")]
     public class LivesEnergyConfig : ScriptableObject
     {

@@ -2,7 +2,6 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Features.Gameplay;
 using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyReward

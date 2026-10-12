@@ -1,20 +1,23 @@
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using PawBlock.Core.Foundation;
+using PawBlock.Core.Contracts;
 
-namespace PawBlock.Game
+namespace PawBlock.Shared
 {
     /// <summary>
     /// Nút phụ trên Home (Starter, No Ads, Daily): định kỳ icon nhấc lên, to ra một chút, lắc nghiêng vài nhịp rồi hạ xuống để mời bấm
-    /// (như bản gốc; khung tròn / ruy băng / chữ đứng yên). Bấm -> chuyển sang tab chỉ định (mặc định Shop; tab &lt; 0 = không chuyển).
+    /// (như bản gốc; khung tròn / ruy băng / chữ đứng yên). opensShop: bấm -> sang tab Shop (ShopOpenRequestedEvent);
+    /// tắt thì nút chỉ là khung lắc, script khác trên cùng nút lo việc bấm (Daily, Lucky).
     /// SetAttention(false): thôi lắc, ẩn chấm đỏ báo (badge, tùy chọn) – vd Daily đã nhận quà hôm nay.
     /// Icon xoay quanh pivot của nó (đặt ở đáy icon để lắc như đặt trên mặt phẳng).
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class MenuShortcutButton : MonoBehaviour
     {
-        [SerializeField] private MainMenuNavigator navigator;
-        [SerializeField] private int tab = 0;
+        [Tooltip("Bấm thì mở tab Shop (Starter, No Ads)")]
+        [SerializeField] private bool opensShop;
         [SerializeField] private RectTransform icon;
         [SerializeField] private GameObject badge;
 
@@ -125,7 +128,7 @@ namespace PawBlock.Game
 
         private void OnClick()
         {
-            if (navigator != null && tab >= 0) navigator.Select(tab);
+            if (opensShop) EventBus<ShopOpenRequestedEvent>.Raise(default);
         }
 
 #if UNITY_EDITOR

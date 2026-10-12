@@ -4,12 +4,11 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
-using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.Shop;
 
-namespace PawBlock.Features.Shop
+namespace PawBlock.Game
 {
     /// <summary>
     /// Tab Shop như bản gốc (Tools → PawBlock → Builders → Build Shop; Build Main Menu cũng gọi BuildPanel):
@@ -66,9 +65,7 @@ namespace PawBlock.Features.Shop
         internal static void Wire(Transform shop, MainMenuNavigator nav)
         {
             GameFlowUI flow = Object.FindFirstObjectByType<GameFlowUI>(FindObjectsInactive.Include);
-            foreach (CoinHUD c in shop.GetComponentsInChildren<CoinHUD>(true)) PopupBuilder.Assign(c, "navigator", nav);
             if (flow == null) return;
-            foreach (EnergyHUD e in shop.GetComponentsInChildren<EnergyHUD>(true)) PopupBuilder.Assign(e, "gameFlow", flow);
         }
 
         internal static RectTransform BuildPanel(Transform parent)

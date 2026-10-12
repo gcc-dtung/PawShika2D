@@ -5,10 +5,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.DailyReward;
 
-namespace PawBlock.Features.DailyReward
+namespace PawBlock.Game
 {
     /// <summary>
     /// Điểm danh hằng ngày (Tools → PawBlock → Builders → Build Daily Reward), chạy lại được:

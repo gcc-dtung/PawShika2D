@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using PawBlock.Core.Foundation;
-using PawBlock.Game;
 using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyReward

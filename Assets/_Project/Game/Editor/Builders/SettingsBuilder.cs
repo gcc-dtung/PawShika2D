@@ -3,9 +3,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Features.Gameplay;
-using PawBlock.Game;
+using PawBlock.Features.Settings;
 
-namespace PawBlock.Features.Settings
+namespace PawBlock.Game
 {
     /// <summary>
     /// Dựng phần cài đặt trong scene đang mở:
@@ -56,7 +56,6 @@ namespace PawBlock.Features.Settings
             // Đang chơi mà bấm Home: hỏi lại, bỏ dở mất 1 năng lượng
             QuitLevelPopup quit = PopupBuilder.BuildQuitLevel(popups);
             quit.gameObject.SetActive(false);
-            PopupBuilder.Assign(popup, "quitPopup", quit);
             PopupBuilder.Assign(flow, "quitLevelPopup", quit);
 
             // ---------- Nút Settings trên Main Menu ----------
@@ -71,7 +70,6 @@ namespace PawBlock.Features.Settings
 
             foreach (SettingsButton b in Object.FindObjectsByType<SettingsButton>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
-                PopupBuilder.Assign(b, "gameFlow", flow);
             }
 
             EditorSceneManager.MarkSceneDirty(hudGo.scene);

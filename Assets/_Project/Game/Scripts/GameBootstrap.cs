@@ -34,6 +34,7 @@ namespace PawBlock.Game
 
         [Header("Gameplay")]
         [SerializeField] private LevelManager levelManager;
+        [SerializeField] private DailyLevelLoader dailyLevelLoader;
         [SerializeField] private GridManager gridManager;
         [SerializeField] private DragAndDropController dragAndDrop;
         [SerializeField] private HintMarker hintMarker;
@@ -123,12 +124,13 @@ namespace PawBlock.Game
             IScreenNavigator screens = Require(screenFlow);
 
             // Manager có dữ liệu riêng / lộ contract cho feature khác
-            Require(energyManager)?.Init(save, clock, lives);
+            Require(energyManager)?.Init(save, clock, lives.maxEnergy, lives.refillSeconds);
             Require(boosterManager)?.Init(save, s.Boosters, s.Coins, gridManager, levelTimer, lives, hintMarker);
             s.Shop = new ShopService(save, s.Coins, boosterManager, energyManager, iap);
 
             // Gameplay
             Require(levelManager)?.Init(save, gridManager, levelTimer, tutorialController);
+            Require(dailyLevelLoader)?.Init(levelManager);
             Require(boosterTutorial)?.Init(save, boosterManager, boosterButtons);
             Require(levelStatsRecorder)?.Init(save, screens, levelManager, gridManager, boosterManager, levelStars);
             Require(mechanicIntro)?.Init(save);
@@ -164,14 +166,14 @@ namespace PawBlock.Game
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters, boosterManager, levelTimer);
 
             // Economy
-            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager, economy);
+            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager, economy.refillAdsEnergy, economy.refillCoinCost);
             foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
             foreach (EnergyHUD hud in energyHuds) Require(hud)?.Init(energyManager, gameFlowUI);
 
             // Meta: chỉ nhận contract của feature khác
             foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
             Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads, screens, boosterManager, gameFlowUI);
-            Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock, levelManager);
+            Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock, dailyLevelLoader);
             Require(dailyChallengePanel)?.Init(ads, screens, dailyRewardManager, dailyChallengeManager);
             Require(dailyTabBadge)?.Init(dailyChallengeManager);
             Require(dailyRewardButton)?.Init(dailyRewardManager, gameFlowUI);
@@ -181,7 +183,7 @@ namespace PawBlock.Game
             Require(avatarButton)?.Init(s.Profile, gameFlowUI);
             Require(profilePopup)?.Init(s.Profile, screens, levelManager);
             Require(profileStatsRecorder)?.Init(s.Profile);
-            Require(settingsPopup)?.Init(screens, levelManager);
+            Require(settingsPopup)?.Init(screens, levelManager, gameFlowUI);
             Require(noticePopup)?.Init(screens, levelManager);
             foreach (SettingsButton b in settingsButtons) Require(b)?.Init(gameFlowUI);
 

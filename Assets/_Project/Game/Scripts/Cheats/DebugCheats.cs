@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.DailyReward;
 using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
 

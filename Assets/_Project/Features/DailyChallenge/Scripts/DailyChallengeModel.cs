@@ -30,7 +30,6 @@ namespace PawBlock.Features.DailyChallenge
         public const int MaxMilestone = 21;   // thanh tiến trình đầy ở mốc cuối (progressMaxDays gốc)
         public const int MissScanMaxDays = 400; // tìm ngày lỡ gần nhất tối đa bấy nhiêu ngày về trước (gốc)
 
-        private static readonly DateTime Epoch = new DateTime(1970, 1, 1);
         private readonly DailyChallengeSave _save;
 
         public DailyChallengeModel(DailyChallengeSave save)
@@ -38,8 +37,8 @@ namespace PawBlock.Features.DailyChallenge
             _save = save ?? new DailyChallengeSave();
         }
 
-        public static long DayNumber(DateTime local) => (long)(local.Date - Epoch).TotalDays;
-        public static DateTime DateOf(long day) => Epoch.AddDays(day);
+        public static long DayNumber(DateTime local) => Core.Foundation.DayNumber.Of(local);
+        public static DateTime DateOf(long day) => Core.Foundation.DayNumber.ToDate(day);
 
         /// <summary>Khóa quà theo tháng + mốc, vd 2026-10 mốc 14 -> 20261014.</summary>
         public static int GiftKey(int year, int month, int milestone) => (year * 100 + month) * 100 + milestone;

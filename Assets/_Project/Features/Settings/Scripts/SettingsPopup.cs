@@ -1,8 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
 using PawBlock.Core.Contracts;
 
@@ -16,11 +14,13 @@ namespace PawBlock.Features.Settings
     public class SettingsPopup : PopupView
     {
         private IGamePause _pause;
+        private IMenuPopups _popups;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens, IGamePause pause)
+        public void Init(IScreenNavigator screens, IGamePause pause, IMenuPopups popups)
         {
+            _popups = popups;
             _screens = screens;
             _pause = pause;
         }
@@ -28,8 +28,6 @@ namespace PawBlock.Features.Settings
         [SerializeField] private Button closeButton;
         [SerializeField] private Button homeButton;
         [SerializeField] private TMP_Text versionText;
-        [Tooltip("Đang chơi mà bấm Home: hỏi lại (bỏ dở level mất 1 năng lượng). Trống thì về Home luôn")]
-        [SerializeField] private QuitLevelPopup quitPopup;
         [Tooltip("Ở Main Menu (không có nút Home): thân popup ngắn đi bao nhiêu, mép trên giữ nguyên")]
         [SerializeField] private float menuHeightCut = 180f;
 
@@ -83,11 +81,7 @@ namespace PawBlock.Features.Settings
             _pausedGame = false;
             // Đang trong ván: cảnh báo mất năng lượng; ván vẫn tạm dừng, popup Quit lo chơi tiếp / về Home
             bool inGame = _screens != null && !_screens.IsMenu;
-            if (inGame && quitPopup != null)
-            {
-                quitPopup.Open();
-                return;
-            }
+            if (inGame && _popups != null && _popups.OpenQuitLevel()) return;
             if (_screens != null) _screens.ShowMenu();
         }
     }

@@ -4,10 +4,10 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.Profile;
 
-namespace PawBlock.Features.Profile
+namespace PawBlock.Game
 {
     /// <summary>
     /// Dựng hồ sơ người chơi trong scene đang mở (chạy lại được):
@@ -119,7 +119,6 @@ namespace PawBlock.Features.Profile
             if (button == null) button = Undo.AddComponent<AvatarButton>(root.gameObject);
             PopupBuilder.Assign(button, "avatars", db);
             PopupBuilder.Assign(button, "avatarImage", cat);
-            if (flow != null) PopupBuilder.Assign(button, "gameFlow", flow);
         }
 
         // =====================================================================

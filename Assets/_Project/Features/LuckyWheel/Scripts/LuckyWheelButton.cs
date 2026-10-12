@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Game;
+using PawBlock.Shared;
 
 namespace PawBlock.Features.LuckyWheel
 {

@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using PawBlock.Game;
+using PawBlock.Shared;
 
-namespace PawBlock.Shared
+namespace PawBlock.Game
 {
     /// <summary>
     /// Hoa văn chân mèo phủ nền màn chơi như bản gốc (GameplayUI/BG_Pattern: ảnh BG_Pattern lát kín màn hình trên nền bg).

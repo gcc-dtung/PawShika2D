@@ -3,8 +3,6 @@ using UnityEngine;
 using PawBlock.Core.Contracts;
 using UnityEngine.UI;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
-using PawBlock.Game;
 using PawBlock.Shared;
 
 namespace PawBlock.Features.Gameplay

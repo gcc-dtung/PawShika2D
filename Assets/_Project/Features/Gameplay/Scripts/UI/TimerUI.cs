@@ -2,7 +2,6 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Gameplay
 {

@@ -7,10 +7,10 @@ using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Features.DailyChallenge;
 
-namespace PawBlock.Features.DailyChallenge
+namespace PawBlock.Game
 {
     /// <summary>
     /// Daily Challenge (Tools → PawBlock → Builders → Build Daily Challenge, chạy lại được):
@@ -272,7 +272,6 @@ namespace PawBlock.Features.DailyChallenge
             gp.arraySize = gifts.Length;
             for (int i = 0; i < gifts.Length; i++) gp.GetArrayElementAtIndex(i).objectReferenceValue = gifts[i];
             so.FindProperty("giftBubble").objectReferenceValue = bubble;
-            so.FindProperty("rewardIcons").objectReferenceValue = AssetDatabase.LoadAssetAtPath<DailyRewardDatabase>(RewardDatabasePath);
             so.FindProperty("grid").objectReferenceValue = grid;
             so.FindProperty("cellTemplate").objectReferenceValue = template;
             so.FindProperty("frameDone").objectReferenceValue = PopupBuilder.LoadSprite(UI + "Frames_Borders/daily_khung_1.png");

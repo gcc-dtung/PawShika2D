@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.DailyChallenge;
-using PawBlock.Features.DailyReward;
 using PawBlock.Shared;
 
 namespace PawBlock.Features.LuckyWheel
@@ -35,7 +33,6 @@ namespace PawBlock.Features.LuckyWheel
 
         [SerializeField] private LuckyWheelDatabase database;
         [Tooltip("Icon coin / năng lượng vô hạn cho dòng kết quả (dùng chung với điểm danh)")]
-        [SerializeField] private DailyRewardDatabase rewardIcons;
         [SerializeField] private RectTransform wheel;      // quay quanh tâm
         [SerializeField] private RectTransform pointer;    // kim ở đỉnh
         [SerializeField] private Image[] segmentImages;    // cùng thứ tự database.segments (để nhấp sáng ô trúng)
@@ -185,7 +182,7 @@ namespace PawBlock.Features.LuckyWheel
                 resultIcon.gameObject.SetActive(true);
                 resultIcon.sprite = _rewardIconSource != null ? _rewardIconSource.IconOf(item) : null;
             }
-            if (resultText != null) resultText.SetText($"You got {DailyGiftBubble.AmountOf(item)}!");
+            if (resultText != null) resultText.SetText($"You got {RewardText.Amount(item)}!");
             resultRow.DOKill(true);
             resultRow.localScale = Vector3.one * 0.6f;
             resultRow.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true).SetLink(resultRow.gameObject);

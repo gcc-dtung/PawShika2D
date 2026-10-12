@@ -1,8 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Features.Gameplay;
-using PawBlock.Game;
 using PawBlock.Shared;
 using PawBlock.Core.Contracts;
 

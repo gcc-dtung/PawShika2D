@@ -1,5 +1,4 @@
 using UnityEngine;
-using PawBlock.Features.Gameplay;
 
 namespace PawBlock.Core.Foundation
 {
@@ -56,22 +55,6 @@ namespace PawBlock.Core.Foundation
             if (semitones == null || semitones.Length == 0) return basePitch;
             int semis = semitones[Mathf.Clamp(count - 1, 0, semitones.Length - 1)];
             return basePitch * Mathf.Pow(2f, semis / 12f);
-        }
-
-        /// <summary>
-        /// Ô dưới ngón tay có "dính": ngón tay còn cách tâm ô hiện tại không quá (0.5 + stick) ô theo mỗi trục thì giữ ô đó,
-        /// tránh vùng chọn nhảy qua lại khi ngón tay rung ở ranh giới 2 ô. stick = 0 thì như WorldToCell.
-        /// </summary>
-        public static Vector2Int StickyCell(GridGeometry geometry, Vector3 world, Vector2Int current, float stick)
-        {
-            Vector2Int cell = geometry.WorldToCell(world);
-            if (cell == current || stick <= 0f) return cell;
-            if (current.x < 0 || current.y < 0 || current.x >= geometry.Width || current.y >= geometry.Height) return cell;
-
-            Vector3 center = geometry.CellToWorld(current);
-            float limit = (0.5f + stick) * geometry.Spacing;
-            bool inside = Mathf.Abs(world.x - center.x) <= limit && Mathf.Abs(world.y - center.y) <= limit;
-            return inside ? current : cell;
         }
 
         /// <summary>Cao độ âm đặt khối theo combo: combo 1 = 1, mỗi bậc cao thêm <paramref name="step"/>, tối đa <paramref name="max"/>.</summary>

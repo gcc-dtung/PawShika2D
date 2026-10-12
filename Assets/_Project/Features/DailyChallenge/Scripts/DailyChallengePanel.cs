@@ -7,8 +7,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.DailyReward;
-using PawBlock.Game;
 
 namespace PawBlock.Features.DailyChallenge
 {
@@ -52,7 +50,6 @@ namespace PawBlock.Features.DailyChallenge
         [SerializeField] private DailyGiftSlot[] gifts;
         [SerializeField] private DailyGiftBubble giftBubble;
         [Tooltip("Icon coin / năng lượng vô hạn cho bong thoại quà (dùng chung với điểm danh)")]
-        [SerializeField] private DailyRewardDatabase rewardIcons;
 
         [Header("Lịch")]
         [SerializeField] private RectTransform grid;

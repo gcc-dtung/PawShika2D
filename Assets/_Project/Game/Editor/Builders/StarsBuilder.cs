@@ -2,10 +2,9 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Features.Economy;
-using PawBlock.Game;
+using PawBlock.Features.Gameplay;
 
-namespace PawBlock.Features.Gameplay
+namespace PawBlock.Game
 {
     /// <summary>
     /// Hệ thống sao theo thời gian (Tools → PawBlock → Builders → Build Stars, chạy lại được):

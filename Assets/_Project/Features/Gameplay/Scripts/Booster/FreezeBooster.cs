@@ -1,5 +1,4 @@
 using PawBlock.Core.Contracts;
-using PawBlock.Game;
 
 namespace PawBlock.Features.Gameplay
 {

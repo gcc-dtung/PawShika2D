@@ -2,7 +2,6 @@ using DG.Tweening;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.DailyChallenge;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -55,7 +54,7 @@ namespace PawBlock.Features.Gameplay
         public bool HasRevived => _hasRevived;
         public bool IsPractice => _isPractice;
         public bool IsDaily => _daily != null;
-        /// <summary>Ngày của level Daily đang chơi (số ngày từ 1/1/1970, DailyChallengeModel.DayNumber).</summary>
+        /// <summary>Ngày của level Daily đang chơi (số ngày từ 1/1/1970, DayNumber.Of).</summary>
         public long DailyDay { get; private set; } = -1;
 
         /// <summary>Thắng / hết giờ thì tự sang level kế / chơi lại. GameFlowUI tắt đi để popup quyết định.</summary>
@@ -141,7 +140,7 @@ namespace PawBlock.Features.Gameplay
             _hasRevived = false;
             SetState(GameState.Playing);
             EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level != null ? level.name : null, true));
-            Debug.Log($"[LevelManager] Daily {DailyChallengeModel.DateOf(day):yyyy-MM-dd}: {level.name} ({level.size}x{level.Height})");
+            Debug.Log($"[LevelManager] Daily {DayNumber.ToDate(day):yyyy-MM-dd}: {level.name} ({level.size}x{level.Height})");
         }
 
         /// <summary>Chơi lại từ đầu level đang chơi (Daily thì đúng level Daily đó).</summary>

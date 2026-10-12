@@ -14,16 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unlockLevel: 21
   replayMissedWithAd: 1
-  generator:
-    width: 10
-    height: 10
-    minArea: 2
-    maxArea: 10
-    maxSide: 5
-    maxSingles: 3
-    requireUnique: 1
-    clueRetries: 12
-    maxPartitions: 60
   gifts:
   - milestone: 7
     box: {fileID: 21300000, guid: d556f6679d12b8044ad6dda10bd3e2cf, type: 3}

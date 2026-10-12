@@ -1,9 +1,9 @@
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using PawBlock.Game;
+using PawBlock.Shared;
 
-namespace PawBlock.Shared
+namespace PawBlock.Game
 {
     /// <summary>
     /// Dựng UI Zone (SafeAreaZone) để UI tránh tai thỏ / thanh home:

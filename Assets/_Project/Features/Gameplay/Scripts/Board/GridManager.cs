@@ -144,7 +144,7 @@ namespace PawBlock.Features.Gameplay
             if (!_drag.IsActive || _board == null) return;
 
             GridGeometry geometry = _board.Geometry;
-            Vector2Int cell = FeelCurves.StickyCell(geometry, fingerWorld, _fingerCell, cellStick);
+            Vector2Int cell = geometry.StickyCell(fingerWorld, _fingerCell, cellStick);
             if (cell != _fingerCell)
             {
                 _fingerCell = cell;

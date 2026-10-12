@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
-using PawBlock.Game;
+using PawBlock.Shared;
 
 namespace PawBlock.Features.DailyReward
 {

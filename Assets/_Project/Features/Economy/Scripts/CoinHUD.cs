@@ -2,7 +2,8 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Game;
+using PawBlock.Core.Foundation;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Economy
 {
@@ -17,7 +18,6 @@ namespace PawBlock.Features.Economy
         [SerializeField] private TMP_Text amountText;
         [SerializeField] private RectTransform icon;
         [SerializeField] private Button button;
-        [SerializeField] private MainMenuNavigator navigator;
 
         private Tween _punch;
 
@@ -41,7 +41,7 @@ namespace PawBlock.Features.Economy
 
         private void OnClick()
         {
-            if (navigator != null) navigator.Select(MainMenuNavigator.ShopTab);
+            EventBus<ShopOpenRequestedEvent>.Raise(default);
         }
 
         private void OnChanged(int balance, int delta)

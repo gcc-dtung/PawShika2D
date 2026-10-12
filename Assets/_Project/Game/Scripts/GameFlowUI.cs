@@ -124,6 +124,14 @@ namespace PawBlock.Game
 
         private void OnPurchaseFailed(string productId, string reason) => ShowNotice(reason);
 
+        /// <summary>Nút Home trong popup Settings lúc đang chơi: hỏi thoát ván.</summary>
+        public bool OpenQuitLevel()
+        {
+            if (quitLevelPopup == null) return false;
+            quitLevelPopup.Open();
+            return true;
+        }
+
         /// <summary>Nút năng lượng trên Menu.</summary>
         public void OpenEnergyRefill()
         {

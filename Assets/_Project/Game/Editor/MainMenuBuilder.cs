@@ -3,14 +3,11 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Features.DailyChallenge;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
 using PawBlock.Features.LuckyWheel;
-using PawBlock.Features.Profile;
 using PawBlock.Features.Settings;
-using PawBlock.Features.Shop;
 using PawBlock.Shared;
 
 namespace PawBlock.Game
@@ -173,21 +170,9 @@ namespace PawBlock.Game
             if (swipe == null) swipe = Undo.AddComponent<MenuSwipe>(panels.gameObject);
             PopupBuilder.Assign(swipe, "navigator", nav);
 
-            PopupBuilder.Assign(coin, "navigator", nav);
             ShopBuilder.Wire(shop, nav);
-            PopupBuilder.Assign(starter, "navigator", nav);
-            PopupBuilder.Assign(noAds, "navigator", nav);
-            PopupBuilder.Assign(daily, "navigator", nav);
-            PopupBuilder.Assign(lucky, "navigator", nav);
             LuckyWheelBuilder.WireButton(lucky.GetComponent<LuckyWheelButton>());
             GameFlowUI flow = Object.FindFirstObjectByType<GameFlowUI>(FindObjectsInactive.Include);
-            if (flow != null)
-            {
-                PopupBuilder.Assign(energy, "gameFlow", flow);
-                PopupBuilder.Assign(settings, "gameFlow", flow);
-                PopupBuilder.Assign(daily.GetComponent<DailyRewardButton>(), "gameFlow", flow);
-            }
-
             // ---------- ScreenFlow ----------
             LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
             if (lm != null)
@@ -375,7 +360,7 @@ namespace PawBlock.Game
             Outline(label, GameFontSetup.OutlinePurple());
             label.enableWordWrapping = false;
 
-            return Shortcut(root, chest.rectTransform, 1.4f, 0.6f, 12f, 0.05f, 9f);
+            return OpensShop(Shortcut(root, chest.rectTransform, 1.4f, 0.6f, 12f, 0.05f, 9f));
         }
 
         /// <summary>TV "ADS" gạch chéo + ruy băng cam "No Ads" bên phải -> Shop.</summary>
@@ -399,7 +384,7 @@ namespace PawBlock.Game
             Outline(label, GameFontSetup.OutlineBrown());
             label.enableWordWrapping = false;
 
-            return Shortcut(root, tv.rectTransform, 2.35f, 1.3f, 10f, 0.1f, 6f);
+            return OpensShop(Shortcut(root, tv.rectTransform, 2.35f, 1.3f, 10f, 0.1f, 6f));
         }
 
         /// <summary>
@@ -433,7 +418,6 @@ namespace PawBlock.Game
 
             MenuShortcutButton s = Shortcut(root, calendar.rectTransform, 1.9f, 1.0f, 10f, 0.06f, 8f);
             SerializedObject so = new SerializedObject(s);
-            so.FindProperty("tab").intValue = -1; // không chuyển tab: DailyRewardButton mở popup
             so.FindProperty("badge").objectReferenceValue = badge.gameObject;
             so.ApplyModifiedPropertiesWithoutUndo();
             DailyRewardButton daily = Undo.AddComponent<DailyRewardButton>(root.gameObject);
@@ -457,8 +441,6 @@ namespace PawBlock.Game
             if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
             MenuShortcutButton daily = BuildDaily(zone);
             daily.transform.SetSiblingIndex(index);
-            PopupBuilder.Assign(daily, "navigator", nav);
-            if (flow != null) PopupBuilder.Assign(daily.GetComponent<DailyRewardButton>(), "gameFlow", flow);
         }
 
         /// <summary>
@@ -504,7 +486,6 @@ namespace PawBlock.Game
 
             MenuShortcutButton s = Shortcut(root, star.rectTransform, 2.6f, 1.8f, 10f, 0.08f, 10f);
             SerializedObject so = new SerializedObject(s);
-            so.FindProperty("tab").intValue = -1; // không chuyển tab: LuckyWheelButton mở popup
             so.FindProperty("badge").objectReferenceValue = badge.gameObject;
             so.ApplyModifiedPropertiesWithoutUndo();
             LuckyWheelButton lucky = Undo.AddComponent<LuckyWheelButton>(root.gameObject);
@@ -529,7 +510,6 @@ namespace PawBlock.Game
             if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
             MenuShortcutButton lucky = BuildLucky(zone);
             lucky.transform.SetSiblingIndex(index);
-            PopupBuilder.Assign(lucky, "navigator", nav);
             return lucky.GetComponent<LuckyWheelButton>();
         }
 
@@ -548,6 +528,14 @@ namespace PawBlock.Game
             so.FindProperty("lift").floatValue = lift;
             so.FindProperty("scaleUp").floatValue = scaleUp;
             so.FindProperty("angle").floatValue = angle;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return s;
+        }
+
+        private static MenuShortcutButton OpensShop(MenuShortcutButton s)
+        {
+            SerializedObject so = new SerializedObject(s);
+            so.FindProperty("opensShop").boolValue = true;
             so.ApplyModifiedPropertiesWithoutUndo();
             return s;
         }

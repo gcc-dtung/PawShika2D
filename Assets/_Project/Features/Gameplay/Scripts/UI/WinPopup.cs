@@ -5,9 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Game;
 using PawBlock.Shared;
-using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {

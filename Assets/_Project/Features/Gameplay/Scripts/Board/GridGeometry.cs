@@ -52,5 +52,21 @@ namespace PawBlock.Features.Gameplay
         {
             return new Vector2(rect.width * Spacing, rect.height * Spacing);
         }
+
+        /// <summary>
+        /// Ô dưới ngón tay có "dính": ngón tay còn cách tâm ô hiện tại không quá (0.5 + stick) ô theo mỗi trục thì giữ ô đó,
+        /// tránh vùng chọn nhảy qua lại khi ngón tay rung ở ranh giới 2 ô. stick = 0 thì như WorldToCell.
+        /// </summary>
+        public Vector2Int StickyCell(Vector3 world, Vector2Int current, float stick)
+        {
+            Vector2Int cell = WorldToCell(world);
+            if (cell == current || stick <= 0f) return cell;
+            if (current.x < 0 || current.y < 0 || current.x >= Width || current.y >= Height) return cell;
+
+            Vector3 center = CellToWorld(current);
+            float limit = (0.5f + stick) * Spacing;
+            bool inside = Mathf.Abs(world.x - center.x) <= limit && Mathf.Abs(world.y - center.y) <= limit;
+            return inside ? current : cell;
+        }
     }
 }
