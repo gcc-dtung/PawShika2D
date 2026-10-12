@@ -8,14 +8,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class DragAndDropController : MonoBehaviour
     {
+        private GridSpawner _spawner;
         private BoosterManager _boosterManager;
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid, BoosterManager boosterManager)
+        public void Init(GridManager grid, BoosterManager boosterManager, GridSpawner spawner)
         {
             _grid = grid;
             _boosterManager = boosterManager;
+            _spawner = spawner;
         }
 
         [SerializeField] private Camera cam;
@@ -46,7 +48,7 @@ namespace PawBlock.Features.Gameplay
             Vector3 worldPos = cam.ScreenToWorldPoint(screenPos);
 
             Collider2D hit2D = Physics2D.OverlapPoint(worldPos, cellLayer);
-            if (hit2D != null && hit2D.TryGetComponent(out CellView cell2D))
+            if (_spawner != null && _spawner.TryGetCell(hit2D, out CellView cell2D))
             {
                 return cell2D;
             }

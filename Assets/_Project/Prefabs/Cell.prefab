@@ -773,6 +773,7 @@ MonoBehaviour:
   lockSprites:
   - {fileID: 2592657854179920581}
   - {fileID: 4849550683927795928}
+  hitBox: {fileID: 751636190205843187}
 --- !u!61 &751636190205843187
 BoxCollider2D:
   m_ObjectHideFlags: 0

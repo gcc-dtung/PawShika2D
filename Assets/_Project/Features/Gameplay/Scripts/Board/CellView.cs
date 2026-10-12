@@ -25,6 +25,7 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Sprite badgeTallSprite;
         [SerializeField] private Sprite badgeWideSprite;
         [SerializeField] private SpriteRenderer[] lockSprites;
+        [SerializeField] private Collider2D hitBox;
 
         // Kích thước ô nền (đơn vị world). Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
         private static readonly Vector2 BadgeTall = new Vector2(0.5f, 0.74f);
@@ -38,6 +39,8 @@ namespace PawBlock.Features.Gameplay
         private const float ShakeDistance = 0.07f;
 
         public CellModel Model { get; private set; }
+        /// <summary>Collider để raycast chạm (GridSpawner đăng ký vào registry).</summary>
+        public Collider2D HitBox => hitBox;
         public Vector2Int Position => Model.Position;
 
         private Sequence _intro;
@@ -292,6 +295,7 @@ namespace PawBlock.Features.Gameplay
         // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
         private void OnValidate()
         {
+            if (hitBox == null) hitBox = GetComponent<Collider2D>();
             if (lockSprites == null || lockSprites.Length == 0) lockSprites = lockRoot != null ? lockRoot.GetComponentsInChildren<SpriteRenderer>(true) : new SpriteRenderer[0];
         }
 #endif

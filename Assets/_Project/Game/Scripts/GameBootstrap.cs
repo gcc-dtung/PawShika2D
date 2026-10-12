@@ -142,7 +142,7 @@ namespace PawBlock.Game
             Require(levelIntroSequencer)?.Init(levelManager, gridManager, tutorialController, gridSpawner, new ILevelIntro[] { boosterTutorial, mechanicIntro, difficultyIntro });
             Require(lowTimeVignette)?.Init(levelManager, levelTimer);
             Require(mechanicIntroPopup)?.Init(levelManager);
-            Require(dragAndDrop)?.Init(gridManager, boosterManager);
+            Require(dragAndDrop)?.Init(gridManager, boosterManager, gridSpawner);
             Require(hintMarker)?.Init(gridManager, visuals, gridSpawner, tutorialHand);
             Require(tutorialHand)?.Init(gridManager);
             Require(blockFeedback)?.Init(gridManager, levelTimer, gridSpawner);

@@ -37,6 +37,7 @@ namespace PawBlock.Features.Gameplay
         private readonly Dictionary<Vector2Int, ClueData> _clueLookup = new Dictionary<Vector2Int, ClueData>();
         private readonly HashSet<Vector2Int> _voidLookup = new HashSet<Vector2Int>();
         private ObjectPool<CellView> _cellPool;
+        private readonly Dictionary<Collider2D, CellView> _cellsByCollider = new Dictionary<Collider2D, CellView>();
         private float _introEndTime;
 
         public LevelDefinition LevelData => levelData;
@@ -51,7 +52,7 @@ namespace PawBlock.Features.Gameplay
         {
             // Ô được tái sử dụng giữa các level thay vì Instantiate / Destroy mỗi lần
             _cellPool = new ObjectPool<CellView>(
-                createFunc: () => Instantiate(cellPrefab, transform),
+                createFunc: CreateCell,
                 actionOnGet: c => c.gameObject.SetActive(true),
                 actionOnRelease: c =>
                 {
@@ -59,10 +60,29 @@ namespace PawBlock.Features.Gameplay
                     c.gameObject.SetActive(false);
                 },
                 // Thoát Play mode: scene hủy object trước, rồi Editor mới Clear() pool -> object có thể đã null
-                actionOnDestroy: c => { if (c != null) Destroy(c.gameObject); },
+                actionOnDestroy: c =>
+                {
+                    if (c == null) return;
+                    if (c.HitBox != null) _cellsByCollider.Remove(c.HitBox);
+                    Destroy(c.gameObject);
+                },
                 collectionCheck: false,
                 defaultCapacity: cellPoolCapacity,
                 maxSize: cellPoolCapacity * 2);
+        }
+
+        private CellView CreateCell()
+        {
+            CellView cell = Instantiate(cellPrefab, transform);
+            if (cell.HitBox != null) _cellsByCollider[cell.HitBox] = cell; // đăng ký 1 lần khi tạo (guide 8.3)
+            return cell;
+        }
+
+        /// <summary>Ô của collider vừa raycast trúng (thay cho GetComponent trên kết quả raycast).</summary>
+        public bool TryGetCell(Collider2D collider, out CellView cell)
+        {
+            cell = null;
+            return collider != null && _cellsByCollider.TryGetValue(collider, out cell) && cell != null;
         }
 
         private void Start()
