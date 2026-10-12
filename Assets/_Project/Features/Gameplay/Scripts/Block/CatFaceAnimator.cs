@@ -49,7 +49,6 @@ namespace PawBlock.Features.Gameplay
         private void Register()
         {
             if (_index >= 0) return;
-            CatFaceTicker.Ensure();
             _index = Running.Count;
             Running.Add(this);
         }

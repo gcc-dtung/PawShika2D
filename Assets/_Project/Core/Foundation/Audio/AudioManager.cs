@@ -17,17 +17,19 @@ namespace PawBlock.Core.Foundation
     public class AudioManager : Singleton<AudioManager>
     {
         [SerializeField] private AudioDatabase database;
+        [Tooltip("Số kênh SFX (Editor tạo sẵn object con Sfx_i: menu chuột phải -> Tạo nguồn âm)")]
         [SerializeField] private int sfxVoices = 8;
+        [Header("Nguồn âm (object con có sẵn)")]
+        [SerializeField] private AudioSource music;
+        [SerializeField] private AudioSource[] voices;
         [SerializeField] private float musicFadeDuration = 0.6f;
         [SerializeField] private bool playMusicOnStart = true;
 
         /// <summary>Đổi cài đặt Nhạc / Âm thanh / Rung.</summary>
         public static event Action SettingsChanged;
 
-        private AudioSource _music;
         private Tween _musicPitch;
         private float _musicPitchTarget = 1f;
-        private readonly List<AudioSource> _voices = new List<AudioSource>();
         private readonly Dictionary<SoundId, AudioDatabase.Sound> _lookup = new Dictionary<SoundId, AudioDatabase.Sound>();
         private readonly Dictionary<SoundId, float> _lastPlayed = new Dictionary<SoundId, float>();
         private Tween _musicFade;
@@ -85,9 +87,10 @@ namespace PawBlock.Core.Foundation
         protected override void Awake()
         {
             base.Awake();
-            _music = CreateSource("Music");
-            _music.loop = true;
-            for (int i = 0; i < sfxVoices; i++) _voices.Add(CreateSource("Sfx_" + i));
+            if (music == null || voices == null || voices.Length == 0)
+            {
+                Debug.LogError("[AudioManager] Thiếu nguồn âm con (chuột phải component -> Tạo nguồn âm)", this);
+            }
             BuildLookup();
         }
 
@@ -136,7 +139,7 @@ namespace PawBlock.Core.Foundation
         public void PlayMusic(AudioClip clip)
         {
             if (clip == null) return;
-            if (_music.clip == clip && _music.isPlaying)
+            if (music.clip == clip && music.isPlaying)
             {
                 ApplyMusicSetting();
                 return;
@@ -145,12 +148,12 @@ namespace PawBlock.Core.Foundation
             float target = MusicTargetVolume();
             _musicFade?.Kill();
             Sequence seq = DOTween.Sequence().SetUpdate(true).SetLink(gameObject);
-            if (_music.isPlaying) seq.Append(FadeMusic(0f, musicFadeDuration * 0.5f));
+            if (music.isPlaying) seq.Append(FadeMusic(0f, musicFadeDuration * 0.5f));
             seq.AppendCallback(() =>
             {
-                _music.clip = clip;
-                _music.volume = 0f;
-                _music.Play();
+                music.clip = clip;
+                music.volume = 0f;
+                music.Play();
             });
             seq.Append(FadeMusic(target, musicFadeDuration));
             _musicFade = seq;
@@ -159,10 +162,10 @@ namespace PawBlock.Core.Foundation
         /// <summary>Đổi tốc độ / cao độ nhạc nền mượt (vd. sắp hết giờ nhạc nhanh lên). 1 = bình thường.</summary>
         public void SetMusicPitch(float pitch, float duration = 0.4f)
         {
-            if (_music == null || Mathf.Approximately(_musicPitchTarget, pitch)) return; // gọi lặp lại cùng đích thì để tween chạy tiếp
+            if (music == null || Mathf.Approximately(_musicPitchTarget, pitch)) return; // gọi lặp lại cùng đích thì để tween chạy tiếp
             _musicPitchTarget = pitch;
             _musicPitch?.Kill();
-            _musicPitch = DOVirtual.Float(_music.pitch, pitch, duration, v => _music.pitch = v)
+            _musicPitch = DOVirtual.Float(music.pitch, pitch, duration, v => music.pitch = v)
                 .SetUpdate(true)
                 .SetLink(gameObject);
         }
@@ -171,7 +174,7 @@ namespace PawBlock.Core.Foundation
         {
             _musicFade?.Kill();
             _musicFade = FadeMusic(0f, musicFadeDuration * 0.5f).SetUpdate(true).SetLink(gameObject)
-                .OnComplete(() => _music.Stop());
+                .OnComplete(() => music.Stop());
         }
 
         private void ApplyMusicSetting()
@@ -183,7 +186,7 @@ namespace PawBlock.Core.Foundation
         private float MusicTargetVolume() => MusicOn && database != null ? database.musicVolume : 0f;
 
         private Tween FadeMusic(float to, float duration) =>
-            DOVirtual.Float(_music.volume, to, duration, v => _music.volume = v);
+            DOVirtual.Float(music.volume, to, duration, v => music.volume = v);
 
         // ---------- Hiệu ứng ----------
 
@@ -208,8 +211,8 @@ namespace PawBlock.Core.Foundation
 
         private AudioSource FreeVoice()
         {
-            AudioSource oldest = _voices[0];
-            foreach (AudioSource s in _voices)
+            AudioSource oldest = voices[0];
+            foreach (AudioSource s in voices)
             {
                 if (!s.isPlaying) return s;
                 if (s.time > oldest.time) oldest = s;
@@ -219,20 +222,40 @@ namespace PawBlock.Core.Foundation
 
         private void StopAllSounds()
         {
-            foreach (AudioSource s in _voices) s.Stop();
+            foreach (AudioSource s in voices) s.Stop();
         }
 
         // ---------- Khởi tạo ----------
 
-        private AudioSource CreateSource(string sourceName)
+#if UNITY_EDITOR
+        /// <summary>Tạo object con Music + Sfx_0..n-1 (AudioSource 2D, không tự phát) và gán vào field. Chỉ trong Editor.</summary>
+        [ContextMenu("Tạo nguồn âm")]
+        public void EditorCreateSources()
         {
-            GameObject go = new GameObject(sourceName);
-            go.transform.SetParent(transform, false);
-            AudioSource s = go.AddComponent<AudioSource>();
+            music = EditorSource("Music");
+            music.loop = true;
+            voices = new AudioSource[sfxVoices];
+            for (int i = 0; i < sfxVoices; i++) voices[i] = EditorSource("Sfx_" + i);
+            UnityEditor.EditorUtility.SetDirty(this);
+        }
+
+        private AudioSource EditorSource(string sourceName)
+        {
+            Transform t = transform.Find(sourceName);
+            if (t == null)
+            {
+                GameObject go = new GameObject(sourceName);
+                UnityEditor.Undo.RegisterCreatedObjectUndo(go, "Tạo nguồn âm");
+                go.transform.SetParent(transform, false);
+                t = go.transform;
+            }
+            AudioSource s = t.GetComponent<AudioSource>();
+            if (s == null) s = UnityEditor.Undo.AddComponent<AudioSource>(t.gameObject);
             s.playOnAwake = false;
             s.spatialBlend = 0f; // âm 2D
             return s;
         }
+#endif
 
         private void BuildLookup()
         {

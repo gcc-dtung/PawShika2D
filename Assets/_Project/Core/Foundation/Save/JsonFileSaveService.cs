@@ -22,6 +22,7 @@ namespace PawBlock.Core.Foundation
         private const string SavedAtKey = "savedAt";
 
         private readonly string _path;
+        private SaveRunner _runner;
         private readonly Dictionary<string, string> _raw = new Dictionary<string, string>();
         private readonly Dictionary<string, object> _live = new Dictionary<string, object>();
         private readonly List<string> _order = new List<string>();
@@ -86,6 +87,11 @@ namespace PawBlock.Core.Foundation
             return data;
         }
 
+        /// <summary>
+        /// GameBootstrap gắn SaveRunner trong scene: Play mode gom ghi. Không có runner (công cụ Editor, test) thì ghi ngay.
+        /// </summary>
+        public void AttachRunner(SaveRunner runner) => _runner = runner;
+
         public void MarkDirty()
         {
             if (_path == null)
@@ -93,9 +99,9 @@ namespace PawBlock.Core.Foundation
                 return;
             }
             _dirty = true;
-            if (Application.isPlaying)
+            if (Application.isPlaying && _runner != null)
             {
-                SaveRunner.Ensure(this);
+                _runner.Schedule(this);
             }
             else
             {

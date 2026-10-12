@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace PawBlock.Core.Foundation
 {
-    /// <summary>Object ẩn chạy coroutine đồng bộ của TrustedClockService; quay lại app thì đồng bộ lại.</summary>
+    /// <summary>Chạy coroutine đồng bộ của TrustedClockService (đặt sẵn trong scene cùng GameBootstrap); quay lại app thì đồng bộ lại.</summary>
     public class TrustedClockRunner : MonoBehaviour
     {
         private TrustedClockService _clock;

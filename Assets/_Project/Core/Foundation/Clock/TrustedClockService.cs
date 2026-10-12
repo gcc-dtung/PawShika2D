@@ -24,14 +24,17 @@ namespace PawBlock.Core.Foundation
         private readonly ISaveService _save;
         private readonly ClockSave _clock;
         private readonly TrustedClockModel _model;
-        private TrustedClockRunner _runner;
+        private readonly TrustedClockRunner _runner;
         private float _lastSyncAttempt = -1000f;
 
         public event Action Synced;
 
-        public TrustedClockService(ISaveService save)
+        /// <summary><paramref name="runner"/>: component đặt sẵn trong scene chạy coroutine đồng bộ (null: không đồng bộ, dùng giờ máy).</summary>
+        public TrustedClockService(ISaveService save, TrustedClockRunner runner)
         {
             _save = save;
+            _runner = runner;
+            if (_runner != null) _runner.Init(this);
             _clock = save.Get<ClockSave>(ClockSave.Key);
             _model = new TrustedClockModel(_clock.lastTrustedUtc);
         }
@@ -62,7 +65,7 @@ namespace PawBlock.Core.Foundation
         /// <summary>Đồng bộ giờ server (bỏ qua nếu vừa thử trong ResyncInterval, trừ khi force). Chỉ chạy trong Play mode.</summary>
         public void RequestSync(bool force = false)
         {
-            if (!Application.isPlaying)
+            if (!Application.isPlaying || _runner == null)
             {
                 return;
             }
@@ -71,20 +74,7 @@ namespace PawBlock.Core.Foundation
                 return;
             }
             _lastSyncAttempt = Time.realtimeSinceStartup;
-            EnsureRunner().StartCoroutine(SyncRoutine());
-        }
-
-        private TrustedClockRunner EnsureRunner()
-        {
-            if (_runner == null)
-            {
-                // P5 (Refactor): đặt sẵn runner trong scene thay cho AddComponent lúc chạy
-                GameObject go = new GameObject("[TrustedClock]") { hideFlags = HideFlags.HideInHierarchy };
-                UnityEngine.Object.DontDestroyOnLoad(go);
-                _runner = go.AddComponent<TrustedClockRunner>();
-                _runner.Init(this);
-            }
-            return _runner;
+            _runner.StartCoroutine(SyncRoutine());
         }
 
         private IEnumerator SyncRoutine()

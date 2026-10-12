@@ -29,6 +29,8 @@ namespace PawBlock.Game
 
         [Header("Scene")]
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private SaveRunner saveRunner;
+        [SerializeField] private TrustedClockRunner clockRunner;
 
         [Header("Gameplay")]
         [SerializeField] private LevelManager levelManager;
@@ -103,9 +105,10 @@ namespace PawBlock.Game
         {
             // Core / Foundation
             var save = new JsonFileSaveService(JsonFileSaveService.DefaultPath);
+            save.AttachRunner(Require(saveRunner));
             SaveMigrator.Migrate(save);
             AudioManager.InitSettings(save);
-            var clock = new TrustedClockService(save);
+            var clock = new TrustedClockService(save, Require(clockRunner));
             clock.RequestSync(true);
             EconomyConfig economy = ConfigOrDefault(config != null ? config.economy : null);
             LivesEnergyConfig lives = ConfigOrDefault(config != null ? config.livesEnergy : null);
