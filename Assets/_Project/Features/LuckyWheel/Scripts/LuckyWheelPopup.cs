@@ -19,14 +19,16 @@ namespace PawBlock.Features.LuckyWheel
     /// </summary>
     public class LuckyWheelPopup : PopupView
     {
+        private IRewardIcons _rewardIconSource;
         private ICurrencyWallet _stars;
         private IRewardGranter _rewards;
 
         /// <summary>GameBootstrap gọi: ví sao (tiêu khi quay), nơi trao quà (DailyReward) – đều qua contract.</summary>
-        public void Init(ICurrencyWallet stars, IRewardGranter rewards)
+        public void Init(ICurrencyWallet stars, IRewardGranter rewards, IRewardIcons rewardIconSource)
         {
             _stars = stars;
             _rewards = rewards;
+            _rewardIconSource = rewardIconSource;
         }
 
         private int Stars => _stars != null ? _stars.Balance : 0;
@@ -181,7 +183,7 @@ namespace PawBlock.Features.LuckyWheel
             if (resultIcon != null)
             {
                 resultIcon.gameObject.SetActive(true);
-                resultIcon.sprite = DailyGiftBubble.IconOf(item, rewardIcons);
+                resultIcon.sprite = _rewardIconSource != null ? _rewardIconSource.IconOf(item) : null;
             }
             if (resultText != null) resultText.SetText($"You got {DailyGiftBubble.AmountOf(item)}!");
             resultRow.DOKill(true);

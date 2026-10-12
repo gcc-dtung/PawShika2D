@@ -9,6 +9,14 @@ namespace PawBlock.Features.Gameplay
     [RequireComponent(typeof(CanvasGroup))]
     public class RevealBanner : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(BoosterManager boosterManager)
+        {
+            _boosterManager = boosterManager;
+        }
+
         [SerializeField] private RectTransform content;
         [SerializeField] private Button cancelButton;
         [SerializeField] private float slide = -60f; // âm: bắt đầu thấp hơn rồi trượt lên
@@ -28,12 +36,12 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onModeChanged.AddListener(OnModeChanged);
+            if (_boosterManager != null) _boosterManager.onModeChanged.AddListener(OnModeChanged);
         }
 
         private void OnDestroy()
         {
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onModeChanged.RemoveListener(OnModeChanged);
+            if (_boosterManager != null) _boosterManager.onModeChanged.RemoveListener(OnModeChanged);
         }
 
         private void OnDisable()
@@ -49,7 +57,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnCancel()
         {
-            if (BoosterManager.Instance != null) BoosterManager.Instance.CancelModes();
+            if (_boosterManager != null) _boosterManager.CancelModes();
         }
 
         private void Apply(bool on, bool instant)

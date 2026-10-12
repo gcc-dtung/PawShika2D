@@ -26,14 +26,16 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyChallengePanel : MonoBehaviour
     {
+        private IRewardIcons _rewardIconSource;
         private IScreenNavigator _screens;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: quảng cáo có thưởng (chơi bù ngày lỡ).</summary>
-        public void Init(IAdsService ads, IScreenNavigator screens)
+        public void Init(IAdsService ads, IScreenNavigator screens, IRewardIcons rewardIconSource)
         {
             _ads = ads;
             _screens = screens;
+            _rewardIconSource = rewardIconSource;
         }
 
         [Header("Đầu trang")]
@@ -279,10 +281,10 @@ namespace PawBlock.Features.DailyChallenge
                 slot.Pop();
                 AudioManager.Play(SoundId.Reward);
                 AudioManager.Vibrate(HapticType.Success);
-                if (giftBubble != null) giftBubble.Show(slot.Rect, "Claimed!", items, rewardIcons);
+                if (giftBubble != null) giftBubble.Show(slot.Rect, "Claimed!", items, _rewardIconSource);
                 return;
             }
-            if (giftBubble != null) giftBubble.Show(slot.Rect, $"Win {slot.Milestone} days", items, rewardIcons);
+            if (giftBubble != null) giftBubble.Show(slot.Rect, $"Win {slot.Milestone} days", items, _rewardIconSource);
         }
 
         // ---------- Vừa thắng 1 ngày ----------

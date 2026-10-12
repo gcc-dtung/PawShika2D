@@ -19,18 +19,20 @@ namespace PawBlock.Game
     /// </summary>
     public class GameFlowUI : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
         private LevelManager _levels;
         private ScreenFlow _screens;
         private PlayerProfileService _profile;
         private IIAPService _iap;
 
         /// <summary>GameBootstrap gọi trước OnEnable: hồ sơ người chơi (popup hồ sơ), IAP (báo mua lỗi).</summary>
-        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels)
+        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels, BoosterManager boosterManager)
         {
             _profile = profile;
             _iap = iap;
             _screens = screens;
             _levels = levels;
+            _boosterManager = boosterManager;
         }
 
         [SerializeField] private WinPopup winPopup;
@@ -68,7 +70,7 @@ namespace PawBlock.Game
                 if (popup != null) popup.CloseImmediate();
             }
             if (losePopup != null) losePopup.RetryHandler = RetryAfterLose;
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.AddListener(OnBuyBooster);
+            if (_boosterManager != null) _boosterManager.onBuyRequested.AddListener(OnBuyBooster);
             if (_iap != null) _iap.PurchaseFailed += OnPurchaseFailed;
         }
 
@@ -77,7 +79,7 @@ namespace PawBlock.Game
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
             EventBus<AllLevelsCompletedEvent>.Unsubscribe(OnAllLevelsCompleted);
             if (_levels != null) _levels.AutoAdvance = true;
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.RemoveListener(OnBuyBooster);
+            if (_boosterManager != null) _boosterManager.onBuyRequested.RemoveListener(OnBuyBooster);
             if (_iap != null) _iap.PurchaseFailed -= OnPurchaseFailed;
         }
 

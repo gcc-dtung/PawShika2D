@@ -9,14 +9,16 @@ namespace PawBlock.Features.Gameplay
     /// <summary>Hết lượt booster: mua valueOneBuy lượt bằng coin. Mở popup thì ván tạm dừng.</summary>
     public class BuyBoosterPopup : PopupView
     {
+        private BoosterManager _boosterManager;
         private LevelManager _levels;
         private ICurrencyWallet _coins;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
-        public void Init(ICurrencyWallet coins, LevelManager levels)
+        public void Init(ICurrencyWallet coins, LevelManager levels, BoosterManager boosterManager)
         {
             _coins = coins;
             _levels = levels;
+            _boosterManager = boosterManager;
         }
 
         [SerializeField] private TMP_Text titleText;
@@ -46,7 +48,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (_levels != null) _levels.Pause();
 
-            BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(_type) : null;
+            BoosterData data = _boosterManager != null ? _boosterManager.Get(_type) : null;
             if (data == null) return;
             if (titleText != null) titleText.SetText(data.name.ToUpperInvariant());
             if (detailText != null) detailText.SetText(data.detail);
@@ -58,7 +60,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnBuy()
         {
-            if (BoosterManager.Instance == null || !BoosterManager.Instance.Buy(_type))
+            if (_boosterManager == null || !_boosterManager.Buy(_type))
             {
                 // Chưa có Shop (Giai đoạn 6): chỉ báo thiếu coin
                 Debug.Log($"[BuyBoosterPopup] Không đủ coin mua {_type}");

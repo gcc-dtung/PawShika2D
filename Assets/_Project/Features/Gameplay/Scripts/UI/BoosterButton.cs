@@ -15,10 +15,15 @@ namespace PawBlock.Features.Gameplay
     [RequireComponent(typeof(Button))]
     public class BoosterButton : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
         private BoosterInventory _inventory;
 
         /// <summary>GameBootstrap gọi trước OnEnable: kho lượt booster (vẽ lại số lượt khi đổi).</summary>
-        public void Init(BoosterInventory inventory) => _inventory = inventory;
+        public void Init(BoosterInventory inventory, BoosterManager boosterManager)
+        {
+            _inventory = inventory;
+            _boosterManager = boosterManager;
+        }
 
         [SerializeField] private BoosterType type;
         [SerializeField] private Image icon;
@@ -63,7 +68,7 @@ namespace PawBlock.Features.Gameplay
         private void OnEnable()
         {
             if (_inventory != null) _inventory.Changed += OnInventoryChanged;
-            BoosterManager bm = BoosterManager.Instance;
+            BoosterManager bm = _boosterManager;
             if (bm != null)
             {
                 bm.onModeChanged.AddListener(OnModeChanged);
@@ -79,7 +84,7 @@ namespace PawBlock.Features.Gameplay
         private void OnDisable()
         {
             if (_inventory != null) _inventory.Changed -= OnInventoryChanged;
-            BoosterManager bm = BoosterManager.Instance;
+            BoosterManager bm = _boosterManager;
             if (bm != null)
             {
                 bm.onModeChanged.RemoveListener(OnModeChanged);
@@ -98,7 +103,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnClick()
         {
-            if (BoosterManager.Instance != null) BoosterManager.Instance.Press(type);
+            if (_boosterManager != null) _boosterManager.Press(type);
         }
 
         private void OnInventoryChanged(BoosterType changed, int count)
@@ -127,7 +132,7 @@ namespace PawBlock.Features.Gameplay
 
         public void Refresh()
         {
-            BoosterManager bm = BoosterManager.Instance;
+            BoosterManager bm = _boosterManager;
             BoosterData data = bm != null ? bm.Get(type) : null;
             bool unlocked = bm != null && bm.IsUnlocked(type);
             int count = bm != null ? bm.Count(type) : 0;

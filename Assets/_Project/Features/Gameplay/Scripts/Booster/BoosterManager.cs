@@ -14,7 +14,7 @@ namespace PawBlock.Features.Gameplay
     /// Nút trên HUD chỉ gọi Press(type); popup mua nghe onBuyRequested. Lượt chỉ bị trừ khi booster thực sự có tác dụng.
     /// Tutorial mở khóa (BoosterTutorial): BeginTutorial(type) -> chỉ nút đó bấm được; bấm -> TutorialPressed, lần dùng này miễn phí.
     /// </summary>
-    public class BoosterManager : Singleton<BoosterManager>, IBoosterHost, IBoosterInventory
+    public class BoosterManager : MonoBehaviour, IBoosterHost, IBoosterInventory, IBoosterCatalog
     {
         private GridManager _grid;
         private ISaveService _save;
@@ -76,9 +76,8 @@ namespace PawBlock.Features.Gameplay
         public GridManager Grid => _grid;
         public LevelTimer Timer => LevelTimer.Instance;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             foreach (BoosterType type in Enum.GetValues(typeof(BoosterType)))
             {
                 BoosterEffect effect = BoosterEffectFactory.Create(type);
@@ -120,6 +119,12 @@ namespace PawBlock.Features.Gameplay
         {
             BoosterData data = Get(type);
             if (data != null) _inventory.Add(data, amount);
+        }
+
+        public Sprite ItemIcon(BoosterType type)
+        {
+            BoosterData data = Get(type);
+            return data != null ? data.ItemIcon : null;
         }
 
         /// <summary>Đã qua tutorial mở khóa, hoặc đang trong tutorial của chính booster này.</summary>

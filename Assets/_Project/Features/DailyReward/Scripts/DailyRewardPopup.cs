@@ -38,7 +38,7 @@ namespace PawBlock.Features.DailyReward
             if (m == null) return;
             if (!_setup)
             {
-                foreach (DailyRewardSlot s in slots) s.Setup(m.Database != null ? m.Database.Get(s.Day) : null, m.Database);
+                foreach (DailyRewardSlot s in slots) s.Setup(m.Database != null ? m.Database.Get(s.Day) : null, m);
                 _setup = true;
             }
             m.onChanged.RemoveListener(Refresh); // Open lại khi đang mở: không đăng ký trùng

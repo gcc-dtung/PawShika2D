@@ -53,7 +53,7 @@ namespace PawBlock.Features.DailyReward
         }
 
         /// <summary>Hiện quà của ngày (icon lấy từ database / BoosterManager).</summary>
-        public void Setup(DailyRewardDay reward, DailyRewardDatabase db)
+        public void Setup(DailyRewardDay reward, IRewardIcons icons)
         {
             if (dayText != null) dayText.SetText("Day {0}", day + 1);
             int n = reward != null ? reward.items.Count : 0;
@@ -63,7 +63,7 @@ namespace PawBlock.Features.DailyReward
                 itemRoots[i].SetActive(show);
                 if (!show) continue;
                 DailyRewardItem item = reward.items[i];
-                if (itemIcons[i] != null) itemIcons[i].sprite = IconOf(item, db);
+                if (itemIcons[i] != null) itemIcons[i].sprite = icons != null ? icons.IconOf(item) : null;
                 if (itemTexts[i] != null) itemTexts[i].SetText(TextOf(item));
             }
         }
@@ -108,17 +108,6 @@ namespace PawBlock.Features.DailyReward
             _pop = seq;
         }
 
-        private static Sprite IconOf(DailyRewardItem item, DailyRewardDatabase db)
-        {
-            switch (item.kind)
-            {
-                case DailyRewardKind.Coin: return db != null ? db.coinIcon : null;
-                case DailyRewardKind.InfiniteEnergy: return db != null ? db.infiniteEnergyIcon : null;
-                default:
-                    BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(item.booster) : null;
-                    return data != null ? data.ItemIcon : null;
-            }
-        }
 
         private static string TextOf(DailyRewardItem item)
         {

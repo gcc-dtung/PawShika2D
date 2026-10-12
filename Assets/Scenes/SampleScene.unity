@@ -57487,6 +57487,9 @@ MonoBehaviour:
   dragFeedback: {fileID: 82617398}
   gameplayFeedback: {fileID: 82617381}
   gameHapticEvents: {fileID: 1918377223}
+  boosterUseFx: {fileID: 1056015950}
+  freezeOverlayFx: {fileID: 1942025443}
+  revealBanner: {fileID: 1045284869}
   boosterManager: {fileID: 82617385}
   boosterTutorial: {fileID: 82617390}
   levelStatsRecorder: {fileID: 82617395}

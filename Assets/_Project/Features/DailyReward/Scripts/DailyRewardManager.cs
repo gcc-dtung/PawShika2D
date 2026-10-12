@@ -13,8 +13,9 @@ namespace PawBlock.Features.DailyReward
     /// - Sang ngày mới (qua nửa đêm khi đang mở game, quay lại app) thì tự cập nhật.
     /// - autoOpen: mở game lần đầu trong ngày mà chưa nhận thì tự mở popup (GameFlowUI) khi đang ở Main Menu.
     /// </summary>
-    public class DailyRewardManager : Singleton<DailyRewardManager>, IRewardGranter
+    public class DailyRewardManager : Singleton<DailyRewardManager>, IRewardGranter, IRewardIcons
     {
+        private IBoosterCatalog _boosterIcons;
         private IScreenNavigator _screens;
         private ISaveService _save;
         private DailyRewardSave _data;
@@ -27,7 +28,7 @@ namespace PawBlock.Features.DailyReward
         /// <summary>
         /// GameBootstrap gọi trước Start: section "dailyReward", nơi nhận quà (ví coin, kho booster, năng lượng – đều qua contract).
         /// </summary>
-        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads, IScreenNavigator screens)
+        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads, IScreenNavigator screens, IBoosterCatalog boosterIcons)
         {
             _clock = clock;
             _ads = ads;
@@ -38,6 +39,7 @@ namespace PawBlock.Features.DailyReward
             _energy = energy;
             _model = null;
             _screens = screens;
+            _boosterIcons = boosterIcons;
         }
 
         [SerializeField] private DailyRewardDatabase database;
@@ -167,6 +169,17 @@ namespace PawBlock.Features.DailyReward
         }
 
         void IRewardGranter.Grant(DailyRewardItem item) => GrantItem(item);
+
+        /// <summary>Icon 1 món quà: coin / năng lượng vô hạn từ database, booster từ Gameplay (IBoosterCatalog).</summary>
+        public Sprite IconOf(DailyRewardItem item)
+        {
+            switch (item.kind)
+            {
+                case DailyRewardKind.Coin: return database != null ? database.coinIcon : null;
+                case DailyRewardKind.InfiniteEnergy: return database != null ? database.infiniteEnergyIcon : null;
+                default: return _boosterIcons != null ? _boosterIcons.ItemIcon(item.booster) : null;
+            }
+        }
 
         /// <summary>Trao 1 món quà (coin / booster / năng lượng vô hạn). Daily Challenge, Vòng quay dùng qua IRewardGranter.</summary>
         public void GrantItem(DailyRewardItem item)

@@ -30,6 +30,7 @@ namespace PawBlock.Game
         /// <summary>LevelManager trong scene (Cheat Panel, Debug Panel đọc trạng thái ván).</summary>
         public static LevelManager Levels => _scene?.Levels;
         private static GridManager Grid => _scene?.Grid;
+        private static BoosterManager Boosters => _scene?.Boosters;
 
         public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
         public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
@@ -213,19 +214,19 @@ namespace PawBlock.Game
 
         public static int BoosterCount(BoosterType type)
         {
-            BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(type) : null;
+            BoosterData data = Boosters != null ? Boosters.Get(type) : null;
             return data != null && _services != null ? _services.Boosters.Get(data) : 0;
         }
 
         public static void AddBooster(BoosterType type, int amount)
         {
-            BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(type) : null;
+            BoosterData data = Boosters != null ? Boosters.Get(type) : null;
             if (data != null && _services != null) _services.Boosters.SetCount(data, Mathf.Max(0, _services.Boosters.Get(data) + amount));
         }
 
         public static void SetBooster(BoosterType type, int value)
         {
-            BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(type) : null;
+            BoosterData data = Boosters != null ? Boosters.Get(type) : null;
             if (data != null && _services != null) _services.Boosters.SetCount(data, Mathf.Max(0, value));
         }
 

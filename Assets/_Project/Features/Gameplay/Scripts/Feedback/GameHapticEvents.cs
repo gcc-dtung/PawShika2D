@@ -15,12 +15,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class GameHapticEvents : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid)
+        public void Init(GridManager grid, BoosterManager boosterManager)
         {
             _grid = grid;
+            _boosterManager = boosterManager;
         }
 
         [SerializeField] private bool onBlockPlaced = true;
@@ -36,7 +38,7 @@ namespace PawBlock.Features.Gameplay
         private void Start()
         {
             _timer = LevelTimer.Instance;
-            _booster = BoosterManager.Instance;
+            _booster = _boosterManager;
 
             if (_grid != null)
             {

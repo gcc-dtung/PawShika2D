@@ -17,6 +17,7 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStatsRecorder : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
         private GridManager _grid;
         private LevelManager _levels;
         private IScreenNavigator _screens;
@@ -24,13 +25,14 @@ namespace PawBlock.Features.Gameplay
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels, GridManager grid)
+        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels, GridManager grid, BoosterManager boosterManager)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _screens = screens;
             _levels = levels;
             _grid = grid;
+            _boosterManager = boosterManager;
         }
 
         private LevelStatSave _current;  // lượt đang chơi, null nếu không có
@@ -53,7 +55,7 @@ namespace PawBlock.Features.Gameplay
                 _grid.onBlockRemoved.AddListener(OnBlockRemoved);
                 _grid.onBlockPlaced.AddListener(OnBlockPlaced);
             }
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.AddListener(OnBoosterUsed);
+            if (_boosterManager != null) _boosterManager.onBoosterUsed.AddListener(OnBoosterUsed);
         }
 
         private void OnDisable()
@@ -70,7 +72,7 @@ namespace PawBlock.Features.Gameplay
                 _grid.onBlockRemoved.RemoveListener(OnBlockRemoved);
                 _grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
             }
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.RemoveListener(OnBoosterUsed);
+            if (_boosterManager != null) _boosterManager.onBoosterUsed.RemoveListener(OnBoosterUsed);
         }
 
         // App vào nền: không tính thời gian ở ngoài game

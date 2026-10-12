@@ -36,7 +36,7 @@ namespace PawBlock.Features.DailyChallenge
         }
 
         /// <summary>Hiện dưới <paramref name="anchor"/> với các món quà; icons lấy từ DailyRewardDatabase (coin, năng lượng vô hạn).</summary>
-        public void Show(RectTransform anchor, string heading, IList<DailyRewardItem> items, DailyRewardDatabase icons)
+        public void Show(RectTransform anchor, string heading, IList<DailyRewardItem> items, IRewardIcons icons)
         {
             gameObject.SetActive(true);
             if (title != null) title.SetText(heading);
@@ -72,7 +72,7 @@ namespace PawBlock.Features.DailyChallenge
             gameObject.SetActive(false);
         }
 
-        private void Fill(IList<DailyRewardItem> items, DailyRewardDatabase icons)
+        private void Fill(IList<DailyRewardItem> items, IRewardIcons icons)
         {
             foreach (Image i in _items) i.gameObject.SetActive(false);
             if (items == null || itemIconTemplate == null) return;
@@ -85,23 +85,12 @@ namespace PawBlock.Features.DailyChallenge
                 }
                 Image img = _items[n];
                 img.gameObject.SetActive(true);
-                img.sprite = IconOf(items[n], icons);
+                img.sprite = icons != null ? icons.IconOf(items[n]) : null;
                 TMP_Text amount = img.GetComponentInChildren<TMP_Text>(true);
                 if (amount != null) amount.SetText(AmountOf(items[n]));
             }
         }
 
-        public static Sprite IconOf(DailyRewardItem item, DailyRewardDatabase icons)
-        {
-            switch (item.kind)
-            {
-                case DailyRewardKind.Coin: return icons != null ? icons.coinIcon : null;
-                case DailyRewardKind.InfiniteEnergy: return icons != null ? icons.infiniteEnergyIcon : null;
-                default:
-                    BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(item.booster) : null;
-                    return data != null ? data.ItemIcon : null;
-            }
-        }
 
         /// <summary>"15m" cho năng lượng vô hạn (phút), "x2" cho booster / coin.</summary>
         public static string AmountOf(DailyRewardItem item) =>

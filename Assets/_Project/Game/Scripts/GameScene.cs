@@ -11,5 +11,6 @@ namespace PawBlock.Game
         public ScreenFlow Screens { get; set; }
         public LevelManager Levels { get; set; }
         public GridManager Grid { get; set; }
+        public BoosterManager Boosters { get; set; }
     }
 }

@@ -17,6 +17,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterUseFx : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(BoosterManager boosterManager)
+        {
+            _boosterManager = boosterManager;
+        }
+
         [Header("Thời gian (tổng nên bằng BoosterManager.effectDelay)")]
         [SerializeField] private float popDuration = 0.42f;
         [SerializeField] private float holdDuration = 0.45f;
@@ -110,7 +118,7 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _boosters = BoosterManager.Instance;
+            _boosters = _boosterManager;
             if (_boosters != null) _boosters.onBoosterUsed.AddListener(Play);
         }
 

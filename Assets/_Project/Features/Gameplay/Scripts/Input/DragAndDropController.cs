@@ -8,12 +8,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class DragAndDropController : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid)
+        public void Init(GridManager grid, BoosterManager boosterManager)
         {
             _grid = grid;
+            _boosterManager = boosterManager;
         }
 
         [SerializeField] private Camera cam;
@@ -67,7 +69,7 @@ namespace PawBlock.Features.Gameplay
             if (!cell) return;
 
             // Đang chọn số cho booster Reveal: chạm ô là chọn, không kéo
-            BoosterManager booster = BoosterManager.Instance;
+            BoosterManager booster = _boosterManager;
             if (booster && booster.HandleCellTap(cell.Position)) return;
 
             // Ô đã có khối: chờ thả tay để gỡ khối (kéo sang khối khác thì thôi)

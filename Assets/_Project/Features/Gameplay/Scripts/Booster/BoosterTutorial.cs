@@ -15,14 +15,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterTutorial : MonoBehaviour, ILevelIntro
     {
+        private BoosterManager _boosterManager;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save)
+        public void Init(ISaveService save, BoosterManager boosterManager)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
+            _boosterManager = boosterManager;
         }
 
         [SerializeField] private BoosterTutorialView view;
@@ -36,7 +38,7 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _boosters = BoosterManager.Instance;
+            _boosters = _boosterManager;
             if (_boosters != null) _boosters.TutorialPressed += OnTutorialPressed;
         }
 
@@ -85,7 +87,7 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Booster chưa mở có levelUnlock nhỏ nhất mà level <paramref name="levelNumber"/> đã đạt tới.</summary>
         private BoosterData NextToUnlock(int levelNumber)
         {
-            BoosterManager bm = _boosters != null ? _boosters : BoosterManager.Instance;
+            BoosterManager bm = _boosters != null ? _boosters : _boosterManager;
             if (bm == null || bm.Database == null) return null;
             BoosterData best = null;
             foreach (BoosterData d in bm.Database.boosterDatas)

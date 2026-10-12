@@ -20,6 +20,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class FreezeOverlayFX : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(BoosterManager boosterManager)
+        {
+            _boosterManager = boosterManager;
+        }
+
         [Header("Đồng hồ + bàn tay (Spine)")]
         [SerializeField] private SkeletonGraphic handStartFreeze;
         [SerializeField, SpineAnimation(dataField = nameof(handStartFreeze))] private string startAnimation = "Start";
@@ -61,7 +69,7 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _boosters = BoosterManager.Instance;
+            _boosters = _boosterManager;
             if (_boosters != null) _boosters.onBoosterUsed.AddListener(OnBoosterUsed);
         }
 

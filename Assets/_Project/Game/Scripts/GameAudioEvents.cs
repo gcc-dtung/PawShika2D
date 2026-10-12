@@ -13,16 +13,18 @@ namespace PawBlock.Game
     /// </summary>
     public class GameAudioEvents : MonoBehaviour
     {
+        private BoosterManager _boosterManager;
         private GridManager _grid;
         private LevelManager _levels;
         private ScreenFlow _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(ScreenFlow screens, LevelManager levels, GridManager grid)
+        public void Init(ScreenFlow screens, LevelManager levels, GridManager grid, BoosterManager boosterManager)
         {
             _screens = screens;
             _levels = levels;
             _grid = grid;
+            _boosterManager = boosterManager;
         }
 
         [Header("Tiếng mèo kèm theo (xác suất mỗi lần)")]
@@ -51,7 +53,7 @@ namespace PawBlock.Game
         private void Start()
         {
             _timer = LevelTimer.Instance;
-            _booster = BoosterManager.Instance;
+            _booster = _boosterManager;
             _spawner = FindFirstObjectByType<GridSpawner>();
 
             if (_grid != null)
