@@ -14,6 +14,7 @@ namespace PawBlock.Features.Gameplay
     {
         public const float DefaultMinOrthoSize = 5f;
 
+        [Tooltip("Gán từ ngoài: Main Camera của scene (override trên instance GameplayHUD)")]
         [SerializeField] private Camera targetCamera;
         [SerializeField] private bool respectSafeArea = true;
         [Tooltip("Lưới nhỏ không bị phóng quá to: nửa chiều cao camera tối thiểu (world)")]

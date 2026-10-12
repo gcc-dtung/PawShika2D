@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Features.Gameplay;
 using PawBlock.Features.Settings;
+using PawBlock.Shared;
 
 namespace PawBlock.Game
 {

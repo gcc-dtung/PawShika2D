@@ -19,6 +19,7 @@ namespace PawBlock.Features.LuckyWheel
         /// <summary>GameBootstrap gọi trước OnEnable: ví sao (Economy, qua contract).</summary>
         public void Init(ICurrencyWallet stars) => _stars = stars;
 
+        [Tooltip("Gán từ ngoài: instance popup trong Canvas_Popup (override trên instance MainMenu)")]
         [SerializeField] private LuckyWheelPopup popup;
         [SerializeField] private LuckyWheelDatabase database;
         [SerializeField] private MenuShortcutButton shortcut;

@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 
-namespace PawBlock.Features.Settings
+namespace PawBlock.Shared
 {
     /// <summary>Nút bánh răng (HUD trong ván, thanh trên Main Menu): bấm -> mở popup cài đặt (IMenuPopups).</summary>
     [RequireComponent(typeof(Button))]
