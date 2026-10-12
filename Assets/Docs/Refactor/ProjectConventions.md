@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-12 |
+| Cập nhật lần cuối | 2026-10-12 (P1) |
 
 ---
 
@@ -50,5 +50,19 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 ## 6. Test
 
-- Test của dự án nằm trong `Assembly-CSharp-Editor` (`Script/Editor/Tests/`), tới P6 mới tách asmdef.
+- Test của dự án nằm trong `Assembly-CSharp-Editor` (`<module>/Tests/Editor/`, từ P1), tới P6 mới tách asmdef.
 - Chạy test **lọc theo assembly `Assembly-CSharp-Editor`**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
+
+## 7. Namespace và thư mục (từ P1)
+
+| Quy tắc | Ví dụ | Lý do |
+| --- | --- | --- |
+| **Một namespace cho mỗi module / feature**, thư mục con không thêm cấp (khác ví dụ `Core.Foundation.Save` của guide 5) | `Core/Foundation/Save/SaveSystem.cs` → `PawBlock.Core.Foundation`; `Features/Gameplay/Scripts/Board/BoardModel.cs` → `PawBlock.Features.Gameplay` | Ít `using`; thư mục con trong một module gọi thẳng nhau (guide 5) |
+| Code Editor dùng **cùng namespace** với module, không thêm `.Editor` | `Features/Gameplay/Editor/Level/LevelEditorWindow.cs` → `PawBlock.Features.Gameplay` | Namespace có đoạn `Editor` che mất class `UnityEditor.Editor` (`: Editor` báo lỗi) |
+| Test: namespace module + `.Tests` | `PawBlock.Features.LuckyWheel.Tests` | Tách khỏi code thật, vẫn thấy type của module |
+| Không đặt type trùng tên namespace (`Gameplay`, `Shop`, `Profile`, `Settings`, `Game`, `Core`…) | — | Trong `PawBlock.*`, tên đó sẽ trỏ vào namespace |
+| `Core` và `Shared` không có `Scripts/`; feature và `Game` có `Scripts/` | `Core/Foundation/Audio/`, `Features/Shop/Scripts/` | Theo cây thư mục guide 5 |
+| Tối đa 4 tầng từ `_Project/`: gộp `Booster/Effects` vào `Booster/`, `Level/Generator` vào `Level/` | `Features/Gameplay/Scripts/Booster/FreezeBooster.cs` | Guide 5 |
+
+- P1 **không** sửa định dạng (`if` một dòng, `private` thiếu…) dù đụng mọi file: chỉ bọc namespace + thụt lề + `using`, để diff chỉ có thay đổi cơ học. Định dạng sửa dần khi sửa logic từng file (mục 3).
+- Phụ thuộc sai chiều lộ ra sau khi có namespace: xem [Dependencies.md](Dependencies.md).

@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0 xong (2026-10-12), tiếp P1 |
+| Trạng thái | P0, P1 xong (2026-10-12), tiếp P2 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-12 |
@@ -164,24 +164,26 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Mục tiêu:** code nằm đúng chỗ theo bảng 3.2, có namespace. **Không đổi một dòng logic.**
 
 **Thêm**
-- [ ] Cây thư mục 3.1 (chỉ thư mục có nội dung).
-- [ ] `Core/Contracts/Events/`: tách `GameEvents.cs` thành 1 struct / file (`LevelLoadedEvent`, `GameStateChangedEvent`, `ScreenChangedEvent`, `BoosterLockChangedEvent`, `BoosterTutorialCompletedEvent`, `StarsChangedEvent`...) + `IGameEvent`.
-- [ ] `Core/Contracts/Types/BoosterType.cs` (tách khỏi `BoosterDatabase.cs`), `GameState.cs`, `SoundId.cs`.
+- [x] Cây thư mục 3.1 (chỉ thư mục có nội dung). `Booster/Effects`, `Level/Generator` gộp lên 1 cấp (tối đa 4 tầng).
+- [x] `Core/Contracts/Events/`: tách `GameEvents.cs` thành 1 struct / file (`LevelLoadedEvent`, `GameStateChangedEvent`, `ScreenChangedEvent`, `BoosterLockChangedEvent`, `BoosterTutorialCompletedEvent`, `StarsChangedEvent`...) + `IGameEvent`.
+- [x] `Core/Contracts/Types/BoosterType.cs` (tách khỏi `BoosterDatabase.cs`), `GameState.cs`, `SoundId.cs`.
 
 **Di chuyển** (trong Unity, theo bảng 3.2)
-- [ ] Toàn bộ `Script/Gameplay`, `Script/UI`, `Script/Editor` vào module đích. Thư mục `Editor/` của từng module giữ tên `Editor` (Unity cần để không đưa vào build trước khi có asmdef).
-- [ ] `Editor/Tests/*` → `<module>/Tests/Editor/`.
+- [x] Toàn bộ `Script/Gameplay`, `Script/UI`, `Script/Editor` vào module đích (198 file bằng `AssetDatabase.MoveAsset`, GUID giữ nguyên 198 / 198). Thư mục `Editor/` của từng module giữ tên `Editor` (Unity cần để không đưa vào build trước khi có asmdef).
+- [x] `Editor/Tests/*` → `<module>/Tests/Editor/`.
 
 **Sửa**
-- [ ] Mỗi file: bọc `namespace PawBlock.<Module>[.<Feature>] { … }` dạng block, thêm `using` cần thiết. File nào đụng tới thì sửa luôn format (guide 7.1) **chỉ trong file đó**.
-- [ ] Grep tham chiếu theo **tên type dạng chuỗi**: `Type.GetType`, `GetType().Name`, `"PawBlock…"`, tên class trong `MenuItem`, JSON / SerializeReference (hiện dùng `JsonUtility` cho `SaveData` → không lưu tên type, an toàn).
+- [x] Mỗi file: bọc `namespace PawBlock.<Module>[.<Feature>] { … }` dạng block, thêm `using` cần thiết (207 file, 257 type). **Không** sửa format ở P1 (đụng mọi file → thành format hàng loạt); xem `ProjectConventions.md` mục 7.
+- [x] Grep tham chiếu theo **tên type dạng chuỗi**: `Type.GetType`, `GetType().Name`, `"PawBlock…"`, tên class trong `MenuItem`, JSON / SerializeReference (hiện dùng `JsonUtility` cho `SaveData` → không lưu tên type, an toàn).
 
 **Xóa**
-- [ ] Thư mục cũ `Script/Gameplay`, `Script/UI`, `Script/Editor` khi đã trống.
+- [x] Thư mục cũ `Script/Gameplay`, `Script/UI`, `Script/Editor` khi đã trống (xóa cả `Script/`).
 
 **Rủi ro:** scene / prefab mất script (Missing Script) nếu di chuyển ngoài Unity hoặc tên class ≠ tên file.
 **Kiểm tra:** compile sạch; 46 test xanh; mở `SampleScene` + 7 prefab không có Missing Script; smoke test.
 **Xong khi:** không còn file trong `Script/`; mọi file có namespace.
+
+**Kết quả P1:** compile sạch; 104 / 104 test; scene 0 Missing Script (1 368 MonoBehaviour), 7 prefab 0, 365 ScriptableObject đọc được; không UnityEvent / `SerializeReference` nào lưu tên type của dự án; smoke test qua MCP (Menu, chơi, đặt khối, Đóng băng, hết giờ, thua, chơi lại, thắng, Shop, Settings, Profile, Daily Reward, nạp năng lượng, tab Daily, Lucky Wheel) không lỗi Console. Phụ thuộc sai chiều lộ ra: [Dependencies.md](Dependencies.md) (89 `using` / 57 file).
 
 ---
 
@@ -410,10 +412,10 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Frame Debugger 3 màn + Build Report Android | 1.5 | 0.5 | 100% | Đo bằng Profiler counter + build qua MCP |
 | | | `.editorconfig` + Unity Analyzers | 1 | 0.5 | 100% | |
 | | | `ProjectConventions.md`, `Baseline.md`, lưu 3 save mẫu | 1 | 0.5 | 100% | |
-| P1 Thư mục + namespace | Không đổi logic | Tạo cây thư mục, di chuyển 199 file trong Unity | 3 | | 0% | |
-| | | Thêm namespace + `using` cho 199 file | 4 | | 0% | |
-| | | Tách GameEvents, BoosterType, GameState, SoundId sang Contracts | 1 | | 0% | |
-| | | Kiểm tra Missing Script, test, smoke test | 1 | | 0% | |
+| P1 Thư mục + namespace | Không đổi logic | Tạo cây thư mục, di chuyển 199 file trong Unity | 3 | 0.4 | 100% | Script mapping + `MoveAsset` qua MCP |
+| | | Thêm namespace + `using` cho 199 file | 4 | 0.5 | 100% | Script tự bọc + dò `using` |
+| | | Tách GameEvents, BoosterType, GameState, SoundId sang Contracts | 1 | 0.1 | 100% | |
+| | | Kiểm tra Missing Script, test, smoke test | 1 | 0.5 | 100% | |
 | P2 Contracts | Event + interface | Định nghĩa ~10 event, phát song song code cũ | 2 | | 0% | |
 | | | ~6 interface, cài vào class sở hữu | 2 | | 0% | |
 | | | Unit test qua interface | 1 | | 0% | |
@@ -444,7 +446,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **2** | **4%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **3.5** | **12%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 
