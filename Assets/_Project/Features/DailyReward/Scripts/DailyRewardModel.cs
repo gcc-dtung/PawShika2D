@@ -18,10 +18,10 @@ namespace PawBlock.Features.DailyReward
     /// </summary>
     public class DailyRewardModel
     {
-        private readonly DailySave _save;
+        private readonly DailyRewardSave _save;
         private readonly int _cycleDays;
 
-        public DailyRewardModel(DailySave save, int cycleDays)
+        public DailyRewardModel(DailyRewardSave save, int cycleDays)
         {
             _save = save;
             _cycleDays = cycleDays;

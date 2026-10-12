@@ -2,6 +2,10 @@ using System;
 using System.IO;
 using UnityEngine;
 using PawBlock.Core.Contracts;
+using PawBlock.Features.DailyReward;
+using PawBlock.Features.Economy;
+using PawBlock.Features.Gameplay;
+using PawBlock.Features.Profile;
 
 namespace PawBlock.Core.Foundation
 {
@@ -146,7 +150,7 @@ namespace PawBlock.Core.Foundation
             if (data.boosters == null) data.boosters = new System.Collections.Generic.List<BoosterSave>();
             if (data.energy == null) data.energy = new EnergySave();
             if (data.settings == null) data.settings = new SettingsSave();
-            if (data.daily == null) data.daily = new DailySave();
+            if (data.daily == null) data.daily = new DailyRewardSave();
             if (data.clock == null) data.clock = new ClockSave();
             if (data.profile == null) data.profile = new ProfileSave();
             if (data.levelStats == null) data.levelStats = new System.Collections.Generic.List<LevelStatSave>();
