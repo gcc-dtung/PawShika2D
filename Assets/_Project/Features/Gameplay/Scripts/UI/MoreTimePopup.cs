@@ -15,14 +15,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class MoreTimePopup : PopupView
     {
+        private LevelManager _levels;
         private ICurrencyWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
-        public void Init(ICurrencyWallet coins, IAdsService ads)
+        public void Init(ICurrencyWallet coins, IAdsService ads, LevelManager levels)
         {
             _coins = coins;
             _ads = ads;
+            _levels = levels;
         }
 
         [SerializeField] private Button adsButton;
@@ -80,13 +82,13 @@ namespace PawBlock.Features.Gameplay
         private void OnClose()
         {
             Close();
-            if (LevelManager.Instance != null) LevelManager.Instance.GiveUp();
+            if (_levels != null) _levels.GiveUp();
         }
 
         private void Revive(int seconds)
         {
             Close();
-            if (LevelManager.Instance != null) LevelManager.Instance.Revive(seconds);
+            if (_levels != null) _levels.Revive(seconds);
         }
 
         private void SetButtons(bool interactable)

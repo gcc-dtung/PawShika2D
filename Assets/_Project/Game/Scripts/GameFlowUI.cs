@@ -19,16 +19,18 @@ namespace PawBlock.Game
     /// </summary>
     public class GameFlowUI : MonoBehaviour
     {
+        private LevelManager _levels;
         private ScreenFlow _screens;
         private PlayerProfileService _profile;
         private IIAPService _iap;
 
         /// <summary>GameBootstrap gọi trước OnEnable: hồ sơ người chơi (popup hồ sơ), IAP (báo mua lỗi).</summary>
-        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens)
+        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels)
         {
             _profile = profile;
             _iap = iap;
             _screens = screens;
+            _levels = levels;
         }
 
         [SerializeField] private WinPopup winPopup;
@@ -56,7 +58,7 @@ namespace PawBlock.Game
         {
             EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
             EventBus<AllLevelsCompletedEvent>.Subscribe(OnAllLevelsCompleted);
-            if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = false; // popup quyết định sang level kế / chơi lại
+            if (_levels != null) _levels.AutoAdvance = false; // popup quyết định sang level kế / chơi lại
         }
 
         private void Start()
@@ -74,7 +76,7 @@ namespace PawBlock.Game
         {
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
             EventBus<AllLevelsCompletedEvent>.Unsubscribe(OnAllLevelsCompleted);
-            if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = true;
+            if (_levels != null) _levels.AutoAdvance = true;
             if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.RemoveListener(OnBuyBooster);
             if (_iap != null) _iap.PurchaseFailed -= OnPurchaseFailed;
         }
@@ -84,7 +86,7 @@ namespace PawBlock.Game
         {
             if (settingsPopup == null || settingsPopup.IsOpen) return;
             bool inMenu = _screens != null && _screens.IsMenu;
-            if (!inMenu && LevelManager.Instance != null && !LevelManager.Instance.IsPlaying) return;
+            if (!inMenu && _levels != null && !_levels.IsPlaying) return;
             settingsPopup.Open();
         }
 
@@ -123,7 +125,7 @@ namespace PawBlock.Game
         {
             if (refillEnergyPopup == null || refillEnergyPopup.IsOpen) return;
             bool inMenu = _screens != null && _screens.IsMenu;
-            if (!inMenu && LevelManager.Instance != null && !LevelManager.Instance.IsPlaying) return; // đang có popup khác
+            if (!inMenu && _levels != null && !_levels.IsPlaying) return; // đang có popup khác
             refillEnergyPopup.ShowOptional();
         }
 
@@ -141,7 +143,7 @@ namespace PawBlock.Game
         /// <summary>Thua rồi bấm Retry: còn năng lượng thì chơi lại, hết thì chờ / nạp rồi mới chơi lại.</summary>
         private void RetryAfterLose()
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             if (lm == null) return;
             if (EnergyManager.Instance == null || EnergyManager.Instance.CanPlay) lm.Retry();
             else if (refillEnergyPopup != null) refillEnergyPopup.ShowRequired(lm.Retry, () => Open(losePopup)); // X -> về lại popup Thua
@@ -153,7 +155,7 @@ namespace PawBlock.Game
         {
             ShowNotice(string.Format(comingSoonMessage, e.LevelCount), comingSoonTitle, () =>
             {
-                if (LevelManager.Instance != null) LevelManager.Instance.RestartFromFirst();
+                if (_levels != null) _levels.RestartFromFirst();
             });
         }
 

@@ -13,12 +13,14 @@ namespace PawBlock.Game
     /// </summary>
     public class GameAudioEvents : MonoBehaviour
     {
+        private LevelManager _levels;
         private ScreenFlow _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(ScreenFlow screens)
+        public void Init(ScreenFlow screens, LevelManager levels)
         {
             _screens = screens;
+            _levels = levels;
         }
 
         [Header("Tiếng mèo kèm theo (xác suất mỗi lần)")]
@@ -144,7 +146,7 @@ namespace PawBlock.Game
         private void RefreshMusicPitch()
         {
             if (AudioManager.Instance == null) return;
-            bool playing = LevelManager.Instance == null || LevelManager.Instance.State == GameState.Playing;
+            bool playing = _levels == null || _levels.State == GameState.Playing;
             bool hurry = playing && _timer != null && _timer.IsLow && !_timer.IsFrozen && !_timer.IsTimeUp;
             AudioManager.Instance.SetMusicPitch(hurry ? lowTimeMusicPitch : 1f);
         }

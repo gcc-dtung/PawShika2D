@@ -16,12 +16,14 @@ namespace PawBlock.Game
     [RequireComponent(typeof(Button))]
     public class PlayButtonView : MonoBehaviour
     {
+        private LevelManager _levels;
         private ScreenFlow _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(ScreenFlow screens)
+        public void Init(ScreenFlow screens, LevelManager levels)
         {
             _screens = screens;
+            _levels = levels;
         }
 
         [SerializeField] private TMP_Text levelText;
@@ -100,7 +102,7 @@ namespace PawBlock.Game
 
         private void Refresh()
         {
-            if (LevelManager.Instance != null) SetLevel(LevelManager.Instance.CurrentLevelNumber);
+            if (_levels != null) SetLevel(_levels.CurrentLevelNumber);
         }
 
         private void OnLevelLoaded(LevelLoadedEvent e) => SetLevel(e.Number);
@@ -114,7 +116,7 @@ namespace PawBlock.Game
         private void ApplyDifficulty()
         {
             CacheNormal();
-            LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+            LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
             DifficultyStyle style = theme != null && level != null ? theme.Get(level.difficulty) : null;
             bool hard = style != null && style.playFace != null;
 

@@ -7,6 +7,14 @@ namespace PawBlock.Features.Gameplay
 {
     public class GridSpawner : MonoBehaviour
     {
+        private LevelManager _levels;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelManager levels)
+        {
+            _levels = levels;
+        }
+
         public const float CellSpacing = 1.2f; // cellGap + cellSize
 
         [SerializeField] private CellView cellPrefab;
@@ -60,7 +68,7 @@ namespace PawBlock.Features.Gameplay
         private void Start()
         {
             // Có LevelManager thì để LevelManager quyết định level nào được spawn
-            if (LevelManager.Instance == null)
+            if (_levels == null)
             {
                 Spawn(levelData);
             }

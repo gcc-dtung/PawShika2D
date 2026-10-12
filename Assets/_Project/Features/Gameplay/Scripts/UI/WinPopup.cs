@@ -23,16 +23,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class WinPopup : PopupView
     {
+        private LevelManager _levels;
         private IScreenNavigator _screens;
         private ICurrencyWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
-        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens)
+        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens, LevelManager levels)
         {
             _coins = coins;
             _ads = ads;
             _screens = screens;
+            _levels = levels;
         }
 
         [Header("Thành phần")]
@@ -195,21 +197,21 @@ namespace PawBlock.Features.Gameplay
         // ---------- Nhận thưởng ----------
 
         // Theo độ khó level vừa thắng: Normal 10 / Hard 20 / Very Hard 30 (EconomyConfig), chưa tính sao
-        private static int BaseReward
+        private int BaseReward
         {
             get
             {
-                LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+                LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
                 return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal);
             }
         }
 
         // Thưởng thật: theo độ khó + coinsPerStar x số sao
-        private static int CoinReward
+        private int CoinReward
         {
             get
             {
-                LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+                LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
                 int stars = LevelStars.Instance != null ? LevelStars.Instance.Stars : 0;
                 return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal, stars);
             }
@@ -305,7 +307,7 @@ namespace PawBlock.Features.Gameplay
             seq.OnComplete(() =>
             {
                 Close();
-                LevelManager lm = LevelManager.Instance;
+                LevelManager lm = _levels;
                 if (lm != null && lm.IsDaily && _screens != null) _screens.ShowMenu(); // Daily: về tab Daily
                 else if (lm != null) lm.NextLevel();
             });

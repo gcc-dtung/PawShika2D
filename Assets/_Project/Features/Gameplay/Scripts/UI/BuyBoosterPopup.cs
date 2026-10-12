@@ -9,10 +9,15 @@ namespace PawBlock.Features.Gameplay
     /// <summary>Hết lượt booster: mua valueOneBuy lượt bằng coin. Mở popup thì ván tạm dừng.</summary>
     public class BuyBoosterPopup : PopupView
     {
+        private LevelManager _levels;
         private ICurrencyWallet _coins;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
-        public void Init(ICurrencyWallet coins) => _coins = coins;
+        public void Init(ICurrencyWallet coins, LevelManager levels)
+        {
+            _coins = coins;
+            _levels = levels;
+        }
 
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text detailText;
@@ -39,7 +44,7 @@ namespace PawBlock.Features.Gameplay
 
         protected override void OnOpen()
         {
-            if (LevelManager.Instance != null) LevelManager.Instance.Pause();
+            if (_levels != null) _levels.Pause();
 
             BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(_type) : null;
             if (data == null) return;
@@ -65,7 +70,7 @@ namespace PawBlock.Features.Gameplay
         private void OnClose()
         {
             Close();
-            if (LevelManager.Instance != null) LevelManager.Instance.Resume();
+            if (_levels != null) _levels.Resume();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace PawBlock.Features.Gameplay
     /// Daily Challenge: LoadDaily nạp level sinh theo ngày (không thuộc database, không đổi level hiện tại đã lưu);
     /// Retry chơi lại đúng level Daily, NextLevel không làm gì (màn thắng đưa về Menu).
     /// </summary>
-    public class LevelManager : Singleton<LevelManager>
+    public class LevelManager : MonoBehaviour, IGamePause
     {
         private ISaveService _save;
         private GameplaySave _data;
@@ -60,9 +60,8 @@ namespace PawBlock.Features.Gameplay
         public int CurrentLevelNumber => _currentIndex + 1;
         public LevelDefinition CurrentLevel => _daily != null ? _daily : database != null ? database.Get(_currentIndex) : null;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
         }
 

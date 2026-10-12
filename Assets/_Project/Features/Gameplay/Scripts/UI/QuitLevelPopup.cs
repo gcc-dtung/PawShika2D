@@ -14,12 +14,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class QuitLevelPopup : PopupView
     {
+        private LevelManager _levels;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens)
+        public void Init(IScreenNavigator screens, LevelManager levels)
         {
             _screens = screens;
+            _levels = levels;
         }
 
         [SerializeField] private Button quitButton;
@@ -34,7 +36,7 @@ namespace PawBlock.Features.Gameplay
 
         protected override void OnOpen()
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             if (lm != null && lm.IsPlaying)
             {
                 if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
@@ -53,7 +55,7 @@ namespace PawBlock.Features.Gameplay
         {
             Close();
             // Ván đang tạm dừng (bởi popup này hoặc Setting trước đó) -> chơi tiếp
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             if (lm != null && lm.State == GameState.Paused) lm.Resume();
         }
     }

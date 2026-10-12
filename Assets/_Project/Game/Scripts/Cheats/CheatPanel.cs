@@ -226,7 +226,7 @@ namespace PawBlock.Game
         private static string StatusText()
         {
             string screen = DebugCheats.InMenu ? "Main Menu" : "Trong ván";
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = DebugCheats.Levels;
             string state = lm != null ? lm.State.ToString() : "-";
             EnergyManager en = EnergyManager.Instance;
             string energy = en != null ? (en.IsInfinite ? "∞" : $"{en.Current}/{en.Max}") : "-";
@@ -264,7 +264,7 @@ namespace PawBlock.Game
             if (Btn("Vào ván level hiện tại (bỏ qua năng lượng)")) { DebugCheats.PlayLevel(DebugCheats.CurrentLevel); SetOpen(false); }
 
             Header("Thắng / Thua");
-            bool canPlay = !DebugCheats.InMenu && LevelManager.Instance != null && LevelManager.Instance.State == GameState.Playing;
+            bool canPlay = !DebugCheats.InMenu && DebugCheats.Levels != null && DebugCheats.Levels.State == GameState.Playing;
             GUI.enabled = canPlay;
             using (new GUILayout.HorizontalScope())
             {

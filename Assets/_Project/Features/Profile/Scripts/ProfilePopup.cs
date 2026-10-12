@@ -16,14 +16,16 @@ namespace PawBlock.Features.Profile
     /// </summary>
     public class ProfilePopup : PopupView
     {
+        private IGamePause _pause;
         private IScreenNavigator _screens;
         private PlayerProfileService _service;
 
         /// <summary>GameBootstrap gọi: hồ sơ người chơi máy này.</summary>
-        public void Init(PlayerProfileService service, IScreenNavigator screens)
+        public void Init(PlayerProfileService service, IScreenNavigator screens, IGamePause pause)
         {
             _service = service;
             _screens = screens;
+            _pause = pause;
         }
 
         [Header("Thẻ người chơi")]
@@ -100,7 +102,7 @@ namespace PawBlock.Features.Profile
         {
             if (avatarPicker != null) avatarPicker.SetActive(false);
             SetEditing(false);
-            LevelManager lm = LevelManager.Instance;
+            IGamePause lm = _pause;
             _pausedGame = lm != null && lm.IsPlaying && (_screens == null || !_screens.IsMenu);
             if (_pausedGame) lm.Pause();
         }
@@ -117,7 +119,7 @@ namespace PawBlock.Features.Profile
         {
             if (!_pausedGame) return;
             _pausedGame = false;
-            if (LevelManager.Instance != null) LevelManager.Instance.Resume();
+            if (_pause != null) _pause.Resume();
         }
 
         // ---------- Hiển thị ----------

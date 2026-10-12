@@ -13,6 +13,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LowTimeVignette : MonoBehaviour
     {
+        private LevelManager _levels;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelManager levels)
+        {
+            _levels = levels;
+        }
+
         [SerializeField] private Color color = new Color(1f, 0.15f, 0.15f, 1f);
         [SerializeField, Range(0f, 1f)] private float baseAlpha = 0.14f;  // lúc giữa 2 nhịp
         [SerializeField, Range(0f, 1f)] private float pulseAlpha = 0.4f;  // đỉnh mỗi nhịp
@@ -93,7 +101,7 @@ namespace PawBlock.Features.Gameplay
 
         private bool ShouldShow()
         {
-            bool playing = LevelManager.Instance == null || LevelManager.Instance.State == GameState.Playing;
+            bool playing = _levels == null || _levels.State == GameState.Playing;
             return playing && _timer != null && _timer.IsLow && !_timer.IsFrozen && !_timer.IsTimeUp;
         }
 

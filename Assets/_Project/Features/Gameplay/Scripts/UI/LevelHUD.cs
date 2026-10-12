@@ -12,6 +12,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelHUD : MonoBehaviour
     {
+        private LevelManager _levels;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelManager levels)
+        {
+            _levels = levels;
+        }
+
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private DifficultyTheme theme;
         [SerializeField] private UnityEngine.UI.Image hardFrame;
@@ -30,7 +38,7 @@ namespace PawBlock.Features.Gameplay
         private void Start()
         {
             EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
-            if (LevelManager.Instance != null) SetLevel(LevelManager.Instance.CurrentLevelNumber);
+            if (_levels != null) SetLevel(_levels.CurrentLevelNumber);
         }
 
         private void OnDestroy()
@@ -42,14 +50,14 @@ namespace PawBlock.Features.Gameplay
 
         private void SetLevel(int number)
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             if (levelText != null)
             {
                 if (lm != null && lm.IsDaily) levelText.SetText(DailyLabel(lm.DailyDay));
                 else levelText.SetText($"LEVEL {number}");
             }
 
-            LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+            LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
             DifficultyStyle style = theme != null && level != null ? theme.Get(level.difficulty) : null;
             bool hard = style != null && style.hudFrame != null;
             if (!_cached)

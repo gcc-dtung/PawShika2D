@@ -1,3 +1,5 @@
+using PawBlock.Features.Gameplay;
+
 namespace PawBlock.Game
 {
     /// <summary>
@@ -7,5 +9,6 @@ namespace PawBlock.Game
     public sealed class GameScene
     {
         public ScreenFlow Screens { get; set; }
+        public LevelManager Levels { get; set; }
     }
 }

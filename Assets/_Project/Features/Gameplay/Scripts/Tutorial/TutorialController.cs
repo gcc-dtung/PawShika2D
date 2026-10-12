@@ -13,14 +13,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TutorialController : Singleton<TutorialController>
     {
+        private LevelManager _levels;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save)
+        public void Init(ISaveService save, LevelManager levels)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
+            _levels = levels;
         }
 
         [SerializeField] private TutorialView view;
@@ -84,7 +86,7 @@ namespace PawBlock.Features.Gameplay
             TutorialLevels.Step step = _steps[index];
             if (hand != null) hand.Stop();
             if (view != null) view.SetStep(index, _steps.Count, step.message);
-            if (LevelManager.Instance != null) LevelManager.Instance.LoadTutorial(step.level);
+            if (_levels != null) _levels.LoadTutorial(step.level);
             // Bàn tay chờ lưới xuất hiện xong
             _pending = DOVirtual.DelayedCall(0.6f, ShowHint).SetLink(gameObject);
         }
@@ -129,7 +131,7 @@ namespace PawBlock.Features.Gameplay
             if (view != null) view.Hide();
             _data.tutorialDone = true;
             _save.MarkDirty();
-            if (LevelManager.Instance != null) LevelManager.Instance.LoadLevel(_data.currentLevel);
+            if (_levels != null) _levels.LoadLevel(_data.currentLevel);
         }
     }
 }

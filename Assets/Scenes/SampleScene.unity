@@ -57491,6 +57491,11 @@ MonoBehaviour:
   losePopup: {fileID: 170904531}
   quitLevelPopup: {fileID: 841797986}
   levelTimer: {fileID: 82617383}
+  gridSpawner: {fileID: 1117016762}
+  levelHud: {fileID: 1668204976}
+  levelIntroSequencer: {fileID: 82617394}
+  lowTimeVignette: {fileID: 1056015949}
+  mechanicIntroPopup: {fileID: 1572696192}
   boosterButtons:
   - {fileID: 1923732572}
   - {fileID: 1978117101}

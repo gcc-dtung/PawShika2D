@@ -27,6 +27,9 @@ namespace PawBlock.Game
 
         private static ScreenFlow Screens => _scene?.Screens;
 
+        /// <summary>LevelManager trong scene (Cheat Panel, Debug Panel đọc trạng thái ván).</summary>
+        public static LevelManager Levels => _scene?.Levels;
+
         public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
         public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
 
@@ -34,22 +37,22 @@ namespace PawBlock.Game
 
         // ---------- Level ----------
 
-        public static int LevelCount => LevelManager.Instance != null ? LevelManager.Instance.LevelCount : 0;
-        public static int CurrentLevel => LevelManager.Instance != null ? LevelManager.Instance.CurrentLevelNumber : 0;
+        public static int LevelCount => Levels != null ? Levels.LevelCount : 0;
+        public static int CurrentLevel => Levels != null ? Levels.CurrentLevelNumber : 0;
         public static bool InMenu => Screens != null && Screens.IsMenu;
 
         /// <summary>Nạp level số <paramref name="number"/> (bắt đầu từ 1). Đang ở Menu thì chỉ đổi level (nút PLAY hiện số mới).</summary>
         public static void GoToLevel(int number)
         {
-            if (LevelManager.Instance == null) return;
-            LevelManager.Instance.LoadLevel(Mathf.Clamp(number, 1, Mathf.Max(1, LevelCount)) - 1);
+            if (Levels == null) return;
+            Levels.LoadLevel(Mathf.Clamp(number, 1, Mathf.Max(1, LevelCount)) - 1);
         }
 
         /// <summary>Nạp level rồi vào ván ngay (bỏ qua kiểm tra năng lượng).</summary>
         public static void PlayLevel(int number)
         {
-            if (LevelManager.Instance == null) return;
-            LevelManager.Instance.LoadLevel(Mathf.Clamp(number, 1, Mathf.Max(1, LevelCount)) - 1);
+            if (Levels == null) return;
+            Levels.LoadLevel(Mathf.Clamp(number, 1, Mathf.Max(1, LevelCount)) - 1);
             if (InMenu) Screens.EnterGameNow(); // EnterGame nạp lại level hiện tại từ đầu
         }
 
@@ -112,7 +115,7 @@ namespace PawBlock.Game
         /// <summary>Thua hẳn (bỏ qua popup Thêm giờ) -> popup Thua, trừ 1 năng lượng.</summary>
         public static void LoseNow()
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = Levels;
             if (lm == null || lm.State != GameState.Playing) return;
             // LevelManager đổi sang OutOfTime sau stateChangeDelay: chờ đúng sự kiện đó rồi từ chối thêm giờ
             System.Action<GameStateChangedEvent> onState = null;

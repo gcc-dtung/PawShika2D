@@ -11,12 +11,14 @@ namespace PawBlock.Features.Gameplay
     /// <summary>Thua level (đã từ chối hồi mạng): chơi lại từ đầu.</summary>
     public class LosePopup : PopupView
     {
+        private LevelManager _levels;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens)
+        public void Init(IScreenNavigator screens, LevelManager levels)
         {
             _screens = screens;
+            _levels = levels;
         }
 
         [SerializeField] private TMP_Text titleText;
@@ -35,7 +37,7 @@ namespace PawBlock.Features.Gameplay
 
         protected override void OnOpen()
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             if (titleText == null || lm == null) return;
             if (lm.IsDaily) titleText.SetText(LevelHUD.DailyLabel(lm.DailyDay));
             else titleText.SetText($"LEVEL {lm.CurrentLevelNumber}");
@@ -51,7 +53,7 @@ namespace PawBlock.Features.Gameplay
         {
             Close();
             if (RetryHandler != null) RetryHandler();
-            else if (LevelManager.Instance != null) LevelManager.Instance.Retry();
+            else if (_levels != null) _levels.Retry();
         }
     }
 }

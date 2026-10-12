@@ -58,7 +58,7 @@ namespace PawBlock.Game
 
         private void DrawStatus()
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = DebugCheats.Levels;
             string screen = DebugCheats.InMenu ? "Main Menu" : "Trong ván";
             string state = lm != null ? lm.State.ToString() : "-";
             string energy = EnergyManager.Instance != null ? (EnergyManager.Instance.IsInfinite ? "∞" : $"{EnergyManager.Instance.Current}/{EnergyManager.Instance.Max}") : "-";
@@ -107,7 +107,7 @@ namespace PawBlock.Game
         {
             if (!Section("Thắng / Thua", ref _foldResult)) return;
 
-            bool canPlay = !DebugCheats.InMenu && LevelManager.Instance != null && LevelManager.Instance.State == GameState.Playing;
+            bool canPlay = !DebugCheats.InMenu && DebugCheats.Levels != null && DebugCheats.Levels.State == GameState.Playing;
             using (new EditorGUI.DisabledScope(!canPlay))
             {
                 using (new EditorGUILayout.HorizontalScope())

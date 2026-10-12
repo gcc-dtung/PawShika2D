@@ -15,6 +15,14 @@ namespace PawBlock.Game
     /// </summary>
     public class ScreenFlow : MonoBehaviour, IScreenNavigator
     {
+        private LevelManager _levels;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelManager levels)
+        {
+            _levels = levels;
+        }
+
         [SerializeField] private GameObject menuCanvas;
         [SerializeField] private GameObject hudCanvas;
         [SerializeField] private MainMenuNavigator navigator;
@@ -54,10 +62,10 @@ namespace PawBlock.Game
         /// <summary>Về Main Menu: tab Home, hoặc tab Daily nếu vừa chơi level Daily.</summary>
         public void ShowMenu()
         {
-            bool daily = LevelManager.Instance != null && LevelManager.Instance.IsDaily;
+            bool daily = _levels != null && _levels.IsDaily;
             IsMenu = true;
             if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
-            if (LevelManager.Instance != null) LevelManager.Instance.Pause();
+            if (_levels != null) _levels.Pause();
             if (hudCanvas != null) hudCanvas.SetActive(false);
             if (menuCanvas != null) menuCanvas.SetActive(true);
             if (navigator != null) navigator.Select(daily ? MainMenuNavigator.DailyTab : MainMenuNavigator.HomeTab, false);
@@ -92,7 +100,7 @@ namespace PawBlock.Game
         public void EnterGameNow() => EnterGame();
 
         // Nạp lại level thường hiện tại từ đầu (kể cả vừa chơi Daily), state Playing
-        private void EnterGame() => Enter(() => { if (LevelManager.Instance != null) LevelManager.Instance.PlayCurrent(); });
+        private void EnterGame() => Enter(() => { if (_levels != null) _levels.PlayCurrent(); });
 
         private void Enter(System.Action load)
         {
@@ -106,7 +114,7 @@ namespace PawBlock.Game
         // Level nạp lúc đang ở Menu (lúc mở game) -> tạm dừng lại
         private void OnLevelLoaded(LevelLoadedEvent _)
         {
-            if (IsMenu && LevelManager.Instance != null) LevelManager.Instance.Pause();
+            if (IsMenu && _levels != null) _levels.Pause();
         }
     }
 }

@@ -12,6 +12,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class MechanicIntroPopup : PopupView
     {
+        private LevelManager _levels;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelManager levels)
+        {
+            _levels = levels;
+        }
+
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text messageText;
         [SerializeField] private Image picture;
@@ -41,7 +49,7 @@ namespace PawBlock.Features.Gameplay
 
         protected override void OnOpen()
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             _pausedGame = lm != null && lm.IsPlaying;
             if (_pausedGame) lm.Pause();
         }
@@ -50,7 +58,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (!IsOpen) return;
             Close();
-            if (_pausedGame && LevelManager.Instance != null) LevelManager.Instance.Resume();
+            if (_pausedGame && _levels != null) _levels.Resume();
             _pausedGame = false;
             Action cb = _onClose;
             _onClose = null;

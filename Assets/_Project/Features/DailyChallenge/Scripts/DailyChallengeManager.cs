@@ -15,6 +15,7 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyChallengeManager : Singleton<DailyChallengeManager>
     {
+        private LevelManager _levels;
         private ISaveService _save;
         private DailyChallengeSave _data;
         private IRewardGranter _rewards;
@@ -25,7 +26,7 @@ namespace PawBlock.Features.DailyChallenge
         /// GameBootstrap gọi trước Start: section "dailyChallenge", nơi trao quà mốc (DailyReward, qua contract),
         /// <paramref name="reachedLevel"/> = số level thường đang tới (bắt đầu từ 1; đã qua hết = int.MaxValue) để mở khóa tab.
         /// </summary>
-        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel, IClock clock)
+        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel, IClock clock, LevelManager levels)
         {
             _clock = clock;
             _save = save;
@@ -33,6 +34,7 @@ namespace PawBlock.Features.DailyChallenge
             _rewards = rewards;
             _reachedLevel = reachedLevel;
             _model = null;
+            _levels = levels;
         }
 
         private DateTime LocalNow => _clock != null ? _clock.LocalNow : DateTime.Now;
@@ -86,13 +88,13 @@ namespace PawBlock.Features.DailyChallenge
         private void OnEnable()
         {
             if (_clock != null) _clock.Synced += OnClockSynced;
-            EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
+            EventBus<LevelCompletedEvent>.Subscribe(OnLevelCompleted);
         }
 
         private void OnDisable()
         {
             if (_clock != null) _clock.Synced -= OnClockSynced;
-            EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+            EventBus<LevelCompletedEvent>.Unsubscribe(OnLevelCompleted);
         }
 
         private void Update()
@@ -151,7 +153,7 @@ namespace PawBlock.Features.DailyChallenge
         /// <summary>Sinh level của ngày <paramref name="day"/> rồi nạp vào LevelManager (gọi sau khi đã vào màn chơi).</summary>
         public void Load(long day)
         {
-            LevelManager lm = LevelManager.Instance;
+            LevelManager lm = _levels;
             if (lm == null || database == null) return;
             LevelDefinition level = CreateLevel(day);
             if (level == null)
@@ -175,14 +177,12 @@ namespace PawBlock.Features.DailyChallenge
             return level;
         }
 
-        private void OnStateChanged(GameStateChangedEvent e)
+        private void OnLevelCompleted(LevelCompletedEvent e)
         {
-            LevelManager lm = LevelManager.Instance;
-            if (e.State != GameState.Won || lm == null || !lm.IsDaily) return;
-            if (!Model.MarkDone(lm.DailyDay)) return;
+            if (!e.IsDaily || !Model.MarkDone(e.DailyDay)) return;
             _save.MarkDirty();
-            PendingCelebrateDay = lm.DailyDay;
-            Debug.Log($"[DailyChallenge] Thắng ngày {DailyChallengeModel.DateOf(lm.DailyDay):yyyy-MM-dd}");
+            PendingCelebrateDay = e.DailyDay;
+            Debug.Log($"[DailyChallenge] Thắng ngày {DailyChallengeModel.DateOf(e.DailyDay):yyyy-MM-dd}");
             Changed?.Invoke();
         }
 

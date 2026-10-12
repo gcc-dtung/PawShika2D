@@ -14,12 +14,14 @@ namespace PawBlock.Shared
     /// </summary>
     public class NoticePopup : PopupView
     {
+        private IGamePause _pause;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens)
+        public void Init(IScreenNavigator screens, IGamePause pause)
         {
             _screens = screens;
+            _pause = pause;
         }
 
         [SerializeField] private TMP_Text titleText;
@@ -50,7 +52,7 @@ namespace PawBlock.Shared
 
         protected override void OnOpen()
         {
-            LevelManager lm = LevelManager.Instance;
+            IGamePause lm = _pause;
             _pausedGame = lm != null && lm.IsPlaying && (_screens == null || !_screens.IsMenu);
             if (_pausedGame) lm.Pause();
         }
@@ -58,7 +60,7 @@ namespace PawBlock.Shared
         private void OnClose()
         {
             Close();
-            if (_pausedGame && LevelManager.Instance != null) LevelManager.Instance.Resume();
+            if (_pausedGame && _pause != null) _pause.Resume();
             _pausedGame = false;
             Action cb = _onClose;
             _onClose = null;

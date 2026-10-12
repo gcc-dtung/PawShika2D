@@ -37,6 +37,11 @@ namespace PawBlock.Game
         [SerializeField] private LosePopup losePopup;
         [SerializeField] private QuitLevelPopup quitLevelPopup;
         [SerializeField] private LevelTimer levelTimer;
+        [SerializeField] private GridSpawner gridSpawner;
+        [SerializeField] private LevelHUD levelHud;
+        [SerializeField] private LevelIntroSequencer levelIntroSequencer;
+        [SerializeField] private LowTimeVignette lowTimeVignette;
+        [SerializeField] private MechanicIntroPopup mechanicIntroPopup;
         [SerializeField] private BoosterButton[] boosterButtons;
 
         [Header("Economy")]
@@ -90,40 +95,46 @@ namespace PawBlock.Game
             // Gameplay
             Require(levelManager)?.Init(save);
             Require(boosterTutorial)?.Init(save);
-            Require(levelStatsRecorder)?.Init(save, screens);
+            Require(levelStatsRecorder)?.Init(save, screens, levelManager);
             Require(mechanicIntro)?.Init(save);
-            Require(tutorialController)?.Init(save);
-            Require(levelStars)?.Init(s.Stars);
-            Require(buyBoosterPopup)?.Init(s.Coins);
-            Require(moreTimePopup)?.Init(s.Coins, ads);
-            Require(winPopup)?.Init(s.Coins, ads, screens);
-            Require(losePopup)?.Init(screens);
-            Require(quitLevelPopup)?.Init(screens);
-            Require(levelTimer)?.Init(screens);
+            Require(tutorialController)?.Init(save, levelManager);
+            Require(levelStars)?.Init(s.Stars, levelManager);
+            Require(buyBoosterPopup)?.Init(s.Coins, levelManager);
+            Require(moreTimePopup)?.Init(s.Coins, ads, levelManager);
+            Require(winPopup)?.Init(s.Coins, ads, screens, levelManager);
+            Require(losePopup)?.Init(screens, levelManager);
+            Require(quitLevelPopup)?.Init(screens, levelManager);
+            Require(levelTimer)?.Init(screens, levelManager);
+            Require(gridSpawner)?.Init(levelManager);
+            Require(levelHud)?.Init(levelManager);
+            Require(levelIntroSequencer)?.Init(levelManager);
+            Require(lowTimeVignette)?.Init(levelManager);
+            Require(mechanicIntroPopup)?.Init(levelManager);
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters);
 
             // Economy
-            Require(refillEnergyPopup)?.Init(s.Coins, ads);
+            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager);
             foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
 
             // Meta: chỉ nhận contract của feature khác
             foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
             Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads, screens);
-            Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock);
+            Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock, levelManager);
             Require(dailyChallengePanel)?.Init(ads, screens);
             Require(luckyWheelButton)?.Init(s.Stars);
             Require(luckyWheelPopup)?.Init(s.Stars, dailyRewardManager);
             Require(avatarButton)?.Init(s.Profile);
-            Require(profilePopup)?.Init(s.Profile, screens);
+            Require(profilePopup)?.Init(s.Profile, screens, levelManager);
             Require(profileStatsRecorder)?.Init(s.Profile);
-            Require(settingsPopup)?.Init(screens);
-            Require(noticePopup)?.Init(screens);
+            Require(settingsPopup)?.Init(screens, levelManager);
+            Require(noticePopup)?.Init(screens, levelManager);
 
             // Game
-            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow);
-            Require(gameAudioEvents)?.Init(screenFlow);
-            Require(playButton)?.Init(screenFlow);
-            DebugCheats.Init(s, new GameScene { Screens = screenFlow });
+            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager);
+            Require(screenFlow)?.Init(levelManager);
+            Require(gameAudioEvents)?.Init(screenFlow, levelManager);
+            Require(playButton)?.Init(screenFlow, levelManager);
+            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager });
         }
 
         private void OnDestroy()

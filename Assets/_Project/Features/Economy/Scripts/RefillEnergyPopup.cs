@@ -20,14 +20,16 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class RefillEnergyPopup : PopupView
     {
+        private IGamePause _pause;
         private CoinWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (nạp bằng coin), quảng cáo có thưởng.</summary>
-        public void Init(CoinWallet coins, IAdsService ads)
+        public void Init(CoinWallet coins, IAdsService ads, IGamePause pause)
         {
             _coins = coins;
             _ads = ads;
+            _pause = pause;
         }
 
         [SerializeField] private TMP_Text countText;
@@ -75,7 +77,7 @@ namespace PawBlock.Features.Economy
 
         protected override void OnOpen()
         {
-            LevelManager lm = LevelManager.Instance;
+            IGamePause lm = _pause;
             _pausedByMe = lm != null && lm.IsPlaying;
             if (_pausedByMe) lm.Pause();
             EventBus<GameStateChangedEvent>.Unsubscribe(OnGameState); // Open lại khi đang mở: không đăng ký trùng
@@ -108,9 +110,9 @@ namespace PawBlock.Features.Economy
         // Mở lúc vào game: LevelManager nạp level xong đặt lại Playing -> tạm dừng lại
         private void OnGameState(GameStateChangedEvent e)
         {
-            if (!IsOpen || e.State != GameState.Playing || LevelManager.Instance == null) return;
+            if (!IsOpen || e.State != GameState.Playing || _pause == null) return;
             _pausedByMe = true;
-            LevelManager.Instance.Pause();
+            _pause.Pause();
         }
 
         private void Refresh()
@@ -184,7 +186,7 @@ namespace PawBlock.Features.Economy
             _onReady = null;
             _onCancel = null;
             Close();
-            if (_pausedByMe && LevelManager.Instance != null) LevelManager.Instance.Resume();
+            if (_pausedByMe && _pause != null) _pause.Resume();
             _pausedByMe = false;
             ready?.Invoke();
         }

@@ -17,16 +17,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStatsRecorder : MonoBehaviour
     {
+        private LevelManager _levels;
         private IScreenNavigator _screens;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save, IScreenNavigator screens)
+        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _screens = screens;
+            _levels = levels;
         }
 
         private LevelStatSave _current;  // lượt đang chơi, null nếu không có
@@ -73,7 +75,7 @@ namespace PawBlock.Features.Gameplay
         private void OnApplicationPause(bool paused)
         {
             if (paused) PauseClock();
-            else if (!_ended && LevelManager.Instance != null && LevelManager.Instance.IsPlaying && !InMenu) ResumeClock();
+            else if (!_ended && _levels != null && _levels.IsPlaying && !InMenu) ResumeClock();
         }
 
         // ---------- Sự kiện ----------
@@ -86,7 +88,7 @@ namespace PawBlock.Features.Gameplay
             _ended = false;
             _attemptSeconds = 0f;
             _playingSince = -1f;
-            if (LevelManager.Instance != null && LevelManager.Instance.IsPlaying && !InMenu) ResumeClock();
+            if (_levels != null && _levels.IsPlaying && !InMenu) ResumeClock();
         }
 
         /// <summary>Thao tác đầu tiên của người chơi trong level vừa nạp: bắt đầu tính 1 lượt.</summary>
@@ -179,7 +181,7 @@ namespace PawBlock.Features.Gameplay
         }
 
         private bool InMenu => _screens != null && _screens.IsMenu;
-        private static bool IsPractice => LevelManager.Instance != null && LevelManager.Instance.IsPractice;
+        private bool IsPractice => _levels != null && _levels.IsPractice;
 
         private LevelStatSave Get(string id, int number)
         {

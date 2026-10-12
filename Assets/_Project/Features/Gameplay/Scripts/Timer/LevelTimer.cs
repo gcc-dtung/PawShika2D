@@ -19,12 +19,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelTimer : Singleton<LevelTimer>
     {
+        private LevelManager _levels;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens)
+        public void Init(IScreenNavigator screens, LevelManager levels)
         {
             _screens = screens;
+            _levels = levels;
         }
 
         [SerializeField] private GridSpawner gridSpawner;
@@ -193,7 +195,7 @@ namespace PawBlock.Features.Gameplay
         private bool IsRunning()
         {
             if (_timeUp || IsPractice || DebugPaused || _total <= 0f) return false;
-            if (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying) return false;
+            if (_levels != null && !_levels.IsPlaying) return false;
             if (_screens != null && _screens.IsMenu) return false;
             GridManager gm = GridManager.Instance;
             if (gm == null || gm.Board == null || gm.IsGameWon) return false;
