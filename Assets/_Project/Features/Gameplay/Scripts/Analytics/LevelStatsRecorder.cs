@@ -17,6 +17,7 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStatsRecorder : MonoBehaviour
     {
+        private LevelStars _levelStars;
         private BoosterManager _boosterManager;
         private GridManager _grid;
         private LevelManager _levels;
@@ -25,7 +26,7 @@ namespace PawBlock.Features.Gameplay
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels, GridManager grid, BoosterManager boosterManager)
+        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels, GridManager grid, BoosterManager boosterManager, LevelStars levelStars)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
@@ -33,6 +34,7 @@ namespace PawBlock.Features.Gameplay
             _levels = levels;
             _grid = grid;
             _boosterManager = boosterManager;
+            _levelStars = levelStars;
         }
 
         private LevelStatSave _current;  // lượt đang chơi, null nếu không có
@@ -126,7 +128,7 @@ namespace PawBlock.Features.Gameplay
                     _current.wins++;
                     _current.playSeconds += _attemptSeconds;
                     if (_current.bestWinSeconds <= 0f || _attemptSeconds < _current.bestWinSeconds) _current.bestWinSeconds = _attemptSeconds;
-                    if (LevelStars.Instance != null) _current.bestStars = Mathf.Max(_current.bestStars, LevelStars.Instance.Stars);
+                    if (_levelStars != null) _current.bestStars = Mathf.Max(_current.bestStars, _levelStars.Stars);
                     End();
                     break;
                 case GameState.Lost:

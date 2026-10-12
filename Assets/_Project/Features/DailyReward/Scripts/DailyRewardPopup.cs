@@ -11,6 +11,14 @@ namespace PawBlock.Features.DailyReward
     /// </summary>
     public class DailyRewardPopup : PopupView
     {
+        private DailyRewardManager _rewards;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(DailyRewardManager rewards)
+        {
+            _rewards = rewards;
+        }
+
         [SerializeField] private DailyRewardSlot[] slots;
         [SerializeField] private Button claimButton;
         [SerializeField] private Button closeButton;
@@ -34,7 +42,7 @@ namespace PawBlock.Features.DailyReward
 
         protected override void OnOpen()
         {
-            DailyRewardManager m = DailyRewardManager.Instance;
+            DailyRewardManager m = _rewards;
             if (m == null) return;
             if (!_setup)
             {
@@ -49,7 +57,7 @@ namespace PawBlock.Features.DailyReward
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.onChanged.RemoveListener(Refresh);
+            if (_rewards != null) _rewards.onChanged.RemoveListener(Refresh);
         }
 
         private void Update()
@@ -63,7 +71,7 @@ namespace PawBlock.Features.DailyReward
 
         private void Refresh()
         {
-            DailyRewardManager m = DailyRewardManager.Instance;
+            DailyRewardManager m = _rewards;
             if (m == null) return;
             foreach (DailyRewardSlot s in slots) s.SetState(m.StateOf(s.Day), m.CanRecover(s.Day));
 
@@ -79,14 +87,14 @@ namespace PawBlock.Features.DailyReward
 
         private void UpdateTimer()
         {
-            if (timerText == null || DailyRewardManager.Instance == null) return;
-            System.TimeSpan t = DailyRewardManager.Instance.TimeToTomorrow;
+            if (timerText == null || _rewards == null) return;
+            System.TimeSpan t = _rewards.TimeToTomorrow;
             timerText.SetText("Next reward in {0:00}:{1:00}:{2:00}", (int)t.TotalHours, t.Minutes, t.Seconds);
         }
 
         private void OnClaimToday()
         {
-            DailyRewardManager m = DailyRewardManager.Instance;
+            DailyRewardManager m = _rewards;
             if (m == null) return;
             foreach (DailyRewardSlot s in slots)
             {
@@ -96,7 +104,7 @@ namespace PawBlock.Features.DailyReward
 
         private void ClaimSlot(DailyRewardSlot slot)
         {
-            DailyRewardManager m = DailyRewardManager.Instance;
+            DailyRewardManager m = _rewards;
             if (m == null || m.IsBusy) return;
             m.Claim(slot.Day, ok => { if (ok && slot != null) slot.PlayClaimed(); });
         }

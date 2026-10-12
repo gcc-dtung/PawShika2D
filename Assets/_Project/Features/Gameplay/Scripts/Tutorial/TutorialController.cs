@@ -11,7 +11,7 @@ namespace PawBlock.Features.Gameplay
     /// - Trong tutorial: đặt sai không trừ mạng (GridManager), thắng màn không hiện màn WELL DONE (LevelManager).
     /// - Xong bước cuối hoặc bấm Skip: lưu tutorialDone, vào thẳng level hiện tại (level 1).
     /// </summary>
-    public class TutorialController : Singleton<TutorialController>
+    public class TutorialController : MonoBehaviour
     {
         private GridManager _grid;
         private LevelManager _levels;
@@ -37,11 +37,10 @@ namespace PawBlock.Features.Gameplay
         private Tween _pending;
 
         /// <summary>Đang trong tutorial.</summary>
-        public static bool Active { get; private set; }
+        public bool IsActive { get; private set; }
 
         /// <summary>Lần mở game này cần chạy tutorial (ScreenFlow / LevelManager hỏi lúc Start).</summary>
-        public static bool Pending =>
-            Instance != null && Instance.isActiveAndEnabled && Instance._data != null && !Instance._data.tutorialDone && Instance._data.currentLevel == 0;
+        public bool IsPending => isActiveAndEnabled && _data != null && !_data.tutorialDone && _data.currentLevel == 0;
 
         private void OnEnable()
         {
@@ -64,7 +63,7 @@ namespace PawBlock.Features.Gameplay
             }
             if (view != null && view.SkipButton != null) view.SkipButton.onClick.RemoveListener(Skip);
             _pending?.Kill();
-            Active = false;
+            IsActive = false;
         }
 
         /// <summary>Bắt đầu tutorial từ bước 1 (ScreenFlow gọi khi mở game; Debug Panel gọi để xem lại).</summary>
@@ -72,14 +71,14 @@ namespace PawBlock.Features.Gameplay
         {
             _pending?.Kill();
             _steps = TutorialLevels.Create();
-            Active = true;
+            IsActive = true;
             if (view != null) view.Show();
             LoadStep(0);
         }
 
         public void Skip()
         {
-            if (Active) Finish();
+            if (IsActive) Finish();
         }
 
         private void LoadStep(int index)
@@ -95,13 +94,13 @@ namespace PawBlock.Features.Gameplay
 
         private void OnBlockPlaced(BlockModel _)
         {
-            if (Active) ShowHint();
+            if (IsActive) ShowHint();
         }
 
         /// <summary>Bàn tay kéo mẫu cho số đầu tiên (theo thứ tự gợi ý) chưa có khối đúng; hết gợi ý thì ẩn.</summary>
         private void ShowHint()
         {
-            if (!Active || hand == null || _grid == null || _grid.Board == null) return;
+            if (!IsActive || hand == null || _grid == null || _grid.Board == null) return;
             BoardModel board = _grid.Board;
             foreach (var hint in _steps[_index].hints)
             {
@@ -115,7 +114,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnStepWon()
         {
-            if (!Active) return;
+            if (!IsActive) return;
             if (hand != null) hand.Stop();
             _pending?.Kill();
             _pending = DOVirtual.DelayedCall(nextStepDelay, () =>
@@ -128,7 +127,7 @@ namespace PawBlock.Features.Gameplay
         private void Finish()
         {
             _pending?.Kill();
-            Active = false;
+            IsActive = false;
             if (hand != null) hand.Stop();
             if (view != null) view.Hide();
             _data.tutorialDone = true;

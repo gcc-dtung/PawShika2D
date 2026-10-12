@@ -26,16 +26,18 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyChallengePanel : MonoBehaviour
     {
+        private DailyChallengeManager _challenge;
         private IRewardIcons _rewardIconSource;
         private IScreenNavigator _screens;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: quảng cáo có thưởng (chơi bù ngày lỡ).</summary>
-        public void Init(IAdsService ads, IScreenNavigator screens, IRewardIcons rewardIconSource)
+        public void Init(IAdsService ads, IScreenNavigator screens, IRewardIcons rewardIconSource, DailyChallengeManager challenge)
         {
             _ads = ads;
             _screens = screens;
             _rewardIconSource = rewardIconSource;
+            _challenge = challenge;
         }
 
         [Header("Đầu trang")]
@@ -75,7 +77,7 @@ namespace PawBlock.Features.DailyChallenge
         private bool _waitingAd;
         private Sequence _celebrate;
 
-        private static DailyChallengeManager Manager => DailyChallengeManager.Instance;
+        private DailyChallengeManager Manager => _challenge;
 
         private void Awake()
         {

@@ -14,7 +14,7 @@ namespace PawBlock.Features.Gameplay
     /// Thắng (không tính màn luyện tập) thì cộng số sao vào ví sao (StarWallet) để quay Vòng quay may mắn.
     /// Đặt cùng LevelTimer.
     /// </summary>
-    public class LevelStars : Singleton<LevelStars>
+    public class LevelStars : MonoBehaviour
     {
         private LevelManager _levels;
         private ICurrencyWallet _stars;
@@ -33,9 +33,8 @@ namespace PawBlock.Features.Gameplay
 
         public int Stars => _tracker.Stars;
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             if (timer == null) timer = GetComponent<LevelTimer>();
             if (timer == null) timer = FindFirstObjectByType<LevelTimer>();
             if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();

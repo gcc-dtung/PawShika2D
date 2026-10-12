@@ -23,18 +23,20 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class WinPopup : PopupView
     {
+        private LevelStars _levelStars;
         private LevelManager _levels;
         private IScreenNavigator _screens;
         private ICurrencyWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
-        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens, LevelManager levels)
+        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens, LevelManager levels, LevelStars levelStars)
         {
             _coins = coins;
             _ads = ads;
             _screens = screens;
             _levels = levels;
+            _levelStars = levelStars;
         }
 
         [Header("Thành phần")]
@@ -113,7 +115,7 @@ namespace PawBlock.Features.Gameplay
         {
             _intro?.Kill();
             _claim?.Kill();
-            int earned = LevelStars.Instance != null ? LevelStars.Instance.Stars : StarRating.Max;
+            int earned = _levelStars != null ? _levelStars.Stars : StarRating.Max;
             Image title = ShowTitle(StarRating.Title(earned));
             SetScale(title != null ? title.rectTransform : null, 0f);
             foreach (Image star in stars) if (star != null) star.gameObject.SetActive(false);
@@ -212,7 +214,7 @@ namespace PawBlock.Features.Gameplay
             get
             {
                 LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;
-                int stars = LevelStars.Instance != null ? LevelStars.Instance.Stars : 0;
+                int stars = _levelStars != null ? _levelStars.Stars : 0;
                 return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal, stars);
             }
         }

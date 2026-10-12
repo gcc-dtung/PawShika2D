@@ -57542,6 +57542,9 @@ MonoBehaviour:
   dailyRewardManager: {fileID: 82617388}
   dailyChallengeManager: {fileID: 82617401}
   dailyChallengePanel: {fileID: 1216972971}
+  dailyTabBadge: {fileID: 556416545}
+  dailyRewardButton: {fileID: 2008576698}
+  dailyRewardPopup: {fileID: 2015940751}
   luckyWheelButton: {fileID: 356095813}
   luckyWheelPopup: {fileID: 319460732}
   avatarButton: {fileID: 943530460}

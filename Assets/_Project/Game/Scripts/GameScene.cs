@@ -1,5 +1,6 @@
 using PawBlock.Features.Gameplay;
 using PawBlock.Features.Economy;
+using PawBlock.Features.DailyReward;
 
 namespace PawBlock.Game
 {
@@ -15,5 +16,6 @@ namespace PawBlock.Game
         public BoosterManager Boosters { get; set; }
         public LevelTimer Timer { get; set; }
         public EnergyManager Energy { get; set; }
+        public DailyRewardManager DailyReward { get; set; }
     }
 }

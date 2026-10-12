@@ -18,11 +18,13 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TimeStarBar : MonoBehaviour
     {
+        private LevelStars _levelStars;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelTimer timer)
+        public void Init(LevelTimer timer, LevelStars levelStars)
         {
             _timer = timer;
+            _levelStars = levelStars;
         }
 
         [Tooltip("Vùng chạy của phần còn lại (bên trong viền nền), mốc sao đặt theo chiều rộng vùng này")]
@@ -52,7 +54,7 @@ namespace PawBlock.Features.Gameplay
                 OnTimeChanged(_timer.Remaining, _timer.Total);
                 OnFreezeChanged(_timer.IsFrozen);
             }
-            LevelStars stars = LevelStars.Instance;
+            LevelStars stars = _levelStars;
             ShowStars(stars != null ? stars.Stars : StarRating.Max);
         }
 

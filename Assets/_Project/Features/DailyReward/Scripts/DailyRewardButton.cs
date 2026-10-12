@@ -11,6 +11,14 @@ namespace PawBlock.Features.DailyReward
     [RequireComponent(typeof(Button))]
     public class DailyRewardButton : MonoBehaviour
     {
+        private DailyRewardManager _rewards;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(DailyRewardManager rewards)
+        {
+            _rewards = rewards;
+        }
+
         [SerializeField] private GameFlowUI gameFlow;
         [SerializeField] private MenuShortcutButton shortcut;
 
@@ -22,18 +30,18 @@ namespace PawBlock.Features.DailyReward
 
         private void OnEnable()
         {
-            if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.onChanged.AddListener(Refresh);
+            if (_rewards != null) _rewards.onChanged.AddListener(Refresh);
             Refresh();
         }
 
         private void OnDisable()
         {
-            if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.onChanged.RemoveListener(Refresh);
+            if (_rewards != null) _rewards.onChanged.RemoveListener(Refresh);
         }
 
         private void Refresh()
         {
-            bool claimable = DailyRewardManager.Instance != null && DailyRewardManager.Instance.CanClaimToday;
+            bool claimable = _rewards != null && _rewards.CanClaimToday;
             if (shortcut != null) shortcut.SetAttention(claimable);
         }
 

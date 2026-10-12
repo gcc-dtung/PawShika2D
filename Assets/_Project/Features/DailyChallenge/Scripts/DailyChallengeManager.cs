@@ -13,7 +13,7 @@ namespace PawBlock.Features.DailyChallenge
     /// Ngày lấy theo IClock (giờ server nếu có mạng, chặn chỉnh giờ máy).
     /// Mở khóa khi tới DailyChallengeDatabase.unlockLevel; ngày mở khóa là ngày bắt đầu (ngày trước đó không tính lỡ).
     /// </summary>
-    public class DailyChallengeManager : Singleton<DailyChallengeManager>
+    public class DailyChallengeManager : MonoBehaviour
     {
         private LevelManager _levels;
         private ISaveService _save;

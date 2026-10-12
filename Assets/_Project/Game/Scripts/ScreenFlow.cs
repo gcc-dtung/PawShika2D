@@ -10,19 +10,21 @@ namespace PawBlock.Game
     /// - Menu: bật Canvas_Menu, tắt Canvas_HUD, ván đang nạp ở nền bị tạm dừng (không kéo được).
     /// - PLAY: kiểm tra năng lượng (GameFlowUI.RequestPlay), tắt menu, bật HUD, nạp lại level hiện tại từ đầu.
     /// - PlayDaily: như PLAY nhưng nạp level Daily Challenge; về Menu sau ván Daily thì mở tab Daily.
-    /// - Lần đầu mở game (TutorialController.Pending): vào thẳng tutorial thay cho Menu.
+    /// - Lần đầu mở game (TutorialController.IsPending): vào thẳng tutorial thay cho Menu.
     /// Popup nằm ở Canvas_Popup riêng nên dùng được ở cả 2 màn. Đổi màn thì phát ScreenChangedEvent (EventBus).
     /// </summary>
     public class ScreenFlow : MonoBehaviour, IScreenNavigator
     {
+        private TutorialController _tutorial;
         private GridManager _grid;
         private LevelManager _levels;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelManager levels, GridManager grid)
+        public void Init(LevelManager levels, GridManager grid, TutorialController tutorial)
         {
             _levels = levels;
             _grid = grid;
+            _tutorial = tutorial;
         }
 
         [SerializeField] private GameObject menuCanvas;
@@ -37,7 +39,7 @@ namespace PawBlock.Game
         {
             EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
             EventBus<ShopOpenRequestedEvent>.Subscribe(OnShopRequested);
-            if (TutorialController.Pending) EnterTutorial(); // lần đầu mở game: vào thẳng tutorial, xong thì vào level 1
+            if (_tutorial != null && _tutorial.IsPending) EnterTutorial(); // lần đầu mở game: vào thẳng tutorial, xong thì vào level 1
             else if (startInMenu) ShowMenu();
             else EnterGame();
         }
@@ -45,11 +47,11 @@ namespace PawBlock.Game
         /// <summary>Vào màn chơi chạy tutorial (lần đầu mở game, hoặc Debug Panel xem lại).</summary>
         public void EnterTutorial()
         {
-            if (TutorialController.Instance == null) return;
+            if (_tutorial == null) return;
             IsMenu = false;
             if (menuCanvas != null) menuCanvas.SetActive(false);
             if (hudCanvas != null) hudCanvas.SetActive(true);
-            TutorialController.Instance.Begin();
+            _tutorial.Begin();
             EventBus<ScreenChangedEvent>.Raise(new ScreenChangedEvent(false));
         }
 

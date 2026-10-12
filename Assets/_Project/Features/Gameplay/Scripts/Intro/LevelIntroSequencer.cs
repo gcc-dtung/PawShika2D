@@ -16,14 +16,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelIntroSequencer : MonoBehaviour
     {
+        private TutorialController _tutorial;
         private GridManager _grid;
         private LevelManager _levels;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelManager levels, GridManager grid)
+        public void Init(LevelManager levels, GridManager grid, TutorialController tutorial)
         {
             _levels = levels;
             _grid = grid;
+            _tutorial = tutorial;
         }
 
         [SerializeField] private GridSpawner gridSpawner;
@@ -119,7 +121,7 @@ namespace PawBlock.Features.Gameplay
             LevelManager lm = _levels;
             GridManager gm = _grid;
             if (lm == null || gm == null || gm.Board == null || !lm.IsPlaying || gm.IsSelecting) return false;
-            if (TutorialController.Active) return false;
+            if (_tutorial != null && _tutorial.IsActive) return false;
             if (gridSpawner != null && gridSpawner.IsIntroPlaying) return false;
             return true;
         }

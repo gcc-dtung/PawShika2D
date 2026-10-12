@@ -260,8 +260,8 @@ namespace PawBlock.Game
 
         // ---------- Khác ----------
 
-        public static void DailyNextDay() { if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.DebugNextDay(); }
-        public static void DailyReset() { if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.DebugReset(); }
+        public static void DailyNextDay() { if (_scene?.DailyReward != null) _scene.DailyReward.DebugNextDay(); }
+        public static void DailyReset() { if (_scene?.DailyReward != null) _scene.DailyReward.DebugReset(); }
 
         public static void SaveNow()
         {

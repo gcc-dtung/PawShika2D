@@ -13,7 +13,7 @@ namespace PawBlock.Features.DailyReward
     /// - Sang ngày mới (qua nửa đêm khi đang mở game, quay lại app) thì tự cập nhật.
     /// - autoOpen: mở game lần đầu trong ngày mà chưa nhận thì tự mở popup (GameFlowUI) khi đang ở Main Menu.
     /// </summary>
-    public class DailyRewardManager : Singleton<DailyRewardManager>, IRewardGranter, IRewardIcons
+    public class DailyRewardManager : MonoBehaviour, IRewardGranter, IRewardIcons
     {
         private IBoosterCatalog _boosterIcons;
         private IScreenNavigator _screens;

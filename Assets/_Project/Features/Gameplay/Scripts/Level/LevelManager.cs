@@ -18,19 +18,21 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelManager : MonoBehaviour, IGamePause
     {
+        private TutorialController _tutorial;
         private LevelTimer _timer;
         private GridManager _grid;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay" (level đang chơi đã lưu).</summary>
-        public void Init(ISaveService save, GridManager grid, LevelTimer timer)
+        public void Init(ISaveService save, GridManager grid, LevelTimer timer, TutorialController tutorial)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _currentIndex = _data.currentLevel;
             _grid = grid;
             _timer = timer;
+            _tutorial = tutorial;
         }
 
         [SerializeField] private int currentLevel = 0;
@@ -73,7 +75,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (_grid != null) _grid.onGameWin.AddListener(OnWin);
             if (_timer != null) _timer.onTimeUp.AddListener(OnTimeUp);
-            if (!TutorialController.Pending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
+            if (_tutorial == null || !_tutorial.IsPending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
         }
 
         private void OnDisable()

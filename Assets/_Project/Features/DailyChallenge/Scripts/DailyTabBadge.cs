@@ -8,23 +8,31 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyTabBadge : MonoBehaviour
     {
+        private DailyChallengeManager _challenge;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(DailyChallengeManager challenge)
+        {
+            _challenge = challenge;
+        }
+
         [SerializeField] private GameObject lockIcon;
         [SerializeField] private GameObject todayBadge;
 
         private void OnEnable()
         {
-            if (DailyChallengeManager.Instance != null) DailyChallengeManager.Instance.Changed += Refresh;
+            if (_challenge != null) _challenge.Changed += Refresh;
             Refresh();
         }
 
         private void OnDisable()
         {
-            if (DailyChallengeManager.Instance != null) DailyChallengeManager.Instance.Changed -= Refresh;
+            if (_challenge != null) _challenge.Changed -= Refresh;
         }
 
         private void Refresh()
         {
-            DailyChallengeManager m = DailyChallengeManager.Instance;
+            DailyChallengeManager m = _challenge;
             bool unlocked = m != null && m.IsUnlocked;
             if (lockIcon != null) lockIcon.SetActive(!unlocked);
             if (todayBadge != null) todayBadge.SetActive(unlocked && m.IsTodayPlayable);
