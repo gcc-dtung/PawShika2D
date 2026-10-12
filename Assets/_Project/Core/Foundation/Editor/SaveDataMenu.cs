@@ -10,7 +10,7 @@ namespace PawBlock.Core.Foundation
         [MenuItem("Tools/PawBlock/Save Data/Log Save", priority = 21)]
         public static void LogSave()
         {
-            string path = SaveSystem.FilePath;
+            string path = JsonFileSaveService.DefaultPath;
             if (!File.Exists(path))
             {
                 Debug.Log($"[SaveData] Chưa có file save: {path}");
@@ -23,7 +23,7 @@ namespace PawBlock.Core.Foundation
         public static void OpenFolder()
         {
             Directory.CreateDirectory(Application.persistentDataPath);
-            EditorUtility.RevealInFinder(SaveSystem.FilePath);
+            EditorUtility.RevealInFinder(JsonFileSaveService.DefaultPath);
         }
 
         [MenuItem("Tools/PawBlock/Save Data/Delete Save", priority = 23)]
@@ -34,9 +34,12 @@ namespace PawBlock.Core.Foundation
                 Debug.LogWarning("[SaveData] Thoát Play mode rồi mới xóa save (đang chơi sẽ ghi đè lại).");
                 return;
             }
-            if (!EditorUtility.DisplayDialog("Xóa save", "Xóa toàn bộ dữ liệu người chơi (level, coin, booster, năng lượng, cài đặt)?\n" + SaveSystem.FilePath, "Xóa", "Hủy"))
+            if (!EditorUtility.DisplayDialog("Xóa save", "Xóa toàn bộ dữ liệu người chơi (level, coin, booster, năng lượng, cài đặt)?\n" + JsonFileSaveService.DefaultPath, "Xóa", "Hủy"))
                 return;
-            SaveSystem.Delete();
+            foreach (string p in new[] { JsonFileSaveService.DefaultPath, JsonFileSaveService.DefaultPath + ".tmp", JsonFileSaveService.DefaultPath + ".bak" })
+            {
+                if (File.Exists(p)) File.Delete(p);
+            }
             Debug.Log("[SaveData] Đã xóa save. Lần chơi sau bắt đầu từ level 1, 0 coin.");
         }
     }

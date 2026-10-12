@@ -1,83 +1,89 @@
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
-using PawBlock.Features.Gameplay;
 
 namespace PawBlock.Features.Profile
 {
     /// <summary>
-    /// Ghi chỉ số hồ sơ (SaveData.profile) theo sự kiện có sẵn, đặt trên Manager:
-    /// thắng ngay lượt đầu (theo SaveData.levelStats của LevelStatsRecorder), level đã qua, thắng Hard / Very Hard,
-    /// chuỗi thắng (thua hẳn thì về 0), coin nhận được (CoinWallet.Changed), booster đã dùng.
-    /// Màn tutorial không tính.
+    /// Ghi chỉ số hồ sơ (section "profile") từ event trong Core/Contracts, đặt trên Manager:
+    /// thắng ngay lượt đầu (LevelCompletedEvent.Attempts), level đã qua, thắng Hard / Very Hard,
+    /// chuỗi thắng (thua hẳn thì về 0), coin nhận được (CoinsChangedEvent), booster đã dùng (BoosterUsedEvent).
+    /// Màn tutorial không phát các event này nên không tính.
     /// </summary>
     public class ProfileStatsRecorder : MonoBehaviour
     {
+        private PlayerProfileService _profile;
+
+        public void Init(PlayerProfileService profile) => _profile = profile;
+
         private void OnEnable()
         {
-            EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
-            CoinWallet.Changed += OnCoinChanged;
-        }
-
-        private void Start()
-        {
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.AddListener(OnBoosterUsed);
+            EventBus<LevelCompletedEvent>.Subscribe(OnLevelCompleted);
+            EventBus<LevelFailedEvent>.Subscribe(OnLevelFailed);
+            EventBus<CoinsChangedEvent>.Subscribe(OnCoinsChanged);
+            EventBus<BoosterUsedEvent>.Subscribe(OnBoosterUsed);
         }
 
         private void OnDisable()
         {
-            EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
-            CoinWallet.Changed -= OnCoinChanged;
+            EventBus<LevelCompletedEvent>.Unsubscribe(OnLevelCompleted);
+            EventBus<LevelFailedEvent>.Unsubscribe(OnLevelFailed);
+            EventBus<CoinsChangedEvent>.Unsubscribe(OnCoinsChanged);
+            EventBus<BoosterUsedEvent>.Unsubscribe(OnBoosterUsed);
         }
 
-        private void OnDestroy()
+        private void OnLevelCompleted(LevelCompletedEvent e)
         {
-            if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.RemoveListener(OnBoosterUsed);
-        }
-
-        private void OnStateChanged(GameStateChangedEvent e)
-        {
-            LevelManager lm = LevelManager.Instance;
-            if (lm == null || lm.IsPractice) return;
-            ProfileSave p = PlayerProfileService.Save;
-
-            if (e.State == GameState.Won)
+            if (_profile == null)
             {
-                LevelDefinition level = lm.CurrentLevel;
-                if (level != null)
-                {
-                    LevelStatSave stat = SaveSystem.Data.levelStats.Find(s => s.id == level.name);
-                    if (stat != null && stat.attempts == 1) p.firstTryWins++;
-                    if (level.difficulty != LevelDifficulty.Normal) p.hardWins++;
-                }
-                if (!lm.IsDaily) p.levelsCleared = Mathf.Max(p.levelsCleared, lm.CurrentLevelNumber); // Daily: CurrentLevelNumber là level thường chưa thắng
-                p.winStreak++;
-                p.bestWinStreak = Mathf.Max(p.bestWinStreak, p.winStreak);
+                return;
             }
-            else if (e.State == GameState.Lost)
+            ProfileSave p = _profile.Save;
+            if (e.Attempts == 1)
             {
-                p.winStreak = 0;
+                p.firstTryWins++;
             }
-            else return;
-
-            SaveSystem.MarkDirty();
-            PlayerProfileService.NotifyStatsChanged();
+            if (e.IsHard)
+            {
+                p.hardWins++;
+            }
+            if (!e.IsDaily)
+            {
+                p.levelsCleared = Mathf.Max(p.levelsCleared, e.Number); // Daily: Number là level thường chưa thắng
+            }
+            p.winStreak++;
+            p.bestWinStreak = Mathf.Max(p.bestWinStreak, p.winStreak);
+            _profile.NotifyStatsChanged();
         }
 
-        private void OnCoinChanged(int balance, int delta)
+        private void OnLevelFailed(LevelFailedEvent e)
         {
-            if (delta <= 0) return;
-            PlayerProfileService.Save.coinsEarned += delta;
-            SaveSystem.MarkDirty();
-            PlayerProfileService.NotifyStatsChanged();
+            if (_profile == null)
+            {
+                return;
+            }
+            _profile.Save.winStreak = 0;
+            _profile.NotifyStatsChanged();
         }
 
-        private void OnBoosterUsed(BoosterType type)
+        private void OnCoinsChanged(CoinsChangedEvent e)
         {
-            PlayerProfileService.Save.boostersUsed++;
-            SaveSystem.MarkDirty();
-            PlayerProfileService.NotifyStatsChanged();
+            if (_profile == null || e.Delta <= 0)
+            {
+                return;
+            }
+            _profile.Save.coinsEarned += e.Delta;
+            _profile.NotifyStatsChanged();
+        }
+
+        private void OnBoosterUsed(BoosterUsedEvent e)
+        {
+            if (_profile == null)
+            {
+                return;
+            }
+            _profile.Save.boostersUsed++;
+            _profile.NotifyStatsChanged();
         }
     }
 }

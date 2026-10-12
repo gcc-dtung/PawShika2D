@@ -9,6 +9,11 @@ namespace PawBlock.Features.Economy
     /// <summary>Số coin trên thanh trên của Menu; đổi số thì icon nảy. Bấm (nút "+") -> sang tab Shop.</summary>
     public class CoinHUD : MonoBehaviour
     {
+        private CoinWallet _coins;
+
+        /// <summary>GameBootstrap gọi trước OnEnable.</summary>
+        public void Init(CoinWallet coins) => _coins = coins;
+
         [SerializeField] private TMP_Text amountText;
         [SerializeField] private RectTransform icon;
         [SerializeField] private Button button;
@@ -23,13 +28,13 @@ namespace PawBlock.Features.Economy
 
         private void OnEnable()
         {
-            CoinWallet.Changed += OnChanged;
+            if (_coins != null) _coins.Changed += OnChanged;
             Refresh();
         }
 
         private void OnDisable()
         {
-            CoinWallet.Changed -= OnChanged;
+            if (_coins != null) _coins.Changed -= OnChanged;
             _punch?.Kill();
             _punch = null;
         }
@@ -52,7 +57,7 @@ namespace PawBlock.Features.Economy
 
         private void Refresh()
         {
-            if (amountText != null) amountText.SetText("{0}", CoinWallet.Balance);
+            if (amountText != null) amountText.SetText("{0}", _coins != null ? _coins.Balance : 0);
         }
     }
 }

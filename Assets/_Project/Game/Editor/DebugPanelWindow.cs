@@ -65,7 +65,7 @@ namespace PawBlock.Game
 
             EditorGUILayout.HelpBox(
                 $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount}   ·   {screen}   ·   {state}\n" +
-                $"Coin {CoinWallet.Balance}   ·   ★ {StarWallet.Balance}   ·   Giờ {DebugCheats.TimerStatus}   ·   Năng lượng {energy}",
+                $"Coin {DebugCheats.CoinBalance}   ·   ★ {DebugCheats.StarBalance}   ·   Giờ {DebugCheats.TimerStatus}   ·   Năng lượng {energy}",
                 MessageType.None);
         }
 
@@ -143,7 +143,7 @@ namespace PawBlock.Game
                 if (GUILayout.Button("Đặt", GUILayout.Width(60))) DebugCheats.SetCoins(_coinInput);
             }
 
-            EditorGUILayout.LabelField($"Sao ★ (Vòng quay may mắn): {StarWallet.Balance}", EditorStyles.miniBoldLabel);
+            EditorGUILayout.LabelField($"Sao ★ (Vòng quay may mắn): {DebugCheats.StarBalance}", EditorStyles.miniBoldLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
                 if (GUILayout.Button("+10")) DebugCheats.AddStars(10);

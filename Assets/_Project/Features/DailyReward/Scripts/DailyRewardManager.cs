@@ -2,8 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
-using PawBlock.Features.Gameplay;
 using PawBlock.Game;
 using PawBlock.Core.Contracts;
 
@@ -17,6 +15,25 @@ namespace PawBlock.Features.DailyReward
     /// </summary>
     public class DailyRewardManager : Singleton<DailyRewardManager>, IRewardGranter
     {
+        private ISaveService _save;
+        private DailyRewardSave _data;
+        private ICurrencyWallet _coins;
+        private IBoosterInventory _boosters;
+        private IEnergyService _energy;
+
+        /// <summary>
+        /// GameBootstrap gọi trước Start: section "dailyReward", nơi nhận quà (ví coin, kho booster, năng lượng – đều qua contract).
+        /// </summary>
+        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy)
+        {
+            _save = save;
+            _data = save.Get<DailyRewardSave>(DailyRewardSave.Key);
+            _coins = coins;
+            _boosters = boosters;
+            _energy = energy;
+            _model = null;
+        }
+
         [SerializeField] private DailyRewardDatabase database;
         [SerializeField] private bool autoOpen = true;
         [SerializeField] private float autoOpenDelay = 0.5f;
@@ -41,7 +58,7 @@ namespace PawBlock.Features.DailyReward
             {
                 if (_model == null)
                 {
-                    _model = new DailyRewardModel(SaveSystem.Data.daily, DailyRewardDatabase.CycleDays);
+                    _model = new DailyRewardModel(_data ?? new DailyRewardSave(), DailyRewardDatabase.CycleDays);
                     RefreshDay(false);
                 }
                 return _model;
@@ -123,7 +140,7 @@ namespace PawBlock.Features.DailyReward
         private void Grant(int day)
         {
             if (!Model.MarkClaimed(day)) return;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
 
             DailyRewardDay reward = database != null ? database.Get(day) : null;
             if (reward != null)
@@ -137,20 +154,19 @@ namespace PawBlock.Features.DailyReward
 
         void IRewardGranter.Grant(DailyRewardItem item) => GrantItem(item);
 
-        /// <summary>Trao 1 món quà (coin / booster / năng lượng vô hạn). Daily Challenge dùng chung.</summary>
-        public static void GrantItem(DailyRewardItem item)
+        /// <summary>Trao 1 món quà (coin / booster / năng lượng vô hạn). Daily Challenge, Vòng quay dùng qua IRewardGranter.</summary>
+        public void GrantItem(DailyRewardItem item)
         {
             switch (item.kind)
             {
                 case DailyRewardKind.Coin:
-                    CoinWallet.Add(item.amount);
+                    _coins?.Add(item.amount);
                     break;
                 case DailyRewardKind.Booster:
-                    BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(item.booster) : null;
-                    if (data != null) BoosterInventory.Add(data, item.amount);
+                    _boosters?.Add(item.booster, item.amount);
                     break;
                 case DailyRewardKind.InfiniteEnergy:
-                    if (EnergyManager.Instance != null) EnergyManager.Instance.AddInfinite(item.amount * 60);
+                    _energy?.AddInfinite(item.amount * 60);
                     break;
             }
         }
@@ -161,7 +177,7 @@ namespace PawBlock.Features.DailyReward
             bool newDay = today != _today;
             _today = today;
             if (_model == null) return;
-            if (_model.Refresh(today)) SaveSystem.MarkDirty();
+            if (_model.Refresh(today)) _save.MarkDirty();
             if (newDay && notify) onChanged?.Invoke();
         }
 
@@ -175,7 +191,7 @@ namespace PawBlock.Features.DailyReward
         [ContextMenu("Debug/Next Day")]
         public void DebugNextDay()
         {
-            SaveSystem.Data.daily.cycleStart -= 1;
+            _data.cycleStart -= 1;
             _today = -1;
             RefreshDay(true);
             onChanged?.Invoke();
@@ -184,8 +200,8 @@ namespace PawBlock.Features.DailyReward
         [ContextMenu("Debug/Reset")]
         public void DebugReset()
         {
-            SaveSystem.Data.daily.cycleStart = -1;
-            SaveSystem.Data.daily.claimedMask = 0;
+            _data.cycleStart = -1;
+            _data.claimedMask = 0;
             _today = -1;
             RefreshDay(true);
             onChanged?.Invoke();

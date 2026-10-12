@@ -19,6 +19,11 @@ namespace PawBlock.Game
     /// </summary>
     public class GameFlowUI : MonoBehaviour
     {
+        private PlayerProfileService _profile;
+
+        /// <summary>GameBootstrap gọi: hồ sơ người chơi (nút avatar mở popup hồ sơ).</summary>
+        public void Init(PlayerProfileService profile) => _profile = profile;
+
         [SerializeField] private WinPopup winPopup;
         [SerializeField, FormerlySerializedAs("revivePopup")] private MoreTimePopup moreTimePopup;
         [SerializeField] private LosePopup losePopup;
@@ -84,7 +89,10 @@ namespace PawBlock.Game
         }
 
         /// <summary>Nút avatar trên Menu: hồ sơ của mình.</summary>
-        public void OpenProfile() => ShowProfile(PlayerProfileService.Local());
+        public void OpenProfile()
+        {
+            if (_profile != null) ShowProfile(_profile.Local());
+        }
 
         /// <summary>Hồ sơ bất kỳ (của mình, hoặc người khác khi bấm vào 1 dòng bảng xếp hạng).</summary>
         public void ShowProfile(PlayerProfile profile)

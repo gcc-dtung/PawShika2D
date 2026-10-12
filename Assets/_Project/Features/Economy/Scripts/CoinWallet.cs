@@ -6,40 +6,50 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Economy
 {
     /// <summary>
-    /// Số coin của người chơi, lưu trong SaveData. Shop / IAP (Giai đoạn 6) sẽ cộng vào đây.
-    /// Feature khác dùng qua ICurrencyWallet (new CoinWallet(): mọi instance cùng đọc / ghi SaveData);
-    /// API static giữ tới P3 (Refactor) thì chuyển hẳn sang instance.
+    /// Số coin của người chơi (section "economy"). GameBootstrap tạo 1 instance, truyền vào nơi cần qua Init
+    /// (feature khác nhận ICurrencyWallet). Mỗi lần đổi: event Changed (trong Economy) + CoinsChangedEvent (feature khác).
     /// </summary>
     public sealed class CoinWallet : ICurrencyWallet
     {
-        int ICurrencyWallet.Balance => Balance;
-        bool ICurrencyWallet.TrySpend(int amount) => TrySpend(amount);
-        void ICurrencyWallet.Add(int amount) => Add(amount);
+        private readonly ISaveService _save;
+        private readonly EconomySave _data;
 
         /// <summary>(số dư mới, thay đổi)</summary>
-        public static event Action<int, int> Changed;
+        public event Action<int, int> Changed;
 
-        public static int Balance => SaveSystem.Data.coins;
-
-        public static void Add(int amount)
+        public CoinWallet(ISaveService save)
         {
-            if (amount <= 0) return;
+            _save = save;
+            _data = save.Get<EconomySave>(EconomySave.Key);
+        }
+
+        public int Balance => _data.coins;
+
+        public void Add(int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
             Set(Balance + amount, amount);
         }
 
-        public static bool CanAfford(int amount) => Balance >= amount;
+        public bool CanAfford(int amount) => Balance >= amount;
 
-        public static bool TrySpend(int amount)
+        public bool TrySpend(int amount)
         {
-            if (amount < 0 || Balance < amount) return false;
+            if (amount < 0 || Balance < amount)
+            {
+                return false;
+            }
             Set(Balance - amount, -amount);
             return true;
         }
 
-        private static void Set(int value, int delta)
+        private void Set(int value, int delta)
         {
-            SaveSystem.Data.coins = Mathf.Max(0, value);
-            SaveSystem.MarkDirty();
+            _data.coins = Mathf.Max(0, value);
+            _save.MarkDirty();
             Changed?.Invoke(Balance, delta);
             EventBus<CoinsChangedEvent>.Raise(new CoinsChangedEvent(Balance, delta));
         }

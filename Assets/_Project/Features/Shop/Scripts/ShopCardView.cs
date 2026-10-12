@@ -12,6 +12,11 @@ namespace PawBlock.Features.Shop
     /// </summary>
     public class ShopCardView : MonoBehaviour
     {
+        private ShopService _shop;
+
+        /// <summary>GameBootstrap gọi trước OnEnable.</summary>
+        public void Init(ShopService shop) => _shop = shop;
+
         [SerializeField] private ShopDatabase database;
         [SerializeField] private string productId;
         [SerializeField] private TMP_Text titleText;
@@ -39,13 +44,13 @@ namespace PawBlock.Features.Shop
 
         private void OnEnable()
         {
-            ShopService.Purchased += OnPurchased;
+            if (_shop != null) _shop.Purchased += OnPurchased;
             Refresh();
         }
 
         private void OnDisable()
         {
-            ShopService.Purchased -= OnPurchased;
+            if (_shop != null) _shop.Purchased -= OnPurchased;
         }
 
         public void Refresh()
@@ -62,7 +67,7 @@ namespace PawBlock.Features.Shop
             SetItem(revealItem, revealText, _product.reveal, "x" + _product.reveal);
             SetItem(infiniteItem, infiniteText, _product.infiniteMinutes, ShopDatabase.FormatMinutes(_product.infiniteMinutes));
             if (saleText != null) saleText.SetText(_product.saleTag ?? "");
-            if (hideWhenNoAds && ShopService.NoAds) gameObject.SetActive(false);
+            if (hideWhenNoAds && _shop != null && _shop.NoAds) gameObject.SetActive(false);
         }
 
         private static void SetItem(GameObject item, TMP_Text text, int amount, string label)
@@ -73,12 +78,12 @@ namespace PawBlock.Features.Shop
 
         private void OnBuy()
         {
-            if (_product != null) ShopService.Buy(_product);
+            if (_product != null && _shop != null) _shop.Buy(_product);
         }
 
         private void OnPurchased(ShopProduct p)
         {
-            if (hideWhenNoAds && ShopService.NoAds) gameObject.SetActive(false);
+            if (hideWhenNoAds && _shop != null && _shop.NoAds) gameObject.SetActive(false);
         }
     }
 }

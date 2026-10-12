@@ -20,6 +20,11 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class RefillEnergyPopup : PopupView
     {
+        private CoinWallet _coins;
+
+        /// <summary>GameBootstrap gọi: ví coin (nạp bằng coin).</summary>
+        public void Init(CoinWallet coins) => _coins = coins;
+
         [SerializeField] private TMP_Text countText;
         [SerializeField] private TMP_Text timerText;
         [SerializeField] private TMP_Text coinCostText;
@@ -111,7 +116,7 @@ namespace PawBlock.Features.Economy
 
             if (countText != null) countText.SetText("{0}", em.Current);
             if (timerText != null) timerText.SetText(em.IsFull ? "FULL" : EnergyManager.FormatTime(em.SecondsToNext));
-            if (balanceText != null) balanceText.SetText("{0}", CoinWallet.Balance);
+            if (balanceText != null) balanceText.SetText("{0}", _coins.Balance);
             if (adsButton != null) adsButton.interactable = !_waitingAd && !em.IsFull;
             if (coinButton != null) coinButton.interactable = !_waitingAd && !em.IsFull; // thiếu coin vẫn bấm được -> Shop
         }
@@ -142,9 +147,9 @@ namespace PawBlock.Features.Economy
         {
             EnergyManager em = EnergyManager.Instance;
             if (em == null || em.IsFull) return;
-            if (!CoinWallet.TrySpend(GameConfig.Economy.refillCoinCost))
+            if (!_coins.TrySpend(GameConfig.Economy.refillCoinCost))
             {
-                Debug.Log($"[RefillEnergyPopup] Không đủ coin: {CoinWallet.Balance}/{GameConfig.Economy.refillCoinCost} -> Shop");
+                Debug.Log($"[RefillEnergyPopup] Không đủ coin: {_coins.Balance}/{GameConfig.Economy.refillCoinCost} -> Shop");
                 GoShop();
                 return;
             }

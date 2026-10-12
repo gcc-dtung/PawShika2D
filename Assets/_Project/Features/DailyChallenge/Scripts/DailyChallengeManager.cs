@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.DailyReward;
 using PawBlock.Features.Gameplay;
 
 namespace PawBlock.Features.DailyChallenge
@@ -16,6 +15,27 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyChallengeManager : Singleton<DailyChallengeManager>
     {
+        private ISaveService _save;
+        private DailyChallengeSave _data;
+        private IRewardGranter _rewards;
+        private Func<int> _reachedLevel;
+
+        /// <summary>
+        /// GameBootstrap gọi trước Start: section "dailyChallenge", nơi trao quà mốc (DailyReward, qua contract),
+        /// <paramref name="reachedLevel"/> = số level thường đang tới (bắt đầu từ 1; đã qua hết = int.MaxValue) để mở khóa tab.
+        /// </summary>
+        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel)
+        {
+            _save = save;
+            _data = save.Get<DailyChallengeSave>(DailyChallengeSave.Key);
+            _rewards = rewards;
+            _reachedLevel = reachedLevel;
+            _model = null;
+        }
+
+        /// <summary>Ngày mở khóa Daily (-1 = chưa mở).</summary>
+        public long StartDay => _data != null ? _data.startDay : -1;
+
         [SerializeField] private DailyChallengeDatabase database;
 
         /// <summary>Dữ liệu đổi (sang ngày mới, thắng 1 ngày, nhận quà, vừa mở khóa): tab Daily vẽ lại.</summary>
@@ -42,9 +62,8 @@ namespace PawBlock.Features.DailyChallenge
         {
             get
             {
-                if (database == null) return false;
-                SaveData data = SaveSystem.Data;
-                return data.allLevelsCleared || data.currentLevel + 1 >= database.unlockLevel;
+                if (database == null || _reachedLevel == null) return false;
+                return _reachedLevel() >= database.unlockLevel;
             }
         }
 
@@ -55,7 +74,7 @@ namespace PawBlock.Features.DailyChallenge
         {
             get
             {
-                if (_model == null) _model = new DailyChallengeModel(SaveSystem.Data.challenge);
+                if (_model == null) _model = new DailyChallengeModel(_data ?? new DailyChallengeSave());
                 return _model;
             }
         }
@@ -109,7 +128,7 @@ namespace PawBlock.Features.DailyChallenge
         public void EnsureStarted()
         {
             if (!IsUnlocked || !Model.EnsureStart(Today)) return;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             Changed?.Invoke();
         }
 
@@ -157,7 +176,7 @@ namespace PawBlock.Features.DailyChallenge
             LevelManager lm = LevelManager.Instance;
             if (e.State != GameState.Won || lm == null || !lm.IsDaily) return;
             if (!Model.MarkDone(lm.DailyDay)) return;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             PendingCelebrateDay = lm.DailyDay;
             Debug.Log($"[DailyChallenge] Thắng ngày {DailyChallengeModel.DateOf(lm.DailyDay):yyyy-MM-dd}");
             Changed?.Invoke();
@@ -172,9 +191,9 @@ namespace PawBlock.Features.DailyChallenge
             DailyChallengeGift gift = database != null ? database.GetGift(milestone) : null;
             if (gift != null)
             {
-                foreach (DailyRewardItem item in gift.items) DailyRewardManager.GrantItem(item);
+                foreach (DailyRewardItem item in gift.items) _rewards?.Grant(item);
             }
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             Debug.Log($"[DailyChallenge] Nhận quà mốc {milestone} tháng {month}/{year}");
             Changed?.Invoke();
             return true;
@@ -186,16 +205,18 @@ namespace PawBlock.Features.DailyChallenge
         public void DebugMarkDone(long day)
         {
             if (!Model.MarkDone(day)) return;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             Changed?.Invoke();
         }
 
         /// <summary>Cheat: xóa tiến độ Daily (ngày mở khóa, ngày thắng, quà).</summary>
         public void DebugReset()
         {
-            SaveSystem.Data.challenge = new DailyChallengeSave();
+            _data.startDay = -1;
+            _data.doneDays.Clear();
+            _data.claimedGifts.Clear();
             _model = null;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             Changed?.Invoke();
         }
     }

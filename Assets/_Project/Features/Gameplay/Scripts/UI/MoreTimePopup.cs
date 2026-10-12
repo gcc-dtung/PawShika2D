@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using PawBlock.Core.Contracts;
 using UnityEngine.UI;
 using PawBlock.Core.Foundation;
 using PawBlock.Features.Economy;
@@ -14,6 +15,11 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class MoreTimePopup : PopupView
     {
+        private ICurrencyWallet _coins;
+
+        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
+        public void Init(ICurrencyWallet coins) => _coins = coins;
+
         [SerializeField] private Button adsButton;
         [SerializeField] private Button coinButton;
         [SerializeField] private Button closeButton;
@@ -41,7 +47,7 @@ namespace PawBlock.Features.Gameplay
 
         private void Refresh()
         {
-            if (balanceText != null) balanceText.SetText(CoinWallet.Balance.ToString());
+            if (balanceText != null) balanceText.SetText(_coins.Balance.ToString());
             SetButtons(true);
         }
 
@@ -57,9 +63,9 @@ namespace PawBlock.Features.Gameplay
 
         private void OnCoin()
         {
-            if (!CoinWallet.TrySpend(GameConfig.Economy.moreTimeCoinCost))
+            if (!_coins.TrySpend(GameConfig.Economy.moreTimeCoinCost))
             {
-                Debug.Log($"[MoreTimePopup] Không đủ coin: {CoinWallet.Balance}/{GameConfig.Economy.moreTimeCoinCost}");
+                Debug.Log($"[MoreTimePopup] Không đủ coin: {_coins.Balance}/{GameConfig.Economy.moreTimeCoinCost}");
                 Refresh();
                 return;
             }
@@ -81,7 +87,7 @@ namespace PawBlock.Features.Gameplay
         private void SetButtons(bool interactable)
         {
             if (adsButton != null) adsButton.interactable = interactable;
-            if (coinButton != null) coinButton.interactable = interactable && CoinWallet.CanAfford(GameConfig.Economy.moreTimeCoinCost);
+            if (coinButton != null) coinButton.interactable = interactable && _coins.Balance >= GameConfig.Economy.moreTimeCoinCost;
             if (closeButton != null) closeButton.interactable = interactable;
         }
     }

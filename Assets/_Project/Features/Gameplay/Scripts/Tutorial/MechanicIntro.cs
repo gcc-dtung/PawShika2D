@@ -13,6 +13,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class MechanicIntro : MonoBehaviour, ILevelIntro
     {
+        private ISaveService _save;
+        private GameplaySave _data;
+
+        /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
+        public void Init(ISaveService save)
+        {
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+        }
+
         // [MECHANIC] Popup giới thiệu: thêm Kind + sprite + nhánh trong NewMechanics / ShowNext (TutorialBuilder gán sprite)
         public enum Kind
         {
@@ -54,7 +64,7 @@ namespace PawBlock.Features.Gameplay
         }
 
         /// <summary>Cơ chế có trong level mà người chơi chưa xem, theo thứ tự Mechanic Injector giới thiệu.</summary>
-        private static List<Kind> NewMechanics(LevelDefinition level)
+        private List<Kind> NewMechanics(LevelDefinition level)
         {
             List<Kind> result = new List<Kind>();
             if (level == null || level.clues == null) return result;
@@ -71,7 +81,7 @@ namespace PawBlock.Features.Gameplay
             return result;
         }
 
-        private static bool Seen(Kind kind) => SaveSystem.Data.seenMechanics.Contains(kind.ToString());
+        private bool Seen(Kind kind) => _data != null && _data.seenMechanics.Contains(kind.ToString());
 
         private void ShowNext()
         {
@@ -99,8 +109,8 @@ namespace PawBlock.Features.Gameplay
 
         private void Done(Kind kind)
         {
-            if (!Seen(kind)) SaveSystem.Data.seenMechanics.Add(kind.ToString());
-            SaveSystem.MarkDirty();
+            if (!Seen(kind)) _data.seenMechanics.Add(kind.ToString());
+            _save.MarkDirty();
             ShowNext();
         }
     }

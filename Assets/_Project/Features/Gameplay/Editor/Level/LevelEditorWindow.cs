@@ -14,7 +14,7 @@ namespace PawBlock.Features.Gameplay
     ///   Void (bật / tắt ô bỏ trống, kéo để tô), Xóa. Chuột phải = Xóa.
     /// - Số đang chọn: giá trị, hướng, khóa, "?", màu.
     /// - Kiểm tra: LevelValidator (dữ liệu, có lời giải, không cần đoán) + lời giải duy nhất; Giải: lưu lời giải của solver.
-    /// - Chơi thử: ghi level vào save (SaveSystem), vào Play mode thẳng level đang sửa.
+    /// - Chơi thử: ghi level vào save (section "gameplay"), vào Play mode thẳng level đang sửa.
     /// Lưới vẽ y = 0 ở dưới cùng như trong game. Mọi thay đổi có Undo.
     /// </summary>
     public class LevelEditorWindow : EditorWindow
@@ -571,8 +571,16 @@ namespace PawBlock.Features.Gameplay
             if (index < 0) return;
             AssetDatabase.SaveAssetIfDirty(_level);
             AssetDatabase.SaveAssetIfDirty(_database);
-            SaveSystem.Data.currentLevel = index;
-            SaveSystem.MarkDirty(); // ngoài Play mode: ghi file ngay
+            var save = new JsonFileSaveService(JsonFileSaveService.DefaultPath);
+            if (save.NeedsMigration)
+            {
+                Debug.LogWarning("[LevelEditor] Save còn định dạng cũ: vào Play 1 lần để chuyển sang v2 rồi Play Test lại (level không đổi).");
+            }
+            else
+            {
+                save.Get<GameplaySave>(GameplaySave.Key).currentLevel = index;
+                save.MarkDirty(); // ngoài Play mode: ghi file ngay
+            }
             LevelEditorPlayTest.Request();
             EditorApplication.isPlaying = true;
         }

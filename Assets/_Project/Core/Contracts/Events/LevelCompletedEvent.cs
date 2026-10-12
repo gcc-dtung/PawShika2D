@@ -10,14 +10,16 @@ namespace PawBlock.Core.Contracts
         public readonly bool IsDaily;
         public readonly long DailyDay;  // ngày của level Daily (số ngày từ 1/1/1970), -1 nếu không phải Daily
         public readonly bool IsHard;    // độ khó khác Normal (Hard / Very Hard)
+        public readonly int Attempts;   // số lượt đã chơi level này kể cả lượt thắng (số liệu level); 0 = không ghi (Daily)
 
-        public LevelCompletedEvent(int number, string levelId, bool isDaily, long dailyDay, bool isHard)
+        public LevelCompletedEvent(int number, string levelId, bool isDaily, long dailyDay, bool isHard, int attempts)
         {
             Number = number;
             LevelId = levelId;
             IsDaily = isDaily;
             DailyDay = dailyDay;
             IsHard = isHard;
+            Attempts = attempts;
         }
     }
 }

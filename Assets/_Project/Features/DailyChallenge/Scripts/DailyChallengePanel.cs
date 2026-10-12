@@ -114,7 +114,7 @@ namespace PawBlock.Features.DailyChallenge
         private void RefreshNav(DailyChallengeManager m)
         {
             DateTime first = MonthOf(m.Today);
-            if (m.IsUnlocked && SaveSystem.Data.challenge.startDay >= 0) first = MonthOf(SaveSystem.Data.challenge.startDay);
+            if (m.IsUnlocked && m.StartDay >= 0) first = MonthOf(m.StartDay);
             if (prevMonthButton != null) prevMonthButton.interactable = _month > first;
             if (nextMonthButton != null) nextMonthButton.interactable = _month < MonthOf(m.Today);
         }

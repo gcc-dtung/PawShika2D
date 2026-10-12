@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
-using PawBlock.Features.Economy;
 using PawBlock.Shared;
 
 namespace PawBlock.Features.Gameplay
@@ -10,6 +9,11 @@ namespace PawBlock.Features.Gameplay
     /// <summary>Hết lượt booster: mua valueOneBuy lượt bằng coin. Mở popup thì ván tạm dừng.</summary>
     public class BuyBoosterPopup : PopupView
     {
+        private ICurrencyWallet _coins;
+
+        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
+        public void Init(ICurrencyWallet coins) => _coins = coins;
+
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text detailText;
         [SerializeField] private Image icon;
@@ -44,7 +48,7 @@ namespace PawBlock.Features.Gameplay
             if (icon != null && data.icon != null) icon.sprite = data.icon;
             if (amountText != null) amountText.SetText("x{0}", data.valueOneBuy);
             if (priceText != null) priceText.SetText("{0}", data.priceOneBuy);
-            if (buyButton != null) buyButton.interactable = CoinWallet.CanAfford(data.priceOneBuy);
+            if (buyButton != null) buyButton.interactable = _coins.Balance >= data.priceOneBuy;
         }
 
         private void OnBuy()

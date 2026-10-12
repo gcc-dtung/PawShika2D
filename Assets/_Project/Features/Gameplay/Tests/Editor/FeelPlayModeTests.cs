@@ -28,13 +28,19 @@ namespace PawBlock.Features.Gameplay.Tests
         private SceneSetup[] _sceneSetup;
         private readonly Dictionary<string, byte[]> _saveFiles = new Dictionary<string, byte[]>();
 
-        private static string[] SaveFilePaths =>
-            new[] { SaveSystem.FilePath, SaveSystem.FilePath + ".bak", SaveSystem.FilePath + ".tmp" };
+        private static string[] SaveFilePaths
+        {
+            get
+            {
+                string path = JsonFileSaveService.DefaultPath;
+                return new[] { path, path + ".bak", path + ".tmp", Path.Combine(Path.GetDirectoryName(path), "save.v1.bak") };
+            }
+        }
 
         /// <summary>
-        /// Vào Play mode thì TrustedClock tự đồng bộ giờ và ghi save, kể cả trong scene trống; UseInMemoryForTests không
-        /// giữ được vì SaveSystem.ResetStatics chạy lại mỗi lần vào Play. Nên giữ nguyên byte save.json / .bak / .tmp của máy
-        /// trước cả nhóm test, xong thì trả lại (file test tạo thêm thì xóa).
+        /// Vào Play mode thì code tự chạy lúc mở game (TrustedClock đồng bộ giờ...) có thể ghi save, kể cả trong scene trống.
+        /// Nên giữ nguyên byte save.json / .bak / .tmp / save.v1.bak của máy trước cả nhóm test, xong thì trả lại
+        /// (file test tạo thêm thì xóa).
         /// </summary>
         [OneTimeSetUp]
         public void BackupSave()
@@ -49,8 +55,6 @@ namespace PawBlock.Features.Gameplay.Tests
         [OneTimeTearDown]
         public void RestoreSave()
         {
-            // Dữ liệu save trong bộ nhớ là bản của Play mode (Domain Reload tắt): bỏ để lần dùng sau đọc lại file
-            SaveSystem.UseInMemoryForTests(null);
             foreach (KeyValuePair<string, byte[]> file in _saveFiles)
             {
                 if (file.Value != null)

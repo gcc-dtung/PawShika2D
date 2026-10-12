@@ -4,13 +4,15 @@ using UnityEditor;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
+using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay.Tests
 {
     /// <summary>EditMode: số lượt booster qua IBoosterInventory (BoosterManager), save trong bộ nhớ.</summary>
     public class BoosterInventoryTests
     {
-        private SaveData _save;
+        private JsonFileSaveService _save;
+        private GameplaySave _gameplay;
         private GameObject _go;
         private BoosterDatabase _db;
         private IBoosterInventory _sut;
@@ -18,8 +20,8 @@ namespace PawBlock.Features.Gameplay.Tests
         [SetUp]
         public void SetUp()
         {
-            _save = new SaveData();
-            SaveSystem.UseInMemoryForTests(_save);
+            _save = new JsonFileSaveService(null);
+            _gameplay = _save.Get<GameplaySave>(GameplaySave.Key);
 
             _db = ScriptableObject.CreateInstance<BoosterDatabase>();
             _db.boosterDatas = new List<BoosterData>
@@ -31,6 +33,7 @@ namespace PawBlock.Features.Gameplay.Tests
             // EditMode: AddComponent không chạy Awake nên không đăng ký Singleton
             _go = new GameObject("BoosterManager (test)");
             BoosterManager manager = _go.AddComponent<BoosterManager>();
+            manager.Init(_save, new BoosterInventory(_save), new Economy.CoinWallet(_save));
             var so = new SerializedObject(manager);
             so.FindProperty("database").objectReferenceValue = _db;
             so.ApplyModifiedPropertiesWithoutUndo();
@@ -42,7 +45,6 @@ namespace PawBlock.Features.Gameplay.Tests
         {
             Object.DestroyImmediate(_go);
             Object.DestroyImmediate(_db);
-            SaveSystem.UseInMemoryForTests(null);
         }
 
         [Test]
@@ -51,7 +53,7 @@ namespace PawBlock.Features.Gameplay.Tests
             int count = _sut.GetCount(BoosterType.Hint);
 
             Assert.AreEqual(3, count);
-            Assert.AreEqual(3, _save.GetBooster(BoosterType.Hint));
+            Assert.AreEqual(3, _gameplay.GetBooster(BoosterType.Hint));
         }
 
         [Test]
@@ -83,13 +85,13 @@ namespace PawBlock.Features.Gameplay.Tests
             _sut.Add(BoosterType.Reveal, 5);
 
             Assert.AreEqual(0, _sut.GetCount(BoosterType.Reveal));
-            Assert.AreEqual(-1, _save.GetBooster(BoosterType.Reveal));
+            Assert.AreEqual(-1, _gameplay.GetBooster(BoosterType.Reveal));
         }
 
         [Test]
         public void Add_KeepsExistingSavedCount()
         {
-            _save.SetBooster(BoosterType.Hint, 10);
+            _gameplay.SetBooster(BoosterType.Hint, 10);
 
             _sut.Add(BoosterType.Hint, 2);
 

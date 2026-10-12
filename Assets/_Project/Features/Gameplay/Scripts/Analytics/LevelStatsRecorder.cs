@@ -17,6 +17,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStatsRecorder : MonoBehaviour
     {
+        private ISaveService _save;
+        private GameplaySave _data;
+
+        /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
+        public void Init(ISaveService save)
+        {
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+        }
+
         private LevelStatSave _current;  // lượt đang chơi, null nếu không có
         private string _levelId;         // level vừa nạp (chưa thành lượt cho tới khi người chơi thao tác)
         private int _levelNumber;
@@ -85,7 +95,7 @@ namespace PawBlock.Features.Gameplay
             if (string.IsNullOrEmpty(_levelId)) return false;
             _current = Get(_levelId, _levelNumber);
             _current.attempts++;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             return true;
         }
 
@@ -102,7 +112,7 @@ namespace PawBlock.Features.Gameplay
             {
                 case GameState.OutOfTime:
                     _current.outOfTime++;
-                    SaveSystem.MarkDirty();
+                    _save.MarkDirty();
                     break;
                 case GameState.Won:
                     _current.wins++;
@@ -123,14 +133,14 @@ namespace PawBlock.Features.Gameplay
         {
             if (!EnsureAttempt()) return;
             _current.mistakes++;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
         }
 
         private void OnBoosterUsed(BoosterType type)
         {
             if (!EnsureAttempt()) return;
             _current.boosters++;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
         }
 
         // ---------- Lượt chơi ----------
@@ -143,7 +153,7 @@ namespace PawBlock.Features.Gameplay
             {
                 _current.quits++;
                 _current.playSeconds += _attemptSeconds;
-                SaveSystem.MarkDirty();
+                _save.MarkDirty();
             }
             _current = null;
         }
@@ -151,7 +161,7 @@ namespace PawBlock.Features.Gameplay
         private void End()
         {
             _ended = true;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
         }
 
         private void ResumeClock()
@@ -169,9 +179,9 @@ namespace PawBlock.Features.Gameplay
         private static bool InMenu => ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu;
         private static bool IsPractice => LevelManager.Instance != null && LevelManager.Instance.IsPractice;
 
-        private static LevelStatSave Get(string id, int number)
+        private LevelStatSave Get(string id, int number)
         {
-            List<LevelStatSave> list = SaveSystem.Data.levelStats;
+            List<LevelStatSave> list = _data.levelStats;
             LevelStatSave s = list.Find(x => x.id == id);
             if (s == null)
             {

@@ -15,6 +15,11 @@ namespace PawBlock.Features.Gameplay
     [RequireComponent(typeof(Button))]
     public class BoosterButton : MonoBehaviour
     {
+        private BoosterInventory _inventory;
+
+        /// <summary>GameBootstrap gọi trước OnEnable: kho lượt booster (vẽ lại số lượt khi đổi).</summary>
+        public void Init(BoosterInventory inventory) => _inventory = inventory;
+
         [SerializeField] private BoosterType type;
         [SerializeField] private Image icon;
         [SerializeField] private GameObject countBadge;
@@ -57,7 +62,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            BoosterInventory.Changed += OnInventoryChanged;
+            if (_inventory != null) _inventory.Changed += OnInventoryChanged;
             BoosterManager bm = BoosterManager.Instance;
             if (bm != null)
             {
@@ -73,7 +78,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnDisable()
         {
-            BoosterInventory.Changed -= OnInventoryChanged;
+            if (_inventory != null) _inventory.Changed -= OnInventoryChanged;
             BoosterManager bm = BoosterManager.Instance;
             if (bm != null)
             {

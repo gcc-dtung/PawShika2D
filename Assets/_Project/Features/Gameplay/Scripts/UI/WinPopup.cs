@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
 using PawBlock.Game;
 using PawBlock.Shared;
 
@@ -24,6 +23,11 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class WinPopup : PopupView
     {
+        private ICurrencyWallet _coins;
+
+        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
+        public void Init(ICurrencyWallet coins) => _coins = coins;
+
         [Header("Thành phần")]
         [Tooltip("Ảnh tiêu đề, thứ tự theo WinTitle: Well done, Nice, Great, Perfect")]
         [SerializeField] private Image[] titleImages = new Image[4];
@@ -88,7 +92,7 @@ namespace PawBlock.Features.Gameplay
         protected override void OnOpen()
         {
             _claimed = false;
-            _shownCoins = CoinWallet.Balance;
+            _shownCoins = _coins.Balance;
             SetCoinText(_shownCoins);
             SetRewardText(BaseReward, false); // sao đập xuống sẽ cộng dần tới CoinReward
             PlayIntro();
@@ -246,8 +250,8 @@ namespace PawBlock.Features.Gameplay
             AudioManager.Play(SoundId.Reward);
 
             int from = _shownCoins;
-            CoinWallet.Add(coins);
-            int to = CoinWallet.Balance;
+            _coins.Add(coins);
+            int to = _coins.Balance;
 
             int count = Mathf.Clamp(coins, 1, maxFlyingCoins);
             Sequence seq = DOTween.Sequence().SetUpdate(true).SetLink(gameObject);

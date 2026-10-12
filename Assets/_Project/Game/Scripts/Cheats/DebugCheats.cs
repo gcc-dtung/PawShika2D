@@ -15,6 +15,16 @@ namespace PawBlock.Game
     /// </summary>
     public static class DebugCheats
     {
+        private static GameServices _services;
+
+        /// <summary>GameBootstrap gọi lúc mở game (Play mode); chưa gọi thì lệnh tài nguyên / save bỏ qua.</summary>
+        public static void Init(GameServices services) => _services = services;
+
+        public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
+        public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
+
+        private static GameplaySave Gameplay => _services?.Save.Get<GameplaySave>(GameplaySave.Key);
+
         // ---------- Level ----------
 
         public static int LevelCount => LevelManager.Instance != null ? LevelManager.Instance.LevelCount : 0;
@@ -115,20 +125,22 @@ namespace PawBlock.Game
 
         public static void AddCoins(int amount)
         {
-            if (amount > 0) CoinWallet.Add(amount);
-            else if (amount < 0) CoinWallet.TrySpend(Mathf.Min(-amount, CoinWallet.Balance));
+            if (_services == null) return;
+            if (amount > 0) _services.Coins.Add(amount);
+            else if (amount < 0) _services.Coins.TrySpend(Mathf.Min(-amount, _services.Coins.Balance));
         }
 
-        public static void SetCoins(int value) => AddCoins(Mathf.Max(0, value) - CoinWallet.Balance);
+        public static void SetCoins(int value) => AddCoins(Mathf.Max(0, value) - CoinBalance);
 
         /// <summary>Cộng / trừ sao trong ví sao (Vòng quay may mắn); trừ quá số đang có thì về 0.</summary>
         public static void AddStars(int amount)
         {
-            if (amount > 0) StarWallet.Add(amount);
-            else if (amount < 0) StarWallet.TrySpend(Mathf.Min(-amount, StarWallet.Balance));
+            if (_services == null) return;
+            if (amount > 0) _services.Stars.Add(amount);
+            else if (amount < 0) _services.Stars.TrySpend(Mathf.Min(-amount, _services.Stars.Balance));
         }
 
-        public static void SetStars(int value) => AddStars(Mathf.Max(0, value) - StarWallet.Balance);
+        public static void SetStars(int value) => AddStars(Mathf.Max(0, value) - StarBalance);
 
         // ---------- Đồng hồ trong ván ----------
 
@@ -191,34 +203,36 @@ namespace PawBlock.Game
         public static int BoosterCount(BoosterType type)
         {
             BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(type) : null;
-            return data != null ? BoosterInventory.Get(data) : 0;
+            return data != null && _services != null ? _services.Boosters.Get(data) : 0;
         }
 
         public static void AddBooster(BoosterType type, int amount)
         {
             BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(type) : null;
-            if (data != null) BoosterInventory.SetCount(data, Mathf.Max(0, BoosterInventory.Get(data) + amount));
+            if (data != null && _services != null) _services.Boosters.SetCount(data, Mathf.Max(0, _services.Boosters.Get(data) + amount));
         }
 
         public static void SetBooster(BoosterType type, int value)
         {
             BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(type) : null;
-            if (data != null) BoosterInventory.SetCount(data, Mathf.Max(0, value));
+            if (data != null && _services != null) _services.Boosters.SetCount(data, Mathf.Max(0, value));
         }
 
         /// <summary>Mở khóa mọi booster, bỏ qua tutorial.</summary>
         public static void UnlockAllBoosters()
         {
-            foreach (BoosterType type in System.Enum.GetValues(typeof(BoosterType))) SaveSystem.Data.UnlockBooster(type);
-            SaveSystem.MarkDirty();
+            if (Gameplay == null) return;
+            foreach (BoosterType type in System.Enum.GetValues(typeof(BoosterType))) Gameplay.UnlockBooster(type);
+            _services.Save.MarkDirty();
             RaiseLockChanged(true);
         }
 
         /// <summary>Khóa lại mọi booster: nạp level (>= level mở) để xem lại tutorial mở khóa.</summary>
         public static void LockAllBoosters()
         {
-            SaveSystem.Data.unlockedBoosters.Clear();
-            SaveSystem.MarkDirty();
+            if (Gameplay == null) return;
+            Gameplay.unlockedBoosters.Clear();
+            _services.Save.MarkDirty();
             RaiseLockChanged(false);
         }
 
@@ -233,7 +247,12 @@ namespace PawBlock.Game
         public static void DailyNextDay() { if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.DebugNextDay(); }
         public static void DailyReset() { if (DailyRewardManager.Instance != null) DailyRewardManager.Instance.DebugReset(); }
 
-        public static void SaveNow() => SaveSystem.Save(true);
+        public static void SaveNow()
+        {
+            if (_services == null) return;
+            _services.Save.MarkDirty();
+            _services.Save.SaveNow();
+        }
 
         /// <summary>Chơi lại tutorial từ bước 1 (xong / Skip thì về level đang chơi).</summary>
         public static void PlayTutorial()
@@ -244,15 +263,17 @@ namespace PawBlock.Game
         /// <summary>Bỏ cờ đã xem popup cơ chế (Hướng / Khóa / "?"): nạp level có cơ chế là hiện lại.</summary>
         public static void ResetMechanicIntros()
         {
-            SaveSystem.Data.seenMechanics.Clear();
-            SaveSystem.MarkDirty();
+            if (Gameplay == null) return;
+            Gameplay.seenMechanics.Clear();
+            _services.Save.MarkDirty();
         }
 
         /// <summary>Bỏ cờ đã xem tutorial: lần mở game sau (đang ở level 1) sẽ chạy lại tutorial.</summary>
         public static void ResetTutorial()
         {
-            SaveSystem.Data.tutorialDone = false;
-            SaveSystem.MarkDirty();
+            if (Gameplay == null) return;
+            Gameplay.tutorialDone = false;
+            _services.Save.MarkDirty();
         }
 
         /// <summary>Thử mua bằng tiền thật (chưa có SDK: luôn hiện "Purchase Failed!").</summary>

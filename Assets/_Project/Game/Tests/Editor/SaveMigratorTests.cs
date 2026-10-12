@@ -7,6 +7,8 @@ using UnityEngine;
 using PawBlock.Core.Foundation;
 using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
+using PawBlock.Core.Contracts;
+using PawBlock.Features.DailyReward;
 
 namespace PawBlock.Game.Tests
 {

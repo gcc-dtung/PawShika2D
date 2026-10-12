@@ -1,25 +1,24 @@
 using System;
 using System.Collections.Generic;
 using PawBlock.Core.Contracts;
+using PawBlock.Core.Foundation;
 using PawBlock.Features.DailyChallenge;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
 using PawBlock.Features.Profile;
 
-namespace PawBlock.Core.Foundation
+namespace PawBlock.Game
 {
     /// <summary>
-    /// Toàn bộ dữ liệu người chơi, lưu thành 1 file JSON (SaveSystem). Chỉ field public / [Serializable] (JsonUtility).
-    /// Thêm field mới: đặt giá trị mặc định ngay tại khai báo (file cũ thiếu field thì giữ mặc định);
-    /// đổi ý nghĩa field cũ: tăng CurrentVersion và chuyển đổi trong SaveSystem.Upgrade.
+    /// Save v1 (1 class phẳng chứa mọi feature) – chỉ để SaveMigrator đọc file đời cũ rồi chia sang section v2.
+    /// Không dùng cho dữ liệu mới. Class con (EnergySave, ProfileSave...) là class section hiện tại cùng tên field,
+    /// đổi chúng thì chạy lại SaveMigratorTests (3 file mẫu v1).
     /// </summary>
     [Serializable]
-    public class SaveData
+    public class SaveDataV1
     {
-        public const int CurrentVersion = 1;
-
-        public int version = CurrentVersion;
+        public int version = 1;
         public long savedAt; // unix giây, lần ghi cuối
 
         public int currentLevel;
@@ -40,20 +39,6 @@ namespace PawBlock.Core.Foundation
         public List<string> seenMechanics = new List<string>(); // cơ chế đã xem popup giới thiệu (tên MechanicIntro.Kind)
 
         public List<LevelStatSave> levelStats = new List<LevelStatSave>(); // số liệu chơi thật từng level (LevelStatsRecorder)
-
-        public bool IsBoosterUnlocked(BoosterType type) => unlockedBoosters.Contains(type.ToString());
-
-        public void UnlockBooster(BoosterType type)
-        {
-            if (!IsBoosterUnlocked(type)) unlockedBoosters.Add(type.ToString());
-        }
-
-        /// <summary>Số lượt booster; chưa có (lần đầu) thì -1 để BoosterInventory tặng lượt khởi đầu.</summary>
-        public int GetBooster(BoosterType type)
-        {
-            BoosterSave b = boosters.Find(x => x.type == type.ToString());
-            return b != null ? b.count : -1;
-        }
 
         public void SetBooster(BoosterType type, int count)
         {

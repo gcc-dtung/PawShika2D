@@ -23,6 +23,16 @@ namespace PawBlock.Core.Foundation
 
         private static TrustedClockModel _model;
         private static TrustedClockRunner _runner;
+        private static ISaveService _save;
+        private static ClockSave _clock = new ClockSave(); // chưa Init (Edit mode / test): trong bộ nhớ, không ghi
+
+        /// <summary>GameBootstrap gọi trước mọi thứ dùng giờ: section "clock" (mốc giờ tin cậy lớn nhất đã thấy).</summary>
+        public static void Init(ISaveService save)
+        {
+            _save = save;
+            _clock = save.Get<ClockSave>(ClockSave.Key);
+            _model = null;
+        }
         private static float _lastSyncAttempt = -1000f;
 
         /// <summary>Vừa lấy được giờ server (giờ tin cậy có thể nhảy): hệ thống theo thời gian nên tính lại.</summary>
@@ -38,11 +48,11 @@ namespace PawBlock.Core.Foundation
             get
             {
                 long now = Model.Now(DeviceUtc, Mono);
-                ClockSave save = SaveSystem.Data.clock;
+                ClockSave save = _clock;
                 if (now - save.lastTrustedUtc >= SaveEvery || now < save.lastTrustedUtc)
                 {
                     save.lastTrustedUtc = now;
-                    SaveSystem.MarkDirty();
+                    _save?.MarkDirty();
                 }
                 return now;
             }
@@ -51,7 +61,7 @@ namespace PawBlock.Core.Foundation
         /// <summary>Giờ tin cậy theo múi giờ máy (dùng cho "sang ngày mới" của điểm danh).</summary>
         public static DateTime LocalNow => DateTimeOffset.FromUnixTimeSeconds(UtcNowSeconds).ToLocalTime().DateTime;
 
-        private static TrustedClockModel Model => _model ??= new TrustedClockModel(SaveSystem.Data.clock.lastTrustedUtc);
+        private static TrustedClockModel Model => _model ??= new TrustedClockModel(_clock.lastTrustedUtc);
         private static long DeviceUtc => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
         private static double Mono => Time.realtimeSinceStartupAsDouble;
 
@@ -60,6 +70,8 @@ namespace PawBlock.Core.Foundation
         {
             _model = null;
             _runner = null;
+            _save = null;
+            _clock = new ClockSave();
             _lastSyncAttempt = -1000f;
             Synced = null;
         }
@@ -102,8 +114,8 @@ namespace PawBlock.Core.Foundation
                     double received = Mono;
                     long corrected = serverUtc + (long)Math.Round((received - sent) * 0.5); // bù nửa thời gian khứ hồi
                     Model.ApplyServerTime(corrected, DeviceUtc, received);
-                    SaveSystem.Data.clock.lastTrustedUtc = corrected;
-                    SaveSystem.MarkDirty();
+                    _clock.lastTrustedUtc = corrected;
+                    _save?.MarkDirty();
                     if (Model.IsDeviceClockOff)
                         Debug.LogWarning($"[TrustedClock] Giờ máy lệch {Model.DeviceOffset} s so với server: dùng giờ server");
                     else

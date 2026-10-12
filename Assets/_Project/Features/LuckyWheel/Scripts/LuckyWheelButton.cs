@@ -1,7 +1,8 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Features.Economy;
+using PawBlock.Core.Contracts;
+using PawBlock.Core.Foundation;
 using PawBlock.Game;
 
 namespace PawBlock.Features.LuckyWheel
@@ -13,6 +14,11 @@ namespace PawBlock.Features.LuckyWheel
     [RequireComponent(typeof(Button))]
     public class LuckyWheelButton : MonoBehaviour
     {
+        private ICurrencyWallet _stars;
+
+        /// <summary>GameBootstrap gọi trước OnEnable: ví sao (Economy, qua contract).</summary>
+        public void Init(ICurrencyWallet stars) => _stars = stars;
+
         [SerializeField] private LuckyWheelPopup popup;
         [SerializeField] private LuckyWheelDatabase database;
         [SerializeField] private MenuShortcutButton shortcut;
@@ -26,20 +32,22 @@ namespace PawBlock.Features.LuckyWheel
 
         private void OnEnable()
         {
-            StarWallet.Changed += OnChanged;
+            EventBus<StarsBalanceChangedEvent>.Subscribe(OnChanged);
             Refresh();
         }
 
-        private void OnDisable() => StarWallet.Changed -= OnChanged;
+        private void OnDisable() => EventBus<StarsBalanceChangedEvent>.Unsubscribe(OnChanged);
 
-        private void OnChanged(int balance, int delta) => Refresh();
+        private void OnChanged(StarsBalanceChangedEvent e) => Refresh();
 
         private void Refresh()
         {
-            if (starsText != null) starsText.SetText("{0}", StarWallet.Balance);
-            bool canSpin = database != null && StarWallet.CanAfford(database.spinCost);
+            if (starsText != null) starsText.SetText("{0}", Stars);
+            bool canSpin = database != null && Stars >= database.spinCost;
             if (shortcut != null) shortcut.SetAttention(canSpin);
         }
+
+        private int Stars => _stars != null ? _stars.Balance : 0;
 
         private void OnClick()
         {

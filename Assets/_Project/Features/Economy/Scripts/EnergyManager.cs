@@ -14,6 +14,17 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class EnergyManager : Singleton<EnergyManager>, IEnergyService
     {
+        private ISaveService _save;
+        private EnergySave _energy;
+
+        /// <summary>GameBootstrap gọi trước Awake / Start: section "economy" (năng lượng).</summary>
+        public void Init(ISaveService save)
+        {
+            _save = save;
+            _energy = save.Get<EconomySave>(EconomySave.Key).energy;
+            _model = null; // đọc lại theo save vừa nhận
+        }
+
         [Header("Events")]
         public UnityEvent<int, int> onEnergyChanged = new UnityEvent<int, int>(); // (hiện tại, tối đa)
         public UnityEvent onTick = new UnityEvent();                              // mỗi giây, để UI cập nhật đồng hồ
@@ -45,7 +56,7 @@ namespace PawBlock.Features.Economy
         protected override void Awake()
         {
             base.Awake();
-            Load();
+            if (_model == null && _energy != null) Load();
         }
 
         private void Start()
@@ -115,7 +126,7 @@ namespace PawBlock.Features.Economy
 
         private void Load()
         {
-            EnergySave save = SaveSystem.Data.energy;
+            EnergySave save = _energy ?? new EnergySave(); // chưa Init (lỗi nối): dùng tạm mặc định, không ghi
             _model = new EnergyModel(
                 Config.maxEnergy, Config.refillSeconds,
                 save.energy < 0 ? Config.maxEnergy : save.energy, // -1: lần đầu chơi, đầy
@@ -126,11 +137,12 @@ namespace PawBlock.Features.Economy
 
         private void SaveAndNotify()
         {
-            EnergySave save = SaveSystem.Data.energy;
+            if (_energy == null) return;
+            EnergySave save = _energy;
             save.energy = _model.Energy;
             save.refillStart = _model.RefillStart;
             save.infiniteUntil = _model.InfiniteUntil;
-            SaveSystem.MarkDirty();
+            _save.MarkDirty();
             onEnergyChanged?.Invoke(_model.Energy, _model.Max);
             onTick?.Invoke();
         }

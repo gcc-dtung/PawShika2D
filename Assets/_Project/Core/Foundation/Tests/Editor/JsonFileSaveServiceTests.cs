@@ -199,6 +199,34 @@ namespace PawBlock.Core.Foundation.Tests
         }
 
         [Test]
+        public void OldVersionFile_NotMigrated_IsNeverOverwritten()
+        {
+            const string v1 = "{ \"version\": 1, \"coins\": 5 }";
+            File.WriteAllText(_path, v1);
+            var sut = new JsonFileSaveService(_path);
+            sut.Get<SampleSave>("sample").coins = 99;
+
+            UnityEngine.TestTools.LogAssert.Expect(UnityEngine.LogType.Error, new System.Text.RegularExpressions.Regex("chưa chuyển sang"));
+            sut.MarkDirty();
+
+            Assert.IsTrue(sut.NeedsMigration);
+            Assert.AreEqual(v1, File.ReadAllText(_path));
+        }
+
+        [Test]
+        public void OldVersionFile_AfterSet_CanWrite()
+        {
+            File.WriteAllText(_path, "{ \"version\": 1, \"coins\": 5 }");
+            var sut = new JsonFileSaveService(_path);
+
+            sut.Set("sample", new SampleSave { coins = 5 });
+            sut.MarkDirty();
+
+            Assert.IsFalse(sut.NeedsMigration);
+            Assert.AreEqual(2, new JsonFileSaveService(_path).FileVersion);
+        }
+
+        [Test]
         public void Set_ReplacesSection()
         {
             var sut = new JsonFileSaveService(_path);

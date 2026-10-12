@@ -26,6 +26,10 @@ namespace PawBlock.Core.Foundation
         private readonly Dictionary<string, object> _live = new Dictionary<string, object>();
         private readonly List<string> _order = new List<string>();
         private bool _dirty;
+        private bool _migrated; // file đời cũ đã được migrator chuyển (Set): mới cho ghi
+
+        /// <summary>Đường dẫn save của game: persistentDataPath/save.json.</summary>
+        public static string DefaultPath => Path.Combine(Application.persistentDataPath, "save.json");
 
         /// <summary>Version của file đã đọc (0 = không có file / file không có version).</summary>
         public int FileVersion { get; private set; }
@@ -35,6 +39,9 @@ namespace PawBlock.Core.Foundation
 
         /// <summary>Đọc được file nào (null = không có / chỉ bộ nhớ).</summary>
         public string LoadedFrom { get; private set; }
+
+        /// <summary>File đời cũ chưa migrate: không được ghi (ghi bây giờ sẽ mất các section chưa chuyển).</summary>
+        public bool NeedsMigration => LoadedText != null && FileVersion < CurrentVersion && !_migrated;
 
         public bool IsDirty => _dirty;
         public string FilePath => _path;
@@ -102,6 +109,11 @@ namespace PawBlock.Core.Foundation
             {
                 return;
             }
+            if (NeedsMigration)
+            {
+                Debug.LogError($"[Save] {Path.GetFileName(_path)} là save v{FileVersion}, chưa chuyển sang v{CurrentVersion}: không ghi để khỏi mất dữ liệu (chạy game 1 lần để migrate)");
+                return;
+            }
             if (Write(BuildText()))
             {
                 _dirty = false;
@@ -115,6 +127,7 @@ namespace PawBlock.Core.Foundation
         {
             _raw.Remove(key);
             Track(key, data);
+            _migrated = true;
         }
 
         public bool HasSection(string key) => _live.ContainsKey(key) || _raw.ContainsKey(key);
@@ -173,6 +186,7 @@ namespace PawBlock.Core.Foundation
             _live.Clear();
             _order.Clear();
             _dirty = false;
+            _migrated = false;
             FileVersion = 0;
             LoadedText = null;
             LoadedFrom = null;

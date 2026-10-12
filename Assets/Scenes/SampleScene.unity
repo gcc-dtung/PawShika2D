@@ -57462,6 +57462,92 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 1
   m_ConstraintCount: 7
+--- !u!1 &1059018814
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1059018816}
+  - component: {fileID: 1059018815}
+  m_Layer: 0
+  m_Name: GameBootstrap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1059018815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059018814}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b0a02622aeef4d46a8b644f8ce85c22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelManager: {fileID: 82617382}
+  boosterManager: {fileID: 82617385}
+  boosterTutorial: {fileID: 82617390}
+  levelStatsRecorder: {fileID: 82617395}
+  mechanicIntro: {fileID: 82617391}
+  tutorialController: {fileID: 82617389}
+  levelStars: {fileID: 82617400}
+  buyBoosterPopup: {fileID: 1766585799}
+  moreTimePopup: {fileID: 1383001587}
+  winPopup: {fileID: 156642231}
+  boosterButtons:
+  - {fileID: 1923732572}
+  - {fileID: 1978117101}
+  - {fileID: 609478784}
+  energyManager: {fileID: 82617386}
+  refillEnergyPopup: {fileID: 2049676040}
+  coinHuds:
+  - {fileID: 195153655}
+  - {fileID: 104946356}
+  shopCards:
+  - {fileID: 1989572310}
+  - {fileID: 1373334382}
+  - {fileID: 1392050875}
+  - {fileID: 834279953}
+  - {fileID: 444290553}
+  - {fileID: 1005411846}
+  - {fileID: 1082182790}
+  - {fileID: 83357903}
+  - {fileID: 1360166281}
+  - {fileID: 375077217}
+  - {fileID: 948786233}
+  - {fileID: 1529629804}
+  - {fileID: 1903677837}
+  - {fileID: 295562512}
+  dailyRewardManager: {fileID: 82617388}
+  dailyChallengeManager: {fileID: 82617401}
+  luckyWheelButton: {fileID: 356095813}
+  luckyWheelPopup: {fileID: 319460732}
+  avatarButton: {fileID: 943530460}
+  profilePopup: {fileID: 2043603488}
+  profileStatsRecorder: {fileID: 82617396}
+  gameFlowUI: {fileID: 622904678}
+--- !u!4 &1059018816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059018814}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1066707121
 GameObject:
   m_ObjectHideFlags: 0
@@ -79412,7 +79498,9 @@ MonoBehaviour:
   slideIn: 0.42
   hold: 1.3
   slideOut: 0.36
-  offscreen: {x: -2200, y: 900}
+  dropHeight: 1600
+  enterTilt: {x: -10, y: 4}
+  exitTilt: {x: -6, y: -12}
   bannerScale: 0.8
 --- !u!225 &1463359283
 CanvasGroup:
@@ -109512,6 +109600,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1059018816}
   - {fileID: 519420032}
   - {fileID: 619394802}
   - {fileID: 1117016763}

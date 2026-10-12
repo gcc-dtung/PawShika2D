@@ -15,6 +15,11 @@ namespace PawBlock.Features.Profile
     /// </summary>
     public class ProfilePopup : PopupView
     {
+        private PlayerProfileService _service;
+
+        /// <summary>GameBootstrap gọi: hồ sơ người chơi máy này.</summary>
+        public void Init(PlayerProfileService service) => _service = service;
+
         [Header("Thẻ người chơi")]
         [SerializeField] private AvatarDatabase avatars;
         [SerializeField] private Image avatarImage;
@@ -66,13 +71,13 @@ namespace PawBlock.Features.Profile
         protected override void OnEnable()
         {
             base.OnEnable();
-            PlayerProfileService.Changed += OnLocalChanged;
+            if (_service != null) _service.Changed += OnLocalChanged;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            PlayerProfileService.Changed -= OnLocalChanged;
+            if (_service != null) _service.Changed -= OnLocalChanged;
             ResumeGame();
         }
 
@@ -145,7 +150,7 @@ namespace PawBlock.Features.Profile
         private void OnLocalChanged()
         {
             if (!IsOpen || _profile == null || !_profile.IsLocal) return;
-            _profile = PlayerProfileService.Local();
+            _profile = _service.Local();
             Refresh();
         }
 
@@ -164,7 +169,7 @@ namespace PawBlock.Features.Profile
         {
             if (nameInput == null || !nameInput.gameObject.activeSelf) return;
             SetEditing(false);
-            if (!PlayerProfileService.Rename(text)) Refresh(); // tên không hợp lệ: giữ tên cũ
+            if (!_service.Rename(text)) Refresh(); // tên không hợp lệ: giữ tên cũ
         }
 
         private void SetEditing(bool editing)
@@ -190,7 +195,7 @@ namespace PawBlock.Features.Profile
 
         private void PickAvatar(int id)
         {
-            PlayerProfileService.SetAvatar(id);
+            _service.SetAvatar(id);
             ClosePicker();
         }
 

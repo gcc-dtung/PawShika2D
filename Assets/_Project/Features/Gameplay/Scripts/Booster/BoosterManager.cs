@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -17,6 +16,23 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterManager : Singleton<BoosterManager>, IBoosterHost, IBoosterInventory
     {
+        private ISaveService _save;
+        private GameplaySave _data;
+        private BoosterInventory _inventory;
+        private ICurrencyWallet _coins;
+
+        /// <summary>GameBootstrap gọi trước Start: section "gameplay" (booster đã mở), kho lượt, ví coin (mua lượt).</summary>
+        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins)
+        {
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+            _inventory = inventory;
+            _coins = coins;
+        }
+
+        /// <summary>Kho lượt booster (BoosterButton, Debug).</summary>
+        public BoosterInventory Inventory => _inventory;
+
         [SerializeField] private BoosterDatabase database;
         [Tooltip("Khoảng cách giữa các khối Reveal tự đặt")]
         [SerializeField] private float revealStagger = 0.12f;
@@ -95,26 +111,26 @@ namespace PawBlock.Features.Gameplay
         public int GetCount(BoosterType type)
         {
             BoosterData data = Get(type);
-            return data != null ? BoosterInventory.Get(data) : 0;
+            return data != null ? _inventory.Get(data) : 0;
         }
 
         public void Add(BoosterType type, int amount)
         {
             BoosterData data = Get(type);
-            if (data != null) BoosterInventory.Add(data, amount);
+            if (data != null) _inventory.Add(data, amount);
         }
 
         /// <summary>Đã qua tutorial mở khóa, hoặc đang trong tutorial của chính booster này.</summary>
         public bool IsUnlocked(BoosterType type)
         {
             if (Get(type) == null) return false;
-            return SaveSystem.Data.IsBoosterUnlocked(type) || TutorialTarget == type;
+            return _data.IsBoosterUnlocked(type) || TutorialTarget == type;
         }
 
         public int Count(BoosterType type)
         {
             BoosterData data = Get(type);
-            return data != null ? BoosterInventory.Get(data) : 0;
+            return data != null ? _inventory.Get(data) : 0;
         }
 
         public bool IsActive(BoosterType type) => _effects.TryGetValue(type, out BoosterEffect e) && e.IsActive;
@@ -167,8 +183,8 @@ namespace PawBlock.Features.Gameplay
         public bool Buy(BoosterType type)
         {
             BoosterData data = Get(type);
-            if (data == null || !CoinWallet.TrySpend(data.priceOneBuy)) return false;
-            BoosterInventory.Add(data, data.valueOneBuy);
+            if (data == null || !_coins.TrySpend(data.priceOneBuy)) return false;
+            _inventory.Add(data, data.valueOneBuy);
             return true;
         }
 
@@ -195,7 +211,7 @@ namespace PawBlock.Features.Gameplay
         {
             BoosterData data = Get(type);
             if (_freeUse == type) _freeUse = null;
-            else if (data != null) BoosterInventory.TryConsume(data);
+            else if (data != null) _inventory.TryConsume(data);
             LastTarget = target;
             onBoosterUsed?.Invoke(type);
             EventBus<BoosterUsedEvent>.Raise(new BoosterUsedEvent(type));

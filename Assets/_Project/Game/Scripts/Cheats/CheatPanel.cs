@@ -231,7 +231,7 @@ namespace PawBlock.Game
             EnergyManager en = EnergyManager.Instance;
             string energy = en != null ? (en.IsInfinite ? "∞" : $"{en.Current}/{en.Max}") : "-";
             return $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount} · {screen} · {state}\n" +
-                   $"Coin {CoinWallet.Balance} · ★ {StarWallet.Balance} · Giờ {DebugCheats.TimerStatus} · Năng lượng {energy}";
+                   $"Coin {DebugCheats.CoinBalance} · ★ {DebugCheats.StarBalance} · Giờ {DebugCheats.TimerStatus} · Năng lượng {energy}";
         }
 
         // ---------- Tab: Level + thắng / thua ----------
@@ -292,7 +292,7 @@ namespace PawBlock.Game
 
         private void DrawResources()
         {
-            Header($"Coin · {CoinWallet.Balance}");
+            Header($"Coin · {DebugCheats.CoinBalance}");
             using (new GUILayout.HorizontalScope())
             {
                 if (Btn("+100")) DebugCheats.AddCoins(100);
@@ -301,7 +301,7 @@ namespace PawBlock.Game
                 if (Btn("= 0")) DebugCheats.SetCoins(0);
             }
 
-            Header($"Sao ★ (Vòng quay may mắn) · {StarWallet.Balance}");
+            Header($"Sao ★ (Vòng quay may mắn) · {DebugCheats.StarBalance}");
             using (new GUILayout.HorizontalScope())
             {
                 if (Btn("+10")) DebugCheats.AddStars(10);

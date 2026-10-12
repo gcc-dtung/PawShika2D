@@ -15,6 +15,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterTutorial : MonoBehaviour, ILevelIntro
     {
+        private ISaveService _save;
+        private GameplaySave _data;
+
+        /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
+        public void Init(ISaveService save)
+        {
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+        }
+
         [SerializeField] private BoosterTutorialView view;
         [Tooltip("Chờ thêm sau khi lưới hiện xong rồi mới tối màn hình")]
         [SerializeField] private float startDelay = 0.3f;
@@ -80,7 +90,7 @@ namespace PawBlock.Features.Gameplay
             BoosterData best = null;
             foreach (BoosterData d in bm.Database.boosterDatas)
             {
-                if (d == null || SaveSystem.Data.IsBoosterUnlocked(d.boosterType) || levelNumber < d.levelUnlock) continue;
+                if (d == null || _data.IsBoosterUnlocked(d.boosterType) || levelNumber < d.levelUnlock) continue;
                 if (best == null || d.levelUnlock < best.levelUnlock) best = d;
             }
             return best;
@@ -110,10 +120,10 @@ namespace PawBlock.Features.Gameplay
             EventBus<BoosterTutorialCompletedEvent>.Raise(new BoosterTutorialCompletedEvent(type));
         }
 
-        private static void Unlock(BoosterType type)
+        private void Unlock(BoosterType type)
         {
-            SaveSystem.Data.UnlockBooster(type);
-            SaveSystem.MarkDirty();
+            _data.UnlockBooster(type);
+            _save.MarkDirty();
             EventBus<BoosterLockChangedEvent>.Raise(new BoosterLockChangedEvent(type, true));
         }
     }

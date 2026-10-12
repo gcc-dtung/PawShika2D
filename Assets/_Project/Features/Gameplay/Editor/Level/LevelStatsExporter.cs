@@ -22,8 +22,7 @@ namespace PawBlock.Features.Gameplay
         [MenuItem(Menu + "Xuất CSV (save máy này)", priority = 4)]
         private static void ExportLocal()
         {
-            SaveData data = SaveSystem.Data;
-            Export(data.levelStats, "LevelStats_Real.csv", 1);
+            Export(OpenSave().Get<GameplaySave>(GameplaySave.Key).levelStats, "LevelStats_Real.csv", 1);
         }
 
         [MenuItem(Menu + "Xuất CSV gộp nhiều save.json...", priority = 5)]
@@ -36,10 +35,10 @@ namespace PawBlock.Features.Gameplay
             int files = 0;
             foreach (string path in Directory.GetFiles(folder, "*.json"))
             {
-                SaveData data;
+                GameplaySave data;
                 try
                 {
-                    data = JsonUtility.FromJson<SaveData>(File.ReadAllText(path));
+                    data = ReadGameplay(File.ReadAllText(path));
                 }
                 catch (System.Exception e)
                 {
@@ -56,23 +55,41 @@ namespace PawBlock.Features.Gameplay
         [MenuItem(Menu + "Log tóm tắt", priority = 6)]
         private static void LogSummary()
         {
-            List<LevelStatSave> list = SaveSystem.Data.levelStats;
+            JsonFileSaveService save = OpenSave();
+            List<LevelStatSave> list = save.Get<GameplaySave>(GameplaySave.Key).levelStats;
             int attempts = 0, wins = 0;
             foreach (LevelStatSave s in list)
             {
                 attempts += s.attempts;
                 wins += s.wins;
             }
-            Debug.Log($"[LevelStats] {list.Count} level có số liệu, {attempts} lượt, {wins} thắng (save: {SaveSystem.FilePath})");
+            Debug.Log($"[LevelStats] {list.Count} level có số liệu, {attempts} lượt, {wins} thắng (save: {save.FilePath})");
         }
 
         [MenuItem(Menu + "Xóa số liệu", priority = 7)]
         private static void Clear()
         {
-            if (!EditorUtility.DisplayDialog("Xóa số liệu level", "Xóa toàn bộ SaveData.levelStats trên máy này?", "Xóa", "Thôi")) return;
-            SaveSystem.Data.levelStats.Clear();
-            SaveSystem.MarkDirty();
-            SaveSystem.Save(true);
+            if (!EditorUtility.DisplayDialog("Xóa số liệu level", "Xóa toàn bộ số liệu level (save.json → gameplay.levelStats) trên máy này?", "Xóa", "Thôi")) return;
+            if (EditorApplication.isPlaying)
+            {
+                Debug.LogWarning("[LevelStats] Thoát Play mode rồi mới xóa (đang chơi sẽ ghi đè lại).");
+                return;
+            }
+            JsonFileSaveService save = OpenSave();
+            save.Get<GameplaySave>(GameplaySave.Key).levelStats.Clear();
+            save.MarkDirty();
+        }
+
+        private static JsonFileSaveService OpenSave() => new JsonFileSaveService(JsonFileSaveService.DefaultPath);
+
+        /// <summary>Section "gameplay" của save v2, hoặc cả file v1 (field levelStats cùng tên ở cấp ngoài).</summary>
+        private static GameplaySave ReadGameplay(string json)
+        {
+            if (JsonSections.TryParse(json, out Dictionary<string, string> top) && top.TryGetValue(GameplaySave.Key, out string section))
+            {
+                json = section;
+            }
+            return JsonUtility.FromJson<GameplaySave>(json);
         }
 
         private static void Merge(Dictionary<string, LevelStatSave> merged, LevelStatSave s)

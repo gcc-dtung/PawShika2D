@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
-using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
 
 namespace PawBlock.Game
@@ -66,7 +65,7 @@ namespace PawBlock.Game
                 _timer.onTimeChanged.AddListener(OnTimeChanged);
             }
             if (_booster != null) _booster.onBoosterUsed.AddListener(OnBoosterUsed);
-            CoinWallet.Changed += OnCoinChanged;
+            EventBus<CoinsChangedEvent>.Subscribe(OnCoinChanged);
         }
 
         private void OnDestroy()
@@ -92,7 +91,7 @@ namespace PawBlock.Game
                 _timer.onTimeChanged.RemoveListener(OnTimeChanged);
             }
             if (_booster != null) _booster.onBoosterUsed.RemoveListener(OnBoosterUsed);
-            CoinWallet.Changed -= OnCoinChanged;
+            EventBus<CoinsChangedEvent>.Unsubscribe(OnCoinChanged);
         }
 
         private void OnBlockPlaced(BlockModel block)
@@ -183,9 +182,9 @@ namespace PawBlock.Game
 
         private void OnBoosterUsed(BoosterType type) => AudioManager.Play(SoundId.Booster);
 
-        private void OnCoinChanged(int balance, int delta)
+        private void OnCoinChanged(CoinsChangedEvent e)
         {
-            if (delta > 0) AudioManager.Play(SoundId.Coin);
+            if (e.Delta > 0) AudioManager.Play(SoundId.Coin);
         }
     }
 }

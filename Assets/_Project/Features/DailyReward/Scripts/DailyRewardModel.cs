@@ -1,5 +1,4 @@
 using System;
-using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.DailyReward
 {

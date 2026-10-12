@@ -32,14 +32,26 @@ namespace PawBlock.Core.Foundation
         private readonly Dictionary<SoundId, float> _lastPlayed = new Dictionary<SoundId, float>();
         private Tween _musicFade;
 
+        private static ISaveService _save;
+        private static SettingsSave _settings = new SettingsSave(); // chưa Init (Edit mode): mặc định, không ghi
+
+        /// <summary>GameBootstrap gọi đầu tiên: section "settings" (nhạc, âm thanh, rung).</summary>
+        public static void InitSettings(ISaveService save)
+        {
+            _save = save;
+            _settings = save.Get<SettingsSave>(SettingsSave.Key);
+        }
+
+        private static void MarkSettingsDirty() => _save?.MarkDirty();
+
         public static bool MusicOn
         {
-            get => SaveSystem.Data.settings.music;
+            get => _settings.music;
             set
             {
                 if (value == MusicOn) return;
-                SaveSystem.Data.settings.music = value;
-                SaveSystem.MarkDirty();
+                _settings.music = value;
+                MarkSettingsDirty();
                 if (Instance != null) Instance.ApplyMusicSetting();
                 SettingsChanged?.Invoke();
             }
@@ -47,12 +59,12 @@ namespace PawBlock.Core.Foundation
 
         public static bool SoundOn
         {
-            get => SaveSystem.Data.settings.sound;
+            get => _settings.sound;
             set
             {
                 if (value == SoundOn) return;
-                SaveSystem.Data.settings.sound = value;
-                SaveSystem.MarkDirty();
+                _settings.sound = value;
+                MarkSettingsDirty();
                 if (!value && Instance != null) Instance.StopAllSounds();
                 SettingsChanged?.Invoke();
             }
@@ -60,12 +72,12 @@ namespace PawBlock.Core.Foundation
 
         public static bool VibrateOn
         {
-            get => SaveSystem.Data.settings.vibrate;
+            get => _settings.vibrate;
             set
             {
                 if (value == VibrateOn) return;
-                SaveSystem.Data.settings.vibrate = value;
-                SaveSystem.MarkDirty();
+                _settings.vibrate = value;
+                MarkSettingsDirty();
                 SettingsChanged?.Invoke();
             }
         }

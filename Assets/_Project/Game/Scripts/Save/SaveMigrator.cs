@@ -15,7 +15,7 @@ namespace PawBlock.Game
 {
     /// <summary>
     /// Chuyển save đời cũ sang v2 (mỗi feature 1 section). Chạy 1 lần lúc mở game, trước khi feature đọc save.
-    /// - v1 (SaveData phẳng, version 1): chia field về section, giữ file cũ thành save.v1.bak, ghi v2.
+    /// - v1 (SaveDataV1 phẳng, version 1): chia field về section, giữ file cũ thành save.v1.bak, ghi v2.
     /// - Không có file: chuyển PlayerPrefs của bản trước nữa (như SaveSystem cũ), ghi xong mới xóa key cũ.
     /// Nằm ở Game vì phải biết class save của mọi feature.
     /// </summary>
@@ -45,7 +45,7 @@ namespace PawBlock.Game
                 return false;
             }
 
-            SaveData v1;
+            SaveDataV1 v1;
             bool fromPrefs = false;
             if (save.LoadedText != null)
             {
@@ -59,7 +59,7 @@ namespace PawBlock.Game
             }
             else
             {
-                v1 = new SaveData();
+                v1 = new SaveDataV1();
                 if (!usePlayerPrefs || !ReadPlayerPrefs(v1))
                 {
                     return false; // người mới: section mặc định, ghi khi có thay đổi đầu tiên
@@ -79,7 +79,7 @@ namespace PawBlock.Game
         }
 
         /// <summary>Chia dữ liệu v1 về section v2 (thứ tự gọi = thứ tự trong file).</summary>
-        public static void ApplyV1(JsonFileSaveService save, SaveData v1)
+        public static void ApplyV1(JsonFileSaveService save, SaveDataV1 v1)
         {
             save.Set(EconomySave.Key, new EconomySave { coins = v1.coins, stars = v1.stars, energy = v1.energy });
             save.Set(ShopSave.Key, new ShopSave { noAds = v1.noAds });
@@ -101,12 +101,12 @@ namespace PawBlock.Game
         }
 
         /// <summary>Đọc JSON v1; object lồng nhau thiếu (file rất cũ) thì dùng mặc định.</summary>
-        public static SaveData ReadV1(string json)
+        public static SaveDataV1 ReadV1(string json)
         {
-            SaveData data;
+            SaveDataV1 data;
             try
             {
-                data = JsonUtility.FromJson<SaveData>(json);
+                data = JsonUtility.FromJson<SaveDataV1>(json);
             }
             catch (Exception e)
             {
@@ -149,7 +149,7 @@ namespace PawBlock.Game
 
         // ---------- PlayerPrefs của bản trước v1 ----------
 
-        private static bool ReadPlayerPrefs(SaveData data)
+        private static bool ReadPlayerPrefs(SaveDataV1 data)
         {
             bool any = false;
             if (PlayerPrefs.HasKey(OldLevelKey)) { data.currentLevel = PlayerPrefs.GetInt(OldLevelKey); any = true; }

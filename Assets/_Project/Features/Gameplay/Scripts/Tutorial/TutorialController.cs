@@ -13,6 +13,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TutorialController : Singleton<TutorialController>
     {
+        private ISaveService _save;
+        private GameplaySave _data;
+
+        /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
+        public void Init(ISaveService save)
+        {
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+        }
+
         [SerializeField] private TutorialView view;
         [SerializeField] private TutorialHand hand;
         [Tooltip("Chờ lưới lóe sáng xong rồi mới sang bước kế")]
@@ -27,7 +37,7 @@ namespace PawBlock.Features.Gameplay
 
         /// <summary>Lần mở game này cần chạy tutorial (ScreenFlow / LevelManager hỏi lúc Start).</summary>
         public static bool Pending =>
-            Instance != null && Instance.isActiveAndEnabled && !SaveSystem.Data.tutorialDone && SaveSystem.Data.currentLevel == 0;
+            Instance != null && Instance.isActiveAndEnabled && Instance._data != null && !Instance._data.tutorialDone && Instance._data.currentLevel == 0;
 
         private void OnEnable()
         {
@@ -117,9 +127,9 @@ namespace PawBlock.Features.Gameplay
             Active = false;
             if (hand != null) hand.Stop();
             if (view != null) view.Hide();
-            SaveSystem.Data.tutorialDone = true;
-            SaveSystem.MarkDirty();
-            if (LevelManager.Instance != null) LevelManager.Instance.LoadLevel(SaveSystem.Data.currentLevel);
+            _data.tutorialDone = true;
+            _save.MarkDirty();
+            if (LevelManager.Instance != null) LevelManager.Instance.LoadLevel(_data.currentLevel);
         }
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.DailyChallenge.Tests
 {

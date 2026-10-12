@@ -6,38 +6,49 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Economy
 {
     /// <summary>
-    /// Ví sao (SaveData.stars): mỗi lần thắng cộng số sao của ván (LevelStars), Vòng quay may mắn tiêu sao.
-    /// Giống CoinWallet: sự kiện Changed(số dư mới, thay đổi); feature khác dùng qua ICurrencyWallet (new StarWallet()).
+    /// Ví sao (section "economy"): mỗi lần thắng cộng số sao của ván (LevelStars), Vòng quay may mắn tiêu sao.
+    /// Giống CoinWallet: event Changed(số dư mới, thay đổi) trong Economy, StarsBalanceChangedEvent cho feature khác.
     /// </summary>
     public sealed class StarWallet : ICurrencyWallet
     {
-        int ICurrencyWallet.Balance => Balance;
-        bool ICurrencyWallet.TrySpend(int amount) => TrySpend(amount);
-        void ICurrencyWallet.Add(int amount) => Add(amount);
+        private readonly ISaveService _save;
+        private readonly EconomySave _data;
 
-        public static event Action<int, int> Changed;
+        public event Action<int, int> Changed;
 
-        public static int Balance => SaveSystem.Data.stars;
-
-        public static void Add(int amount)
+        public StarWallet(ISaveService save)
         {
-            if (amount <= 0) return;
+            _save = save;
+            _data = save.Get<EconomySave>(EconomySave.Key);
+        }
+
+        public int Balance => _data.stars;
+
+        public void Add(int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
             Set(Balance + amount, amount);
         }
 
-        public static bool CanAfford(int amount) => Balance >= amount;
+        public bool CanAfford(int amount) => Balance >= amount;
 
-        public static bool TrySpend(int amount)
+        public bool TrySpend(int amount)
         {
-            if (amount < 0 || Balance < amount) return false;
+            if (amount < 0 || Balance < amount)
+            {
+                return false;
+            }
             Set(Balance - amount, -amount);
             return true;
         }
 
-        private static void Set(int value, int delta)
+        private void Set(int value, int delta)
         {
-            SaveSystem.Data.stars = Mathf.Max(0, value);
-            SaveSystem.MarkDirty();
+            _data.stars = Mathf.Max(0, value);
+            _save.MarkDirty();
             Changed?.Invoke(Balance, delta);
             EventBus<StarsBalanceChangedEvent>.Raise(new StarsBalanceChangedEvent(Balance, delta));
         }

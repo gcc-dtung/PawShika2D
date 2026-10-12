@@ -71,7 +71,6 @@ namespace PawBlock.Core.Foundation
         {
             StopAllCoroutines(); // đã ghi sớm (vào nền / thoát): bỏ lượt chờ cũ
             _dirtySince = -1f;
-            SaveSystem.Save();
             foreach (ISaveService service in _services)
             {
                 service.SaveNow();

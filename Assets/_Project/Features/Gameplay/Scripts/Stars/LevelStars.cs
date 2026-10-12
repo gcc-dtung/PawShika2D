@@ -16,6 +16,11 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStars : Singleton<LevelStars>
     {
+        private ICurrencyWallet _stars;
+
+        /// <summary>GameBootstrap gọi: ví sao (Economy, qua contract) – thắng thì cộng số sao của ván.</summary>
+        public void Init(ICurrencyWallet stars) => _stars = stars;
+
         [SerializeField] private LevelTimer timer;
         [SerializeField] private GridSpawner gridSpawner;
 
@@ -49,7 +54,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (e.State != GameState.Won) return;
             if (LevelManager.Instance != null && LevelManager.Instance.IsPractice) return;
-            StarWallet.Add(Stars);
+            _stars?.Add(Stars);
         }
 
         private void OnGridSpawned(List<CellView> cells)

@@ -5,45 +5,63 @@ using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Gameplay
 {
-    /// <summary>Số lượt mỗi booster, lưu trong SaveData. Lần đầu đọc thì tặng valueStart.</summary>
-    public static class BoosterInventory
+    /// <summary>
+    /// Số lượt booster (section "gameplay"). Lần đầu đọc 1 booster thì tặng valueStart lượt.
+    /// GameBootstrap tạo 1 instance, BoosterManager / BoosterButton nhận qua Init.
+    /// </summary>
+    public sealed class BoosterInventory
     {
-        /// <summary>(loại, số lượt mới)</summary>
-        public static event Action<BoosterType, int> Changed;
+        private readonly ISaveService _save;
+        private readonly GameplaySave _data;
 
-        public static int Get(BoosterData data)
+        /// <summary>(loại, số lượt mới)</summary>
+        public event Action<BoosterType, int> Changed;
+
+        public BoosterInventory(ISaveService save)
         {
-            int count = SaveSystem.Data.GetBooster(data.boosterType);
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+        }
+
+        public int Get(BoosterData data)
+        {
+            int count = _data.GetBooster(data.boosterType);
             if (count < 0)
             {
                 count = Mathf.Max(0, data.valueStart);
-                SaveSystem.Data.SetBooster(data.boosterType, count);
-                SaveSystem.MarkDirty();
+                _data.SetBooster(data.boosterType, count);
+                _save.MarkDirty();
             }
             return count;
         }
 
-        public static void Add(BoosterData data, int amount)
+        public void Add(BoosterData data, int amount)
         {
-            if (amount <= 0) return;
+            if (amount <= 0)
+            {
+                return;
+            }
             Set(data.boosterType, Get(data) + amount);
         }
 
-        public static bool TryConsume(BoosterData data)
+        public bool TryConsume(BoosterData data)
         {
             int count = Get(data);
-            if (count <= 0) return false;
+            if (count <= 0)
+            {
+                return false;
+            }
             Set(data.boosterType, count - 1);
             return true;
         }
 
         /// <summary>Đặt thẳng số lượt (Debug Panel).</summary>
-        public static void SetCount(BoosterData data, int value) => Set(data.boosterType, value);
+        public void SetCount(BoosterData data, int value) => Set(data.boosterType, value);
 
-        private static void Set(BoosterType type, int value)
+        private void Set(BoosterType type, int value)
         {
-            SaveSystem.Data.SetBooster(type, Mathf.Max(0, value));
-            SaveSystem.MarkDirty();
+            _data.SetBooster(type, Mathf.Max(0, value));
+            _save.MarkDirty();
             Changed?.Invoke(type, value);
         }
     }

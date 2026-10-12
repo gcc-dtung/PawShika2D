@@ -6,7 +6,6 @@ using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 using PawBlock.Features.DailyChallenge;
 using PawBlock.Features.DailyReward;
-using PawBlock.Features.Economy;
 using PawBlock.Shared;
 
 namespace PawBlock.Features.LuckyWheel
@@ -20,6 +19,18 @@ namespace PawBlock.Features.LuckyWheel
     /// </summary>
     public class LuckyWheelPopup : PopupView
     {
+        private ICurrencyWallet _stars;
+        private IRewardGranter _rewards;
+
+        /// <summary>GameBootstrap gọi: ví sao (tiêu khi quay), nơi trao quà (DailyReward) – đều qua contract.</summary>
+        public void Init(ICurrencyWallet stars, IRewardGranter rewards)
+        {
+            _stars = stars;
+            _rewards = rewards;
+        }
+
+        private int Stars => _stars != null ? _stars.Balance : 0;
+
         [SerializeField] private LuckyWheelDatabase database;
         [Tooltip("Icon coin / năng lượng vô hạn cho dòng kết quả (dùng chung với điểm danh)")]
         [SerializeField] private DailyRewardDatabase rewardIcons;
@@ -57,13 +68,13 @@ namespace PawBlock.Features.LuckyWheel
         protected override void OnEnable()
         {
             base.OnEnable();
-            StarWallet.Changed += OnStarsChanged;
+            EventBus<StarsBalanceChangedEvent>.Subscribe(OnStarsChanged);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            StarWallet.Changed -= OnStarsChanged;
+            EventBus<StarsBalanceChangedEvent>.Unsubscribe(OnStarsChanged);
             // Đóng giữa lúc quay (đổi màn...): quà đã trao lúc bấm, chỉ dừng hình
             _spin?.Kill();
             _flash?.Kill();
@@ -79,12 +90,12 @@ namespace PawBlock.Features.LuckyWheel
             ShowHint();
         }
 
-        private void OnStarsChanged(int balance, int delta) => Refresh();
+        private void OnStarsChanged(StarsBalanceChangedEvent e) => Refresh();
 
         private void Refresh()
         {
-            if (balanceText != null) balanceText.SetText("{0}", StarWallet.Balance);
-            bool afford = database != null && StarWallet.CanAfford(database.spinCost);
+            if (balanceText != null) balanceText.SetText("{0}", Stars);
+            bool afford = database != null && Stars >= database.spinCost;
             if (spinButton != null) spinButton.interactable = afford && !_spinning;
             if (closeButton != null) closeButton.interactable = !_spinning;
         }
@@ -92,7 +103,7 @@ namespace PawBlock.Features.LuckyWheel
         /// <summary>Chưa đủ sao: gợi ý cách lấy sao ở dòng kết quả.</summary>
         private void ShowHint()
         {
-            if (database == null || StarWallet.CanAfford(database.spinCost) || resultText == null) return;
+            if (database == null || Stars >= database.spinCost || resultText == null) return;
             if (resultRow != null) resultRow.gameObject.SetActive(true);
             if (resultIcon != null) resultIcon.gameObject.SetActive(false);
             resultText.SetText("Win levels to earn stars!");
@@ -109,10 +120,10 @@ namespace PawBlock.Features.LuckyWheel
             int[] weights = new int[database.segments.Count];
             for (int i = 0; i < weights.Length; i++) weights[i] = database.segments[i].weight;
             int index = LuckyWheelModel.Pick(weights, Random.value);
-            if (index < 0 || !StarWallet.TrySpend(database.spinCost)) return;
+            if (index < 0 || _stars == null || !_stars.TrySpend(database.spinCost)) return;
 
             DailyRewardItem item = database.segments[index].item;
-            DailyRewardManager.GrantItem(item); // trao ngay, vòng quay chỉ là hình
+            _rewards?.Grant(item); // trao ngay, vòng quay chỉ là hình
 
             _spinning = true;
             Refresh();

@@ -8,6 +8,11 @@ namespace PawBlock.Features.Profile
     [RequireComponent(typeof(Button))]
     public class AvatarButton : MonoBehaviour
     {
+        private PlayerProfileService _service;
+
+        /// <summary>GameBootstrap gọi trước OnEnable.</summary>
+        public void Init(PlayerProfileService service) => _service = service;
+
         [SerializeField] private AvatarDatabase avatars;
         [SerializeField] private Image avatarImage;
         [SerializeField] private GameFlowUI gameFlow;
@@ -20,11 +25,14 @@ namespace PawBlock.Features.Profile
 
         private void OnEnable()
         {
-            PlayerProfileService.Changed += Refresh;
+            if (_service != null) _service.Changed += Refresh;
             Refresh();
         }
 
-        private void OnDisable() => PlayerProfileService.Changed -= Refresh;
+        private void OnDisable()
+        {
+            if (_service != null) _service.Changed -= Refresh;
+        }
 
         private void OnClick()
         {
@@ -33,7 +41,7 @@ namespace PawBlock.Features.Profile
 
         private void Refresh()
         {
-            if (avatarImage != null && avatars != null) avatarImage.sprite = avatars.Get(PlayerProfileService.Save.avatar);
+            if (avatarImage != null && avatars != null && _service != null) avatarImage.sprite = avatars.Get(_service.Save.avatar);
         }
     }
 }

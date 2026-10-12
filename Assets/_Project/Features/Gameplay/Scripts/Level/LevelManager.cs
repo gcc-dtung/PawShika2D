@@ -18,6 +18,17 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelManager : Singleton<LevelManager>
     {
+        private ISaveService _save;
+        private GameplaySave _data;
+
+        /// <summary>GameBootstrap gọi trước Start: section "gameplay" (level đang chơi đã lưu).</summary>
+        public void Init(ISaveService save)
+        {
+            _save = save;
+            _data = save.Get<GameplaySave>(GameplaySave.Key);
+            _currentIndex = _data.currentLevel;
+        }
+
         [SerializeField] private int currentLevel = 0;
 
         [SerializeField] private LevelDatabase database;
@@ -53,7 +64,6 @@ namespace PawBlock.Features.Gameplay
         {
             base.Awake();
             if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
-            _currentIndex = SaveSystem.Data.currentLevel;
         }
 
         private void Start()
@@ -86,10 +96,10 @@ namespace PawBlock.Features.Gameplay
             CancelPending();
             _daily = null;
             _currentIndex = Mathf.Clamp(index, 0, database.Count - 1);
-            if (SaveSystem.Data.currentLevel != _currentIndex)
+            if (_data.currentLevel != _currentIndex)
             {
-                SaveSystem.Data.currentLevel = _currentIndex;
-                SaveSystem.MarkDirty();
+                _data.currentLevel = _currentIndex;
+                _save.MarkDirty();
             }
 
             LevelDefinition level = database.Get(_currentIndex);
@@ -159,10 +169,10 @@ namespace PawBlock.Features.Gameplay
                 LoadLevel(_currentIndex + 1);
                 return;
             }
-            if (!SaveSystem.Data.allLevelsCleared)
+            if (!_data.allLevelsCleared)
             {
-                SaveSystem.Data.allLevelsCleared = true;
-                SaveSystem.MarkDirty();
+                _data.allLevelsCleared = true;
+                _save.MarkDirty();
             }
             EventBus<AllLevelsCompletedEvent>.Raise(new AllLevelsCompletedEvent(database.Count));
             if (AutoAdvance) RestartFromFirst();
@@ -241,7 +251,9 @@ namespace PawBlock.Features.Gameplay
             if (state == GameState.Won)
             {
                 bool isHard = level != null && level.difficulty != LevelDifficulty.Normal;
-                EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent(CurrentLevelNumber, id, IsDaily, IsDaily ? DailyDay : -1, isHard));
+                LevelStatSave stat = !IsDaily && id != null && _data != null ? _data.levelStats.Find(x => x.id == id) : null; // Daily không ghi số liệu
+                int attempts = stat != null ? stat.attempts : 0;
+                EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent(CurrentLevelNumber, id, IsDaily, IsDaily ? DailyDay : -1, isHard, attempts));
             }
             else
             {
