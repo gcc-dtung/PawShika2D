@@ -3,7 +3,6 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Core.Foundation;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
@@ -15,7 +14,7 @@ namespace PawBlock.Game
     /// <summary>
     /// Dựng các popup vào Canvas_Popup (canvas riêng, luôn bật, vẽ trên Canvas_HUD và Canvas_Menu) để dùng được
     /// ở cả màn chơi lẫn Main Menu: Win, Hồi mạng, Thua, Cài đặt, Mua booster, Nạp năng lượng, Điểm danh;
-    /// gắn GameFlowUI, RewardedAds và nối các nút cần GameFlowUI (SettingsButton, EnergyHUD, ScreenFlow).
+    /// gắn GameFlowUI và nối các nút cần GameFlowUI (SettingsButton, EnergyHUD, ScreenFlow).
     /// Chạy lại được: xóa "Popups" cũ (cả bản cũ nằm trong Canvas_HUD) rồi dựng mới.
     /// </summary>
     public static class PopupBuilder
@@ -82,9 +81,6 @@ namespace PawBlock.Game
             foreach (EnergyHUD e in Object.FindObjectsByType<EnergyHUD>(FindObjectsInactive.Include, FindObjectsSortMode.None)) Assign(e, "gameFlow", flow);
             ScreenFlow screenFlow = Object.FindFirstObjectByType<ScreenFlow>(FindObjectsInactive.Include);
             if (screenFlow != null) Assign(screenFlow, "gameFlow", flow);
-
-            LevelManager lm = Object.FindFirstObjectByType<LevelManager>(FindObjectsInactive.Include);
-            if (lm != null && lm.GetComponent<RewardedAds>() == null) lm.gameObject.AddComponent<RewardedAds>();
 
             foreach (PopupView p in new PopupView[] { win, moreTime, lose, settings, quit, buy, refill, daily, notice }) p.gameObject.SetActive(false);
 

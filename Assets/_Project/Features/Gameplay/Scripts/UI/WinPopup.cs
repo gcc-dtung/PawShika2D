@@ -24,9 +24,14 @@ namespace PawBlock.Features.Gameplay
     public class WinPopup : PopupView
     {
         private ICurrencyWallet _coins;
+        private IAdsService _ads;
 
-        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
-        public void Init(ICurrencyWallet coins) => _coins = coins;
+        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
+        public void Init(ICurrencyWallet coins, IAdsService ads)
+        {
+            _coins = coins;
+            _ads = ads;
+        }
 
         [Header("Thành phần")]
         [Tooltip("Ảnh tiêu đề, thứ tự theo WinTitle: Well done, Nice, Great, Perfect")]
@@ -234,7 +239,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (!_ready || _claimed) return;
             SetButtons(false);
-            RewardedAds.Show("win_x2", ok =>
+            _ads.Show("win_x2", ok =>
             {
                 if (ok) Claim(CoinReward * 2);
                 else SetButtons(true);

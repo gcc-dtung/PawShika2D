@@ -20,9 +20,14 @@ namespace PawBlock.Game
     public class GameFlowUI : MonoBehaviour
     {
         private PlayerProfileService _profile;
+        private IIAPService _iap;
 
-        /// <summary>GameBootstrap gọi: hồ sơ người chơi (nút avatar mở popup hồ sơ).</summary>
-        public void Init(PlayerProfileService profile) => _profile = profile;
+        /// <summary>GameBootstrap gọi trước OnEnable: hồ sơ người chơi (popup hồ sơ), IAP (báo mua lỗi).</summary>
+        public void Init(PlayerProfileService profile, IIAPService iap)
+        {
+            _profile = profile;
+            _iap = iap;
+        }
 
         [SerializeField] private WinPopup winPopup;
         [SerializeField, FormerlySerializedAs("revivePopup")] private MoreTimePopup moreTimePopup;
@@ -60,7 +65,7 @@ namespace PawBlock.Game
             }
             if (losePopup != null) losePopup.RetryHandler = RetryAfterLose;
             if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.AddListener(OnBuyBooster);
-            IAPService.PurchaseFailed += OnPurchaseFailed;
+            if (_iap != null) _iap.PurchaseFailed += OnPurchaseFailed;
         }
 
         private void OnDestroy()
@@ -69,7 +74,7 @@ namespace PawBlock.Game
             EventBus<AllLevelsCompletedEvent>.Unsubscribe(OnAllLevelsCompleted);
             if (LevelManager.Instance != null) LevelManager.Instance.AutoAdvance = true;
             if (BoosterManager.Instance != null) BoosterManager.Instance.onBuyRequested.RemoveListener(OnBuyBooster);
-            IAPService.PurchaseFailed -= OnPurchaseFailed;
+            if (_iap != null) _iap.PurchaseFailed -= OnPurchaseFailed;
         }
 
         /// <summary>Nút cài đặt trên HUD / trên Menu. Trong ván chỉ mở khi đang chơi (không chồng lên popup khác).</summary>

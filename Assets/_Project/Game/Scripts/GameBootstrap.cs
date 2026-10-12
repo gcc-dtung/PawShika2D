@@ -13,7 +13,7 @@ namespace PawBlock.Game
 {
     /// <summary>
     /// Composition root (guide 4.5): nơi duy nhất tạo service và nối feature với nhau, chạy trước mọi script khác.
-    /// Thứ tự: save (+ migrate v1 -> v2) -> settings, đồng hồ -> ví / kho / hồ sơ -> manager -> Shop -> view -> cheat.
+    /// Thứ tự: save (+ migrate v1 -> v2) -> settings, đồng hồ, quảng cáo, IAP -> ví / kho / hồ sơ -> manager -> Shop -> view -> cheat.
     /// Tham chiếu tới component trong scene do GameBootstrapCollector (Editor) tự điền khi lưu scene / vào Play,
     /// lúc chạy không tìm gì.
     /// </summary>
@@ -42,6 +42,7 @@ namespace PawBlock.Game
         [SerializeField] private ShopCardView[] shopCards;
         [SerializeField] private DailyRewardManager dailyRewardManager;
         [SerializeField] private DailyChallengeManager dailyChallengeManager;
+        [SerializeField] private DailyChallengePanel dailyChallengePanel;
         [SerializeField] private LuckyWheelButton luckyWheelButton;
         [SerializeField] private LuckyWheelPopup luckyWheelPopup;
         [SerializeField] private AvatarButton avatarButton;
@@ -59,17 +60,20 @@ namespace PawBlock.Game
             var save = new JsonFileSaveService(JsonFileSaveService.DefaultPath);
             SaveMigrator.Migrate(save);
             AudioManager.InitSettings(save);
-            TrustedClock.Init(save);
+            var clock = new TrustedClockService(save);
+            clock.RequestSync(true);
+            IAdsService ads = new FakeAdsService(GameConfig.Economy.adsSimulatedDuration); // chưa có SDK quảng cáo
+            IIAPService iap = new FakeIAPService(); // chưa có SDK thanh toán
 
             // Dữ liệu người chơi do feature sở hữu
-            GameServices s = Services = new GameServices(save);
+            GameServices s = Services = new GameServices(save, clock, ads, iap);
             GameplaySave gameplay = save.Get<GameplaySave>(GameplaySave.Key);
             Func<int> reachedLevel = () => gameplay.allLevelsCleared ? int.MaxValue : gameplay.currentLevel + 1;
 
             // Manager có dữ liệu riêng / lộ contract cho feature khác
-            Require(energyManager)?.Init(save);
+            Require(energyManager)?.Init(save, clock);
             Require(boosterManager)?.Init(save, s.Boosters, s.Coins);
-            s.Shop = new ShopService(save, s.Coins, boosterManager, energyManager);
+            s.Shop = new ShopService(save, s.Coins, boosterManager, energyManager, iap);
 
             // Gameplay
             Require(levelManager)?.Init(save);
@@ -79,18 +83,19 @@ namespace PawBlock.Game
             Require(tutorialController)?.Init(save);
             Require(levelStars)?.Init(s.Stars);
             Require(buyBoosterPopup)?.Init(s.Coins);
-            Require(moreTimePopup)?.Init(s.Coins);
-            Require(winPopup)?.Init(s.Coins);
+            Require(moreTimePopup)?.Init(s.Coins, ads);
+            Require(winPopup)?.Init(s.Coins, ads);
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters);
 
             // Economy
-            Require(refillEnergyPopup)?.Init(s.Coins);
+            Require(refillEnergyPopup)?.Init(s.Coins, ads);
             foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
 
             // Meta: chỉ nhận contract của feature khác
             foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
-            Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager);
-            Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel);
+            Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads);
+            Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock);
+            Require(dailyChallengePanel)?.Init(ads);
             Require(luckyWheelButton)?.Init(s.Stars);
             Require(luckyWheelPopup)?.Init(s.Stars, dailyRewardManager);
             Require(avatarButton)?.Init(s.Profile);
@@ -98,8 +103,13 @@ namespace PawBlock.Game
             Require(profileStatsRecorder)?.Init(s.Profile);
 
             // Game
-            Require(gameFlowUI)?.Init(s.Profile);
+            Require(gameFlowUI)?.Init(s.Profile, iap);
             DebugCheats.Init(s);
+        }
+
+        private void OnDestroy()
+        {
+            (Services?.Ads as IDisposable)?.Dispose(); // hủy quảng cáo giả lập đang chờ
         }
 
         /// <summary>Thiếu thì báo lỗi và trả về null thật (object Unity đã hủy là "null giả", ?. không chặn được).</summary>

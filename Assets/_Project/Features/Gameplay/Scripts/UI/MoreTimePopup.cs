@@ -16,9 +16,14 @@ namespace PawBlock.Features.Gameplay
     public class MoreTimePopup : PopupView
     {
         private ICurrencyWallet _coins;
+        private IAdsService _ads;
 
-        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract).</summary>
-        public void Init(ICurrencyWallet coins) => _coins = coins;
+        /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
+        public void Init(ICurrencyWallet coins, IAdsService ads)
+        {
+            _coins = coins;
+            _ads = ads;
+        }
 
         [SerializeField] private Button adsButton;
         [SerializeField] private Button coinButton;
@@ -54,7 +59,7 @@ namespace PawBlock.Features.Gameplay
         private void OnAds()
         {
             SetButtons(false);
-            RewardedAds.Show("more_time", ok =>
+            _ads.Show("more_time", ok =>
             {
                 if (ok) Revive(GameConfig.Economy.moreTimeAdsSeconds);
                 else Refresh();

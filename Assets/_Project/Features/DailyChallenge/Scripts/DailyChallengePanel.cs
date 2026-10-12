@@ -26,6 +26,11 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyChallengePanel : MonoBehaviour
     {
+        private IAdsService _ads;
+
+        /// <summary>GameBootstrap gọi: quảng cáo có thưởng (chơi bù ngày lỡ).</summary>
+        public void Init(IAdsService ads) => _ads = ads;
+
         [Header("Đầu trang")]
         [SerializeField] private TMP_Text monthLabel;
         [SerializeField] private Button prevMonthButton;
@@ -247,7 +252,7 @@ namespace PawBlock.Features.DailyChallenge
             if (m == null || _waitingAd || m.StateOf(day) != DailyDayState.Missed) return;
             _waitingAd = true;
             RefreshButtons(m);
-            RewardedAds.Show("daily_missed", ok =>
+            _ads.Show("daily_missed", ok =>
             {
                 _waitingAd = false;
                 if (this == null) return;

@@ -21,9 +21,14 @@ namespace PawBlock.Features.Economy
     public class RefillEnergyPopup : PopupView
     {
         private CoinWallet _coins;
+        private IAdsService _ads;
 
-        /// <summary>GameBootstrap gọi: ví coin (nạp bằng coin).</summary>
-        public void Init(CoinWallet coins) => _coins = coins;
+        /// <summary>GameBootstrap gọi: ví coin (nạp bằng coin), quảng cáo có thưởng.</summary>
+        public void Init(CoinWallet coins, IAdsService ads)
+        {
+            _coins = coins;
+            _ads = ads;
+        }
 
         [SerializeField] private TMP_Text countText;
         [SerializeField] private TMP_Text timerText;
@@ -135,7 +140,7 @@ namespace PawBlock.Features.Economy
         {
             _waitingAd = true;
             Refresh();
-            RewardedAds.Show("refill_energy", ok =>
+            _ads.Show("refill_energy", ok =>
             {
                 _waitingAd = false;
                 if (ok && EnergyManager.Instance != null) EnergyManager.Instance.Add(GameConfig.Economy.refillAdsEnergy);

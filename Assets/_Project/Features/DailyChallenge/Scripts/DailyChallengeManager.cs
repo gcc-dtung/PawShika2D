@@ -10,7 +10,7 @@ namespace PawBlock.Features.DailyChallenge
     /// Daily Challenge (tab thứ 3 của Menu, như DailyChallengeUI bản gốc): giữ DailyChallengeModel (SaveData.challenge),
     /// sinh level mỗi ngày bằng LevelGenerator (seed = ngày, cùng ngày mọi máy cùng level), nạp vào LevelManager.LoadDaily,
     /// thắng thì đánh dấu ngày, trao quà mốc 7 / 14 / 21 ngày trong tháng.
-    /// Ngày lấy theo TrustedClock (giờ server nếu có mạng, chặn chỉnh giờ máy).
+    /// Ngày lấy theo IClock (giờ server nếu có mạng, chặn chỉnh giờ máy).
     /// Mở khóa khi tới DailyChallengeDatabase.unlockLevel; ngày mở khóa là ngày bắt đầu (ngày trước đó không tính lỡ).
     /// </summary>
     public class DailyChallengeManager : Singleton<DailyChallengeManager>
@@ -19,19 +19,23 @@ namespace PawBlock.Features.DailyChallenge
         private DailyChallengeSave _data;
         private IRewardGranter _rewards;
         private Func<int> _reachedLevel;
+        private IClock _clock;
 
         /// <summary>
         /// GameBootstrap gọi trước Start: section "dailyChallenge", nơi trao quà mốc (DailyReward, qua contract),
         /// <paramref name="reachedLevel"/> = số level thường đang tới (bắt đầu từ 1; đã qua hết = int.MaxValue) để mở khóa tab.
         /// </summary>
-        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel)
+        public void Init(ISaveService save, IRewardGranter rewards, Func<int> reachedLevel, IClock clock)
         {
+            _clock = clock;
             _save = save;
             _data = save.Get<DailyChallengeSave>(DailyChallengeSave.Key);
             _rewards = rewards;
             _reachedLevel = reachedLevel;
             _model = null;
         }
+
+        private DateTime LocalNow => _clock != null ? _clock.LocalNow : DateTime.Now;
 
         /// <summary>Ngày mở khóa Daily (-1 = chưa mở).</summary>
         public long StartDay => _data != null ? _data.startDay : -1;
@@ -53,7 +57,7 @@ namespace PawBlock.Features.DailyChallenge
         {
             get
             {
-                if (_today < 0) _today = DailyChallengeModel.DayNumber(TrustedClock.LocalNow);
+                if (_today < 0) _today = DailyChallengeModel.DayNumber(LocalNow);
                 return _today;
             }
         }
@@ -81,13 +85,13 @@ namespace PawBlock.Features.DailyChallenge
 
         private void OnEnable()
         {
-            TrustedClock.Synced += OnClockSynced;
+            if (_clock != null) _clock.Synced += OnClockSynced;
             EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
         }
 
         private void OnDisable()
         {
-            TrustedClock.Synced -= OnClockSynced;
+            if (_clock != null) _clock.Synced -= OnClockSynced;
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
         }
 
@@ -109,7 +113,7 @@ namespace PawBlock.Features.DailyChallenge
 
         private void RefreshDay()
         {
-            long today = DailyChallengeModel.DayNumber(TrustedClock.LocalNow);
+            long today = DailyChallengeModel.DayNumber(LocalNow);
             if (today == _today) return;
             _today = today;
             Changed?.Invoke();

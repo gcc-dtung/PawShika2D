@@ -6,7 +6,7 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Shop
 {
     /// <summary>
-    /// Mua 1 gói Shop: thanh toán qua IAPService (chưa có SDK -> thất bại, popup "Purchase Failed!"),
+    /// Mua 1 gói Shop: thanh toán qua IIAPService (chưa có SDK -> thất bại, popup "Purchase Failed!"),
     /// thành công thì trao quà: coin, booster, năng lượng vô hạn, tắt quảng cáo (section "shop").
     /// Chỉ biết contract (ví, kho booster, năng lượng); GameBootstrap tạo và truyền vào.
     /// </summary>
@@ -17,12 +17,14 @@ namespace PawBlock.Features.Shop
         private readonly ICurrencyWallet _coins;
         private readonly IBoosterInventory _boosters;
         private readonly IEnergyService _energy;
+        private readonly IIAPService _iap;
 
         /// <summary>Gói vừa mua xong (UI cập nhật, vd ẩn dòng Remove Ads).</summary>
         public event Action<ShopProduct> Purchased;
 
-        public ShopService(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy)
+        public ShopService(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IIAPService iap)
         {
+            _iap = iap;
             _save = save;
             _data = save.Get<ShopSave>(ShopSave.Key);
             _coins = coins;
@@ -38,7 +40,7 @@ namespace PawBlock.Features.Shop
             {
                 return;
             }
-            IAPService.Purchase(product.productId, ok =>
+            _iap.Purchase(product.productId, ok =>
             {
                 if (ok)
                 {

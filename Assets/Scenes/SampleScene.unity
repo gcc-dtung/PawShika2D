@@ -4398,7 +4398,6 @@ GameObject:
   - component: {fileID: 82617383}
   - component: {fileID: 82617382}
   - component: {fileID: 82617381}
-  - component: {fileID: 82617384}
   - component: {fileID: 82617385}
   - component: {fileID: 82617386}
   - component: {fileID: 82617387}
@@ -4598,18 +4597,6 @@ MonoBehaviour:
   onWaitingForTouchChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &82617384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 82617376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 318f0879b9f8ea141b36fbb9d255bbf4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &82617385
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57527,6 +57514,7 @@ MonoBehaviour:
   - {fileID: 295562512}
   dailyRewardManager: {fileID: 82617388}
   dailyChallengeManager: {fileID: 82617401}
+  dailyChallengePanel: {fileID: 1216972971}
   luckyWheelButton: {fileID: 356095813}
   luckyWheelPopup: {fileID: 319460732}
   avatarButton: {fileID: 943530460}

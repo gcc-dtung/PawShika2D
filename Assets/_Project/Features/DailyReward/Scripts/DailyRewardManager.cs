@@ -20,12 +20,16 @@ namespace PawBlock.Features.DailyReward
         private ICurrencyWallet _coins;
         private IBoosterInventory _boosters;
         private IEnergyService _energy;
+        private IClock _clock;
+        private IAdsService _ads;
 
         /// <summary>
         /// GameBootstrap gọi trước Start: section "dailyReward", nơi nhận quà (ví coin, kho booster, năng lượng – đều qua contract).
         /// </summary>
-        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy)
+        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads)
         {
+            _clock = clock;
+            _ads = ads;
             _save = save;
             _data = save.Get<DailyRewardSave>(DailyRewardSave.Key);
             _coins = coins;
@@ -48,6 +52,7 @@ namespace PawBlock.Features.DailyReward
         private bool _waitingAd;
 
         public DailyRewardDatabase Database => database;
+        private DateTime LocalNow => _clock != null ? _clock.LocalNow : DateTime.Now;
         public int TodayIndex => Model.TodayIndex;
         public bool CanClaimToday => Model.CanClaimToday;
         public bool IsBusy => _waitingAd;
@@ -84,8 +89,15 @@ namespace PawBlock.Features.DailyReward
             if (focus && _model != null) RefreshDay(true);
         }
 
-        private void OnEnable() => TrustedClock.Synced += OnClockSynced;
-        private void OnDisable() => TrustedClock.Synced -= OnClockSynced;
+        private void OnEnable()
+        {
+            if (_clock != null) _clock.Synced += OnClockSynced;
+        }
+
+        private void OnDisable()
+        {
+            if (_clock != null) _clock.Synced -= OnClockSynced;
+        }
 
         // Vừa có giờ server: ngày có thể khác ngày theo giờ máy
         private void OnClockSynced()
@@ -103,7 +115,7 @@ namespace PawBlock.Features.DailyReward
         {
             get
             {
-                DateTime now = TrustedClock.LocalNow;
+                DateTime now = LocalNow;
                 return now.Date.AddDays(1) - now;
             }
         }
@@ -119,13 +131,13 @@ namespace PawBlock.Features.DailyReward
                 onDone?.Invoke(true);
                 return;
             }
-            // Đang có quảng cáo khác: RewardedAds.Show sẽ bỏ qua và không gọi lại -> đừng chờ
-            bool adBusy = RewardedAds.Instance != null && RewardedAds.Instance.IsShowing;
+            // Đang có quảng cáo khác: IAdsService.Show sẽ bỏ qua và không gọi lại -> đừng chờ
+            bool adBusy = _ads == null || _ads.IsShowing;
             if (CanRecover(day) && !_waitingAd && !adBusy)
             {
                 _waitingAd = true;
                 onChanged?.Invoke();
-                RewardedAds.Show("daily_recover", ok =>
+                _ads.Show("daily_recover", ok =>
                 {
                     _waitingAd = false;
                     if (ok && Model.StateOf(day) == DailySlotState.Missed) Grant(day);
@@ -173,7 +185,7 @@ namespace PawBlock.Features.DailyReward
 
         private void RefreshDay(bool notify)
         {
-            long today = DailyRewardModel.DayNumber(TrustedClock.LocalNow); // giờ server nếu có mạng, chặn chỉnh giờ máy
+            long today = DailyRewardModel.DayNumber(LocalNow); // giờ server nếu có mạng, chặn chỉnh giờ máy
             bool newDay = today != _today;
             _today = today;
             if (_model == null) return;

@@ -17,14 +17,16 @@ namespace PawBlock.Features.Profile
         private readonly ISaveService _save;
         private readonly ProfileSave _data;
         private readonly Func<int> _currentLevel;
+        private readonly IClock _clock;
 
         /// <summary>Tên / avatar / chỉ số đổi: nút avatar, popup hồ sơ vẽ lại.</summary>
         public event Action Changed;
 
         /// <param name="currentLevel">Chỉ số level thường hiện tại (bắt đầu từ 0).</param>
-        public PlayerProfileService(ISaveService save, Func<int> currentLevel)
+        public PlayerProfileService(ISaveService save, IClock clock, Func<int> currentLevel)
         {
             _save = save;
+            _clock = clock;
             _data = save.Get<ProfileSave>(ProfileSave.Key);
             _currentLevel = currentLevel ?? (() => 0);
             EnsureCreated(_data);
@@ -106,7 +108,7 @@ namespace PawBlock.Features.Profile
             }
             if (p.createdAt <= 0)
             {
-                p.createdAt = TrustedClock.UtcNowSeconds;
+                p.createdAt = _clock != null ? _clock.UtcNowSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 changed = true;
             }
             if (changed) _save.MarkDirty();

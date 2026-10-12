@@ -13,20 +13,26 @@ namespace PawBlock.Game
     public sealed class GameServices
     {
         public JsonFileSaveService Save { get; }
+        public TrustedClockService Clock { get; }
+        public IAdsService Ads { get; }
+        public IIAPService Iap { get; }
         public CoinWallet Coins { get; }
         public StarWallet Stars { get; }
         public BoosterInventory Boosters { get; }
         public PlayerProfileService Profile { get; }
         public ShopService Shop { get; set; } // cần năng lượng + kho booster (component trong scene): Bootstrap gán sau
 
-        public GameServices(JsonFileSaveService save)
+        public GameServices(JsonFileSaveService save, TrustedClockService clock, IAdsService ads, IIAPService iap)
         {
             Save = save;
+            Clock = clock;
+            Ads = ads;
+            Iap = iap;
             GameplaySave gameplay = save.Get<GameplaySave>(GameplaySave.Key);
             Coins = new CoinWallet(save);
             Stars = new StarWallet(save);
             Boosters = new BoosterInventory(save);
-            Profile = new PlayerProfileService(save, () => gameplay.currentLevel);
+            Profile = new PlayerProfileService(save, clock, () => gameplay.currentLevel);
         }
     }
 }

@@ -16,11 +16,13 @@ namespace PawBlock.Features.Economy
     {
         private ISaveService _save;
         private EnergySave _energy;
+        private IClock _clock;
 
         /// <summary>GameBootstrap gọi trước Awake / Start: section "economy" (năng lượng).</summary>
-        public void Init(ISaveService save)
+        public void Init(ISaveService save, IClock clock)
         {
             _save = save;
+            _clock = clock;
             _energy = save.Get<EconomySave>(EconomySave.Key).energy;
             _model = null; // đọc lại theo save vừa nhận
         }
@@ -42,7 +44,7 @@ namespace PawBlock.Features.Economy
         public int SecondsToNext => Model.SecondsToNext(Now);
         public int InfiniteSecondsLeft => (int)Math.Max(0, Model.InfiniteUntil - Now);
 
-        private static long Now => TrustedClock.UtcNowSeconds; // giờ server nếu có mạng, chặn chỉnh giờ máy
+        private long Now => _clock != null ? _clock.UtcNowSeconds : DateTimeOffset.UtcNow.ToUnixTimeSeconds(); // giờ server nếu có mạng, chặn chỉnh giờ máy
 
         private EnergyModel Model
         {
@@ -62,14 +64,14 @@ namespace PawBlock.Features.Economy
         private void Start()
         {
             EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
-            TrustedClock.Synced += RefreshNow;
+            if (_clock != null) _clock.Synced += RefreshNow;
             RefreshNow();
         }
 
         private void OnDestroy()
         {
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
-            TrustedClock.Synced -= RefreshNow;
+            if (_clock != null) _clock.Synced -= RefreshNow;
         }
 
         private void Update()

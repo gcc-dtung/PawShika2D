@@ -277,6 +277,6 @@ namespace PawBlock.Game
         }
 
         /// <summary>Thử mua bằng tiền thật (chưa có SDK: luôn hiện "Purchase Failed!").</summary>
-        public static void TryIAP() => IAPService.Purchase("debug_test_pack");
+        public static void TryIAP() => _services?.Iap.Purchase("debug_test_pack");
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace PawBlock.Core.Foundation
 {
-    /// <summary>Section "clock" của save v2 (TrustedClock).</summary>
+    /// <summary>Section "clock" của save v2 (TrustedClockService).</summary>
     [Serializable]
     public class ClockSave
     {
