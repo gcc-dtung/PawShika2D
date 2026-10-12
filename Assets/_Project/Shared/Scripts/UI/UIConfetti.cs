@@ -20,8 +20,8 @@ namespace PawBlock.Shared
         [SerializeField] private ParticleSystem rain;
         [Tooltip("Chùm bắn đặt thấp hơn tâm màn hình bao nhiêu (tỉ lệ chiều cao)")]
         [SerializeField, Range(0f, 0.5f)] private float burstHeight = 0.05f;
+        [SerializeField] private UIParticle ui;
 
-        private UIParticle _ui;
         private RectTransform _rect;
 
         public int AliveCount =>
@@ -29,16 +29,15 @@ namespace PawBlock.Shared
 
         private void Awake()
         {
-            _ui = GetComponent<UIParticle>();
             _rect = (RectTransform)transform;
         }
 
         private void OnDisable()
         {
-            if (_ui != null)
+            if (ui != null)
             {
-                _ui.Stop();
-                _ui.Clear();
+                ui.Stop();
+                ui.Clear();
             }
         }
 
@@ -76,10 +75,10 @@ namespace PawBlock.Shared
         /// </summary>
         private void Unpause()
         {
-            if (_ui != null && _ui.isPaused) _ui.Resume();
+            if (ui != null && ui.isPaused) ui.Resume();
         }
 
-        private float Unit() => _ui != null && _ui.scale > 0f ? _ui.scale : 100f;
+        private float Unit() => ui != null && ui.scale > 0f ? ui.scale : 100f;
 
         private static void PlaceShape(ParticleSystem ps, Vector3 pos)
         {
@@ -96,5 +95,13 @@ namespace PawBlock.Shared
         }
 
         private static int Count(ParticleSystem ps) => ps != null ? ps.particleCount : 0;
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (ui == null) ui = GetComponent<UIParticle>();
+        }
+#endif
     }
 }

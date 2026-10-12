@@ -10,9 +10,10 @@ namespace PawBlock.Features.Gameplay
     [RequireComponent(typeof(SpriteRenderer))]
     public class CatFaceAnimator : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer faceRenderer;
+
         private static readonly List<CatFaceAnimator> Running = new List<CatFaceAnimator>();
 
-        private SpriteRenderer _renderer;
         private CatFaceAnimation _animation;
         private float _fps = 24f;
         private float _phase;
@@ -21,7 +22,6 @@ namespace PawBlock.Features.Gameplay
 
         public void Play(CatFaceAnimation animation, float fps, float width)
         {
-            if (_renderer == null) _renderer = GetComponent<SpriteRenderer>();
             _animation = animation;
             _frame = -1;
             _fps = Mathf.Max(1f, fps);
@@ -36,8 +36,7 @@ namespace PawBlock.Features.Gameplay
 
         public void SetColor(Color color)
         {
-            if (_renderer == null) _renderer = GetComponent<SpriteRenderer>();
-            _renderer.color = color;
+            faceRenderer.color = color;
         }
 
         private void OnEnable()
@@ -84,7 +83,15 @@ namespace PawBlock.Features.Gameplay
         private void ShowFrame(int index)
         {
             _frame = index;
-            _renderer.sprite = _animation.frames[index];
+            faceRenderer.sprite = _animation.frames[index];
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (faceRenderer == null) faceRenderer = GetComponent<SpriteRenderer>();
+        }
+#endif
     }
 }

@@ -9895,6 +9895,7 @@ MonoBehaviour:
   panel: {fileID: 0}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 156642232}
   titleImages:
   - {fileID: 1886139120}
   - {fileID: 2131547523}
@@ -10126,6 +10127,7 @@ MonoBehaviour:
   panel: {fileID: 1125096486}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 170904532}
   titleText: {fileID: 569277644}
   retryButton: {fileID: 1569925142}
   homeButton: {fileID: 80181463}
@@ -11366,6 +11368,7 @@ MonoBehaviour:
   shardDuration: 0.55
   glintInterval: 2.2
   glintDuration: 0.35
+  image: {fileID: 194329092}
 --- !u!114 &194329092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12820,6 +12823,7 @@ MonoBehaviour:
   onSprite: {fileID: 21300000, guid: e483c7d1c9e03254ab1e52084512a6f7, type: 3}
   offSprite: {fileID: 21300000, guid: a1d593d321c9b4f4cb6ba2ee22033360, type: 3}
   offMark: {fileID: 134168154}
+  button: {fileID: 245895727}
 --- !u!114 &245895727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15604,6 +15608,7 @@ MonoBehaviour:
   panel: {fileID: 326249396}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 319460733}
   database: {fileID: 11400000, guid: 0fa5a7346d6888643bfc3836df279936, type: 2}
   rewardIcons: {fileID: 11400000, guid: 57e3b4856aa57a049b37604b26c933d7, type: 2}
   wheel: {fileID: 26727148}
@@ -17489,6 +17494,7 @@ MonoBehaviour:
   database: {fileID: 11400000, guid: 0fa5a7346d6888643bfc3836df279936, type: 2}
   shortcut: {fileID: 356095814}
   starsText: {fileID: 1694012631}
+  button: {fileID: 356095815}
 --- !u!114 &356095814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17513,6 +17519,7 @@ MonoBehaviour:
   swings: 4
   swingDuration: 0.08
   liftDuration: 0.12
+  button: {fileID: 356095815}
 --- !u!114 &356095815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25225,6 +25232,8 @@ MonoBehaviour:
   selectOvershoot: 2
   deselectRatio: 0.6
   dividerHideRatio: 0.35
+  button: {fileID: 556416541}
+  dividerGraphic: {fileID: 1382545166}
 --- !u!224 &556416540
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25871,6 +25880,8 @@ MonoBehaviour:
   minOrthoSize: 5
   showZone: 0
   zoneColor: {r: 0, g: 1, b: 0.4, a: 0.2}
+  canvas: {fileID: 1056015945}
+  zoneImage: {fileID: 567406615}
 --- !u!114 &567406615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33086,6 +33097,7 @@ MonoBehaviour:
   lockText: {fileID: 1469905838}
   glow: {fileID: 860952838}
   glowSpin: 90
+  button: {fileID: 609478781}
 --- !u!1 &612443419
 GameObject:
   m_ObjectHideFlags: 0
@@ -43538,6 +43550,7 @@ MonoBehaviour:
   onSprite: {fileID: 21300000, guid: e483c7d1c9e03254ab1e52084512a6f7, type: 3}
   offSprite: {fileID: 21300000, guid: a1d593d321c9b4f4cb6ba2ee22033360, type: 3}
   offMark: {fileID: 1599731575}
+  button: {fileID: 728798305}
 --- !u!114 &728798305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46710,6 +46723,7 @@ MonoBehaviour:
   swings: 4
   swingDuration: 0.08
   liftDuration: 0.12
+  button: {fileID: 816222030}
 --- !u!114 &816222030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -47629,6 +47643,7 @@ MonoBehaviour:
   panel: {fileID: 1271470878}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 841797987}
   quitButton: {fileID: 1241238146}
   closeButton: {fileID: 1288699967}
 --- !u!225 &841797987
@@ -48729,6 +48744,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetCamera: {fileID: 519420031}
+  background: {fileID: 864275408}
 --- !u!1 &864342036
 GameObject:
   m_ObjectHideFlags: 0
@@ -52164,6 +52180,8 @@ MonoBehaviour:
   selectOvershoot: 2
   deselectRatio: 0.6
   dividerHideRatio: 0.35
+  button: {fileID: 923433368}
+  dividerGraphic: {fileID: 1285057198}
 --- !u!224 &923433367
 RectTransform:
   m_ObjectHideFlags: 0
@@ -53144,6 +53162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   avatars: {fileID: 11400000, guid: 1c498278332b59f4a8876e31aee17f81, type: 2}
   avatarImage: {fileID: 1758976868}
+  button: {fileID: 943530457}
 --- !u!1 &946812758
 GameObject:
   m_ObjectHideFlags: 0
@@ -53897,6 +53916,17 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 954389058}
   m_CullTransparentMesh: 1
+--- !u!114 &962527330 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4326, guid: 64930bb133ced3647bddcace4a96d986, type: 3}
+  m_PrefabInstance: {fileID: 250230870}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f0b0b6d0b7542bfbd20a3e05b04ff1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &962964214
 GameObject:
   m_ObjectHideFlags: 0
@@ -56624,6 +56654,7 @@ MonoBehaviour:
   cancelButton: {fileID: 1299120213}
   slide: -60
   duration: 0.2
+  group: {fileID: 1045284870}
 --- !u!225 &1045284870
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -57029,6 +57060,7 @@ MonoBehaviour:
   onSprite: {fileID: 21300000, guid: e483c7d1c9e03254ab1e52084512a6f7, type: 3}
   offSprite: {fileID: 21300000, guid: a1d593d321c9b4f4cb6ba2ee22033360, type: 3}
   offMark: {fileID: 1510555886}
+  button: {fileID: 1047665880}
 --- !u!114 &1047665880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64043,6 +64075,7 @@ MonoBehaviour:
   tabText: {fileID: 1079411981}
   playText: {fileID: 1461982220}
   hardFillSize: {x: 490, y: 190}
+  button: {fileID: 1233381081}
 --- !u!114 &1233381081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64207,7 +64240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b7590d054ccbe4daafa7386ec4c99c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteRenderer: {fileID: 0}
+  spriteRenderer: {fileID: 1233626862}
   opacity: 0.5
   resizeDuration: 0.15
   resizeEase: 6
@@ -67831,6 +67864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f700fa85d2c8d654a9571dc545230772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 1305075259}
 --- !u!114 &1305075259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75854,6 +75888,7 @@ MonoBehaviour:
   panel: {fileID: 1933907687}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 1383001588}
   adsButton: {fileID: 814943776}
   coinButton: {fileID: 1713058426}
   closeButton: {fileID: 1123639857}
@@ -83441,6 +83476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f700fa85d2c8d654a9571dc545230772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 1536378073}
 --- !u!1 &1536538526
 GameObject:
   m_ObjectHideFlags: 0
@@ -85530,6 +85566,7 @@ MonoBehaviour:
   panel: {fileID: 26575718}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 1572696193}
   titleText: {fileID: 622259415}
   messageText: {fileID: 901043651}
   picture: {fileID: 1374933938}
@@ -86891,6 +86928,7 @@ MonoBehaviour:
   itemIconTemplate: {fileID: 194247232}
   offset: {x: 0, y: -120}
   edgeMargin: 24
+  canvas: {fileID: 1335649109}
 --- !u!1 &1599731575
 GameObject:
   m_ObjectHideFlags: 0
@@ -89370,6 +89408,7 @@ MonoBehaviour:
   iconImage: {fileID: 2140910602}
   normalSprite: {fileID: 21300000, guid: 88afd903ac8e16d4a8cf6e4825c797d0, type: 3}
   infiniteSprite: {fileID: 21300000, guid: 12f202aae2158204580577ab6f9e678a, type: 3}
+  button: {fileID: 1669653328}
 --- !u!114 &1669653328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90315,6 +90354,7 @@ MonoBehaviour:
   swings: 4
   swingDuration: 0.08
   liftDuration: 0.12
+  button: {fileID: 1696416193}
 --- !u!114 &1696416193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92975,6 +93015,7 @@ MonoBehaviour:
   panel: {fileID: 917254740}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 1766585800}
   titleText: {fileID: 1979389789}
   detailText: {fileID: 2029005934}
   icon: {fileID: 619141271}
@@ -93773,6 +93814,7 @@ MonoBehaviour:
   panel: {fileID: 1872637660}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 1794426285}
   titleText: {fileID: 1287925437}
   messageText: {fileID: 413029629}
   continueButton: {fileID: 621867730}
@@ -94834,6 +94876,7 @@ MonoBehaviour:
   panel: {fileID: 1328418742}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 1823335364}
   closeButton: {fileID: 1245100747}
   homeButton: {fileID: 1491675848}
   versionText: {fileID: 905258858}
@@ -97577,6 +97620,8 @@ MonoBehaviour:
   selectOvershoot: 2
   deselectRatio: 0.6
   dividerHideRatio: 0.35
+  button: {fileID: 1874791556}
+  dividerGraphic: {fileID: 952676572}
 --- !u!224 &1874791555
 RectTransform:
   m_ObjectHideFlags: 0
@@ -99937,6 +99982,7 @@ MonoBehaviour:
   lockText: {fileID: 1887276711}
   glow: {fileID: 771744593}
   glowSpin: 90
+  button: {fileID: 1923732569}
 --- !u!1 &1925139172
 GameObject:
   m_ObjectHideFlags: 0
@@ -99998,6 +100044,7 @@ MonoBehaviour:
   iconImage: {fileID: 1479630457}
   normalSprite: {fileID: 21300000, guid: 88afd903ac8e16d4a8cf6e4825c797d0, type: 3}
   infiniteSprite: {fileID: 21300000, guid: 12f202aae2158204580577ab6f9e678a, type: 3}
+  button: {fileID: 1925139175}
 --- !u!114 &1925139175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101067,6 +101114,8 @@ MonoBehaviour:
   burstFX: {fileID: 17535988}
   borders: {fileID: 741822907}
   borderFade: 0.4
+  borderParticles:
+  - {fileID: 962527330}
 --- !u!1 &1945691871
 GameObject:
   m_ObjectHideFlags: 0
@@ -102089,6 +102138,7 @@ MonoBehaviour:
   lockText: {fileID: 113738986}
   glow: {fileID: 1030449058}
   glowSpin: 90
+  button: {fileID: 1978117098}
 --- !u!114 &1978117102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103271,6 +103321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shortcut: {fileID: 2008576699}
+  button: {fileID: 2008576700}
 --- !u!114 &2008576699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103295,6 +103346,7 @@ MonoBehaviour:
   swings: 4
   swingDuration: 0.08
   liftDuration: 0.12
+  button: {fileID: 2008576700}
 --- !u!114 &2008576700
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103431,6 +103483,7 @@ MonoBehaviour:
   panel: {fileID: 1451430202}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 2015940752}
   slots:
   - {fileID: 62795061}
   - {fileID: 1171663379}
@@ -104582,6 +104635,7 @@ MonoBehaviour:
   burstRight: {fileID: 593863047}
   rain: {fileID: 1379916734}
   burstHeight: 0.05
+  ui: {fileID: 2033951085}
 --- !u!114 &2033951085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105294,6 +105348,7 @@ MonoBehaviour:
   panel: {fileID: 2116258113}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 2043603489}
   avatars: {fileID: 11400000, guid: 1c498278332b59f4a8876e31aee17f81, type: 2}
   avatarImage: {fileID: 761139477}
   avatarButton: {fileID: 948605080}
@@ -105913,6 +105968,7 @@ MonoBehaviour:
   panel: {fileID: 1099653677}
   showDuration: 0.28
   hideDuration: 0.15
+  group: {fileID: 2049676041}
   countText: {fileID: 478773905}
   timerText: {fileID: 1454796398}
   coinCostText: {fileID: 1568183642}

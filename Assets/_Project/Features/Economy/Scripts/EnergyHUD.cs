@@ -30,13 +30,14 @@ namespace PawBlock.Features.Economy
         [SerializeField] private Image iconImage;
         [SerializeField] private Sprite normalSprite;   // icon_hear_2
         [SerializeField] private Sprite infiniteSprite; // icon_hear_infinity2
+        [SerializeField] private Button button;
 
         private Tween _punch;
         private int _lastCount = -1;
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClick);
+            button.onClick.AddListener(OnClick);
         }
 
         private void OnEnable()
@@ -105,5 +106,13 @@ namespace PawBlock.Features.Economy
                 .SetLink(gameObject)
                 .OnKill(() => { if (icon != null) icon.localScale = Vector3.one; });
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

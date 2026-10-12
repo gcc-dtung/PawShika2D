@@ -40,6 +40,7 @@ namespace PawBlock.Features.Gameplay
         [Header("Trong lúc đóng băng: viền ice_effect + tuyết")]
         [SerializeField] private CanvasGroup borders;
         [SerializeField] private float borderFade = 0.4f;
+        [SerializeField] private UIParticle[] borderParticles;
 
         private BoosterManager _boosters;
         private LevelTimer _timer;
@@ -63,7 +64,7 @@ namespace PawBlock.Features.Gameplay
                 borders.alpha = 0f;
                 borders.blocksRaycasts = false;
                 borders.interactable = false;
-                foreach (UIParticle p in borders.GetComponentsInChildren<UIParticle>(true)) p.raycastTarget = false;
+                foreach (UIParticle p in borderParticles) if (p != null) p.raycastTarget = false;
                 borders.gameObject.SetActive(false);
             }
         }
@@ -175,5 +176,13 @@ namespace PawBlock.Features.Gameplay
                     if (!on) borders.gameObject.SetActive(false);
                 });
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (borderParticles == null || borderParticles.Length == 0) borderParticles = borders != null ? borders.GetComponentsInChildren<UIParticle>(true) : new UIParticle[0];
+        }
+#endif
     }
 }

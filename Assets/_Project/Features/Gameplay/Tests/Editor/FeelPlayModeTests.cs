@@ -172,9 +172,15 @@ namespace PawBlock.Features.Gameplay.Tests
             yield return new EnterPlayMode();
             Time.captureDeltaTime = Dt;
 
-            SelectionBoxView box = new GameObject("SelectionBox").AddComponent<SelectionBoxView>();
-            SpriteRenderer sr = box.GetComponent<SpriteRenderer>();
+            // Như object trong scene: SpriteRenderer có sẵn và đã gán (P5: không GetComponent lúc chạy)
+            GameObject boxGo = new GameObject("SelectionBox");
+            boxGo.SetActive(false);
+            SpriteRenderer sr = boxGo.AddComponent<SpriteRenderer>();
+            SelectionBoxView box = boxGo.AddComponent<SelectionBoxView>();
             SerializedObject so = new SerializedObject(box);
+            so.FindProperty("spriteRenderer").objectReferenceValue = sr;
+            so.ApplyModifiedPropertiesWithoutUndo();
+            boxGo.SetActive(true);
             Color gray = so.FindProperty("rejectGray").colorValue;
             float duration = so.FindProperty("rejectDuration").floatValue;
             box.Show(Vector3.zero, new Vector2(2.4f, 1.2f));

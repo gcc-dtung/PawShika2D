@@ -21,14 +21,13 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Button cancelButton;
         [SerializeField] private float slide = -60f; // âm: bắt đầu thấp hơn rồi trượt lên
         [SerializeField] private float duration = 0.2f;
+        [SerializeField] private CanvasGroup group;
 
-        private CanvasGroup _group;
         private Vector2 _basePos;
         private Sequence _anim;
 
         private void Awake()
         {
-            _group = GetComponent<CanvasGroup>();
             if (content != null) _basePos = content.anchoredPosition;
             if (cancelButton != null) cancelButton.onClick.AddListener(OnCancel);
             Apply(false, true);
@@ -64,18 +63,18 @@ namespace PawBlock.Features.Gameplay
         {
             _anim?.Kill();
             _anim = null;
-            _group.interactable = on;
-            _group.blocksRaycasts = on;
+            group.interactable = on;
+            group.blocksRaycasts = on;
 
             if (instant)
             {
-                _group.alpha = on ? 1f : 0f;
+                group.alpha = on ? 1f : 0f;
                 if (content != null) content.anchoredPosition = _basePos;
                 return;
             }
 
             Sequence seq = DOTween.Sequence().SetLink(gameObject);
-            seq.Join(_group.DOFade(on ? 1f : 0f, duration));
+            seq.Join(group.DOFade(on ? 1f : 0f, duration));
             if (content != null)
             {
                 if (on) content.anchoredPosition = _basePos + Vector2.up * slide;
@@ -84,5 +83,13 @@ namespace PawBlock.Features.Gameplay
             seq.OnKill(() => { if (_anim == seq) _anim = null; });
             _anim = seq;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (group == null) group = GetComponent<CanvasGroup>();
+        }
+#endif
     }
 }

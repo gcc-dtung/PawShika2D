@@ -24,7 +24,6 @@ namespace PawBlock.Game
         private void Awake()
         {
             _rect = (RectTransform)transform;
-            if (navigator == null) navigator = GetComponentInParent<MainMenuNavigator>();
         }
 
         private void OnDisable()
@@ -75,5 +74,12 @@ namespace PawBlock.Game
         {
             return RectTransformUtility.ScreenPointToLocalPointInRectangle(_rect, screen, cam, out local);
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+        }
+#endif
     }
 }

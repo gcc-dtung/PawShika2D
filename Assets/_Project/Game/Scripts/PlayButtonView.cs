@@ -38,6 +38,7 @@ namespace PawBlock.Game
         [SerializeField] private TMP_Text tabText;
         [SerializeField] private TMP_Text playText;  // chữ "PLAY" (đổi viền theo mức khó)
         [SerializeField] private Vector2 hardFillSize = new Vector2(490f, 190f);
+        [SerializeField] private Button button;
 
         private Sprite _normalFill;
         private Vector2 _normalFillSize;
@@ -52,7 +53,7 @@ namespace PawBlock.Game
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClick);
+            button.onClick.AddListener(OnClick);
             CacheNormal();
         }
 
@@ -149,5 +150,13 @@ namespace PawBlock.Game
                 tabText.color = style.playTabTextColor;
             }
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

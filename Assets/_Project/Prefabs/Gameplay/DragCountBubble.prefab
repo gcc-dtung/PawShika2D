@@ -99,7 +99,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countText: {fileID: 9157100341063780665}
+  background: {fileID: 334152855922355128}
   offset: {x: -0.6, y: 0.9, z: 0}
+  followSharpness: 22
+  showDuration: 0.2
+  showEase: 27
+  hideDuration: 0.14
+  hideEase: 26
+  countPunch: 0.2
+  countPunchDuration: 0.16
+  readyColor: {r: 0.36, g: 0.78, b: 0.45, a: 0.95}
+  invalidColor: {r: 0.93, g: 0.38, b: 0.42, a: 0.95}
+  colorDuration: 0.12
 --- !u!1 &6688686131205946960
 GameObject:
   m_ObjectHideFlags: 0

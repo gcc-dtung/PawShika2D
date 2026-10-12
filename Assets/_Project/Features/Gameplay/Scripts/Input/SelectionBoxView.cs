@@ -12,6 +12,7 @@ namespace PawBlock.Features.Gameplay
     /// ra ngoài lưới thì mép phía đó trượt sang lấp khe rồi dừng ngay trước vật cản (như bị kẹt).
     /// Thả tay ở vùng sai (HideRejected): khung co lại, xám đi và mờ dần rồi mới tắt.
     /// </summary>
+    [RequireComponent(typeof(SpriteRenderer))]
     public class SelectionBoxView : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
@@ -71,15 +72,6 @@ namespace PawBlock.Features.Gameplay
 
         private void EnsureSpriteRenderer()
         {
-            if (spriteRenderer == null)
-            {
-                spriteRenderer = GetComponent<SpriteRenderer>();
-                if (spriteRenderer == null)
-                {
-                    spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-                }
-            }
-
             // Tạo 1 sprite vuông trắng mặc định nếu chưa gán sprite nào
             if (spriteRenderer.sprite == null)
             {
@@ -297,5 +289,13 @@ namespace PawBlock.Features.Gameplay
             }
             spriteRenderer.color = color;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+#endif
     }
 }

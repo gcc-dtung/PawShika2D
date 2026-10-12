@@ -24,6 +24,7 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Sprite badgeSquareSprite;
         [SerializeField] private Sprite badgeTallSprite;
         [SerializeField] private Sprite badgeWideSprite;
+        [SerializeField] private SpriteRenderer[] lockSprites;
 
         // Kích thước ô nền (đơn vị world). Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
         private static readonly Vector2 BadgeTall = new Vector2(0.5f, 0.74f);
@@ -59,7 +60,7 @@ namespace PawBlock.Features.Gameplay
             // Nội dung hiện sau ô nền: số, khóa (chữ + hình), ô hướng
             if (valueText != null) _contentTexts.Add(valueText);
             if (lockText != null) _contentTexts.Add(lockText);
-            if (lockRoot != null) _contentSprites.AddRange(lockRoot.GetComponentsInChildren<SpriteRenderer>(true));
+            if (lockSprites != null) _contentSprites.AddRange(lockSprites);
             if (orientationBadge != null) _contentSprites.Add(orientationBadge);
             foreach (TMP_Text t in _contentTexts) _contentAlpha.Add(t.alpha);
             foreach (SpriteRenderer sr in _contentSprites) _contentAlpha.Add(sr.color.a);
@@ -286,5 +287,13 @@ namespace PawBlock.Features.Gameplay
                 }
             }
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (lockSprites == null || lockSprites.Length == 0) lockSprites = lockRoot != null ? lockRoot.GetComponentsInChildren<SpriteRenderer>(true) : new SpriteRenderer[0];
+        }
+#endif
     }
 }

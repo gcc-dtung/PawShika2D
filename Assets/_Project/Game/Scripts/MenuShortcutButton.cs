@@ -30,6 +30,7 @@ namespace PawBlock.Game
         [SerializeField] private int swings = 4;
         [SerializeField] private float swingDuration = 0.08f;
         [SerializeField] private float liftDuration = 0.12f;
+        [SerializeField] private Button button;
 
         private Sequence _anim;
         private Vector2 _iconPos;
@@ -38,7 +39,7 @@ namespace PawBlock.Game
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClick);
+            button.onClick.AddListener(OnClick);
             if (icon != null)
             {
                 _iconPos = icon.anchoredPosition;
@@ -126,5 +127,13 @@ namespace PawBlock.Game
         {
             if (navigator != null && tab >= 0) navigator.Select(tab);
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

@@ -23,11 +23,11 @@ namespace PawBlock.Features.DailyReward
         }
 
         [SerializeField] private MenuShortcutButton shortcut;
+        [SerializeField] private Button button;
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClick);
-            if (shortcut == null) shortcut = GetComponent<MenuShortcutButton>();
+            button.onClick.AddListener(OnClick);
         }
 
         private void OnEnable()
@@ -51,5 +51,13 @@ namespace PawBlock.Features.DailyReward
         {
             _popups?.OpenDailyReward();
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

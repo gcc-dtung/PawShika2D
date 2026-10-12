@@ -770,6 +770,9 @@ MonoBehaviour:
   badgeSquareSprite: {fileID: 21300000, guid: 99135026b687f194fb66006c315fbaee, type: 3}
   badgeTallSprite: {fileID: 21300000, guid: d9c32d60a7977b7438f503973331d54a, type: 3}
   badgeWideSprite: {fileID: 21300000, guid: 97b272c4917373745b7070fbbc3fd95b, type: 3}
+  lockSprites:
+  - {fileID: 2592657854179920581}
+  - {fileID: 4849550683927795928}
 --- !u!61 &751636190205843187
 BoxCollider2D:
   m_ObjectHideFlags: 0

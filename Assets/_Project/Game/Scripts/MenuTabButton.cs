@@ -30,10 +30,11 @@ namespace PawBlock.Game
         [Header("Vạch ngăn")]
         [Tooltip("Vạch biến mất trong tỉ lệ này của thời gian chuyển tab (nhanh, trước khi nền tab chọn lướt qua)")]
         [SerializeField, Range(0.1f, 1f)] private float dividerHideRatio = 0.35f;
+        [SerializeField] private Button button;
+        [SerializeField] private Graphic dividerGraphic;
 
         private Sequence _anim;
         private Tween _dividerFade;
-        private Graphic _dividerGraphic;
         private float _dividerAlpha = 1f;
         private bool _selected;
         private bool _dividerVisible;
@@ -41,13 +42,12 @@ namespace PawBlock.Game
         private void Awake()
         {
             if (divider == null) return;
-            _dividerGraphic = divider.GetComponent<Graphic>();
-            if (_dividerGraphic != null) _dividerAlpha = _dividerGraphic.color.a;
+            if (dividerGraphic != null) _dividerAlpha = dividerGraphic.color.a;
             _dividerVisible = divider.activeSelf;
         }
 
         public RectTransform Rect => (RectTransform)transform;
-        public Button Button => GetComponent<Button>();
+        public Button Button => button;
 
         private void OnDisable()
         {
@@ -86,7 +86,7 @@ namespace PawBlock.Game
             _dividerFade?.Kill();
             _dividerFade = null;
 
-            if (duration <= 0f || _dividerGraphic == null || !isActiveAndEnabled || !Application.isPlaying)
+            if (duration <= 0f || dividerGraphic == null || !isActiveAndEnabled || !Application.isPlaying)
             {
                 divider.SetActive(visible);
                 SetDividerAlpha(_dividerAlpha);
@@ -100,12 +100,12 @@ namespace PawBlock.Game
                     SetDividerAlpha(0f);
                     divider.SetActive(true);
                 }
-                _dividerFade = _dividerGraphic.DOFade(_dividerAlpha, duration).SetEase(Ease.OutQuad);
+                _dividerFade = dividerGraphic.DOFade(_dividerAlpha, duration).SetEase(Ease.OutQuad);
             }
             else
             {
                 if (!divider.activeSelf) return;
-                _dividerFade = _dividerGraphic.DOFade(0f, duration * dividerHideRatio).SetEase(Ease.OutQuad)
+                _dividerFade = dividerGraphic.DOFade(0f, duration * dividerHideRatio).SetEase(Ease.OutQuad)
                     .OnComplete(() =>
                     {
                         divider.SetActive(false);
@@ -118,10 +118,10 @@ namespace PawBlock.Game
 
         private void SetDividerAlpha(float a)
         {
-            if (_dividerGraphic == null) return;
-            Color c = _dividerGraphic.color;
+            if (dividerGraphic == null) return;
+            Color c = dividerGraphic.color;
             c.a = a;
-            _dividerGraphic.color = c;
+            dividerGraphic.color = c;
         }
 
         /// <summary>0 = bình thường, 1 = đang chọn.</summary>
@@ -148,5 +148,14 @@ namespace PawBlock.Game
             _anim?.Kill();
             _anim = null;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+            if (dividerGraphic == null) dividerGraphic = divider != null ? divider.GetComponent<Graphic>() : null;
+        }
+#endif
     }
 }

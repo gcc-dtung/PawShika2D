@@ -21,9 +21,10 @@ namespace PawBlock.Features.Gameplay
         [Tooltip("Tô màu vùng chơi để căn chỉnh (chỉ để debug)")]
         [SerializeField] private bool showZone;
         [SerializeField] private Color zoneColor = new Color(0f, 1f, 0.4f, 0.2f);
+        [SerializeField] private Canvas canvas;
+        [SerializeField] private Image zoneImage;
 
         private RectTransform _rect;
-        private Canvas _canvas;
         private Vector2 _content;   // kích thước world của lưới cần chứa
         private bool _hasContent;
         private Rect _lastZone;
@@ -36,7 +37,6 @@ namespace PawBlock.Features.Gameplay
         private void Awake()
         {
             _rect = (RectTransform)transform;
-            _canvas = GetComponentInParent<Canvas>();
             ApplyZoneColor();
         }
 
@@ -47,6 +47,10 @@ namespace PawBlock.Features.Gameplay
 
         private void OnValidate()
         {
+#if UNITY_EDITOR
+            if (canvas == null) canvas = GetComponentInParent<Canvas>();
+            if (zoneImage == null) zoneImage = GetComponent<Image>();
+#endif
             ApplyZoneColor();
         }
 
@@ -94,7 +98,7 @@ namespace PawBlock.Features.Gameplay
             if (_rect == null) return Rect.zero;
             Vector3[] corners = _corners;
             _rect.GetWorldCorners(corners);
-            Camera uiCam = _canvas != null && _canvas.renderMode != RenderMode.ScreenSpaceOverlay ? _canvas.worldCamera : null;
+            Camera uiCam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
             Vector2 min = RectTransformUtility.WorldToScreenPoint(uiCam, corners[0]);
             Vector2 max = RectTransformUtility.WorldToScreenPoint(uiCam, corners[2]);
             Rect zone = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
@@ -111,7 +115,7 @@ namespace PawBlock.Features.Gameplay
 
         private void ApplyZoneColor()
         {
-            Image img = GetComponent<Image>();
+            Image img = zoneImage;
             if (img == null) return;
             img.raycastTarget = false;
             img.color = zoneColor;

@@ -20,6 +20,7 @@ namespace PawBlock.Shared
         [SerializeField] private float overshoot = 1.7f;
         [Tooltip("Phần đầu của mỗi chữ để hiện từ trong suốt lên rõ")]
         [SerializeField, Range(0.05f, 1f)] private float fadeRatio = 0.35f;
+        [SerializeField] private TMP_Text text;
 
         private TMP_Text _text;
         private TMP_MeshInfo[] _source;
@@ -39,7 +40,7 @@ namespace PawBlock.Shared
             }
         }
 
-        private TMP_Text Text => _text != null ? _text : (_text = GetComponent<TMP_Text>());
+        private TMP_Text Text => text;
 
         private void OnEnable()
         {
@@ -167,5 +168,13 @@ namespace PawBlock.Shared
             float x = p - 1f;
             return 1f + c * x * x * x + overshoot * x * x;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (text == null) text = GetComponent<TMP_Text>();
+        }
+#endif
     }
 }

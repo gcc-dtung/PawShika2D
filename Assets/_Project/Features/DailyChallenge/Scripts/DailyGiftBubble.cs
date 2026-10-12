@@ -26,6 +26,7 @@ namespace PawBlock.Features.DailyChallenge
         [SerializeField] private Vector2 offset = new Vector2(0f, -120f);
         [Tooltip("Cách mép màn hình tối thiểu (bong thoại không tràn ra ngoài)")]
         [SerializeField] private float edgeMargin = 24f;
+        [SerializeField] private Canvas canvas;
 
         private readonly List<Image> _items = new List<Image>();
 
@@ -61,7 +62,6 @@ namespace PawBlock.Features.DailyChallenge
         {
             Pointer pointer = Pointer.current;
             if (pointer == null || !pointer.press.wasPressedThisFrame || bubble == null) return;
-            Canvas canvas = bubble.GetComponentInParent<Canvas>();
             Camera cam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
             if (!RectTransformUtility.RectangleContainsScreenPoint(bubble, pointer.position.ReadValue(), cam)) Hide();
         }
@@ -95,5 +95,13 @@ namespace PawBlock.Features.DailyChallenge
         /// <summary>"15m" cho năng lượng vô hạn (phút), "x2" cho booster / coin.</summary>
         public static string AmountOf(DailyRewardItem item) =>
             item.kind == DailyRewardKind.InfiniteEnergy ? $"{item.amount}m" : $"x{item.amount}";
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (canvas == null) canvas = bubble != null ? bubble.GetComponentInParent<Canvas>() : null;
+        }
+#endif
     }
 }

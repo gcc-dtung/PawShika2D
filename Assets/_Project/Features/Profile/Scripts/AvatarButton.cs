@@ -21,10 +21,11 @@ namespace PawBlock.Features.Profile
 
         [SerializeField] private AvatarDatabase avatars;
         [SerializeField] private Image avatarImage;
+        [SerializeField] private Button button;
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClick);
+            button.onClick.AddListener(OnClick);
         }
 
         private void OnEnable()
@@ -47,5 +48,13 @@ namespace PawBlock.Features.Profile
         {
             if (avatarImage != null && avatars != null && _service != null) avatarImage.sprite = avatars.Get(_service.Save.avatar);
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

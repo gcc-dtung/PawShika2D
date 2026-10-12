@@ -8,6 +8,8 @@ namespace PawBlock.Features.Settings
     [RequireComponent(typeof(Button))]
     public class SettingsButton : MonoBehaviour
     {
+        [SerializeField] private Button button;
+
         private IMenuPopups _popups;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
@@ -18,12 +20,20 @@ namespace PawBlock.Features.Settings
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(OnClick);
+            button.onClick.AddListener(OnClick);
         }
 
         private void OnClick()
         {
             _popups?.OpenSettings();
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

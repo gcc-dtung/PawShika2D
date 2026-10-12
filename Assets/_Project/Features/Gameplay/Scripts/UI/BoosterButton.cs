@@ -36,8 +36,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private TMP_Text lockText;
         [SerializeField] private Image glow;
         [SerializeField] private float glowSpin = 90f; // độ / giây
+        [SerializeField] private Button button;
 
-        private Button _button;
         private Tween _glowTween;
         private Tween _punch;
         private bool _highlight; // tutorial mở khóa đang chỉ vào nút này
@@ -64,8 +64,7 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            _button = GetComponent<Button>();
-            _button.onClick.AddListener(OnClick);
+            button.onClick.AddListener(OnClick);
         }
 
         private void OnEnable()
@@ -171,5 +170,13 @@ namespace PawBlock.Features.Gameplay
                 .SetLoops(-1)
                 .SetLink(gameObject);
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

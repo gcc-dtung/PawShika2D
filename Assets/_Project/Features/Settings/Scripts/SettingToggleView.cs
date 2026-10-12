@@ -23,10 +23,11 @@ namespace PawBlock.Features.Settings
         [SerializeField] private Sprite onSprite;
         [SerializeField] private Sprite offSprite;
         [SerializeField] private GameObject offMark;
+        [SerializeField] private Button button;
 
         private void Awake()
         {
-            GetComponent<Button>().onClick.AddListener(Toggle);
+            button.onClick.AddListener(Toggle);
         }
 
         private void OnEnable()
@@ -78,5 +79,13 @@ namespace PawBlock.Features.Settings
             }
             if (offMark != null) offMark.SetActive(!on);
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (button == null) button = GetComponent<Button>();
+        }
+#endif
     }
 }

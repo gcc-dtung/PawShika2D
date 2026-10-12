@@ -31,7 +31,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            if (sprite == null) sprite = GetComponentInChildren<SpriteRenderer>(true);
             _baseScale = transform.localScale;
             SetAlpha(0f);
         }
@@ -93,5 +92,12 @@ namespace PawBlock.Features.Gameplay
             c.a = alpha;
             sprite.color = c;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+        }
+#endif
     }
 }

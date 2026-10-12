@@ -17,15 +17,14 @@ namespace PawBlock.Shared
         [SerializeField] protected RectTransform panel;
         [SerializeField] private float showDuration = 0.28f;
         [SerializeField] private float hideDuration = 0.15f;
+        [SerializeField] private CanvasGroup group;
 
-        private CanvasGroup _group;
         private Sequence _anim;
 
         public bool IsOpen { get; private set; }
 
         protected virtual void Awake()
         {
-            _group = GetComponent<CanvasGroup>();
         }
 
         protected virtual void OnEnable()
@@ -49,20 +48,19 @@ namespace PawBlock.Shared
 
         public void Open()
         {
-            if (_group == null) _group = GetComponent<CanvasGroup>();
             gameObject.SetActive(true);
             transform.SetAsLastSibling();
             IsOpen = true;
-            _group.interactable = true;
-            _group.blocksRaycasts = true;
+            group.interactable = true;
+            group.blocksRaycasts = true;
             OnOpen();
             AudioManager.Play(SoundId.PopupOpen);
 
-            _group.alpha = 0f;
+            group.alpha = 0f;
             if (panel != null) panel.localScale = Vector3.one * 0.6f;
 
             Sequence seq = NewSequence();
-            seq.Join(_group.DOFade(1f, showDuration * 0.5f).SetEase(Ease.Linear));
+            seq.Join(group.DOFade(1f, showDuration * 0.5f).SetEase(Ease.Linear));
             if (panel != null) seq.Join(panel.DOScale(1f, showDuration).SetEase(Ease.OutBack));
         }
 
@@ -70,11 +68,11 @@ namespace PawBlock.Shared
         {
             if (!IsOpen) return;
             IsOpen = false;
-            _group.interactable = false;
+            group.interactable = false;
             AudioManager.Play(SoundId.PopupClose);
 
             Sequence seq = NewSequence();
-            seq.Join(_group.DOFade(0f, hideDuration).SetEase(Ease.Linear));
+            seq.Join(group.DOFade(0f, hideDuration).SetEase(Ease.Linear));
             if (panel != null) seq.Join(panel.DOScale(0.85f, hideDuration).SetEase(Ease.Linear));
             seq.OnComplete(() => gameObject.SetActive(false));
         }
@@ -103,5 +101,13 @@ namespace PawBlock.Shared
             _anim?.Kill();
             _anim = null;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (group == null) group = GetComponent<CanvasGroup>();
+        }
+#endif
     }
 }

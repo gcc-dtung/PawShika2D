@@ -45,8 +45,8 @@ namespace PawBlock.Features.Gameplay
         [Header("Vệt sáng lướt qua")]
         [SerializeField] private float glintInterval = 2.2f;
         [SerializeField] private float glintDuration = 0.35f;
+        [SerializeField] private Image image;
 
-        private Image _image;
         private RectTransform _rect;
         private Color _baseColor;
         private Vector2 _basePos;
@@ -56,12 +56,11 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            _image = GetComponent<Image>();
             _rect = (RectTransform)transform;
-            _image.raycastTarget = false;
-            _baseColor = _image.color;
+            image.raycastTarget = false;
+            _baseColor = image.color;
             _basePos = _rect.anchoredPosition;
-            SetAlpha(_image, 0f);
+            SetAlpha(image, 0f);
             if (frostOverlay != null)
             {
                 frostOverlay.raycastTarget = false;
@@ -88,7 +87,7 @@ namespace PawBlock.Features.Gameplay
                 timer.onFreezeEnded.RemoveListener(OnBroken);
             }
             KillAll();
-            SetAlpha(_image, 0f);
+            SetAlpha(image, 0f);
             if (frostOverlay != null) SetAlpha(frostOverlay, 0f);
         }
 
@@ -105,11 +104,11 @@ namespace PawBlock.Features.Gameplay
         {
             KillAll();
             transform.localScale = Vector3.one * 0.6f;
-            SetAlpha(_image, 0f);
+            SetAlpha(image, 0f);
             if (withFrost) FlashFrost();
 
             Sequence seq = DOTween.Sequence().SetLink(gameObject);
-            seq.Append(_image.DOFade(alpha, appearDuration));
+            seq.Append(image.DOFade(alpha, appearDuration));
             seq.Join(transform.DOScale(1f, appearDuration).SetEase(Ease.OutBack));
             // Thở nhẹ + lấp lánh khi đang bật (tween lặp vô hạn không lồng được trong Sequence nên chạy riêng)
             seq.OnComplete(() =>
@@ -174,8 +173,8 @@ namespace PawBlock.Features.Gameplay
             normal.a = alpha;
             Sequence s = DOTween.Sequence().SetLink(gameObject);
             s.AppendInterval(glintInterval);
-            s.Append(_image.DOColor(bright, glintDuration * 0.4f));
-            s.Append(_image.DOColor(normal, glintDuration * 0.6f));
+            s.Append(image.DOColor(bright, glintDuration * 0.4f));
+            s.Append(image.DOColor(normal, glintDuration * 0.6f));
             s.SetLoops(-1);
             Track(s);
         }
@@ -185,13 +184,13 @@ namespace PawBlock.Features.Gameplay
         private void OnBroken()
         {
             KillAll();
-            SetAlpha(_image, alpha);
+            SetAlpha(image, alpha);
             Burst();
 
             Sequence seq = DOTween.Sequence().SetLink(gameObject);
             seq.Append(_rect.DOShakeAnchorPos(breakDuration * 0.4f, new Vector2(14f, 4f), 30, 90f, false, true));
             seq.Append(transform.DOScale(1.4f, breakDuration).SetEase(Ease.OutQuad));
-            seq.Join(_image.DOFade(0f, breakDuration));
+            seq.Join(image.DOFade(0f, breakDuration));
             Track(seq);
         }
 
@@ -228,7 +227,7 @@ namespace PawBlock.Features.Gameplay
         private void Hide()
         {
             KillAll();
-            Track(_image.DOFade(0f, 0.15f).SetLink(gameObject));
+            Track(image.DOFade(0f, 0.15f).SetLink(gameObject));
         }
 
         // ---------- Chung ----------
@@ -265,8 +264,8 @@ namespace PawBlock.Features.Gameplay
             transform.localScale = Vector3.one;
             _rect.anchoredPosition = _basePos; // rung bị hủy giữa chừng: về đúng chỗ
             Color c = _baseColor;
-            c.a = _image.color.a;
-            _image.color = c;
+            c.a = image.color.a;
+            image.color = c;
             foreach (Image s in _sparks)
             {
                 if (s != null) s.gameObject.SetActive(false);
@@ -279,5 +278,13 @@ namespace PawBlock.Features.Gameplay
             c.a = a;
             g.color = c;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (image == null) image = GetComponent<Image>();
+        }
+#endif
     }
 }

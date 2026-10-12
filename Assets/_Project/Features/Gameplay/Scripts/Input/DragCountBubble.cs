@@ -14,7 +14,7 @@ namespace PawBlock.Features.Gameplay
     public class DragCountBubble : MonoBehaviour
     {
         [SerializeField] private TextMeshPro countText;
-        [SerializeField] private SpriteRenderer background; // để trống = SpriteRenderer trên chính object
+        [SerializeField] private SpriteRenderer background; // Editor tự điền SpriteRenderer trên chính object
         [SerializeField] private Vector3 offset = new Vector3(-0.6f, 0.9f, 0f);
         [Tooltip("Độ bám ngón tay: càng lớn càng sát (0 = dính cứng như cũ)")]
         [SerializeField, Min(0f)] private float followSharpness = 22f;
@@ -52,7 +52,6 @@ namespace PawBlock.Features.Gameplay
             _initialized = true;
             _baseScale = transform.localScale;
             _textBaseScale = countText.transform.localScale;
-            if (background == null) background = GetComponent<SpriteRenderer>();
             if (background != null) _neutralColor = background.color;
         }
 
@@ -170,5 +169,12 @@ namespace PawBlock.Features.Gameplay
             _visible = false;
             _lastCount = -1;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+        }
+#endif
     }
 }
