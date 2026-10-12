@@ -7,7 +7,7 @@ namespace PawBlock.Shared
 {
     /// <summary>
     /// Font chung của game: Fredoka Bold (nét tròn, đậm, hợp phong cách casual mèo của bản gốc).
-    /// - Đặt làm font mặc định của TMP Settings (chữ dựng bằng PopupBuilder.Text dùng font này)
+    /// - Đặt làm font mặc định của TMP Settings (chữ mới tạo trong Editor dùng font này)
     /// - LiberationSans SDF làm fallback cho ký tự Fredoka không có
     /// - Tạo các material preset viền chữ (Outline Purple / Green / Brown) dùng cho Menu
     /// - Đổi font mọi TMP_Text đang dùng LiberationSans trong scene đang mở và prefab trong Assets/_Project

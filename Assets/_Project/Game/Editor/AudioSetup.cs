@@ -85,7 +85,7 @@ namespace PawBlock.Game
             SetMusicImport();
 
             // Scene: AudioManager
-            GameObject go = PopupBuilder.FindRoot("AudioManager");
+            GameObject go = FindRoot("AudioManager");
             if (go == null)
             {
                 go = new GameObject("AudioManager");
@@ -94,12 +94,12 @@ namespace PawBlock.Game
             AudioManager manager = go.GetComponent<AudioManager>();
             if (manager == null) manager = Undo.AddComponent<AudioManager>(go);
             if (go.GetComponent<GameAudioEvents>() == null) Undo.AddComponent<GameAudioEvents>(go);
-            PopupBuilder.Assign(manager, "database", db);
+            AssignDatabase(manager, db);
 
             int canvases = 0;
             foreach (string name in Canvases)
             {
-                GameObject canvas = PopupBuilder.FindRoot(name);
+                GameObject canvas = FindRoot(name);
                 if (canvas == null) continue;
                 if (canvas.GetComponent<UIButtonSounds>() == null) Undo.AddComponent<UIButtonSounds>(canvas);
                 canvases++;
@@ -108,6 +108,22 @@ namespace PawBlock.Game
             EditorSceneManager.MarkSceneDirty(go.scene);
             AssetDatabase.SaveAssets();
             Debug.Log($"[AudioSetup] AudioDatabase: {db.sounds.Count} âm + nhạc nền; AudioManager trong scene; âm nút trên {canvases} canvas.");
+        }
+
+        private static GameObject FindRoot(string name)
+        {
+            foreach (GameObject root in EditorSceneManager.GetActiveScene().GetRootGameObjects())
+            {
+                if (root.name == name) return root;
+            }
+            return null;
+        }
+
+        private static void AssignDatabase(AudioManager manager, AudioDatabase db)
+        {
+            SerializedObject so = new SerializedObject(manager);
+            so.FindProperty("database").objectReferenceValue = db;
+            so.ApplyModifiedPropertiesWithoutUndo();
         }
 
         private static AudioDatabase BuildDatabase()
