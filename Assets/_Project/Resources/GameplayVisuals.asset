@@ -896,3 +896,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: e7c45a1abbbd7a245a3dd85539b2d912, type: 3}
   - {fileID: 21300000, guid: 7646a5cbcad3ee74f889312b7b144f63, type: 3}
   - {fileID: 21300000, guid: 5ce91657e0b2ad74f92f9571604bacff, type: 3}
+  hintCellFrame: {fileID: 21300000, guid: c6415095cfae28a45b5e1596b3212f5a, type: 3}

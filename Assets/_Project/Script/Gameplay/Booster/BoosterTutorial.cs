@@ -36,7 +36,7 @@ public class BoosterTutorial : MonoBehaviour, ILevelIntro
     public int Order => 20;
     public float StartDelay => startDelay;
 
-    public bool ShouldPlay(LevelLoadedEvent level) => NextToUnlock(level.Number) != null;
+    public bool ShouldPlay(LevelLoadedEvent level) => !level.IsDaily && NextToUnlock(level.Number) != null;
 
     public void Play(LevelLoadedEvent level, Action onDone)
     {

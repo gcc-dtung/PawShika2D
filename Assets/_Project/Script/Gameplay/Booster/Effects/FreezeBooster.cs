@@ -5,9 +5,18 @@ public class FreezeBooster : BoosterEffect
 
     public override bool IsActive => Host.Timer != null && Host.Timer.IsFrozen;
 
+    /// <summary>
+    /// Trừ lượt ngay (hiệu ứng đồng hồ reo bắt đầu), đồng hồ thật sự đóng băng lúc bàn tay Spine bấm nút (sự kiện "Press" – FreezeOverlayFX).
+    /// Trong lúc hiệu ứng, thao tác bị khóa nên đồng hồ đứng yên sẵn.
+    /// </summary>
     public override void Activate()
     {
-        if (Host.Timer == null || !Host.Timer.Freeze(GameConfig.LivesEnergy.freezeSeconds)) return;
+        LevelTimer timer = Host.Timer;
+        if (timer == null || timer.IsFrozen || timer.IsTimeUp) return;
         Host.Consume(Type);
+        Host.AfterEffect(Type, () =>
+        {
+            if (Host.Timer != null) Host.Timer.Freeze(GameConfig.LivesEnergy.freezeSeconds);
+        });
     }
 }

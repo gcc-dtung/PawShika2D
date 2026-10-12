@@ -21,6 +21,12 @@ public class GridManager : Singleton<GridManager>
     [Header("Thắng")]
     [SerializeField] private float winFlashDelay = 0.1f;
 
+    [Header("Feel khi kéo / đặt")]
+    [Tooltip("Ô dưới ngón tay \"dính\" thêm bao nhiêu ô mỗi phía trước khi chuyển sang ô bên cạnh (0 = tắt)")]
+    [SerializeField, Range(0f, 0.4f)] private float cellStick = 0.15f;
+    [Tooltip("Đặt khối tiếp trong khoảng này (giây) thì tính combo")]
+    [SerializeField, Min(0f)] private float comboWindow = 2.5f;
+
     [Header("Events")]
     public UnityEvent onGameWin = new UnityEvent();
     public UnityEvent<BlockModel> onBlockPlaced = new UnityEvent<BlockModel>();
@@ -29,6 +35,7 @@ public class GridManager : Singleton<GridManager>
     public UnityEvent<PlacementResult, Vector3, Vector2> onInvalidMove = new UnityEvent<PlacementResult, Vector3, Vector2>(); // thao tác sai luật, chỉ hủy
     public UnityEvent<CellModel> onClueUnlocked = new UnityEvent<CellModel>();
     public UnityEvent<Vector2Int> onDragCellChanged = new UnityEvent<Vector2Int>(); // ngón tay đang kéo sang ô khác – rung tick nhẹ
+    public UnityEvent<int, SelectionHint> onSelectionChanged = new UnityEvent<int, SelectionHint>(); // vùng kéo đổi số ô / trạng thái; (0, Neutral) = hết kéo
 
     private BoardModel _board;
     private readonly Dictionary<BlockModel, PlacedBlockView> _blockViews = new Dictionary<BlockModel, PlacedBlockView>();
@@ -41,6 +48,8 @@ public class GridManager : Singleton<GridManager>
     private bool _isGameWon = false;
     private bool _finishing; // đã thả tay, đang chờ khung giãn xong rồi mới đặt / báo sai
     private Vector2Int _fingerCell; // ô dưới ngón tay ở lần kéo trước
+    private SelectionHint _selectionHint;
+    private ComboCounter _combo;
 
     public BoardModel Board => _board;
     public bool IsGameWon => _isGameWon;
@@ -53,6 +62,10 @@ public class GridManager : Singleton<GridManager>
         || (gridSpawner != null && gridSpawner.IsIntroPlaying) // lưới đang xuất hiện
         || InputGate.IsLocked;
     public LevelDefinition CurrentLevel => gridSpawner != null ? gridSpawner.LevelData : null;
+
+    /// <summary>Combo đặt khối liên tiếp (đọc trong onBlockPlaced): 1 = lần đặt lẻ, 2+ = đặt nhanh liên tục.</summary>
+    public int Combo => ComboTracker.Count;
+    private ComboCounter ComboTracker => _combo ??= new ComboCounter(comboWindow);
 
     protected override void Awake()
     {
@@ -114,7 +127,7 @@ public class GridManager : Singleton<GridManager>
         if (!_drag.IsActive || _board == null) return;
 
         GridGeometry geometry = _board.Geometry;
-        Vector2Int cell = geometry.WorldToCell(fingerWorld);
+        Vector2Int cell = FeelCurves.StickyCell(geometry, fingerWorld, _fingerCell, cellStick);
         if (cell != _fingerCell)
         {
             _fingerCell = cell;
@@ -137,6 +150,12 @@ public class GridManager : Singleton<GridManager>
     /// <summary>Số ô của vùng đang kéo, dùng cho bong bóng đếm ô.</summary>
     public int SelectionCellCount => _drag.IsActive ? _drag.CellCount : 0;
 
+    /// <summary>Vùng đang kéo (chỉ có nghĩa khi IsSelecting).</summary>
+    public RectInt SelectionRect => _drag.Rect;
+
+    /// <summary>Trạng thái vùng đang kéo (đủ / sai / đang kéo), dùng cho bong bóng đếm ô.</summary>
+    public SelectionHint SelectionHint => _drag.IsActive ? _selectionHint : SelectionHint.Neutral;
+
     /// <summary>
     /// Khung chọn bám vùng. Vùng đủ điều kiện: khung giãn hết vào vùng rồi mới biến thành mèo xem trước
     /// (SelectionBoxView.WhenSettled); kéo sang vùng khác trước khi giãn xong thì không hiện mèo.
@@ -152,6 +171,8 @@ public class GridManager : Singleton<GridManager>
         }
 
         PlacementCheck check = _board.Check(rect);
+        _selectionHint = check.Hint;
+        onSelectionChanged?.Invoke(_drag.CellCount, _selectionHint);
         if (_preview != null && !(check.IsReady && _preview.Rect.Equals(rect))) ReleasePreview();
         if (selectionBox != null) selectionBox.SetFilled(true);
 
@@ -187,6 +208,7 @@ public class GridManager : Singleton<GridManager>
         if (!_drag.IsActive) return;
         RectInt rect = _drag.Rect;
         _drag.End();
+        onSelectionChanged?.Invoke(0, SelectionHint.Neutral);
 
         // Khi đã win hoặc hết giờ -> Khóa toàn bộ thao tác
         if (IsInputLocked || _board == null)
@@ -207,7 +229,8 @@ public class GridManager : Singleton<GridManager>
 
         if (!check.IsReady)
         {
-            HideSelectionBox();
+            // Khung co lại, xám đi rồi tắt (thay vì tắt cái rụp) -> người chơi hiểu là bị từ chối
+            if (selectionBox != null) selectionBox.HideRejected();
             ReleasePreview();
             Reject(check);
             return;
@@ -254,7 +277,11 @@ public class GridManager : Singleton<GridManager>
     public void CancelSelection()
     {
         _finishing = false; // Hide() bỏ luôn callback chờ khung giãn xong
-        _drag.End();
+        if (_drag.IsActive)
+        {
+            _drag.End();
+            onSelectionChanged?.Invoke(0, SelectionHint.Neutral);
+        }
         if (selectionBox != null) selectionBox.Hide();
         ReleasePreview();
     }
@@ -268,6 +295,8 @@ public class GridManager : Singleton<GridManager>
 
         view.Confirm(block.ClueCell);
         _blockViews[block] = view;
+        ComboTracker.Window = comboWindow;
+        ComboTracker.Register(Time.time);
 
         foreach (CellModel cell in _unlockedBuffer) onClueUnlocked?.Invoke(cell);
         onBlockPlaced?.Invoke(block);
@@ -303,6 +332,7 @@ public class GridManager : Singleton<GridManager>
     private void RemoveBlock(BlockModel block)
     {
         if (!_board.Remove(block)) return;
+        ComboTracker.Reset(); // gỡ khối là đứt combo
         if (_blockViews.TryGetValue(block, out PlacedBlockView view))
         {
             _blockViews.Remove(block);
@@ -322,11 +352,8 @@ public class GridManager : Singleton<GridManager>
         if (overlapping.Count == 1 && overlapping[0].Rect.Equals(rect)) return false; // đã đúng sẵn
         if (overlapping.Count > 0)
         {
-            // Ô số còn khóa thì gỡ khối cũng không đặt được: giữ nguyên lưới
-            foreach (BlockModel b in overlapping) b.Release();
-            bool ready = _board.Check(rect).IsReady;
-            foreach (BlockModel b in overlapping) b.Occupy();
-            if (!ready) return false;
+            // Ô số còn khóa (hoặc khóa lại vì gỡ khối) thì không đặt được: giữ nguyên lưới
+            if (!_board.CanPlaceReplacing(rect, overlapping)) return false;
             foreach (BlockModel b in overlapping) RemoveBlock(b);
         }
         PlacementCheck check = _board.Check(rect);
@@ -364,6 +391,36 @@ public class GridManager : Singleton<GridManager>
 
     // ---------- Quản lý view ----------
 
+    /// <summary>
+    /// Mèo mờ (Hint) ở vùng <paramref name="rect"/>: lấy 1 view từ pool, dựng như mèo xem trước (màu ngẫu nhiên).
+    /// Không phải khối thật (không chiếm ô). Trả lại bằng ReturnGhost.
+    /// </summary>
+    public PlacedBlockView RentGhost(RectInt rect)
+    {
+        if (_board == null) return null;
+        CellModel clue = null;
+        foreach (CellModel cell in _board.GetCellsIn(rect))
+        {
+            if (cell.HasClue) { clue = cell; break; }
+        }
+        if (clue == null) return null;
+        PlacedBlockView view = _blockPool.Get();
+        view.ShowPreview(rect, clue, ColorTypeExtensions.GetRandomColorType(), _board.Geometry);
+        return view;
+    }
+
+    public void ReturnGhost(PlacedBlockView view)
+    {
+        if (view != null && view.gameObject.activeSelf) _blockPool.Release(view);
+    }
+
+    /// <summary>View của khối đã đặt (cho hiệu ứng: mèo kề bên phản ứng, run khi đóng băng...).</summary>
+    public bool TryGetView(BlockModel block, out PlacedBlockView view)
+    {
+        view = null;
+        return block != null && _blockViews.TryGetValue(block, out view) && view != null;
+    }
+
     private void ReleasePreview()
     {
         if (_preview == null) return;
@@ -386,6 +443,7 @@ public class GridManager : Singleton<GridManager>
     private void SetGrid(List<CellView> grid)
     {
         ClearAllPlacedBlocks();
+        ComboTracker.Reset();
 
         List<CellModel> cells = new List<CellModel>(grid.Count);
         foreach (CellView cell in grid)

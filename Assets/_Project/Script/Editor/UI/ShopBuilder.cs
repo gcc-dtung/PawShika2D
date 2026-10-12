@@ -230,7 +230,7 @@ public static class ShopBuilder
     private static Sprite BoosterIcon(BoosterDatabase db, BoosterType type)
     {
         BoosterData data = db != null ? db.Get(type) : null;
-        return data != null ? data.icon : null;
+        return data != null ? data.ItemIcon : null;
     }
 
     private static Button PriceButton(Transform parent, Vector2 pos, Vector2 size, out TMP_Text label)

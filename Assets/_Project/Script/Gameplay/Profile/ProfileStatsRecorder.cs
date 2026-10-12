@@ -45,7 +45,7 @@ public class ProfileStatsRecorder : MonoBehaviour
                 if (stat != null && stat.attempts == 1) p.firstTryWins++;
                 if (level.difficulty != LevelDifficulty.Normal) p.hardWins++;
             }
-            p.levelsCleared = Mathf.Max(p.levelsCleared, lm.CurrentLevelNumber);
+            if (!lm.IsDaily) p.levelsCleared = Mathf.Max(p.levelsCleared, lm.CurrentLevelNumber); // Daily: CurrentLevelNumber là level thường chưa thắng
             p.winStreak++;
             p.bestWinStreak = Mathf.Max(p.bestWinStreak, p.winStreak);
         }

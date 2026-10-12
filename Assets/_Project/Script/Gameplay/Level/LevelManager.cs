@@ -8,6 +8,8 @@ using UnityEngine;
 /// Phát LevelLoadedEvent / GameStateChangedEvent qua EventBus; ván không Playing thì khóa lưới (InputGate).
 /// Có bên xử lý luồng (GameFlowUI đặt AutoAdvance = false) thì chờ popup; không có thì tự chuyển sau autoAdvanceDelay.
 /// Căn camera theo lưới: BoardCameraFitter.
+/// Daily Challenge: LoadDaily nạp level sinh theo ngày (không thuộc database, không đổi level hiện tại đã lưu);
+/// Retry chơi lại đúng level Daily, NextLevel không làm gì (màn thắng đưa về Menu).
 /// </summary>
 public class LevelManager : Singleton<LevelManager>
 {
@@ -24,11 +26,15 @@ public class LevelManager : Singleton<LevelManager>
     private GameState _state = GameState.Playing;
     private bool _hasRevived; // đã thêm giờ trong lượt chơi này (lượt sau hết giờ có thể giới hạn)
     private bool _isPractice; // màn tutorial: thắng không sang WinPopup, đồng hồ không chạy
+    private LevelDefinition _daily; // level Daily Challenge đang chơi (null = level thường)
 
     public GameState State => _state;
     public bool IsPlaying => _state == GameState.Playing;
     public bool HasRevived => _hasRevived;
     public bool IsPractice => _isPractice;
+    public bool IsDaily => _daily != null;
+    /// <summary>Ngày của level Daily đang chơi (số ngày từ 1/1/1970, DailyChallengeModel.DayNumber).</summary>
+    public long DailyDay { get; private set; } = -1;
 
     /// <summary>Thắng / hết giờ thì tự sang level kế / chơi lại. GameFlowUI tắt đi để popup quyết định.</summary>
     public bool AutoAdvance { get; set; } = true;
@@ -36,7 +42,7 @@ public class LevelManager : Singleton<LevelManager>
     public int CurrentIndex => _currentIndex;
     public int LevelCount => database != null ? database.Count : 0;
     public int CurrentLevelNumber => _currentIndex + 1;
-    public LevelDefinition CurrentLevel => database != null ? database.Get(_currentIndex) : null;
+    public LevelDefinition CurrentLevel => _daily != null ? _daily : database != null ? database.Get(_currentIndex) : null;
 
     protected override void Awake()
     {
@@ -73,6 +79,7 @@ public class LevelManager : Singleton<LevelManager>
         }
 
         CancelPending();
+        _daily = null;
         _currentIndex = Mathf.Clamp(index, 0, database.Count - 1);
         if (SaveSystem.Data.currentLevel != _currentIndex)
         {
@@ -97,13 +104,40 @@ public class LevelManager : Singleton<LevelManager>
     {
         if (level == null) return;
         CancelPending();
+        _daily = null;
         SetPractice(true);
         gridSpawner.Spawn(level);
         _hasRevived = false;
         SetState(GameState.Playing);
     }
 
-    public void Retry() => LoadLevel(_currentIndex);
+    /// <summary>
+    /// Level Daily Challenge (DailyChallengeManager sinh theo ngày): như level thường nhưng không đổi level hiện tại đã lưu.
+    /// LevelLoadedEvent mang IsDaily = true, Number vẫn là level thường hiện tại.
+    /// </summary>
+    public void LoadDaily(LevelDefinition level, long day)
+    {
+        if (level == null) return;
+        CancelPending();
+        _daily = level;
+        DailyDay = day;
+        SetPractice(false);
+        gridSpawner.Spawn(level);
+        _hasRevived = false;
+        SetState(GameState.Playing);
+        EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level, true));
+        Debug.Log($"[LevelManager] Daily {DailyChallengeModel.DateOf(day):yyyy-MM-dd}: {level.name} ({level.size}x{level.Height})");
+    }
+
+    /// <summary>Chơi lại từ đầu level đang chơi (Daily thì đúng level Daily đó).</summary>
+    public void Retry()
+    {
+        if (_daily != null) LoadDaily(_daily, DailyDay);
+        else LoadLevel(_currentIndex);
+    }
+
+    /// <summary>Vào ván level thường hiện tại (nút PLAY ở Menu), kể cả khi vừa chơi Daily.</summary>
+    public void PlayCurrent() => LoadLevel(_currentIndex);
 
     /// <summary>Đang ở level cuối của database.</summary>
     public bool IsLastLevel => database != null && _currentIndex >= database.Count - 1;
@@ -114,7 +148,7 @@ public class LevelManager : Singleton<LevelManager>
     /// </summary>
     public void NextLevel()
     {
-        if (database == null || database.Count == 0) return;
+        if (database == null || database.Count == 0 || IsDaily) return; // Daily: màn thắng tự đưa về Menu
         if (!IsLastLevel)
         {
             LoadLevel(_currentIndex + 1);

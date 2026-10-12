@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Hiệu ứng vào level Hard / Very Hard (như bản gốc "EXTREME LEVEL"): lưới hiện xong thì nền tối dần,
-/// dải băng cảnh báo sọc và băng chữ (HARD LEVEL / EXTREME LEVEL) trượt chéo từ góc trên trái vào giữa, mèo đầu lâu bật ra
-/// phía trên băng, giữ một lúc (đầu lâu nhịp nhẹ) rồi đầu lâu thu lại, 2 băng trượt ngược ra, nền sáng lại.
+/// dải băng cảnh báo sọc và băng chữ (HARD LEVEL / EXTREME LEVEL) rơi thẳng từ trên xuống giữa (nảy quá 1 chút, hơi xoay về thẳng),
+/// mèo đầu lâu bật ra phía trên băng, giữ một lúc (đầu lâu nhịp nhẹ) rồi đầu lâu thu lại, 2 băng chùng xuống 1 chút
+/// rồi vọt ngược lên khỏi mép trên (dải sọc đi trước băng chữ, nghiêng thêm khi bay), nền sáng lại.
 /// Là 1 ILevelIntro (Order 0, chạy đầu tiên): LevelIntroSequencer chờ lưới hiện xong, khóa lưới trong lúc chạy.
 /// Sprite theo độ khó lấy từ DifficultyTheme.
 /// </summary>
@@ -22,10 +23,14 @@ public class DifficultyIntro : MonoBehaviour, ILevelIntro
     [Header("Nhịp (giây)")]
     [SerializeField] private float dimAlpha = 0.65f;
     [SerializeField] private float slideIn = 0.42f;
-    [SerializeField] private float hold = 1.3f;
-    [SerializeField] private float slideOut = 0.36f;
-    [Tooltip("Băng bắt đầu / kết thúc lệch khỏi chỗ đứng bao nhiêu (đơn vị canvas, hướng góc trên trái)")]
-    [SerializeField] private Vector2 offscreen = new Vector2(-2200f, 900f);
+    [SerializeField] private float hold = 1.25f;
+    [SerializeField] private float slideOut = 0.42f;
+    [Tooltip("Băng rơi từ / bay về độ cao này phía trên chỗ đứng (đơn vị canvas, đủ ra khỏi mép trên)")]
+    [SerializeField] private float dropHeight = 1600f;
+    [Tooltip("Góc xoay (độ) lúc rơi vào: dải sọc / băng chữ, rồi xoay về 0")]
+    [SerializeField] private Vector2 enterTilt = new Vector2(-10f, 4f);
+    [Tooltip("Góc xoay (độ) khi bay lên: dải sọc / băng chữ (băng chữ lật nghiêng xuống phải như bản gốc)")]
+    [SerializeField] private Vector2 exitTilt = new Vector2(-6f, -12f);
     [Tooltip("Tỉ lệ hiện băng chữ so với kích thước ảnh (băng dài quá 2 mép màn, chữ giữ cỡ)")]
     [SerializeField] private float bannerScale = 0.8f;
 
@@ -89,14 +94,21 @@ public class DifficultyIntro : MonoBehaviour, ILevelIntro
             skull.rectTransform.anchoredPosition = _skullPos;
         }
         SetDim(0f);
-        tape.anchoredPosition = _tapePos + offscreen;
-        banner.rectTransform.anchoredPosition = _bannerPos + offscreen;
+        RectTransform bn = banner.rectTransform;
+        Vector2 up = new Vector2(0f, dropHeight);
+        tape.anchoredPosition = _tapePos + up;
+        bn.anchoredPosition = _bannerPos + up;
+        tape.localEulerAngles = new Vector3(0f, 0f, enterTilt.x);
+        bn.localEulerAngles = new Vector3(0f, 0f, enterTilt.y);
         AudioManager.Play(SoundId.HardLevel);
 
+        // Vào: rơi thẳng xuống, nảy quá chỗ đứng 1 chút (OutBack); dải sọc rơi trước, băng chữ theo sau
         Sequence s = DOTween.Sequence().SetUpdate(true).SetLink(gameObject);
         s.Insert(0f, DOVirtual.Float(0f, dimAlpha, 0.25f, SetDim));
-        s.Insert(0f, tape.DOAnchorPos(_tapePos, slideIn).SetEase(Ease.OutCubic));
-        s.Insert(0.06f, banner.rectTransform.DOAnchorPos(_bannerPos, slideIn).SetEase(Ease.OutBack, 1.2f));
+        s.Insert(0f, tape.DOAnchorPos(_tapePos, slideIn).SetEase(Ease.OutBack, 1.1f));
+        s.Insert(0f, tape.DOLocalRotate(Vector3.zero, slideIn).SetEase(Ease.OutCubic));
+        s.Insert(0.06f, bn.DOAnchorPos(_bannerPos, slideIn).SetEase(Ease.OutBack, 1.4f));
+        s.Insert(0.06f, bn.DOLocalRotate(Vector3.zero, slideIn).SetEase(Ease.OutBack, 1.4f));
         if (skull != null && style.skull != null)
         {
             RectTransform sk = skull.rectTransform;
@@ -107,12 +119,17 @@ public class DifficultyIntro : MonoBehaviour, ILevelIntro
 
         float outAt = slideIn + hold;
         if (skull != null && style.skull != null) s.Insert(outAt, skull.rectTransform.DOScale(0f, 0.2f).SetEase(Ease.InBack));
-        s.Insert(outAt + 0.1f, banner.rectTransform.DOAnchorPos(_bannerPos + offscreen, slideOut).SetEase(Ease.InCubic));
-        s.Insert(outAt + 0.14f, tape.DOAnchorPos(_tapePos + offscreen, slideOut).SetEase(Ease.InCubic));
-        s.Insert(outAt + 0.15f, DOVirtual.Float(dimAlpha, 0f, 0.3f, SetDim));
+        // Ra: chùng xuống 1 chút rồi vọt lên khỏi mép trên (InBack); dải sọc đi trước, băng chữ theo sau
+        s.Insert(outAt + 0.1f, tape.DOAnchorPos(_tapePos + up, slideOut).SetEase(Ease.InBack, 1.2f));
+        s.Insert(outAt + 0.1f, tape.DOLocalRotate(new Vector3(0f, 0f, exitTilt.x), slideOut).SetEase(Ease.InOutSine));
+        s.Insert(outAt + 0.16f, bn.DOAnchorPos(_bannerPos + up, slideOut).SetEase(Ease.InBack, 1.2f));
+        s.Insert(outAt + 0.16f, bn.DOLocalRotate(new Vector3(0f, 0f, exitTilt.y), slideOut).SetEase(Ease.InOutSine));
+        s.Insert(outAt + 0.25f, DOVirtual.Float(dimAlpha, 0f, 0.3f, SetDim));
         s.OnComplete(() =>
         {
             Hide();
+            tape.localEulerAngles = Vector3.zero;
+            bn.localEulerAngles = Vector3.zero;
             onDone?.Invoke();
         });
         s.OnKill(() => { if (_seq == s) _seq = null; });

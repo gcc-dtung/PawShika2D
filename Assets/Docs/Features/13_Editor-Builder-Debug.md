@@ -54,6 +54,7 @@ Cửa sổ Editor gọi `Gameplay/Cheats/DebugCheats` (static) – chỉ dùng A
 | Level | Trước / Chơi lại / Sau, đổi level, đổi + vào ván, chơi lại tutorial, xem lại popup cơ chế |
 | Thắng / Thua | Thắng ngay, đặt 1 khối đúng, −1 mạng, hết mạng, thua hẳn |
 | Coin | +100 / +1000 / +10000 / = 0 / đặt |
+| Sao ★ (ví sao, Vòng quay may mắn) | +10 / +50 / -10 / = 0 / đặt (`DebugCheats.AddStars` / `SetStars`); Cheat Panel trong game: tab Tài nguyên |
 | Mạng / Năng lượng | +1 mạng, đầy, khiên; năng lượng +1 / đầy / 0 / bỏ qua chờ / vô hạn |
 | Booster | +1 / +10 / = 0 từng loại, mở / khóa tất cả |
 | Khác | Sang ngày mới, reset điểm danh, tốc độ game, thử IAP, lưu save |

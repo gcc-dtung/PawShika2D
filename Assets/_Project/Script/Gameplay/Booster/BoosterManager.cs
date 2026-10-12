@@ -15,6 +15,10 @@ public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
     [SerializeField] private BoosterDatabase database;
     [Tooltip("Khoảng cách giữa các khối Reveal tự đặt")]
     [SerializeField] private float revealStagger = 0.12f;
+    [Tooltip("Chờ icon booster bay từ giữa màn hình tới mục tiêu (BoosterUseFx) rồi mới đặt khối Reveal / hiện gợi ý Hint")]
+    [SerializeField, Min(0f)] private float effectDelay = 1.2f;
+    [Tooltip("Freeze: từ lúc bấm tới sự kiện Spine \"Press\" (Freeze.skel, 1.67 s – FreezeOverlayFX) thì đồng hồ mới đóng băng")]
+    [SerializeField, Min(0f)] private float freezeEffectDelay = 1.67f;
 
     [Header("Events")]
     public UnityEvent<BoosterType> onBuyRequested = new UnityEvent<BoosterType>();        // hết lượt -> mở popup mua
@@ -31,6 +35,16 @@ public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
 
     public BoosterDatabase Database => database;
     public bool IsBusy => _placing != null;
+    public float EffectDelay => effectDelay;
+
+    /// <summary>Thời gian từ lúc bấm tới lúc tác dụng hiện ra, theo hiệu ứng của từng booster.</summary>
+    public float GetEffectDelay(BoosterType type) => type == BoosterType.Freeze ? freezeEffectDelay : effectDelay;
+
+    /// <summary>Điểm world mà lần dùng booster gần nhất nhắm tới (đọc trong onBoosterUsed); null = mặc định của booster.</summary>
+    public Vector3? LastTarget { get; private set; }
+
+    private HintMarker _hint;
+    private Tween _afterEffect;
 
     /// <summary>Booster tutorial đang chỉ vào (chỉ nút này bấm được), null nếu không có tutorial.</summary>
     public BoosterType? TutorialTarget { get; private set; }
@@ -49,6 +63,9 @@ public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
             effect.Bind(this);
             _effects[type] = effect;
         }
+        _hint = GetComponent<HintMarker>();
+        if (_hint == null) _hint = gameObject.AddComponent<HintMarker>();
+        _hint.Changed += () => onModeChanged?.Invoke(BoosterType.Hint, _hint.IsShowing); // nút Hint sáng khi gợi ý đang hiện
     }
 
     private void OnEnable()
@@ -155,24 +172,48 @@ public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
 
     // ---------- IBoosterHost ----------
 
-    public void Consume(BoosterType type)
+    public void Consume(BoosterType type, Vector3? target = null)
     {
         BoosterData data = Get(type);
         if (_freeUse == type) _freeUse = null;
         else if (data != null) BoosterInventory.TryConsume(data);
+        LastTarget = target;
         onBoosterUsed?.Invoke(type);
     }
 
-    /// <summary>Đặt lần lượt các khối, cách nhau revealStagger; thao tác trên lưới bị khóa trong lúc đặt.</summary>
+    public bool IsHintShowing => _hint != null && _hint.IsShowing;
+
+    public void AfterEffect(BoosterType type, Action action)
+    {
+        _afterEffect?.Kill();
+        _afterEffect = DOVirtual.DelayedCall(GetEffectDelay(type), () =>
+            {
+                _afterEffect = null;
+                action?.Invoke();
+            })
+            .SetUpdate(true)
+            .SetLink(gameObject);
+    }
+
+    public void ShowHint(RectInt rect)
+    {
+        if (_hint != null) _hint.Show(rect, effectDelay);
+    }
+
+    /// <summary>
+    /// Đặt lần lượt các khối, cách nhau revealStagger, bắt đầu sau effectDelay (icon booster bay tới);
+    /// thao tác trên lưới bị khóa từ lúc bấm tới khi đặt xong.
+    /// </summary>
     public void PlaceInSequence(List<RectInt> rects)
     {
         KillPlacing();
         InputGate.Lock(this);
         Sequence seq = DOTween.Sequence().SetLink(gameObject);
+        seq.AppendInterval(effectDelay + revealStagger * Mathf.Max(0, rects.Count - 1)); // giữ sequence sống tới khối cuối
         for (int i = 0; i < rects.Count; i++)
         {
             RectInt rect = rects[i];
-            seq.InsertCallback(i * revealStagger, () =>
+            seq.InsertCallback(effectDelay + i * revealStagger, () =>
             {
                 if (Grid != null) Grid.PlaceSolved(rect);
             });
@@ -210,6 +251,8 @@ public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
     private void OnLevelLoaded(LevelLoadedEvent _)
     {
         _freeUse = null;
+        _afterEffect?.Kill(); // đổi level giữa hiệu ứng: không đóng băng level mới
+        _afterEffect = null;
         KillPlacing();
         CancelModes();
     }

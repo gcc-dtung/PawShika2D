@@ -47,7 +47,7 @@ Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm l�
 - [x] Camera tự zoom theo kích thước lưới; `BackgroundFitter` giữ nền phủ kín
 - [x] `ShikaCatLevelImporter`: nhập 205 level từ JSON (lật trục y, kiểm tra tổng diện tích)
 - [x] Ô khóa: giảm 1 sau mỗi khối đặt đúng, về 0 thì lộ số, còn khóa thì không chọn được
-- [x] Ô ẩn `?`: bỏ kiểm tra số ô, solver quyết định; đặt đúng thì lộ số
+- [x] Ô ẩn `?`: bỏ kiểm tra số ô, solver quyết định; không lộ số (từ 10/10/2026, trước đây đặt khối thì lộ số)
 - [x] Mũi tên ngang / dọc: chặn khối sai hướng, không trừ mạng
 - [x] `DragCountBubble`: bong bóng số ô bám ngón tay khi kéo
 - [x] `PlacedBlock`: khối mèo (thân 9-slice, tai, số, mặt hoạt hình), hiệu ứng bật khi xuất hiện

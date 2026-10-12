@@ -9,11 +9,23 @@ public interface IBoosterHost
     GridManager Grid { get; }
     LevelTimer Timer { get; }
 
-    /// <summary>Booster đã thực sự có tác dụng: trừ 1 lượt (hoặc dùng lượt miễn phí của tutorial), phát onBoosterUsed.</summary>
-    void Consume(BoosterType type);
+    /// <summary>
+    /// Booster đã thực sự có tác dụng: trừ 1 lượt (hoặc dùng lượt miễn phí của tutorial), phát onBoosterUsed.
+    /// <paramref name="target"/>: điểm world hiệu ứng nhắm tới (icon bay từ giữa màn hình tới đó); null = mặc định của booster.
+    /// </summary>
+    void Consume(BoosterType type, Vector3? target = null);
 
-    /// <summary>Đặt lần lượt các khối của lời giải, lưới bị khóa trong lúc đặt.</summary>
+    /// <summary>Đặt lần lượt các khối của lời giải (sau khi icon booster bay tới), lưới bị khóa trong lúc đặt.</summary>
     void PlaceInSequence(List<RectInt> rects);
+
+    /// <summary>Hint: hiện mèo mờ + bàn tay kéo ở vùng đúng (sau khi icon booster bay tới).</summary>
+    void ShowHint(RectInt rect);
+
+    /// <summary>Gợi ý Hint đang hiện (chưa được đặt).</summary>
+    bool IsHintShowing { get; }
+
+    /// <summary>Chạy <paramref name="action"/> khi hiệu ứng dùng booster tới đoạn "có tác dụng" (vd Freeze: lúc sóng băng nổ).</summary>
+    void AfterEffect(BoosterType type, System.Action action);
 
     /// <summary>Booster bật / tắt chế độ chờ (vd Reveal chờ chạm 1 ô số): nút và banner vẽ lại.</summary>
     void NotifyModeChanged(BoosterType type, bool on);

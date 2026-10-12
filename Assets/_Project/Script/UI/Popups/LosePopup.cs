@@ -22,8 +22,10 @@ public class LosePopup : PopupView
 
     protected override void OnOpen()
     {
-        int level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevelNumber : 0;
-        if (titleText != null) titleText.SetText($"LEVEL {level}");
+        LevelManager lm = LevelManager.Instance;
+        if (titleText == null || lm == null) return;
+        if (lm.IsDaily) titleText.SetText(LevelHUD.DailyLabel(lm.DailyDay));
+        else titleText.SetText($"LEVEL {lm.CurrentLevelNumber}");
     }
 
     private void OnHome()

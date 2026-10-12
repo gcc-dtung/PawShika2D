@@ -139,6 +139,7 @@ public class DragAndDropController : MonoBehaviour
     private void UpdateBubble(Vector2 screenPos)
     {
         if (!countBubble || !GridManager.Instance) return;
-        countBubble.Show(ScreenToWorld(screenPos), GridManager.Instance.SelectionCellCount);
+        GridManager gm = GridManager.Instance;
+        countBubble.Show(ScreenToWorld(screenPos), gm.SelectionCellCount, gm.SelectionHint);
     }
 }

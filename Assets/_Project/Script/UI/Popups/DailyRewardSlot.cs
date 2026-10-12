@@ -112,7 +112,7 @@ public class DailyRewardSlot : MonoBehaviour
             case DailyRewardKind.InfiniteEnergy: return db != null ? db.infiniteEnergyIcon : null;
             default:
                 BoosterData data = BoosterManager.Instance != null ? BoosterManager.Instance.Get(item.booster) : null;
-                return data != null ? data.icon : null;
+                return data != null ? data.ItemIcon : null;
         }
     }
 

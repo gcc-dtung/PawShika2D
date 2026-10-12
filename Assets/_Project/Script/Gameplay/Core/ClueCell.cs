@@ -13,7 +13,7 @@ public class ClueCell
     public ClueConstraint Constraint => Data.mechanic.constraint;
     public bool IsLocked => LockSteps > 0;
 
-    // [MECHANIC] Trạng thái lúc chơi của cơ chế (đọc từ data.mechanic) + hàm đổi trạng thái (như StepLock / Reveal)
+    // [MECHANIC] Trạng thái lúc chơi của cơ chế (đọc từ data.mechanic) + hàm đổi trạng thái (như SyncLock). Ô "?" giữ ẩn suốt ván.
     public ClueCell(ClueData data)
     {
         Data = data;
@@ -21,19 +21,15 @@ public class ClueCell
         IsHidden = data.mechanic.hidden;
     }
 
-    /// <summary>Gọi mỗi khi người chơi đặt đúng 1 khối. Trả về true nếu ô vừa được mở khóa.</summary>
-    public bool StepLock()
+    /// <summary>
+    /// Khóa còn lại = số bước gốc - số khối khác đang trên lưới: đặt khối thì mở dần, gỡ khối thì khóa lại.
+    /// Trả về true nếu số bước khóa thay đổi.
+    /// </summary>
+    public bool SyncLock(int otherBlocks)
     {
-        if (!IsLocked) return false;
-        LockSteps--;
-        return LockSteps == 0;
-    }
-
-    /// <summary>Khối chứa ô ẩn đã đặt đúng -> lộ số. Trả về true nếu trạng thái thay đổi.</summary>
-    public bool Reveal()
-    {
-        if (!IsHidden) return false;
-        IsHidden = false;
+        int steps = System.Math.Max(0, Data.mechanic.lockSteps - otherBlocks);
+        if (steps == LockSteps) return false;
+        LockSteps = steps;
         return true;
     }
 }

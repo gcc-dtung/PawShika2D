@@ -52,6 +52,7 @@ Script/
 │   ├── Events/     EventBus, GameEvents (kênh sự kiện toàn game)
 │   ├── Intro/      ILevelIntro, LevelIntroSequencer (hàng đợi intro sau khi nạp level)
 │   ├── Level/      LevelManager, GameState, LevelDefinition, LevelDatabase
+│   │   └── Generator/  LevelGenerator (+ LevelGeneratorSettings, LevelGeneratorPreset): sinh level theo seed
 │   ├── Lives/      LivesManager
 │   ├── Economy/    CoinWallet, RewardedAds, IAPService, ShopDatabase, ShopService
 │   ├── Booster/    BoosterDatabase (+ BoosterType, BoosterData), BoosterInventory, BoosterManager, BoosterTutorial, ShieldTutorialDemo
@@ -60,7 +61,9 @@ Script/
 │   ├── Cheats/     DebugCheats, CheatPanel (panel cheat trong bản build: bấm 10 lần góc trên trái / F1)
 │   ├── Profile/    PlayerProfile, PlayerProfileService, ProfileStatsRecorder, AvatarDatabase
 │   ├── Clock/      TrustedClock, TrustedClockModel (giờ server, chống chỉnh giờ máy)
-│   ├── Daily/      DailyRewardDatabase, DailyRewardModel, DailyRewardManager
+│   ├── Daily/      DailyRewardDatabase, DailyRewardModel, DailyRewardManager; DailyChallengeModel, DailyChallengeDatabase, DailyChallengeManager
+│   ├── Stars/      StarRating (+ WinTitle, StarTracker), LevelStars (sao theo thời gian còn lại), StarWallet (ví sao)
+│   ├── LuckyWheel/ LuckyWheelDatabase (+ LuckyWheelSegment), LuckyWheelModel (Vòng quay may mắn)
 │   ├── Energy/     EnergyModel, EnergyManager
 │   ├── Block/      BlockModel, PlacedBlockView, CatFaceAnimator, CatFaceTicker, ColorType
 │   ├── Input/      InputManager, InputGate, DragAndDropController, DragSelection, SelectionBoxView, DragCountBubble
@@ -73,14 +76,14 @@ Script/
 │   └── Util/       Singleton, TextColor, FrameRateSetup (mobile 60 FPS)
 ├── UI/
 │   ├── Common/     SafeAreaZone, BackgroundCover, UIButtonSounds, NoClickSound, UIButtonPress, ButtonPress, SettingsButton, UIConfetti, TMPLetterPopIn, ButtonPressIgnore, NestedScrollRect
-│   ├── HUD/        LevelHUD, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD, TutorialView, BoosterTutorialView
-│   ├── Menu/       AvatarButton, ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView
-│   └── Popups/     PopupView, GameFlowUI, ProfilePopup, ProfileStatTile, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot
+│   ├── HUD/        LevelHUD, TimeStarBar, LivesUI, BoosterButton, RevealBanner, ShieldIndicator, EnergyHUD, TutorialView, BoosterTutorialView
+│   ├── Menu/       AvatarButton, ScreenFlow, MainMenuNavigator, MenuSwipe, MenuTabButton, PlayButtonView, CoinHUD, MenuShortcutButton, DailyRewardButton, ShopCardView, DailyChallengePanel, DailyDayCell, DailyGiftSlot, DailyGiftBubble, DailyTabBadge, LuckyWheelButton
+│   └── Popups/     PopupView, GameFlowUI, ProfilePopup, ProfileStatTile, WinPopup, ReviveLivesPopup, LosePopup, SettingsPopup, QuitLevelPopup, NoticePopup, SettingToggleView, BuyBoosterPopup, RefillEnergyPopup, DailyRewardPopup, DailyRewardSlot, LuckyWheelPopup
 └── Editor/         Chỉ chạy trong Editor (tên thư mục "Editor" là bắt buộc)
     ├── Config/     GameConfigSetup (Setup Game Config: tạo Configs/ + Resources/GameConfig)
-    ├── Level/      ShikaCatLevelImporter, LevelEditorWindow, LevelValidator, MechanicInjector*, LevelDifficulty*
-    ├── UI/         PopupBuilder, ShopBuilder, SettingsBuilder, DifficultyBuilder, DailyRewardBuilder, WinScreenBuilder, BoosterBuilder, MainMenuBuilder, TutorialBuilder
-    └── Visuals/    GameplayVisualsSetup
+    ├── Level/      ShikaCatLevelImporter, LevelEditorWindow, LevelGeneratorWindow, LevelValidator, MechanicInjector*, LevelDifficulty*
+    ├── UI/         PopupBuilder, ShopBuilder, SettingsBuilder, DifficultyBuilder, DailyRewardBuilder, WinScreenBuilder, StarsBuilder, DailyChallengeBuilder, LuckyWheelBuilder, BoosterBuilder, MainMenuBuilder, TutorialBuilder
+    └── Visuals/    GameplayVisualsSetup, BackgroundPatternBuilder
 ```
 
 Quy tắc đặt file mới:
@@ -117,12 +120,14 @@ Quy tắc đặt file mới:
 
 | File | Vai trò |
 | --- | --- |
-| `LevelManager` | Nạp level từ `LevelDatabase`, lưu tiến độ, chuyển level; giữ `GameState` (`Pause`/`Resume`, `Revive`, `GiveUp`), đổi state sau `stateChangeDelay` 0.8 s. Phát `LevelLoadedEvent` / `GameStateChangedEvent` (EventBus); ván không Playing → `InputGate.Lock`. `LoadTutorial` bật `IsPractice` (đặt cả `LivesManager.IsPractice`). `AutoAdvance` (mặc định true, `GameFlowUI` tắt): không có popup thì tự chuyển level / chơi lại |
+| `LevelManager` | Nạp level từ `LevelDatabase`, lưu tiến độ, chuyển level; giữ `GameState` (`Pause`/`Resume`, `Revive`, `GiveUp`), đổi state sau `stateChangeDelay` 0.8 s. Phát `LevelLoadedEvent` / `GameStateChangedEvent` (EventBus); ván không Playing → `InputGate.Lock`. `LoadTutorial` bật `IsPractice` (đặt cả `LivesManager.IsPractice`). `AutoAdvance` (mặc định true, `GameFlowUI` tắt): không có popup thì tự chuyển level / chơi lại. `LoadDaily(level, day)`: level Daily Challenge (không đổi level đã lưu, `IsDaily`, `DailyDay`), `Retry` chơi lại đúng level đó, `NextLevel` bỏ qua; `PlayCurrent` nạp level thường hiện tại |
 | `GameState` | Enum: Playing, Paused, Won, OutOfLives, Lost. Chỉ Playing nhận thao tác kéo |
 | `LevelDefinition` | ScriptableObject level: kích thước, ô Void, clue, lời giải, luật |
 | `LevelDatabase` | ScriptableObject chứa danh sách level |
 | `LivesManager` | 3 mạng, trừ / hồi mạng, báo hết mạng; khiên (`ActivateShield`, chặn 1 lần `LoseLife`, mất khi `ResetLives`) |
-| `ShikakuSolver` | Backtracking (MRV). `IsSolvable` để phát hiện nước sai; `TrySolve` cho Hint/Reveal |
+| `ShikakuSolver` | Backtracking (MRV). `IsSolvable` để phát hiện nước sai; `TrySolve` cho Hint/Reveal; `CountSolutions(level, limit)` đếm lời giải (dừng ở limit) cho LevelGenerator |
+| `LevelGenerator` | **Logic** C# thuần, cùng seed ra cùng level: chia lưới thành khối chữ nhật (số ô `minArea`..`maxArea`, cạnh ≤ `maxSide`, khối 1 ô ≤ `maxSingles`), mỗi khối 1 ô số ở vị trí ngẫu nhiên, `requireUnique` thì đổi chỗ ô số / chia lại tới khi đúng 1 lời giải. Preset Easy / Normal / Hard / Daily (10 x 10). `SeedForDate` cho Daily Challenge |
+| `LevelStars` | Cùng `LevelTimer`: số sao của ván (`StarTracker`, chỉ giảm) theo thời gian còn lại, ngưỡng `LivesEnergyConfig.threeStarRatio` 0.6 / `twoStarRatio` 0.2; phát `StarsChangedEvent`. Xem Features/15_Sao.md |
 
 ### Gameplay/Economy
 
@@ -251,8 +256,9 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 
 | File | Vai trò |
 | --- | --- |
-| `LevelHUD` | Chữ `LEVEL n`; level Hard / Very Hard: khung có tab ghi mức khó (`khung_hard1` / `khung_expert1`, chữ tab viền theo mức khó) bao ô LEVEL, nền ô đổi sang `rounded_white` bo góc |
-| `DifficultyIntro` | Trên `Canvas_HUD/DifficultyIntro`, 1 `ILevelIntro` (Order 0). Level Hard / Very Hard: nền tối, dải sọc `khung_expert_4` + băng chữ (`khung_hard_3` HARD LEVEL / `khung_expert_3` EXTREME LEVEL) trượt chéo từ góc trên trái vào, mèo đầu lâu (`khung_hard_2` / `khung_expert_2`) bật ra + nhịp, giữ 1.3 s, đầu lâu thu lại, băng trượt ra, nền sáng lại; âm `HardLevel`. Chờ lưới hiện / khóa lưới do `LevelIntroSequencer` lo |
+| `TimeStarBar` | `LevelFrame/TimeBar`: thanh thời gian `tin_trnh2` / `tin_trnh1` (Sliced co chiều rộng) + 3 mốc sao `star2` / `star`; mất sao → sao vàng phồng + tan |
+| `LevelHUD` | Chữ `LEVEL n` (Daily: ngày, vd `OCT 11`); level Hard / Very Hard: khung có tab ghi mức khó (`khung_hard1` / `khung_expert1`, chữ tab viền theo mức khó) bao ô LEVEL, nền ô đổi sang `rounded_white` bo góc |
+| `DifficultyIntro` | Trên `Canvas_HUD/DifficultyIntro`, 1 `ILevelIntro` (Order 0). Level Hard / Very Hard: nền tối, dải sọc `khung_expert_4` + băng chữ (`khung_hard_3` HARD LEVEL / `khung_expert_3` EXTREME LEVEL) rơi thẳng từ trên xuống (nảy quá 1 chút), mèo đầu lâu (`khung_hard_2` / `khung_expert_2`) bật ra + nhịp, giữ 1.25 s, đầu lâu thu lại, băng chùng xuống rồi vọt ngược lên mép trên (dải sọc đi trước, nghiêng thêm), nền sáng lại; âm `HardLevel`. Chờ lưới hiện / khóa lưới do `LevelIntroSequencer` lo |
 | `LivesUI` | Hàng tim trên Canvas |
 | `BoosterButton` | 1 nút booster: icon, số lượt (`btn_number`), dấu `+` (`btn_add_0`), ổ khóa "LV n", quầng sáng xoay khi đang bật; bấm → `BoosterManager.Press`. Vẽ lại theo `onModeChanged`, `onTutorialChanged`, `onBoosterUsed`, `BoosterLockChangedEvent`, `LevelLoadedEvent`. `BoosterButton.Find(type)` |
 | `RevealBanner` | "TAP A NUMBER TO REVEAL" + X (`khung_reveal2`, `revel_X`), đè lên thanh booster khi đang chọn số (`onModeChanged` lọc Reveal); X → `BoosterManager.CancelModes` |
@@ -266,9 +272,11 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | File | Vai trò |
 | --- | --- |
 | `MainMenuNavigator` | Trên `Canvas_Menu`. Panel xếp ngang theo thứ tự tab, đổi tab thì trượt (`duration` 0.3 s, `ease` OutCubic); tab chọn rộng `selectedWidth` 408, nền `home_tab1` trượt theo, tab khác chia đều; xong thì tắt panel khuất màn hình. Tab / nền tab chọn neo bottom center. `Select(index)`, `onTabChanged`; vuốt: `BeginSwipe` / `Swipe(dx)` / `EndSwipe(v)` (panel theo ngón tay, đang ở tab đầu / cuối thì không kéo ra ngoài được; thả: quá `swipeThreshold` 20% bề rộng hoặc nhanh hơn `swipeVelocity` 900/s thì sang tab kề, thời gian trượt theo quãng còn lại, tối thiểu `minReleaseRatio`); `LayoutInEditor` (chuột phải component) xếp sẵn trong Editor |
+| `DailyChallengePanel` | Tab Daily (`Canvas_Menu/Panels/DailyPanel`): tháng + nút tháng, thanh tiến trình + 3 `DailyGiftSlot`, lịch 7 cột `DailyDayCell`, Play / Play quảng cáo, lớp khóa; về tab sau khi thắng thì thanh chạy + "+1". Xem Features/16_DailyChallenge.md |
+| `DailyDayCell`, `DailyGiftSlot`, `DailyGiftBubble`, `DailyTabBadge` | Ô ngày (khung theo trạng thái), hộp quà mốc (tia sáng xoay khi nhận được, tick khi đã nhận), bong thoại xem quà (`dialog` + `ArrowDialog 1`), ổ khóa / chấm đỏ trên tab |
 | `ShopCardView` | 1 thẻ / dòng / ô Shop: đọc `ShopProduct` lúc chạy (tên, giá, hình, coin, ô vật phẩm 2x2 cố định Hint / Shield / Reveal / vô hạn, ẩn món = 0); bấm giá → `ShopService.Buy`; dòng Remove Ads ẩn khi đã `noAds` |
 | `MenuSwipe` | Trên `Canvas_Menu/Panels`: nhận kéo từ mọi thứ trong panel, kéo dọc thì bỏ qua; vận tốc làm mượt, dừng tay > 0.08 s rồi thả = vận tốc 0. Kéo quá ngưỡng thì EventSystem hủy click của nút đang ấn |
-| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.Retry` (nạp lại level từ đầu). `ShowMenu()` (popup Thua / Cài đặt → HOME). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `MainMenuNavigator.ShopTab` (Nạp năng lượng thiếu coin). Phát `ScreenChangedEvent` |
+| `ScreenFlow` | Trên `Manager`. Menu: bật `Canvas_Menu`, tắt `Canvas_HUD`, `LevelManager.Pause` (cả khi level nạp lúc mở game). `Play()` → `GameFlowUI.RequestPlay` (kiểm tra năng lượng) → tắt menu, bật HUD, `LevelManager.PlayCurrent` (nạp lại level thường từ đầu). `PlayDaily(load)` như trên nhưng nạp level Daily. `ShowMenu()` (popup Thua / Cài đặt → HOME; vừa chơi Daily thì mở tab Daily). `ShowShop()`: về Menu nếu đang trong ván rồi chọn tab `MainMenuNavigator.ShopTab` (Nạp năng lượng thiếu coin). Phát `ScreenChangedEvent` |
 | `PlayButtonView` | Nút PLAY: "Level n" theo `LevelLoadedEvent`, thở nhẹ (DOTween lặp, kill khi tắt) → `ScreenFlow.Play` |
 | `CoinHUD` | Số coin (nghe `CoinWallet.Changed`, icon nảy); bấm → tab Shop |
 | `SafeAreaZone` | UI Zone: neo RectTransform theo `Screen.safeArea` (chọn cạnh trên / dưới / trái / phải) để UI tránh tai thỏ, thanh home; chỉ chạy khi Play, tự cập nhật khi màn hình đổi |
@@ -315,7 +323,10 @@ Cách sửa bước / tạo tutorial mới: [TutorialGuide.md](TutorialGuide.md)
 | `Visuals/GameplayVisualsSetup` | Tools → PawBlock → Builders → Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, tạo `GameplayVisuals.asset` |
 | `UI/PopupBuilder` | Tools → PawBlock → Builders → Build Popups | Tạo `Canvas_Popup` (Overlay 1080x1920, sortingOrder 20) nếu chưa có, xóa rồi dựng lại `Popups` trong đó (xóa cả bản cũ trong `Canvas_HUD`), nối `GameFlowUI` cho SettingsButton / EnergyHUD / ScreenFlow, thêm `RewardedAds` vào `Manager` |
 | `UI/ShopBuilder` | Tools → PawBlock → Builders → Build Shop | Thay `ShopPanel`: mái hiên + ô năng lượng / coin, danh sách cuộn (`NestedScrollRect`, VerticalLayoutGroup): Starter Pack, Remove Ads, No Ads Bundle, Special Bundle (5 gói), lưới Coin 3x2; tạo `ShopDatabase.asset` nếu chưa có |
-| `UI/MainMenuBuilder` | Tools → PawBlock → Builders → Build Main Menu | `Canvas_Menu`: CanvasScaler 1080x1920, sortingOrder 10; `Panels` (ShopPanel – ShopBuilder, HomePanel + `PlayButton`, `Starter`, `NoAds`, `TopBar` (Avatar, Energy, Coin, Settings – ô kem `khung_pill_kem`), ProgressPanel tạm, mỗi panel `RectMask2D`); `AlwayOn/TabBar` (tab có `ButtonPress` tắt); Starter dựng từ `starter_back` / `starter_chest` / `starter_ribbon`, No Ads lắc riêng `Tv`; `MainMenuNavigator`, `MenuSwipe` trên `Panels`; `ScreenFlow` trên `Manager`; chữ viền dùng preset của `GameFontSetup` |
+| `UI/StarsBuilder` | Tools → PawBlock → Builders → Build Stars | `LevelStars` cùng `LevelTimer`; `LevelFrame/TimeBar` (`TimeStarBar`); gọi lại Build Win Screen (tiêu đề theo sao + 3 sao) |
+| `UI/DailyChallengeBuilder` | Tools → PawBlock → Builders → Build Daily Challenge | `Configs/DailyChallengeDatabase.asset` (quà nhập từ `DailyChallengeData.txt`), `DailyChallengeManager`, `Canvas_Menu/Panels/DailyPanel` thay `ProgressPanel`, tab thứ 3 "Daily" + `DailyTabBadge` |
+| `Visuals/BackgroundPatternBuilder` | Tools → PawBlock → Builders → Build Background Pattern | Con `Pattern` của nền `bg`: `BG_Pattern` vẽ Tiled (Full Rect, Repeat), `bg` order -2, `Pattern` -1 |
+| `UI/MainMenuBuilder` | Tools → PawBlock → Builders → Build Main Menu | `Canvas_Menu`: CanvasScaler 1080x1920, sortingOrder 10; `Panels` (ShopPanel – ShopBuilder, HomePanel + `PlayButton`, `Starter`, `NoAds`, `TopBar` (Avatar, Energy, Coin, Settings – ô kem `khung_pill_kem`), DailyPanel – DailyChallengeBuilder, mỗi panel `RectMask2D`); `AlwayOn/TabBar` (tab có `ButtonPress` tắt); Starter dựng từ `starter_back` / `starter_chest` / `starter_ribbon`, No Ads lắc riêng `Tv`; `MainMenuNavigator`, `MenuSwipe` trên `Panels`; `ScreenFlow` trên `Manager`; chữ viền dùng preset của `GameFontSetup` |
 | `Save/SaveDataMenu` | Tools → PawBlock → Save Data | Log Save (in nội dung save.json), Open Save Folder, Delete Save (hỏi xác nhận, không chạy khi đang Play) |
 | `Audio/AudioSetup` | Tools → PawBlock → Builders → Setup Audio | Tạo / bổ sung `AudioDatabase` (chỉ thêm âm còn thiếu), BGM nhập Streaming, object `AudioManager` (AudioManager + GameAudioEvents), `UIButtonSounds` trên 3 canvas |
 | `UI/UIZoneBuilder` | Tools → PawBlock → Builders → Build UI Zone | `Canvas_HUD/UIZone` (4 cạnh) chứa PlayZone, TopPanel, DownPanel, RevealBanner; gọi Build Main Menu để dựng `HomePanel/UIZone` (cạnh trên). Builder HUD tìm theo `PopupBuilder.HudRoot` (UIZone nếu có) |
@@ -353,7 +364,7 @@ Canvas_Popup           Canvas Overlay 1080x1920, sortingOrder 20, luôn bật (d
     ├── WinPopup  ReviveLivesPopup  LosePopup  SettingsPopup  BuyBoosterPopup  RefillEnergyPopup  MechanicIntroPopup   (tắt sẵn)
     └── mỗi popup: Dim (đen alpha 0.88 – Linear color space nên cần cao để tối như ref), Panel / Title, nội dung, nút
 Canvas_Menu            Canvas Overlay 1080x1920, sortingOrder 10 (trên HUD), MainMenuNavigator
-├── Panels             ShopPanel | HomePanel | ProgressPanel (trượt ngang, RectMask2D)
+├── Panels             ShopPanel | HomePanel | DailyPanel (trượt ngang, RectMask2D)
 │   └── HomePanel      Background (BackgroundCover), PlayButton,
 │                      UIZone (SafeAreaZone cạnh trên): Starter, NoAds,
 │                      TopBar (Avatar, Energy: EnergyHUD tim + số, đồng hồ, "+"; Coin: CoinHUD; Settings: SettingsButton) – chỉ ở tab Home

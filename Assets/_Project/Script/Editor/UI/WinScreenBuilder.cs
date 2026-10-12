@@ -9,7 +9,8 @@ using UnityEngine.UI;
 /// Màn thắng như bản gốc (Tools → PawBlock → Builders → Build Win Screen, chạy lại được):
 /// - WinPopup trong Canvas_Popup/Popups (thay bản cũ, giữ thứ tự, nối GameFlowUI); Build Popups cũng gọi BuildPopup
 /// - Material lóe sáng BlockFlash.mat (GUI/Text Shader) gán cho PlacedBlock.prefab
-/// Vị trí (canvas 1080x1920, tính từ tâm): chữ WELL DONE +392 (ngay trên huy hiệu), huy hiệu +46, nút -509. Không có sao.
+/// Vị trí (canvas 1080x1920, tính từ tâm, theo WinUI gốc): tiêu đề +633, 3 sao +405..+437 (2 sao bên nghiêng ~33°),
+/// huy hiệu +46, nút -509. Tiêu đề: 4 ảnh well_done_1 / nice_1 / great_1 / perfect_1 (cắt từ atlas EndGame), bật 1 theo số sao.
 /// </summary>
 public static class WinScreenBuilder
 {
@@ -27,6 +28,18 @@ public static class WinScreenBuilder
         new Color(0.35f, 0.5f, 1f), new Color(0.45f, 0.95f, 0.4f), new Color(1f, 0.35f, 0.3f), Color.white
     };
     private static readonly Color PillText = new Color32(0x5A, 0x2A, 0x14, 0xFF);
+
+    // Thứ tự theo WinTitle (Well done, Nice, Great, Perfect)
+    private static readonly string[] TitleSprites =
+    {
+        UI + "Popups_Dialogs/well_done_1.png", UI + "Popups_Dialogs/nice_1.png",
+        UI + "Popups_Dialogs/great_1.png", UI + "Popups_Dialogs/perfect_1.png"
+    };
+
+    // Vị trí / góc nghiêng 3 sao (Star1CG..Star3CG của WinUI gốc)
+    private static readonly Vector2[] StarPositions = { new Vector2(-172, 407), new Vector2(-3, 437), new Vector2(164, 405) };
+    private static readonly float[] StarAngles = { 32.5f, 0f, -35.3f };
+    private const float StarSize = 132f;
 
     [MenuItem("Tools/PawBlock/Builders/Build Win Screen", priority = 110)]
     public static void Build()
@@ -72,18 +85,17 @@ public static class WinScreenBuilder
         pillCoin.rectTransform.anchoredPosition = new Vector2(-140, 0);
         TMP_Text coinText = PopupBuilder.GameText(pill, "Amount", "0", new Vector2(24, 2), new Vector2(200, 80), 54, PillText);
 
-        // Banner
-        // Chữ to ngay trên huy hiệu (đỉnh huy hiệu +261), hiện từng chữ (TMPLetterPopIn)
-        TMP_Text bannerText = PopupBuilder.GameText(rt, "Banner", "WELL DONE!", new Vector2(0, 392), new Vector2(1040, 210), 156, Color.white);
-        bannerText.enableAutoSizing = true;
-        bannerText.fontSizeMin = 100;
-        bannerText.fontSizeMax = 156;
-        bannerText.enableWordWrapping = false;
-        bannerText.enableVertexGradient = true;
-        bannerText.colorGradient = new VertexGradient(Color.white, Color.white, new Color(1f, 0.82f, 0.25f), new Color(1f, 0.82f, 0.25f));
-        bannerText.fontSharedMaterial = GameFontSetup.OutlineBrown();
-        bannerText.characterSpacing = 2;
-        TMPLetterPopIn letters = bannerText.gameObject.AddComponent<TMPLetterPopIn>();
+        // Tiêu đề: 4 ảnh chồng nhau ở cùng chỗ, WinPopup bật 1 theo số sao
+        RectTransform title = PopupBuilder.NewUI("Title", rt);
+        title.anchoredPosition = new Vector2(0, 633);
+        title.sizeDelta = new Vector2(805, 293);
+        Image[] titles = new Image[TitleSprites.Length];
+        for (int i = 0; i < titles.Length; i++)
+        {
+            PopupBuilder.EnsureSprite(TitleSprites[i]);
+            titles[i] = PopupBuilder.Icon(title, ((WinTitle)i).ToString(), TitleSprites[i], 100);
+            titles[i].SetNativeSize();
+        }
 
         // Tia sáng + quầng sáng sau huy hiệu
         Vector2 medalPos = new Vector2(0, 46);
@@ -101,6 +113,21 @@ public static class WinScreenBuilder
         PopupBuilder.Icon(medal, "Circle", UI + "Frames_Borders/khung_win1.png", 430);
         Image cat = PopupBuilder.Icon(medal, "Cat", UI + "Icons/cat_1.png", 360);
         cat.rectTransform.anchoredPosition = new Vector2(0, 8);
+
+        // 3 sao (vẽ đè tia sáng như gốc): bóng xám star_5 cố định, sao vàng star_2 đè lên (WinPopup cho đập xuống)
+        Image[] stars = new Image[StarPositions.Length];
+        for (int i = 0; i < stars.Length; i++)
+        {
+            Image shadow = PopupBuilder.Icon(rt, $"Star{i + 1}Shadow", UI + "Icons/star_5.png", StarSize);
+            shadow.rectTransform.anchoredPosition = StarPositions[i];
+            shadow.rectTransform.localEulerAngles = new Vector3(0, 0, StarAngles[i]);
+        }
+        for (int i = 0; i < stars.Length; i++)
+        {
+            stars[i] = PopupBuilder.Icon(rt, $"Star{i + 1}", UI + "Icons/star_2.png", StarSize);
+            stars[i].rectTransform.anchoredPosition = StarPositions[i];
+            stars[i].rectTransform.localEulerAngles = new Vector3(0, 0, StarAngles[i]);
+        }
 
         // Confetti: ParticleSystem vẽ qua UIParticle (1 mesh, 1 material)
         UIConfetti confetti = BuildConfetti(rt);
@@ -130,7 +157,12 @@ public static class WinScreenBuilder
         RectTransform fly = PopupBuilder.Stretch(PopupBuilder.NewUI("FlyLayer", rt));
 
         SerializedObject so = new SerializedObject(popup);
-        so.FindProperty("banner").objectReferenceValue = letters;
+        SerializedProperty titleProp = so.FindProperty("titleImages");
+        titleProp.arraySize = titles.Length;
+        for (int i = 0; i < titles.Length; i++) titleProp.GetArrayElementAtIndex(i).objectReferenceValue = titles[i];
+        SerializedProperty starProp = so.FindProperty("stars");
+        starProp.arraySize = stars.Length;
+        for (int i = 0; i < stars.Length; i++) starProp.GetArrayElementAtIndex(i).objectReferenceValue = stars[i];
         so.FindProperty("medallion").objectReferenceValue = medal;
         so.FindProperty("rays").objectReferenceValue = rays.rectTransform;
         so.FindProperty("glow").objectReferenceValue = glow.rectTransform;

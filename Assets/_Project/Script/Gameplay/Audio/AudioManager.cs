@@ -22,6 +22,8 @@ public class AudioManager : Singleton<AudioManager>
     public static event Action SettingsChanged;
 
     private AudioSource _music;
+    private Tween _musicPitch;
+    private float _musicPitchTarget = 1f;
     private readonly List<AudioSource> _voices = new List<AudioSource>();
     private readonly Dictionary<SoundId, AudioDatabase.Sound> _lookup = new Dictionary<SoundId, AudioDatabase.Sound>();
     private readonly Dictionary<SoundId, float> _lastPlayed = new Dictionary<SoundId, float>();
@@ -82,6 +84,7 @@ public class AudioManager : Singleton<AudioManager>
     private void OnDestroy()
     {
         _musicFade?.Kill();
+        _musicPitch?.Kill();
     }
 
     // ---------- API tĩnh ----------
@@ -90,6 +93,12 @@ public class AudioManager : Singleton<AudioManager>
     public static void Play(SoundId id)
     {
         if (Instance != null) Instance.PlaySound(id, 1f);
+    }
+
+    /// <summary>Phát âm với cao độ nhân thêm <paramref name="pitch"/> (1 = giữ nguyên), vd. tick kéo cao dần.</summary>
+    public static void PlayPitched(SoundId id, float pitch)
+    {
+        if (Instance != null) Instance.PlaySound(id, 1f, pitch);
     }
 
     /// <summary>Phát âm với xác suất <paramref name="chance"/> (0..1), vd. tiếng mèo không phải lần nào cũng kêu.</summary>
@@ -131,6 +140,17 @@ public class AudioManager : Singleton<AudioManager>
         _musicFade = seq;
     }
 
+    /// <summary>Đổi tốc độ / cao độ nhạc nền mượt (vd. sắp hết giờ nhạc nhanh lên). 1 = bình thường.</summary>
+    public void SetMusicPitch(float pitch, float duration = 0.4f)
+    {
+        if (_music == null || Mathf.Approximately(_musicPitchTarget, pitch)) return; // gọi lặp lại cùng đích thì để tween chạy tiếp
+        _musicPitchTarget = pitch;
+        _musicPitch?.Kill();
+        _musicPitch = DOVirtual.Float(_music.pitch, pitch, duration, v => _music.pitch = v)
+            .SetUpdate(true)
+            .SetLink(gameObject);
+    }
+
     public void StopMusic()
     {
         _musicFade?.Kill();
@@ -151,7 +171,7 @@ public class AudioManager : Singleton<AudioManager>
 
     // ---------- Hiệu ứng ----------
 
-    private void PlaySound(SoundId id, float volumeScale)
+    private void PlaySound(SoundId id, float volumeScale, float pitchScale = 1f)
     {
         if (id == SoundId.None || !SoundOn) return;
         if (!_lookup.TryGetValue(id, out AudioDatabase.Sound sound) || sound.clips == null || sound.clips.Length == 0) return;
@@ -166,7 +186,7 @@ public class AudioManager : Singleton<AudioManager>
         AudioSource source = FreeVoice();
         source.clip = clip;
         source.volume = sound.volume * volumeScale;
-        source.pitch = UnityEngine.Random.Range(sound.pitch.x, sound.pitch.y);
+        source.pitch = UnityEngine.Random.Range(sound.pitch.x, sound.pitch.y) * pitchScale;
         source.Play();
     }
 

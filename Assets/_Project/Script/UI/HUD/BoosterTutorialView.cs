@@ -8,6 +8,8 @@ using UnityEngine.UI;
 /// nền tối chặn mọi thao tác, khung lời nhắc trên cùng, bàn tay nhấn liên tục vào nút booster.
 /// Nút booster được "nhấc" lên trên nền tối bằng Canvas override sorting (thêm lúc chạy nếu chưa có) và bật quầng sáng.
 /// Thứ tự: nền tối (order nền) < nút (nền + 1) < bàn tay (Canvas riêng, nền + 2).
+/// Có spotlightSprite (CircleMask, như TutorialBoosterUI/CircleMask(F) gốc): nền tối thành đèn rọi, khoét 1 vòng tròn
+/// mờ viền quanh nút (ảnh CircleMask đặt tại nút + 4 dải tối cùng màu phủ phần còn lại, tự tạo lúc chạy, cùng chặn chạm).
 /// </summary>
 public class BoosterTutorialView : MonoBehaviour
 {
@@ -21,7 +23,16 @@ public class BoosterTutorialView : MonoBehaviour
     [Tooltip("ShowMessage (không nền tối): khung xuống dưới hàng tim để thấy lớp băng khiên")]
     [SerializeField] private float messageOnlyY = -390f;
 
+    [Header("Đèn rọi quanh nút (CircleMask)")]
+    [Tooltip("Ảnh đen, giữa trong suốt mờ viền. Trống = nền tối phủ đều như cũ")]
+    [SerializeField] private Sprite spotlightSprite;
+    [Tooltip("Cạnh ảnh đèn rọi = cạnh lớn của nút x hệ số này")]
+    [SerializeField] private float spotlightScale = 2f;
+
     private float _bubbleY = float.NaN; // vị trí dựng sẵn (đè khung LEVEL)
+    private Image _dimImage;
+    private RectTransform _spot;
+    private readonly RectTransform[] _sides = new RectTransform[4];
 
     private BoosterButton _target;
     private Canvas _targetCanvas;
@@ -62,6 +73,7 @@ public class BoosterTutorialView : MonoBehaviour
         SetDim(true);
         SetBubbleY(float.NaN);
         _target = target;
+        PlaceSpotlight((RectTransform)target.transform);
         if (message != null) message.text = text;
 
         RaiseTarget(true);
@@ -98,6 +110,64 @@ public class BoosterTutorialView : MonoBehaviour
     {
         Transform dim = transform.Find("Dim");
         if (dim != null) dim.gameObject.SetActive(on);
+    }
+
+    /// <summary>
+    /// Đèn rọi: ảnh CircleMask cạnh = nút x spotlightScale đặt tại nút, 4 dải tối phủ trên / dưới / trái / phải.
+    /// Tất cả cùng màu Dim (ảnh đen x alpha Dim = dải tối) nên không thấy đường nối; Image của Dim tắt để không tối 2 lớp.
+    /// </summary>
+    private void PlaceSpotlight(RectTransform target)
+    {
+        RectTransform dim = transform.Find("Dim") as RectTransform;
+        if (dim == null || spotlightSprite == null) return;
+        if (_dimImage == null) _dimImage = dim.GetComponent<Image>();
+        if (_dimImage == null) return;
+        if (_spot == null) BuildSpotlight(dim);
+
+        Canvas.ForceUpdateCanvases();
+        Vector2 center = dim.InverseTransformPoint(target.TransformPoint(target.rect.center));
+        Vector2 size = target.rect.size * (target.lossyScale.x / dim.lossyScale.x);
+        float half = Mathf.Max(size.x, size.y) * spotlightScale * 0.5f;
+
+        Rect r = dim.rect;
+        // Các mảnh chung mép đúng bằng nhau (không chồng): chồng dù nửa pixel cũng thành vệt tối 2 lớp
+        float left = center.x - half, right = center.x + half, bottom = center.y - half, top = center.y + half;
+        SetSide(_spot, left, bottom, right, top);
+        SetSide(_sides[0], r.xMin, r.yMin, left, r.yMax);    // trái (cả chiều cao)
+        SetSide(_sides[1], right, r.yMin, r.xMax, r.yMax);   // phải
+        SetSide(_sides[2], left, top, right, r.yMax);        // trên (giữa trái / phải)
+        SetSide(_sides[3], left, r.yMin, right, bottom);     // dưới
+    }
+
+    private void BuildSpotlight(RectTransform dim)
+    {
+        Color color = _dimImage.color;
+        _dimImage.enabled = false;
+        _spot = NewPiece(dim, "Spot", color);
+        _spot.GetComponent<Image>().sprite = spotlightSprite;
+        string[] names = { "Left", "Right", "Top", "Bottom" };
+        for (int i = 0; i < _sides.Length; i++) _sides[i] = NewPiece(dim, names[i], color);
+    }
+
+    private static RectTransform NewPiece(RectTransform parent, string name, Color color)
+    {
+        GameObject go = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+        go.layer = parent.gameObject.layer;
+        RectTransform rt = (RectTransform)go.transform;
+        rt.SetParent(parent, false);
+        rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+        go.GetComponent<Image>().color = color; // raycastTarget mặc định bật: chặn chạm như Dim cũ
+        return rt;
+    }
+
+    /// <summary>
+    /// Mảnh theo 2 góc (tọa độ local của Dim, gốc ở tâm), gán thẳng offset để góc đúng từng số với mảnh kề bên;
+    /// rộng / cao âm (nút sát mép) thì thu về 0.
+    /// </summary>
+    private static void SetSide(RectTransform side, float xMin, float yMin, float xMax, float yMax)
+    {
+        side.offsetMin = new Vector2(xMin, yMin);
+        side.offsetMax = new Vector2(Mathf.Max(xMin, xMax), Mathf.Max(yMin, yMax));
     }
 
     public void Hide()

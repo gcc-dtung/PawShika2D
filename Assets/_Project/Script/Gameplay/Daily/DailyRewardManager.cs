@@ -128,7 +128,8 @@ public class DailyRewardManager : Singleton<DailyRewardManager>
         onChanged?.Invoke();
     }
 
-    private static void GrantItem(DailyRewardItem item)
+    /// <summary>Trao 1 món quà (coin / booster / năng lượng vô hạn). Daily Challenge dùng chung.</summary>
+    public static void GrantItem(DailyRewardItem item)
     {
         switch (item.kind)
         {

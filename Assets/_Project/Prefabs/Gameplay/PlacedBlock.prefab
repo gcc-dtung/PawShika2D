@@ -377,23 +377,29 @@ MonoBehaviour:
   flashMaterial: {fileID: 2100000, guid: 69be9dcd8e0232343926d2297b43855d, type: 2}
   earWidth: 0.36
   earOverlap: 0
-  popDuration: 0.18
-  popScale: 0.08
+  squashDuration: 0.34
+  squashAmount: 0.12
+  squashWobbles: 2.5
   ringDuration: 0.2
   ringStartInset: 0.12
   ringStartThickness: 1
   ringEndThickness: 0.35
   ringWhiten: 0.45
-  rejectStyle: 0
   rejectRingColor: {r: 1, g: 0.25, b: 0.3, a: 1}
   rejectRingOutset: 0.05
   rejectRingThickness: 0.6
   rejectRingBlinks: 2
-  rejectShrinkTo: 0.75
   rejectShakeDuration: 0.45
   rejectShakeStrength: 0.12
   rejectShakeFrequency: 45
-  rejectFadeDuration: 0.15
+  removeDuration: 0.34
+  removeShrinkTo: 0.6
+  removeHopHeight: 0.35
+  removeFallDepth: 0.25
+  nudgeHeight: 0.12
+  nudgeDuration: 0.26
+  shiverDuration: 0.45
+  shiverStrength: 0.035
 --- !u!1 &6760164481911088399
 GameObject:
   m_ObjectHideFlags: 0

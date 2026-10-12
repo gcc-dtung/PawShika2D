@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// Tools → PawBlock → Builders → Setup Audio:
 /// - Tạo / bổ sung AudioDatabase (Assets/_Project/Configs) với clip có sẵn trong 01_Audio (game gốc) và ShikaCat.
-///   Chạy lại chỉ thêm âm còn thiếu, không ghi đè âm đã chỉnh trong Inspector.
+///   Chạy lại chỉ thêm âm / clip còn thiếu, không ghi đè volume / pitch / cooldown đã chỉnh trong Inspector.
 /// - Nhạc nền nhập kiểu Streaming (không nạp cả bài vào RAM).
 /// - Scene: object AudioManager (AudioManager + GameAudioEvents), UIButtonSounds trên Canvas_Menu / Canvas_HUD / Canvas_Popup.
 /// </summary>
@@ -46,6 +46,7 @@ public static class AudioSetup
         new Def(SoundId.PopupOpen, 0.7f, 0.1f, Same, S + "UI_SFX/SC_SFX_UI_Popup_Open_01.ogg"),
         new Def(SoundId.PopupClose, 0.6f, 0.1f, Same, S + "UI_SFX/SC_SFX_UI_Popup_Close_01.ogg"),
         new Def(SoundId.Coin, 0.8f, 0.1f, Same, A + "UI_SFX/earn_coin.ogg"),
+        new Def(SoundId.Reward, 0.9f, 0.3f, Same, A + "UI_SFX/earrn_reward.ogg"),
         new Def(SoundId.LevelStart, 0.8f, 0.3f, Same, A + "Gameplay_SFX/load_level.ogg"),
         new Def(SoundId.BlockPlace, 1f, 0.05f, Vary, A + "Gameplay_SFX/block_true.ogg"),
         new Def(SoundId.Mistake, 1f, 0.1f, Same, S + "Gameplay_SFX/SC_Gameplay_Mistake_01.ogg"),
@@ -59,10 +60,17 @@ public static class AudioSetup
         new Def(SoundId.Booster, 0.9f, 0.1f, Same, A + "Gameplay_SFX/booster2.ogg"),
         new Def(SoundId.FreezeOn, 0.9f, 0.1f, Same, A + "Gameplay_SFX/freeze_appear.ogg"),
         new Def(SoundId.FreezeEnd, 1f, 0.1f, Same, A + "Gameplay_SFX/freeze_start.ogg"),
+        new Def(SoundId.StarLost, 0.9f, 0.1f, Same, A + "Gameplay_SFX/poof_star.ogg"),
+        new Def(SoundId.StarEarn, 0.9f, 0.05f, Same, A + "Gameplay_SFX/unlock_obs2.ogg"),
+        new Def(SoundId.DragTick, 0.45f, 0.03f, Same, S + "UI_SFX/SC_SFX_UI_Button_01.ogg"),
+        new Def(SoundId.DragReady, 0.6f, 0.08f, Same, S + "Gameplay_SFX/SC_SFX_Gameplay_Box_Created_01.ogg"),
+        new Def(SoundId.DragCancel, 0.5f, 0.1f, new Vector2(0.78f, 0.85f), S + "UI_SFX/SC_SFX_UI_Popup_Close_01.ogg"),
         new Def(SoundId.CatHappy, 0.6f, 0.4f, new Vector2(0.95f, 1.1f),
-            A + "Cat_Voices/Happy.ogg", A + "Cat_Voices/Joyful.ogg", A + "Cat_Voices/Cute.ogg", A + "Cat_Voices/Cool.ogg", A + "Cat_Voices/Blink.ogg"),
+            A + "Cat_Voices/Happy.ogg", A + "Cat_Voices/Joyful.ogg", A + "Cat_Voices/Cute.ogg", A + "Cat_Voices/Cool.ogg", A + "Cat_Voices/Blink.ogg",
+            A + "Cat_Voices/Sly.ogg", A + "Cat_Voices/Lying.ogg"),
         new Def(SoundId.CatSad, 0.7f, 0.4f, new Vector2(0.95f, 1.05f),
-            A + "Cat_Voices/Angry1.ogg", A + "Cat_Voices/Angry2.ogg", A + "Cat_Voices/Sad.ogg", A + "Cat_Voices/Dizzy.ogg", A + "Cat_Voices/Scare.ogg"),
+            A + "Cat_Voices/Angry1.ogg", A + "Cat_Voices/Angry2.ogg", A + "Cat_Voices/Sad.ogg", A + "Cat_Voices/Dizzy.ogg", A + "Cat_Voices/Scare.ogg",
+            A + "Cat_Voices/Dumb.ogg"),
     };
 
     [MenuItem("Tools/PawBlock/Builders/Setup Audio", priority = 112)]
@@ -114,13 +122,15 @@ public static class AudioSetup
 
         foreach (Def d in Defaults)
         {
-            if (db.Find(d.id) != null) continue; // đã có (có thể đã chỉnh tay): giữ nguyên
-            List<AudioClip> clips = new List<AudioClip>();
-            foreach (string path in d.clips)
+            List<AudioClip> clips = LoadClips(d.clips);
+            AudioDatabase.Sound existing = db.Find(d.id);
+            if (existing != null)
             {
-                AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
-                if (clip != null) clips.Add(clip);
-                else Debug.LogWarning($"[AudioSetup] Không tìm thấy clip: {path}");
+                // Đã có (có thể đã chỉnh tay): giữ volume / pitch / cooldown, chỉ bổ sung clip mới thêm vào Defaults
+                List<AudioClip> merged = new List<AudioClip>(existing.clips ?? new AudioClip[0]);
+                foreach (AudioClip clip in clips) if (!merged.Contains(clip)) merged.Add(clip);
+                existing.clips = merged.ToArray();
+                continue;
             }
             db.sounds.Add(new AudioDatabase.Sound
             {
@@ -134,6 +144,18 @@ public static class AudioSetup
         db.sounds.Sort((a, b) => a.id.CompareTo(b.id));
         EditorUtility.SetDirty(db);
         return db;
+    }
+
+    private static List<AudioClip> LoadClips(string[] paths)
+    {
+        List<AudioClip> clips = new List<AudioClip>();
+        foreach (string path in paths)
+        {
+            AudioClip clip = AssetDatabase.LoadAssetAtPath<AudioClip>(path);
+            if (clip != null) clips.Add(clip);
+            else Debug.LogWarning($"[AudioSetup] Không tìm thấy clip: {path}");
+        }
+        return clips;
     }
 
     private static void SetMusicImport()

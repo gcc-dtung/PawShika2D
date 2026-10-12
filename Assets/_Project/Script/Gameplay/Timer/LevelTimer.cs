@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 /// <summary>
 /// Đồng hồ đếm ngược của 1 level (cơ chế THỜI GIAN như bản gốc Paw Block).
@@ -8,10 +9,13 @@ using UnityEngine.Events;
 /// baseSeconds + secondsPerCell x số ô + (5.5–6.5 s) x số khối, tối thiểu minSeconds (LivesEnergyConfig).
 /// Chỉ chạy khi người chơi thao tác được (ván Playing, lưới đã hiện, không có intro / popup / booster tự đặt khối).
 /// Booster Đóng băng (Freeze) dừng đồng hồ freezeSeconds giây. Hết giờ -> onTimeUp.
+/// Level mới / chơi lại: đồng hồ đứng ở tổng thời gian tới khi người chơi chạm màn hình lần đầu (chạm lúc intro / popup không tính).
 /// </summary>
 public class LevelTimer : Singleton<LevelTimer>
 {
     [SerializeField] private GridSpawner gridSpawner;
+    [Tooltip("Level mới: đồng hồ chỉ bắt đầu chạy khi người chơi chạm màn hình lần đầu")]
+    [SerializeField] private bool waitForFirstTouch = true;
 
     [Header("Events")]
     public UnityEvent<float, float> onTimeChanged = new UnityEvent<float, float>(); // (còn lại, tổng) – mỗi frame đồng hồ chạy / khi cộng giờ
@@ -21,11 +25,13 @@ public class LevelTimer : Singleton<LevelTimer>
     public UnityEvent onTimeUp = new UnityEvent();
     public UnityEvent<bool> onFreezeChanged = new UnityEvent<bool>(); // bật / tắt đóng băng
     public UnityEvent onFreezeEnded = new UnityEvent();               // đóng băng hết hạn (băng vỡ)
+    public UnityEvent<bool> onWaitingForTouchChanged = new UnityEvent<bool>(); // true: đang chờ chạm đầu tiên; false: vừa bắt đầu chạy
 
     private float _total;
     private float _remaining;
     private float _freezeLeft;
     private bool _timeUp;
+    private bool _waitingForTouch;
 
     public float Total => _total;
     public float Remaining => _remaining;
@@ -33,11 +39,23 @@ public class LevelTimer : Singleton<LevelTimer>
     public bool IsFrozen => _freezeLeft > 0f;
     public bool IsTimeUp => _timeUp;
 
+    /// <summary>Level vừa nạp, đồng hồ chưa chạy: chờ người chơi chạm màn hình lần đầu.</summary>
+    public bool IsWaitingForTouch => _waitingForTouch;
+
     /// <summary>Đang dưới ngưỡng cảnh báo (chữ đỏ, nhịp tim đồng hồ).</summary>
     public bool IsLow => !_timeUp && _remaining <= GameConfig.LivesEnergy.warningSeconds;
 
     /// <summary>Màn luyện tập (tutorial lần đầu): đồng hồ không chạy. LevelManager đặt khi nạp màn.</summary>
-    public bool IsPractice { get; set; }
+    public bool IsPractice
+    {
+        get => _isPractice;
+        set
+        {
+            _isPractice = value;
+            if (value) SetWaitingForTouch(false); // màn luyện tập không tính giờ: không chờ chạm (đồng hồ khỏi nhấp nháy)
+        }
+    }
+    private bool _isPractice;
 
     /// <summary>Tạm dừng thêm (Cheat: dừng đồng hồ).</summary>
     public bool DebugPaused { get; set; }
@@ -51,11 +69,20 @@ public class LevelTimer : Singleton<LevelTimer>
     private void OnEnable()
     {
         if (gridSpawner != null) gridSpawner.gridCellEvent.AddListener(OnGridSpawned);
+        EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
     }
 
     private void OnDisable()
     {
         if (gridSpawner != null) gridSpawner.gridCellEvent.RemoveListener(OnGridSpawned);
+        EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+    }
+
+    // Ván kết thúc (thắng / hết giờ / thua) mà còn đóng băng: đồng hồ không chạy nữa nên đóng băng không tự hết,
+    // hiệu ứng băng sẽ đứng mãi -> tắt đóng băng (tan, không vỡ). Tạm dừng (Paused) thì giữ để chơi tiếp.
+    private void OnStateChanged(GameStateChangedEvent e)
+    {
+        if (e.State == GameState.Won || e.State == GameState.OutOfTime || e.State == GameState.Lost) SetFrozen(0f);
     }
 
     private void OnGridSpawned(List<CellView> grid)
@@ -70,7 +97,18 @@ public class LevelTimer : Singleton<LevelTimer>
         _timeUp = false;
         _total = ComputeSeconds(level, cellCount);
         _remaining = _total;
+        SetWaitingForTouch(waitForFirstTouch && !IsPractice);
         onTimeChanged?.Invoke(_remaining, _total);
+    }
+
+    /// <summary>Bắt đầu chạy ngay, không chờ chạm (vd. cheat, tutorial muốn tính giờ).</summary>
+    public void StartNow() => SetWaitingForTouch(false);
+
+    private void SetWaitingForTouch(bool waiting)
+    {
+        if (waiting == _waitingForTouch) return;
+        _waitingForTouch = waiting;
+        onWaitingForTouchChanged?.Invoke(waiting);
     }
 
     /// <summary>
@@ -99,16 +137,27 @@ public class LevelTimer : Singleton<LevelTimer>
     private void Update()
     {
         if (!IsRunning()) return;
+        if (_waitingForTouch)
+        {
+            // Chỉ tính chạm khi người chơi đã thao tác được (qua intro, popup đã đóng); chạm trúng nút cũng tính
+            Pointer pointer = Pointer.current;
+            if (pointer == null || !pointer.press.wasPressedThisFrame) return;
+            SetWaitingForTouch(false);
+        }
         float dt = Time.deltaTime;
 
         if (_freezeLeft > 0f)
         {
-            _freezeLeft -= dt;
-            if (_freezeLeft <= 0f)
+            float left = _freezeLeft - dt;
+            if (left > 0f)
             {
-                SetFrozen(0f);
-                onFreezeEnded?.Invoke();
+                _freezeLeft = left;
+                return;
             }
+            // Không trừ thẳng _freezeLeft về <= 0 rồi mới SetFrozen: lúc đó IsFrozen đã false nên SetFrozen
+            // tưởng không đổi và không phát onFreezeChanged(false) -> tuyết / đếm ngược trên nút không tắt
+            SetFrozen(0f);
+            onFreezeEnded?.Invoke();
             return;
         }
 

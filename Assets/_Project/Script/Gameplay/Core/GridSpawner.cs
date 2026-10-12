@@ -23,14 +23,14 @@ public class GridSpawner : MonoBehaviour
     [SerializeField] private float contentDuration = 0.25f;
     public UnityEvent<List<CellView>> gridCellEvent = new UnityEvent<List<CellView>>();
 
-    private readonly List<CellView> gridCells = new List<CellView>();
+    private readonly List<CellView> _gridCells = new List<CellView>();
     private readonly Dictionary<Vector2Int, ClueData> _clueLookup = new Dictionary<Vector2Int, ClueData>();
     private readonly HashSet<Vector2Int> _voidLookup = new HashSet<Vector2Int>();
     private ObjectPool<CellView> _cellPool;
     private float _introEndTime;
 
     public LevelDefinition LevelData => levelData;
-    public List<CellView> GetGrid => gridCells;
+    public List<CellView> GetGrid => _gridCells;
     /// <summary>Hiệu ứng xuất hiện đang chạy: GridManager khóa thao tác.</summary>
     public bool IsIntroPlaying => Time.time < _introEndTime;
     public GridGeometry Geometry => levelData != null
@@ -64,11 +64,6 @@ public class GridSpawner : MonoBehaviour
         }
     }
 
-    public void SetLevelData(LevelDefinition data)
-    {
-        levelData = data;
-    }
-
     public void Spawn(LevelDefinition data)
     {
         if (data == null) return;
@@ -93,11 +88,11 @@ public class GridSpawner : MonoBehaviour
                 cell.transform.position = geometry.CellToWorld(pos);
                 cell.Bind(model);
 
-                gridCells.Add(cell);
+                _gridCells.Add(cell);
             }
         }
         if (playIntro) PlayIntro();
-        gridCellEvent?.Invoke(gridCells);
+        gridCellEvent?.Invoke(_gridCells);
     }
 
     /// <summary>
@@ -105,7 +100,7 @@ public class GridSpawner : MonoBehaviour
     /// </summary>
     private void PlayIntro()
     {
-        int count = gridCells.Count;
+        int count = _gridCells.Count;
         if (count == 0) return;
 
         float interval = count > 1 ? Mathf.Min(cellInterval, cellSpreadMax / (count - 1)) : 0f;
@@ -118,7 +113,7 @@ public class GridSpawner : MonoBehaviour
         {
             float cellDelay = cellOrder[i] * interval;
             float contentDelay = contentStart + contentOrder[i] * contentInterval;
-            gridCells[i].PlayIntro(cellDelay, cellDuration, contentDelay, contentDuration);
+            _gridCells[i].PlayIntro(cellDelay, cellDuration, contentDelay, contentDuration);
         }
         _introEndTime = Time.time + contentStart + contentSpread + contentDuration;
     }
@@ -156,10 +151,10 @@ public class GridSpawner : MonoBehaviour
 
     public void DeleteGrid()
     {
-        foreach (CellView cell in gridCells)
+        foreach (CellView cell in _gridCells)
         {
             if (cell != null) _cellPool.Release(cell);
         }
-        gridCells.Clear();
+        _gridCells.Clear();
     }
 }

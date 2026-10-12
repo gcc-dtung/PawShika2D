@@ -27,18 +27,14 @@ public class CellModel
         Clue = new ClueCell(clue);
     }
 
-    /// <summary>Giảm 1 bước khóa. Trả về true nếu ô vừa được mở khóa.</summary>
-    public bool StepLock()
+    /// <summary>Tính lại khóa theo số khối khác đang trên lưới. Trả về true nếu ô vừa được mở khóa.</summary>
+    public bool SyncLock(int otherBlocks)
     {
-        if (Clue == null || !Clue.IsLocked) return false;
-        bool unlocked = Clue.StepLock();
+        if (Clue == null) return false;
+        bool wasLocked = Clue.IsLocked;
+        if (!Clue.SyncLock(otherBlocks)) return false;
         Changed?.Invoke();
-        return unlocked;
-    }
-
-    public void RevealClue()
-    {
-        if (Clue != null && Clue.Reveal()) Changed?.Invoke();
+        return wasLocked && !Clue.IsLocked;
     }
 
     public void SetBlock(BlockModel block)

@@ -4,7 +4,7 @@
 
 | Booster | Mở ở level | Tác dụng |
 | --- | --- | --- |
-| **Hint** | 5 | Tự đặt khối nhỏ nhất của lời giải (khớp các khối đã đặt) |
+| **Hint** | 5 | **Chỉ gợi ý, không đặt hộ** (từ 10/10/2026): mèo mờ nhấp nháy + bàn tay kéo ở 1 vùng đúng (ưu tiên vùng còn trống, rồi nhỏ nhất); người chơi tự kéo vào. Tắt khi đặt đúng vùng / đặt khối khác đè lên / đổi level. Đang hiện thì bấm lại không tốn lượt (`HintMarker`) |
 | **Khiên** (thay Freeze Time bản gốc) | 7 | Chặn lần mất mạng kế tiếp trong level |
 | **Reveal** | 9 | Chọn 1 ô số → đặt mọi khối cùng số (lần lượt cách 0.12 s) |
 
@@ -70,3 +70,9 @@ Xem [HowTo_MoRong.md → Thêm booster](HowTo_MoRong.md#thêm-booster). Tóm t�
 - Booster muốn đặt khối thì gọi `GridManager.PlaceSolved(rect)` với rect lấy từ `BoardModel.TrySolveRemaining`, và kiểm tra `Board.Check(rect).IsReady` (ô còn khóa không đặt được).
 - Booster chạy nhiều bước theo thời gian phải khóa lưới: dùng `Host.PlaceInSequence` (đã khóa qua `InputGate`), hoặc tự `InputGate.Lock(owner)` / `Unlock(owner)`.
 - Booster có bước hướng dẫn riêng sau khi mở khóa: viết component nghe `EventBus<BoosterTutorialCompletedEvent>` (như `ShieldTutorialDemo`), không sửa `BoosterTutorial`.
+
+## Phản hồi khi dùng booster (`UI/HUD/BoosterUseFx`, từ 10/10/2026)
+
+Mỗi lần booster có tác dụng (`onBoosterUsed`): icon bay từ nút ra giữa màn hình, phóng to nảy trên chùm tia sáng xoay + chữ "HINT!" / "FREEZE!" / "REVEAL!", màn hình tối nhẹ; rồi lao tới mục tiêu (`IBoosterHost.Consume(type, target)`: Hint = tâm vùng gợi ý, Reveal = ô số vừa chạm, Freeze = đồng hồ) và lóe sáng. Khoảng 1.2 s = `BoosterManager.effectDelay`: tác dụng Hint (mèo mờ) và Reveal (khối rơi xuống) chờ icon tới nơi mới hiện; Trong lúc icon bay, thao tác bị khóa nên đồng hồ dừng.
+
+**Freeze** không dùng hiệu ứng chung mà chạy hiệu ứng như bản gốc (`UI/HUD/FreezeOverlayFX`): Spine đồng hồ + bàn tay bấm nút (`Freeze.skel`, cần package spine-unity 4.1), sự kiện `Press` lúc 1.67 s nổ hạt và đóng băng thật (`freezeEffectDelay` 1.67), viền `ice_effect` + tuyết trong lúc đóng băng. Chi tiết: `Features/14_GameFeel.md` mục 4.3.

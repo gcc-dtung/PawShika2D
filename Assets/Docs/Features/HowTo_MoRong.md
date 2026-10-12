@@ -103,11 +103,11 @@ Ghi: sửa `SaveSystem.Data.xxx` rồi `SaveSystem.MarkDirty()`. Đổi ý nghĩ
 
 ## Thêm tab / màn hình Menu
 
-Ví dụ làm tab **Progress** thật:
+Ví dụ có sẵn: tab **Daily** (thay khung tạm "Progress" cũ), xem [16_DailyChallenge.md](16_DailyChallenge.md).
 
-1. Nội dung panel: thay `BuildProgressPlaceholder` trong `MainMenuBuilder` (hiện dựng panel tạm) hoặc builder riêng như `ShopBuilder.BuildPanel`.
-2. Script UI trong `UI/Menu/` đọc dữ liệu (save / database), nghe `MainMenuNavigator.onTabChanged` nếu cần làm mới khi mở tab.
-3. Thêm tab thứ 4: thêm tên vào `TabNames` trong `MainMenuBuilder`, panel tương ứng trong `Panels` (đúng thứ tự tab), chạy **Build Main Menu**. `MainMenuNavigator.ShopTab` (0, dùng cho `ScreenFlow` và `CoinHUD`) và `ShowMenu` (`Select(1)` = Home) chọn tab theo chỉ số – chèn tab ở giữa thì sửa lại 2 chỗ này.
+1. Nội dung panel: builder riêng trả về panel (như `DailyChallengeBuilder.BuildPanel`, `ShopBuilder.BuildPanel`), gọi từ `MainMenuBuilder`.
+2. Script UI trong `UI/Menu/` đọc dữ liệu (save / database), nghe `MainMenuNavigator.onTabChanged` hoặc sự kiện của manager (vd. `DailyChallengeManager.Changed`) để làm mới.
+3. Thêm tab thứ 4: thêm tên vào `TabNames` trong `MainMenuBuilder`, panel tương ứng trong `Panels` (đúng thứ tự tab), chạy **Build Main Menu**. `MainMenuNavigator.ShopTab` / `HomeTab` / `DailyTab` (0 / 1 / 2, dùng cho `ScreenFlow`, `CoinHUD`) chọn tab theo chỉ số – chèn tab ở giữa thì sửa lại các hằng này.
 
 ## Thêm hệ thống chạy theo ván (nhiệm vụ, chuỗi thắng, thống kê…)
 

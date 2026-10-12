@@ -23,6 +23,9 @@ Mỗi file dưới đây giải thích **một tính năng**: nó làm gì, ch�
 | [11](11_Save.md) | Lưu dữ liệu người chơi (JSON) | thêm dữ liệu cần lưu |
 | [12](12_AmThanh-PhanHoi.md) | Âm thanh, rung, chữ khen, rung camera | thêm âm / hiệu ứng phản hồi |
 | [13](13_Editor-Builder-Debug.md) | Builder dựng UI bằng code, Debug Panel, công cụ Editor | dựng lại UI, test nhanh |
+| [14](14_GameFeel.md) | Game feel: hiệu ứng lúc kéo / đặt / gỡ khối, combo, tiến độ, đồng hồ, test | chỉnh / tắt 1 hiệu ứng, biết nó nằm ở đâu |
+| [15](15_Sao.md) | Sao theo thời gian: thanh 3 mốc trên HUD, tiêu đề + sao ở màn thắng, coin theo sao, ví sao + Vòng quay may mắn | đổi mốc sao, coin mỗi sao, giá / quà vòng quay |
+| [16](16_DailyChallenge.md) | Daily Challenge (lịch tháng, quà mốc 7 / 14 / 21) và Level Generator | đổi quà / độ khó Daily, sinh level mới hàng loạt |
 
 **Hướng dẫn mở rộng**
 

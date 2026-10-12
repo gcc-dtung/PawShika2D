@@ -35,6 +35,7 @@ public class GameHapticEvents : MonoBehaviour
             _grid.onMistake.AddListener(OnMistake);
             _grid.onClueUnlocked.AddListener(OnClueUnlocked);
             _grid.onDragCellChanged.AddListener(OnDragCellChanged);
+            _grid.onInvalidMove.AddListener(OnInvalidMove);
         }
         EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
         if (_timer != null)
@@ -56,6 +57,7 @@ public class GameHapticEvents : MonoBehaviour
             _grid.onMistake.RemoveListener(OnMistake);
             _grid.onClueUnlocked.RemoveListener(OnClueUnlocked);
             _grid.onDragCellChanged.RemoveListener(OnDragCellChanged);
+            _grid.onInvalidMove.RemoveListener(OnInvalidMove);
         }
         EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
         if (_timer != null)
@@ -86,6 +88,9 @@ public class GameHapticEvents : MonoBehaviour
     {
         if (onSelection) AudioManager.Vibrate(HapticType.Selection);
     }
+
+    // Thả tay ở vùng sai: rung mềm (nhẹ hơn lưới kín mà sai)
+    private void OnInvalidMove(PlacementResult result, Vector3 center, Vector2 size) => AudioManager.Vibrate(HapticType.Soft);
 
     private void OnStateChanged(GameStateChangedEvent e)
     {

@@ -1,7 +1,10 @@
 using TMPro;
 using UnityEngine;
 
-/// <summary>HUD trên: chữ "LEVEL n"; level Hard / Very Hard thì có khung có tab ghi mức khó bao ô LEVEL (DifficultyTheme).</summary>
+/// <summary>
+/// HUD trên: chữ "LEVEL n" (Daily Challenge: ngày, vd "OCT 11"); level Hard / Very Hard thì có khung có tab ghi mức khó
+/// bao ô LEVEL (DifficultyTheme).
+/// </summary>
 public class LevelHUD : MonoBehaviour
 {
     [SerializeField] private TMP_Text levelText;
@@ -11,9 +14,12 @@ public class LevelHUD : MonoBehaviour
     [Tooltip("Nền ô LEVEL: mức khó thì đổi sang hình bo góc để góc vuông không lòi ra ngoài khung")]
     [SerializeField] private UnityEngine.UI.Image background;
     [SerializeField] private Sprite roundedBackground;
+    [Tooltip("Màu tô lên nền bo góc (sprite trắng) cho giống nền thường khung1")]
+    [SerializeField] private Color roundedBackgroundColor = new Color(0.204f, 0.204f, 0.365f, 1f);
 
     private Sprite _normalBg;
     private UnityEngine.UI.Image.Type _normalBgType;
+    private Color _normalBgColor = Color.white;
     private bool _cached;
 
     private void Start()
@@ -31,22 +37,33 @@ public class LevelHUD : MonoBehaviour
 
     private void SetLevel(int number)
     {
-        if (levelText != null) levelText.SetText($"LEVEL {number}");
+        LevelManager lm = LevelManager.Instance;
+        if (levelText != null)
+        {
+            if (lm != null && lm.IsDaily) levelText.SetText(DailyLabel(lm.DailyDay));
+            else levelText.SetText($"LEVEL {number}");
+        }
 
         LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
         DifficultyStyle style = theme != null && level != null ? theme.Get(level.difficulty) : null;
         bool hard = style != null && style.hudFrame != null;
-        if (background != null)
+        if (!_cached)
         {
-            if (!_cached)
+            _cached = true;
+            if (background != null)
             {
-                _cached = true;
                 _normalBg = background.sprite;
                 _normalBgType = background.type;
+                _normalBgColor = background.color;
             }
-            bool rounded = hard && roundedBackground != null;
+        }
+        bool rounded = hard && roundedBackground != null;
+        if (background != null)
+        {
             background.sprite = rounded ? roundedBackground : _normalBg;
             background.type = rounded ? UnityEngine.UI.Image.Type.Sliced : _normalBgType;
+            // Sprite bo góc là hình trắng: tô màu nền thường, không thì ô LEVEL thành nền trắng (chữ trắng biến mất)
+            background.color = rounded ? roundedBackgroundColor : _normalBgColor;
         }
         if (hardFrame == null) return;
         hardFrame.gameObject.SetActive(hard);
@@ -56,4 +73,8 @@ public class LevelHUD : MonoBehaviour
         tabText.SetText(style.label);
         if (style.hudTabOutline != null) tabText.fontSharedMaterial = style.hudTabOutline;
     }
+
+    /// <summary>Nhãn level Daily: tháng (3 chữ) + ngày, vd "OCT 11".</summary>
+    public static string DailyLabel(long day) =>
+        DailyChallengeModel.DateOf(day).ToString("MMM d", System.Globalization.CultureInfo.InvariantCulture).ToUpperInvariant();
 }

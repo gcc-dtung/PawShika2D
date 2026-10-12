@@ -9,13 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1497261852, guid: ebe353a9e51fc6708625f16edcb81e06, type: 3}
+  m_Script: {fileID: 11500000, guid: a6b194f808b1af6499c93410e504af42, type: 3}
   m_Name: ingame_cat_face_03_Atlas
-  m_EditorClassIdentifier:
-  atlasFile: {fileID: 4900000, guid: bcab25bc4d1e5a44fab3eeeb0a623ecb, type: 3}
+  m_EditorClassIdentifier: 
+  textureLoadingMode: 0
+  onDemandTextureLoader: {fileID: 0}
+  atlasFile: {fileID: 4900000, guid: 0e6edfc36a472f540b9252dfe47879fe, type: 3}
   materials:
-  - {fileID: 2100000, guid: d47ffe03bc74b1c4da58d51e1c9a2cf5, type: 2}
-  - {fileID: 2100000, guid: ad08734bd1d682247805011d80a73ecc, type: 2}
-  - {fileID: 2100000, guid: 2d03090abf4ff90469083b05325e3fd3, type: 2}
-  - {fileID: 2100000, guid: 02b4b781a0eaaac45951f31a3fdc86a2, type: 2}
-  - {fileID: 2100000, guid: 7141e62f0c151a448997757bf925231b, type: 2}
+  - {fileID: 2100000, guid: f8d5ced92ac5a9546b9f2e4540f1f8a0, type: 2}
+  - {fileID: 2100000, guid: 9885fead067947f40add1875af9f7754, type: 2}
+  - {fileID: 2100000, guid: e183a5b4e598a3c4eba4cff46d8e92f6, type: 2}
+  - {fileID: 2100000, guid: 1dd7e5533c4b8184fbd6f92f8b5ac737, type: 2}
+  - {fileID: 2100000, guid: 97ba116354a633e459b5e733b7cad5e6, type: 2}

@@ -5,17 +5,23 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Màn thắng như bản gốc (full màn hình trên nền tối, không có bảng):
-/// ô coin trên cùng, chữ "WELL DONE!" to ngay trên huy hiệu mèo (tia sáng xoay), confetti,
-/// nút Continue (+coin theo độ khó, EconomyConfig.WinCoinReward) và x2 Coin (quảng cáo, gấp đôi). Game không có sao nên không hiện sao.
-/// Mở: chữ đi vào từng ký tự (TMPLetterPopIn) cùng lúc huy hiệu bật + confetti bắn 2 bên rồi rơi liên tục -> chữ cuối đáp xuống -> 2 nút bật.
-/// Nhận coin: huy hiệu thu lại, coin bung ra rồi bay vào ô coin (số đếm lên), xong thì sang level kế.
+/// Màn thắng như bản gốc (WinUI, full màn hình trên nền tối, không có bảng):
+/// ô coin trên cùng, chữ tiêu đề theo số sao (Perfect 3 / Great 2 / Nice 1 / Well done 0 sao, StarRating.Title),
+/// 3 sao (sao xám làm bóng, sao vàng đập xuống), huy hiệu mèo (tia sáng xoay), confetti,
+/// nút Continue (+coin theo độ khó + EconomyConfig.coinsPerStar mỗi sao) và x2 Coin (quảng cáo, gấp đôi).
+/// Số coin trên 2 nút bắt đầu ở mức theo độ khó, mỗi sao đập xuống thì cộng thêm và số nảy lên.
+/// Mở: tiêu đề bật cùng huy hiệu + confetti bắn 2 bên rồi rơi liên tục, 2 nút bật -> từng sao đập xuống (phóng to starSlamScale
+/// lần rồi thu về trong starSlamDuration giây, cách nhau starSlamInterval, số của WinUI gốc), mỗi sao cộng coin trên nút -> nhận bấm.
+/// Nhận coin: huy hiệu thu lại, coin (lật quanh trục Y) bung ra rồi bay vào ô coin (số đếm lên), xong thì sang level kế.
 /// panel của PopupView để trống: không phóng cả màn, các phần tự diễn theo thứ tự.
 /// </summary>
 public class WinPopup : PopupView
 {
     [Header("Thành phần")]
-    [SerializeField] private TMPLetterPopIn banner;
+    [Tooltip("Ảnh tiêu đề, thứ tự theo WinTitle: Well done, Nice, Great, Perfect")]
+    [SerializeField] private Image[] titleImages = new Image[4];
+    [Tooltip("Sao vàng 1..3 (sao xám bóng bên dưới là ảnh tĩnh)")]
+    [SerializeField] private Image[] stars = new Image[StarRating.Max];
     [SerializeField] private RectTransform medallion;
     [SerializeField] private RectTransform rays;
     [SerializeField] private RectTransform glow;
@@ -29,13 +35,22 @@ public class WinPopup : PopupView
     [SerializeField] private UIConfetti confetti;
     [SerializeField] private RectTransform flyLayer;
     [SerializeField] private Sprite coinSprite;
+    [Tooltip("Giây / 1 vòng lật của coin bay (xoay quanh trục Y, canvas Overlay vẽ thành đồng xu lật)")]
+    [SerializeField] private float coinSpinPeriod = 0.45f;
 
     [Header("Thưởng")]
     [SerializeField] private int maxFlyingCoins = 12;
 
     [Header("Nhịp")]
     [SerializeField] private float raysSpeed = 30f; // độ / giây
-    [SerializeField] private float bannerDelay = 0.05f;
+    [SerializeField] private float titleDelay = 0.05f;
+
+    [Header("Sao đập xuống (WinUI gốc)")]
+    [SerializeField] private float starsDelay = 0.45f;
+    [SerializeField] private float starSlamScale = 2.6f;
+    [SerializeField] private float starSlamDuration = 0.18f;
+    [SerializeField] private float starSlamPunch = 0.25f;
+    [SerializeField] private float starSlamInterval = 0.18f;
 
     private bool _claimed;
     private bool _ready; // intro xong mới nhận bấm (không tắt interactable lúc intro để nút không bị xám)
@@ -43,6 +58,7 @@ public class WinPopup : PopupView
     private Sequence _claim;
     private Tween _raysSpin;
     private int _shownCoins;
+    private int _shownReward; // số coin đang hiện trên nút Continue (tăng theo từng sao)
     private readonly List<Image> _coinPool = new List<Image>();
 
     protected override void Awake()
@@ -67,8 +83,7 @@ public class WinPopup : PopupView
         _claimed = false;
         _shownCoins = CoinWallet.Balance;
         SetCoinText(_shownCoins);
-        if (nextAmountText != null) nextAmountText.SetText("{0}", CoinReward);
-        if (doubleAmountText != null) doubleAmountText.SetText("{0}", CoinReward * 2);
+        SetRewardText(BaseReward, false); // sao đập xuống sẽ cộng dần tới CoinReward
         PlayIntro();
     }
 
@@ -78,7 +93,10 @@ public class WinPopup : PopupView
     {
         _intro?.Kill();
         _claim?.Kill();
-        if (banner != null) banner.Hide();
+        int earned = LevelStars.Instance != null ? LevelStars.Instance.Stars : StarRating.Max;
+        Image title = ShowTitle(StarRating.Title(earned));
+        SetScale(title != null ? title.rectTransform : null, 0f);
+        foreach (Image star in stars) if (star != null) star.gameObject.SetActive(false);
         SetScale(medallion, 0f);
         SetScale(glow, 0f);
         SetScale(rays, 0f);
@@ -96,7 +114,7 @@ public class WinPopup : PopupView
         }
 
         Sequence seq = DOTween.Sequence().SetUpdate(true).SetLink(gameObject);
-        seq.InsertCallback(bannerDelay, () => { if (banner != null) banner.Play(); });
+        if (title != null) seq.Insert(titleDelay, Pop(title.rectTransform, 0.4f, 1.8f));
         seq.Insert(0.15f, Pop(medallion, 0.45f, 1.6f));
         seq.Insert(0.15f, Pop(glow, 0.6f, 1f));
         seq.Insert(0.2f, Pop(rays, 0.5f, 1.2f));
@@ -107,23 +125,91 @@ public class WinPopup : PopupView
             confetti.StartRain();
         });
 
-        // 2 nút bật sau khi chữ cuối đáp xuống
-        float t = bannerDelay + (banner != null ? banner.Duration : 0.4f) + 0.05f;
-        if (nextButton != null) seq.Insert(t, Pop((RectTransform)nextButton.transform, 0.3f, 2f));
-        if (doubleButton != null) seq.Insert(t + 0.15f, Pop((RectTransform)doubleButton.transform, 0.3f, 2f));
-        seq.InsertCallback(t + 0.2f, () => _ready = true);
+        // 2 nút bật trước (thấy số coin cộng dần theo từng sao), rồi từng sao đập xuống; sao xong mới nhận bấm
+        float buttonsAt = titleDelay + 0.2f;
+        if (nextButton != null) seq.Insert(buttonsAt, Pop((RectTransform)nextButton.transform, 0.3f, 2f));
+        if (doubleButton != null) seq.Insert(buttonsAt + 0.1f, Pop((RectTransform)doubleButton.transform, 0.3f, 2f));
+        int count = Mathf.Min(earned, stars.Length);
+        float slamFrom = Mathf.Max(starsDelay, buttonsAt + 0.45f);
+        for (int i = 0; i < count; i++) InsertStarSlam(seq, i, slamFrom + i * starSlamInterval);
+        float t = Mathf.Max(buttonsAt + 0.45f, slamFrom + count * starSlamInterval + starSlamDuration);
+        seq.InsertCallback(t + 0.1f, () => _ready = true);
         _intro = seq;
+    }
+
+    /// <summary>Bật đúng 1 ảnh tiêu đề, trả về ảnh đó (null nếu chưa gán).</summary>
+    private Image ShowTitle(WinTitle kind)
+    {
+        Image shown = null;
+        for (int i = 0; i < titleImages.Length; i++)
+        {
+            if (titleImages[i] == null) continue;
+            bool on = i == (int)kind;
+            titleImages[i].gameObject.SetActive(on);
+            if (on) shown = titleImages[i];
+        }
+        return shown;
+    }
+
+    /// <summary>Sao thứ i: hiện to gấp starSlamScale + trong suốt -> thu về 1 (nhanh dần) + rõ hẳn -> chạm thì nảy, kêu (cao dần), rung nhẹ.</summary>
+    private void InsertStarSlam(Sequence seq, int i, float at)
+    {
+        Image star = stars[i];
+        if (star == null) return;
+        RectTransform rt = star.rectTransform;
+        seq.InsertCallback(at, () =>
+        {
+            star.gameObject.SetActive(true);
+            rt.localScale = Vector3.one * starSlamScale;
+            star.color = new Color(1f, 1f, 1f, 0f);
+        });
+        seq.Insert(at, rt.DOScale(1f, starSlamDuration).SetEase(Ease.InQuad));
+        seq.Insert(at, star.DOFade(1f, starSlamDuration * 0.6f));
+        seq.InsertCallback(at + starSlamDuration, () =>
+        {
+            rt.DOPunchScale(Vector3.one * starSlamPunch, 0.25f, 6, 0.6f).SetUpdate(true).SetLink(star.gameObject);
+            AudioManager.PlayPitched(SoundId.StarEarn, 1f + 0.12f * i);
+            AudioManager.Vibrate(HapticType.Light);
+            SetRewardText(_shownReward + GameConfig.Economy.coinsPerStar, true);
+        });
     }
 
     // ---------- Nhận thưởng ----------
 
-    // Theo độ khó level vừa thắng: Normal 10 / Hard 20 / Very Hard 30 (EconomyConfig)
-    private static int CoinReward
+    // Theo độ khó level vừa thắng: Normal 10 / Hard 20 / Very Hard 30 (EconomyConfig), chưa tính sao
+    private static int BaseReward
     {
         get
         {
             LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
             return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal);
+        }
+    }
+
+    // Thưởng thật: theo độ khó + coinsPerStar x số sao
+    private static int CoinReward
+    {
+        get
+        {
+            LevelDefinition level = LevelManager.Instance != null ? LevelManager.Instance.CurrentLevel : null;
+            int stars = LevelStars.Instance != null ? LevelStars.Instance.Stars : 0;
+            return GameConfig.Economy.WinCoinReward(level != null ? level.difficulty : LevelDifficulty.Normal, stars);
+        }
+    }
+
+    /// <summary>Số coin trên Continue / x2; pop: số nảy (mỗi sao cộng thêm).</summary>
+    private void SetRewardText(int amount, bool pop)
+    {
+        _shownReward = amount;
+        if (nextAmountText != null) nextAmountText.SetText("{0}", amount);
+        if (doubleAmountText != null) doubleAmountText.SetText("{0}", amount * 2);
+        if (!pop) return;
+        foreach (TMP_Text t in new[] { nextAmountText, doubleAmountText })
+        {
+            if (t == null) continue;
+            Transform row = t.transform.parent; // hàng "coin + số"
+            row.DOKill(true);
+            row.DOPunchScale(Vector3.one * 0.25f, 0.25f, 6, 0.6f).SetUpdate(true).SetLink(row.gameObject);
         }
     }
 
@@ -150,7 +236,7 @@ public class WinPopup : PopupView
         _claimed = true;
         SetButtons(false);
         _intro?.Complete();
-        if (banner != null) banner.Finish();
+        AudioManager.Play(SoundId.Reward);
 
         int from = _shownCoins;
         CoinWallet.Add(coins);
@@ -171,6 +257,7 @@ public class WinPopup : PopupView
             RectTransform rt = coin.rectTransform;
             rt.position = start;
             rt.localScale = Vector3.zero;
+            Spin(rt);
             Vector2 burst = Random.insideUnitCircle * 170f;
             int value = from + Mathf.RoundToInt((to - from) * (i + 1f) / count);
             float t0 = 0.12f + i * 0.04f;
@@ -200,9 +287,20 @@ public class WinPopup : PopupView
         seq.OnComplete(() =>
         {
             Close();
-            if (LevelManager.Instance != null) LevelManager.Instance.NextLevel();
+            LevelManager lm = LevelManager.Instance;
+            if (lm != null && lm.IsDaily && ScreenFlow.Instance != null) ScreenFlow.Instance.ShowMenu(); // Daily: về tab Daily
+            else if (lm != null) lm.NextLevel();
         });
         _claim = seq;
+    }
+
+    /// <summary>Coin lật liên tục quanh trục Y, mỗi đồng lệch pha ngẫu nhiên; tắt coin (chạm ô coin) là dừng.</summary>
+    private void Spin(RectTransform coin)
+    {
+        if (coinSpinPeriod <= 0f) return;
+        coin.localRotation = Quaternion.Euler(0f, Random.Range(0f, 180f), 0f);
+        coin.DOLocalRotate(new Vector3(0f, 360f, 0f), coinSpinPeriod, RotateMode.LocalAxisAdd)
+            .SetEase(Ease.Linear).SetLoops(-1).SetUpdate(true).SetLink(coin.gameObject, LinkBehaviour.KillOnDisable);
     }
 
     private Image GetCoin()

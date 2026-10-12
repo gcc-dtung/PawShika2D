@@ -10,6 +10,7 @@ public class DebugPanelWindow : EditorWindow
 {
     private int _levelInput = 1;
     private int _coinInput = 1000;
+    private int _starInput = 10;
     private Vector2 _scroll;
     private bool _foldLevel = true, _foldResult = true, _foldCoin = true, _foldTimer = true, _foldBooster = true, _foldOther = true;
 
@@ -59,7 +60,7 @@ public class DebugPanelWindow : EditorWindow
 
         EditorGUILayout.HelpBox(
             $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount}   ·   {screen}   ·   {state}\n" +
-            $"Coin {CoinWallet.Balance}   ·   Giờ {DebugCheats.TimerStatus}   ·   Năng lượng {energy}",
+            $"Coin {CoinWallet.Balance}   ·   ★ {StarWallet.Balance}   ·   Giờ {DebugCheats.TimerStatus}   ·   Năng lượng {energy}",
             MessageType.None);
     }
 
@@ -122,7 +123,7 @@ public class DebugPanelWindow : EditorWindow
 
     private void DrawCoins()
     {
-        if (!Section("Coin", ref _foldCoin)) return;
+        if (!Section("Coin / Sao ★", ref _foldCoin)) return;
 
         using (new EditorGUILayout.HorizontalScope())
         {
@@ -135,6 +136,20 @@ public class DebugPanelWindow : EditorWindow
         {
             _coinInput = EditorGUILayout.IntField(_coinInput);
             if (GUILayout.Button("Đặt", GUILayout.Width(60))) DebugCheats.SetCoins(_coinInput);
+        }
+
+        EditorGUILayout.LabelField($"Sao ★ (Vòng quay may mắn): {StarWallet.Balance}", EditorStyles.miniBoldLabel);
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            if (GUILayout.Button("+10")) DebugCheats.AddStars(10);
+            if (GUILayout.Button("+50")) DebugCheats.AddStars(50);
+            if (GUILayout.Button("-10")) DebugCheats.AddStars(-10);
+            if (GUILayout.Button("= 0")) DebugCheats.SetStars(0);
+        }
+        using (new EditorGUILayout.HorizontalScope())
+        {
+            _starInput = EditorGUILayout.IntField(_starInput);
+            if (GUILayout.Button("Đặt", GUILayout.Width(60))) DebugCheats.SetStars(_starInput);
         }
     }
 

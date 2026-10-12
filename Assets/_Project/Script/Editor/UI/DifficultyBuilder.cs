@@ -227,7 +227,6 @@ public static class DifficultyBuilder
         so.FindProperty("tape").objectReferenceValue = tape.rectTransform;
         so.FindProperty("banner").objectReferenceValue = banner;
         so.FindProperty("skull").objectReferenceValue = skull;
-        so.FindProperty("offscreen").vector2Value = new Vector2(-2200f, 900f); // băng dài ~2000: xuất phát hẳn ngoài màn
         so.ApplyModifiedPropertiesWithoutUndo();
     }
 }

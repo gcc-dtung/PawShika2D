@@ -17,6 +17,12 @@ public class LivesEnergyConfig : ScriptableObject
     [Tooltip("Còn dưới số giây này thì đồng hồ đỏ + đập")]
     [Min(0)] public float warningSeconds = 10f;
 
+    [Header("Sao theo thời gian còn lại (thanh TimeProgress gốc: mốc 60 / 20 / 0 %)")]
+    [Tooltip("Còn trên tỉ lệ này của tổng thời gian thì giữ 3 sao")]
+    [Range(0f, 1f)] public float threeStarRatio = 0.6f;
+    [Tooltip("Còn trên tỉ lệ này thì giữ 2 sao; còn giây nào là 1 sao, hết giờ 0 sao")]
+    [Range(0f, 1f)] public float twoStarRatio = 0.2f;
+
     [Header("Booster Đóng băng")]
     [Tooltip("Số giây đồng hồ đứng yên (Freeze Time gốc: 20 s)")]
     [Min(1)] public float freezeSeconds = 20f;

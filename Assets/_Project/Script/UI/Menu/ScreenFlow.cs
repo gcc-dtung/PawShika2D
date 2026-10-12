@@ -4,6 +4,7 @@ using UnityEngine;
 /// Chuyển giữa Main Menu và màn chơi.
 /// - Menu: bật Canvas_Menu, tắt Canvas_HUD, ván đang nạp ở nền bị tạm dừng (không kéo được).
 /// - PLAY: kiểm tra năng lượng (GameFlowUI.RequestPlay), tắt menu, bật HUD, nạp lại level hiện tại từ đầu.
+/// - PlayDaily: như PLAY nhưng nạp level Daily Challenge; về Menu sau ván Daily thì mở tab Daily.
 /// - Lần đầu mở game (TutorialController.Pending): vào thẳng tutorial thay cho Menu.
 /// Popup nằm ở Canvas_Popup riêng nên dùng được ở cả 2 màn. Đổi màn thì phát ScreenChangedEvent (EventBus).
 /// </summary>
@@ -41,15 +42,16 @@ public class ScreenFlow : Singleton<ScreenFlow>
         EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
     }
 
-    /// <summary>Về Main Menu (tab Home).</summary>
+    /// <summary>Về Main Menu: tab Home, hoặc tab Daily nếu vừa chơi level Daily.</summary>
     public void ShowMenu()
     {
+        bool daily = LevelManager.Instance != null && LevelManager.Instance.IsDaily;
         IsMenu = true;
         if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
         if (LevelManager.Instance != null) LevelManager.Instance.Pause();
         if (hudCanvas != null) hudCanvas.SetActive(false);
         if (menuCanvas != null) menuCanvas.SetActive(true);
-        if (navigator != null) navigator.Select(1, false);
+        if (navigator != null) navigator.Select(daily ? MainMenuNavigator.DailyTab : MainMenuNavigator.HomeTab, false);
         EventBus<ScreenChangedEvent>.Raise(new ScreenChangedEvent(true));
     }
 
@@ -69,15 +71,26 @@ public class ScreenFlow : Singleton<ScreenFlow>
         else EnterGame();
     }
 
+    /// <summary>Nút Play của tab Daily: kiểm tra năng lượng rồi vào ván, <paramref name="load"/> nạp level Daily.</summary>
+    public void PlayDaily(System.Action load)
+    {
+        if (!IsMenu || load == null) return;
+        if (gameFlow != null) gameFlow.RequestPlay(() => Enter(load));
+        else Enter(load);
+    }
+
     /// <summary>Vào ván ngay, bỏ qua kiểm tra năng lượng (Debug Panel).</summary>
     public void EnterGameNow() => EnterGame();
 
-    private void EnterGame()
+    // Nạp lại level thường hiện tại từ đầu (kể cả vừa chơi Daily), state Playing
+    private void EnterGame() => Enter(() => { if (LevelManager.Instance != null) LevelManager.Instance.PlayCurrent(); });
+
+    private void Enter(System.Action load)
     {
         IsMenu = false;
         if (menuCanvas != null) menuCanvas.SetActive(false);
         if (hudCanvas != null) hudCanvas.SetActive(true);
-        if (LevelManager.Instance != null) LevelManager.Instance.Retry(); // nạp lại level hiện tại từ đầu, state Playing
+        load();
         EventBus<ScreenChangedEvent>.Raise(new ScreenChangedEvent(false));
     }
 

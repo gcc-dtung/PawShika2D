@@ -30,6 +30,7 @@
 | Menu | Việc | File |
 | --- | --- | --- |
 | Tools → PawBlock → **Level Editor** | Vẽ khối (số tự = diện tích), đặt số / Void / xóa; sửa hướng, khóa, "?", Hard; Kiểm tra; Giải; ▶ Chơi thử vào thẳng level; đổi thứ tự, nhân bản | `Editor/Level/LevelEditorWindow` |
+| Tools → PawBlock → **Level Generator** | Sinh hàng loạt level theo seed (preset Easy / Normal / Hard / Daily, đúng 1 lời giải), xem độ khó, lưu vào `Levels/Generated` (+ cuối database). Chi tiết: [16_DailyChallenge.md](16_DailyChallenge.md) | `Editor/Level/LevelGeneratorWindow`, `Gameplay/Level/Generator/LevelGenerator` |
 | Tools → PawBlock → **Validate Levels** | Chạy `LevelValidator` cho cả database, log lỗi / cảnh báo | `Editor/Level/LevelValidator` |
 | Tools → PawBlock → **Mechanic Injector** | Gắn cơ chế theo lịch: Xem trước → Áp dụng / Khôi phục bản gốc | `MechanicInjector*` |
 | Tools → PawBlock → **Level Difficulty** | Độ khó lý thuyết D, biểu đồ, tick Hard / Very Hard, xuất / nạp CSV | `LevelDifficulty*`, công thức: [../DifficultyFormula.md](../DifficultyFormula.md) |

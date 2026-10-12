@@ -20,7 +20,11 @@ public class BoosterData
     public int valueStart;   // số lượt tặng khi mở khóa
     public int valueOneBuy;  // số lượt mỗi lần mua
     public int priceOneBuy;  // giá coin mỗi lần mua
-    public Sprite icon;
+    public Sprite icon;      // icon dạng nút (nút booster HUD, popup mua)
+    public Sprite iconBig;   // icon to không nền (HintBig / FreezeBig / RevealBig): ô vật phẩm trong gói Shop, quà
+
+    /// <summary>Icon cho ô vật phẩm (gói, quà): icon to nếu có, không thì icon nút.</summary>
+    public Sprite ItemIcon => iconBig != null ? iconBig : icon;
 }
 
 /// <summary>Cấu hình 3 booster. Tên field giữ như asset gốc của Paw Block để dùng lại BoosterDatabase.asset.</summary>

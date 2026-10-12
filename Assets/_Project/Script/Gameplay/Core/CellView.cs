@@ -28,10 +28,22 @@ public class CellView : MonoBehaviour
     private static readonly Vector2 BadgeWide = new Vector2(0.74f, 0.5f);
     private const float BadgeScale = 0.25f;
 
+    // Ô số nằm trong vùng đang kéo: số phóng to; vùng phủ ≥ 2 ô số: số lắc ngang
+    private const float HighlightScale = 1.22f;
+    private const float ShakeDuration = 0.28f;
+    private const float ShakeDistance = 0.07f;
+
     public CellModel Model { get; private set; }
     public Vector2Int Position => Model.Position;
 
     private Sequence _intro;
+    private Tween _bump;
+    private Tween _highlight;
+    private Tween _shake;
+    private bool _highlighted;
+    private float _highlightK = 1f;
+    private Transform _clueRoot;      // số đang hiện, hoặc ổ khóa khi ô còn khóa
+    private Vector3 _valueScale, _valuePos, _lockScale, _lockPos;
     private Color _bodyColor = Color.white;
     private readonly List<TMP_Text> _contentTexts = new List<TMP_Text>();
     private readonly List<SpriteRenderer> _contentSprites = new List<SpriteRenderer>();
@@ -48,11 +60,94 @@ public class CellView : MonoBehaviour
         if (orientationBadge != null) _contentSprites.Add(orientationBadge);
         foreach (TMP_Text t in _contentTexts) _contentAlpha.Add(t.alpha);
         foreach (SpriteRenderer sr in _contentSprites) _contentAlpha.Add(sr.color.a);
+        if (valueText != null) { _valueScale = valueText.transform.localScale; _valuePos = valueText.transform.localPosition; }
+        if (lockRoot != null) { _lockScale = lockRoot.transform.localScale; _lockPos = lockRoot.transform.localPosition; }
     }
 
     private void OnDisable()
     {
         StopIntro();
+        StopBump();
+        StopClueFeedback();
+    }
+
+    /// <summary>Ô số nằm trong / ra khỏi vùng đang kéo: số (hoặc ổ khóa) phóng to nảy nhẹ / thu về.</summary>
+    public void SetHighlighted(bool on)
+    {
+        if (on == _highlighted) return;
+        _highlighted = on;
+        Transform target = ClueRoot();
+        if (target == null) return;
+
+        _highlight?.Kill();
+        Vector3 baseScale = BaseScale(target);
+        _highlight = DOVirtual.Float(_highlightK, on ? HighlightScale : 1f, on ? 0.16f : 0.12f, k =>
+            {
+                _highlightK = k;
+                target.localScale = baseScale * k;
+            })
+            .SetEase(on ? Ease.OutBack : Ease.OutQuad)
+            .SetLink(gameObject);
+    }
+
+    /// <summary>Vùng kéo phủ ≥ 2 ô số: số lắc ngang 1 nhịp (báo "không được").</summary>
+    public void PlayConflictShake()
+    {
+        Transform target = ClueRoot();
+        if (target == null) return;
+        _shake?.Kill();
+        Vector3 basePos = lockRoot != null && target == lockRoot.transform ? _lockPos : _valuePos;
+        _shake = DOVirtual.Float(0f, 1f, ShakeDuration, p =>
+                target.localPosition = basePos + Vector3.right * (Mathf.Sin(p * Mathf.PI * 6f) * ShakeDistance * (1f - p)))
+            .SetEase(Ease.Linear)
+            .SetLink(gameObject)
+            .OnKill(() => { if (target != null) target.localPosition = basePos; });
+    }
+
+    private Transform ClueRoot()
+    {
+        if (valueText != null && valueText.gameObject.activeSelf) return valueText.transform;
+        if (lockRoot != null && lockRoot.activeSelf) return lockRoot.transform;
+        return null;
+    }
+
+    private Vector3 BaseScale(Transform t) => lockRoot != null && t == lockRoot.transform ? _lockScale : _valueScale;
+
+    private void StopClueFeedback()
+    {
+        _highlight?.Kill();
+        _highlight = null;
+        _shake?.Kill();
+        _shake = null;
+        _highlighted = false;
+        _highlightK = 1f;
+        if (valueText != null) { valueText.transform.localScale = _valueScale; valueText.transform.localPosition = _valuePos; }
+        if (lockRoot != null) { lockRoot.transform.localScale = _lockScale; lockRoot.transform.localPosition = _lockPos; }
+    }
+
+    /// <summary>
+    /// Khối vừa đặt gần đây: sau <paramref name="delay"/>, ô phồng thêm <paramref name="amount"/> rồi về lại
+    /// (lên nhanh, xuống chậm). Đang chạy intro thì bỏ qua.
+    /// </summary>
+    public void PlayBump(float delay, float amount, float duration)
+    {
+        if (_intro != null || amount <= 0f || duration <= 0f) return;
+        StopBump();
+        Tween tween = null;
+        tween = DOVirtual.Float(0f, 1f, duration, p => transform.localScale = Vector3.one * FeelCurves.Bump(p, amount))
+            .SetDelay(delay)
+            .SetEase(Ease.OutQuad)
+            .SetLink(gameObject)
+            .OnKill(() => { if (_bump == tween) _bump = null; });
+        _bump = tween;
+    }
+
+    private void StopBump()
+    {
+        if (_bump == null) return;
+        _bump.Kill();
+        _bump = null;
+        transform.localScale = Vector3.one;
     }
 
     /// <summary>
@@ -116,6 +211,8 @@ public class CellView : MonoBehaviour
     public void Unbind()
     {
         StopIntro();
+        StopBump();
+        StopClueFeedback();
         if (Model != null) Model.Changed -= Refresh;
         Model = null;
     }

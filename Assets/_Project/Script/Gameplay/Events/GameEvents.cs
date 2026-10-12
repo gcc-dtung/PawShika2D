@@ -3,16 +3,18 @@
 /// bên phát gọi EventBus&lt;X&gt;.Raise, bên nghe Subscribe / Unsubscribe.
 /// </summary>
 
-/// <summary>LevelManager vừa nạp 1 level thường (không phát cho màn tutorial).</summary>
+/// <summary>LevelManager vừa nạp 1 level thường hoặc level Daily Challenge (không phát cho màn tutorial).</summary>
 public readonly struct LevelLoadedEvent : IGameEvent
 {
-    public readonly int Number;           // số level hiển thị (bắt đầu từ 1)
+    public readonly int Number;           // số level hiển thị (bắt đầu từ 1); Daily vẫn là level thường hiện tại
     public readonly LevelDefinition Level;
+    public readonly bool IsDaily;         // level Daily Challenge (sinh theo ngày, không thuộc LevelDatabase)
 
-    public LevelLoadedEvent(int number, LevelDefinition level)
+    public LevelLoadedEvent(int number, LevelDefinition level, bool isDaily = false)
     {
         Number = number;
         Level = level;
+        IsDaily = isDaily;
     }
 }
 
@@ -70,5 +72,18 @@ public readonly struct BoosterTutorialCompletedEvent : IGameEvent
     public BoosterTutorialCompletedEvent(BoosterType type)
     {
         Type = type;
+    }
+}
+
+/// <summary>Số sao của ván đổi (LevelStars): lưới mới về 3 sao (Lost = false) hoặc thời gian tụt qua 1 mốc (Lost = true).</summary>
+public readonly struct StarsChangedEvent : IGameEvent
+{
+    public readonly int Stars;
+    public readonly bool Lost;
+
+    public StarsChangedEvent(int stars, bool lost)
+    {
+        Stars = stars;
+        Lost = lost;
     }
 }

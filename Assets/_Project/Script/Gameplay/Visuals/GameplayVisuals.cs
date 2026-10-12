@@ -21,6 +21,10 @@ public class GameplayVisuals : ScriptableObject
     public Sprite bubbleSprite;
     public Sprite[] praiseSprites;
 
+    [Header("Booster")]
+    [Tooltip("Khung xanh trên từng ô của vùng Hint đang gợi ý (khung_reveal, Cell/WaitSameHint gốc), 9-slice")]
+    public Sprite hintCellFrame;
+
     private static GameplayVisuals _instance;
     public static GameplayVisuals Instance
     {

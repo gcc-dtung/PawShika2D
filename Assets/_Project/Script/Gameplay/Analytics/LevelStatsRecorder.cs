@@ -64,7 +64,7 @@ public class LevelStatsRecorder : MonoBehaviour
     private void OnLevelLoaded(LevelLoadedEvent e)
     {
         CloseAttempt(); // đang dở mà nạp level khác / chơi lại = bỏ cuộc
-        _levelId = e.Level != null ? e.Level.name : null;
+        _levelId = e.Level != null && !e.IsDaily ? e.Level.name : null; // Daily (sinh theo ngày) không ghi số liệu level
         _levelNumber = e.Number;
         _ended = false;
         _attemptSeconds = 0f;
@@ -103,6 +103,7 @@ public class LevelStatsRecorder : MonoBehaviour
                 _current.wins++;
                 _current.playSeconds += _attemptSeconds;
                 if (_current.bestWinSeconds <= 0f || _attemptSeconds < _current.bestWinSeconds) _current.bestWinSeconds = _attemptSeconds;
+                if (LevelStars.Instance != null) _current.bestStars = Mathf.Max(_current.bestStars, LevelStars.Instance.Stars);
                 End();
                 break;
             case GameState.Lost:

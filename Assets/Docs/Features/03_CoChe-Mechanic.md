@@ -26,8 +26,8 @@ public struct ClueMechanic
 | --- | --- | --- | --- | --- | --- |
 | **Void** | Ô bị bỏ, lưới có hình lạ | Vùng chứa Void → `BlockedCell` | Ô Void = `blocked` | – | Không |
 | **Hướng** | Ô nền sau số: cao / vuông / dẹt | Sai hình → `WrongShape` | `MatchesConstraint` lọc ứng viên | – | "Orientation" |
-| **Khóa** | Ổ khóa + số bước, che số và hướng | Còn khóa → `Locked` | (game thật: biết hết; Validator: chưa biết số / hướng) | **Mọi** ổ khóa −1 (`ClueCell.StepLock`) | "Locked Number" |
-| **"?"** | Dấu "?" thay số | Không kiểm tra số ô | Validator: chưa biết số, lời giải phải phủ kín lưới | Lộ số (`ClueCell.Reveal`) | "Hidden Number" |
+| **Khóa** | Ổ khóa + số bước, che số và hướng | Còn khóa → `Locked` | (game thật: biết hết; Validator: chưa biết số / hướng) | **Mọi** ổ khóa −1; gỡ khối thì khóa lại (`ClueCell.SyncLock`: bước gốc − số khối khác trên lưới) | "Locked Number" |
+| **"?"** | Dấu "?" thay số | Không kiểm tra số ô | Validator: chưa biết số, lời giải phải phủ kín lưới | Không đổi: luôn hiện "?" (cả trên khối mèo), số thật chỉ dùng để chấm khi lưới kín | "Hidden Number" |
 
 ### Ai làm gì cho mỗi cơ chế
 

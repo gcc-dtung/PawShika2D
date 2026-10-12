@@ -64,7 +64,7 @@ public struct ClueMechanic
 public bool MustTouchEdge => Data.mechanic.edge;
 ```
 
-Cơ chế **đổi trạng thái** (như Khóa): giữ biến trong `ClueCell` (`LockSteps`), thêm hàm đổi (`StepLock()`), thêm hàm bọc trong `CellModel` gọi `Changed?.Invoke()` để `CellView` vẽ lại.
+Cơ chế **đổi trạng thái** (như Khóa): giữ biến trong `ClueCell` (`LockSteps`), thêm hàm đổi (`SyncLock()`), thêm hàm bọc trong `CellModel` gọi `Changed?.Invoke()` để `CellView` vẽ lại.
 
 ## Bước 3 – Luật đặt khối (`BoardModel.Check`)
 
@@ -84,7 +84,7 @@ if (clue.MustTouchEdge && !ShikakuSolver.TouchesBorder(rect, Geometry.Width, Geo
 
 > **Quy tắc vàng:** viết luật thành **1 hàm static dùng chung** (ở đây `ShikakuSolver.TouchesBorder`, giống `MatchesConstraint`) rồi gọi ở cả `BoardModel` và solver. Hai nơi lệch luật = game hiện mèo nhưng thả ra bị trừ mạng oan.
 
-**3b. Cơ chế phản ứng khi đặt khối** (như Khóa −1, "?" lộ số): sửa `BoardModel.Place` (chỗ có `// [MECHANIC]`). Ô vừa đổi trạng thái thì thêm vào list / event để view và âm thanh biết (xem `onClueUnlocked`).
+**3b. Cơ chế phản ứng khi đặt khối** (như Khóa −1): sửa `BoardModel.Place` (chỗ có `// [MECHANIC]`). Ô vừa đổi trạng thái thì thêm vào list / event để view và âm thanh biết (xem `onClueUnlocked`).
 
 ## Bước 4 – Solver (`ShikakuSolver`)
 

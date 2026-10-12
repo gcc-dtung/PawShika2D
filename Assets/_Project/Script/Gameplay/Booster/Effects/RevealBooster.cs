@@ -43,7 +43,7 @@ public class RevealBooster : BoosterEffect
         if (targets.Count == 0) return true;
 
         SetMode(false);
-        Host.Consume(Type);
+        Host.Consume(Type, gm.Board.Geometry.CellToWorld(pos));
         Host.PlaceInSequence(targets);
         return true;
     }

@@ -114,6 +114,15 @@ public static class DebugCheats
 
     public static void SetCoins(int value) => AddCoins(Mathf.Max(0, value) - CoinWallet.Balance);
 
+    /// <summary>Cộng / trừ sao trong ví sao (Vòng quay may mắn); trừ quá số đang có thì về 0.</summary>
+    public static void AddStars(int amount)
+    {
+        if (amount > 0) StarWallet.Add(amount);
+        else if (amount < 0) StarWallet.TrySpend(Mathf.Min(-amount, StarWallet.Balance));
+    }
+
+    public static void SetStars(int value) => AddStars(Mathf.Max(0, value) - StarWallet.Balance);
+
     // ---------- Đồng hồ trong ván ----------
 
     /// <summary>Chuỗi trạng thái đồng hồ cho Debug / Cheat Panel, vd "1:05 (băng 12s)".</summary>

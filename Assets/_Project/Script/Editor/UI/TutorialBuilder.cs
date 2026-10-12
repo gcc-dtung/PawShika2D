@@ -17,6 +17,7 @@ public static class TutorialBuilder
 {
     private const string HandSprite = "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Grid_Cells/tutorial_hand.png";
     private const string DotSprite = "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Grid_Cells/tutorial_dot.png";
+    private const string SpotlightSprite = "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Grid_Cells/CircleMask.png";
     private const string BubbleSprite = "Assets/_Project/GameAssets/04_UI_Graphics/Popups_Dialogs/popup_tutorial.png";
     private const string RevealBannerSprite = "Assets/_Project/GameAssets/03_Gameplay_Blocks_Grid/Boosters_Obstacles/khung_reveal2.png";
     private const string ConstraintPicture = "Assets/_Project/GameAssets/04_UI_Graphics/Popups_Dialogs/popup_tutorial_4.png";
@@ -176,6 +177,7 @@ public static class TutorialBuilder
         PopupBuilder.Assign(view, "message", message);
         PopupBuilder.Assign(view, "bubble", bubble);
         PopupBuilder.Assign(view, "hand", hand);
+        PopupBuilder.Assign(view, "spotlightSprite", PopupBuilder.LoadSprite(SpotlightSprite));
         root.gameObject.SetActive(false);
         return view;
     }

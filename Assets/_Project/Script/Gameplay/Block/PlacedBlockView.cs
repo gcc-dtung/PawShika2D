@@ -33,9 +33,12 @@ public class PlacedBlockView : MonoBehaviour
     [SerializeField] private float earWidth = 0.36f;   // bề rộng cặp tai
     [SerializeField] private float earOverlap = 0f;    // đỉnh tai đè lên khối bên trên thêm bao nhiêu
 
-    [Header("Bật lên")]
-    [SerializeField] private float popDuration = 0.18f;
-    [SerializeField] private float popScale = 0.08f;
+    [Header("Đặt khối: dẹt xuống rồi bật lên (squash & stretch), đáy khối đứng yên")]
+    [SerializeField, Min(0.01f)] private float squashDuration = 0.34f;
+    [Tooltip("Dẹt / dài tối đa (0.12 = ngang +12%, dọc -12%)")]
+    [SerializeField, Range(0f, 0.3f)] private float squashAmount = 0.12f;
+    [Tooltip("Số nửa nhịp dẹt / dài trước khi đứng yên")]
+    [SerializeField, Range(1f, 5f)] private float squashWobbles = 2.5f;
 
     [Header("Đủ value: viền màu thu bên trong (ref reffullvalue)")]
     [SerializeField] private float ringDuration = 0.2f;
@@ -53,9 +56,19 @@ public class PlacedBlockView : MonoBehaviour
     [SerializeField] private float rejectShakeStrength = 0.12f;
     [SerializeField] private float rejectShakeFrequency = 45f;
 
-    [Header("Gỡ khối (chạm vào khối)")]
-    [SerializeField] private float removeDuration = 0.16f;
+    [Header("Gỡ khối (chạm vào khối): nhảy bật lên rồi rơi xuống, co nhỏ và mờ dần")]
+    [SerializeField] private float removeDuration = 0.34f;
     [SerializeField, Range(0.3f, 1f)] private float removeShrinkTo = 0.6f;
+    [SerializeField] private float removeHopHeight = 0.35f;   // world
+    [SerializeField] private float removeFallDepth = 0.25f;   // rơi thấp hơn chỗ cũ bao nhiêu khi biến mất
+
+    [Header("Mèo kề bên phản ứng (khối mới đặt cạnh)")]
+    [SerializeField] private float nudgeHeight = 0.12f;
+    [SerializeField] private float nudgeDuration = 0.26f;
+
+    [Header("Run khi đóng băng")]
+    [SerializeField] private float shiverDuration = 0.45f;
+    [SerializeField] private float shiverStrength = 0.035f;
 
     private float _cellSize = GridSpawner.CellSpacing;
     private Color _bodyBaseColor = Color.white;
@@ -69,6 +82,8 @@ public class PlacedBlockView : MonoBehaviour
     private SpriteRenderer _earsFlash;
     private static Material _fallbackFlashMaterial;
     private ColorType _color;
+    private float _faceWidth;
+    private CatFaceAnimation _faceAnim;
 
     public bool IsPreview { get; private set; }
     public RectInt Rect { get; private set; }
@@ -94,8 +109,10 @@ public class PlacedBlockView : MonoBehaviour
     /// <summary>Thả tay, nước đi đúng: mèo xem trước thành khối thật.</summary>
     public void Confirm(CellModel clueCell = null)
     {
+        bool wasPreview = IsPreview;
         IsPreview = false;
-        if (clueCell != null) SetNumber(clueCell); // ô ẩn "?" vừa lộ số
+        if (wasPreview) ReactFace(); // mèo xem trước thành khối thật: đổi biểu cảm (như vừa "đáp" xuống)
+        if (clueCell != null) SetNumber(clueCell); // ô "?" vẫn hiện "?" (không lộ số)
         SetTint(Color.white, 1f);
         PlayAnim(PopIn());
     }
@@ -107,21 +124,100 @@ public class PlacedBlockView : MonoBehaviour
         PlayAnim(ShakeRoutine());
     }
 
-    /// <summary>Chạm khối để gỡ: co nhỏ + mờ nhanh. Xong thì gọi onDone (trả về pool).</summary>
+    /// <summary>
+    /// Chạm khối để gỡ: mèo nhảy bật lên (dài người ra), rồi rơi xuống thấp hơn chỗ cũ, co nhỏ và mờ dần.
+    /// Xong thì gọi onDone (trả về pool).
+    /// </summary>
     public void PlayRemove(Action onDone)
     {
         IsPreview = false;
         KillRing();
         _flashAnim?.Kill();
         transform.localScale = Vector3.one;
+        const float upPart = 0.35f; // 35% thời gian đầu: bật lên
         Tween tween = DOVirtual.Float(0f, 1f, removeDuration, p =>
             {
-                transform.localScale = Vector3.one * Mathf.Lerp(1f, removeShrinkTo, p);
-                SetTint(Color.white, 1f - p);
+                float y;
+                Vector3 scale;
+                if (p < upPart)
+                {
+                    float u = p / upPart;
+                    float e = 1f - (1f - u) * (1f - u); // OutQuad
+                    y = removeHopHeight * e;
+                    float stretch = 0.08f * Mathf.Sin(u * Mathf.PI); // giữa cú nhảy dài người ra
+                    scale = new Vector3(1f - stretch, 1f + stretch, 1f);
+                }
+                else
+                {
+                    float u = (p - upPart) / (1f - upPart);
+                    float e = u * u; // InQuad: rơi nhanh dần
+                    y = Mathf.Lerp(removeHopHeight, -removeFallDepth, e);
+                    scale = Vector3.one * Mathf.Lerp(1f, removeShrinkTo, e);
+                    SetTint(Color.white, 1f - e);
+                }
+                transform.localScale = scale;
+                transform.position = _basePosition + new Vector3(0f, y, 0f);
             })
-            .SetEase(Ease.InQuad)
+            .SetEase(Ease.Linear)
             .OnComplete(() => onDone?.Invoke());
         PlayAnim(tween);
+    }
+
+    /// <summary>Khối mới vừa đặt sát bên: mèo nhảy lên 1 cái (giật mình) rồi đáp xuống, đổi biểu cảm.</summary>
+    public void PlayNudge(float delay)
+    {
+        if (IsPreview || !gameObject.activeInHierarchy) return;
+        Tween tween = DOVirtual.Float(0f, 1f, nudgeDuration, p =>
+            {
+                float hop = Mathf.Sin(p * Mathf.PI);
+                transform.position = _basePosition + new Vector3(0f, nudgeHeight * hop, 0f);
+                float s = 0.05f * hop;
+                transform.localScale = new Vector3(1f - s, 1f + s, 1f);
+            })
+            .SetDelay(delay)
+            .SetEase(Ease.OutQuad)
+            .OnStart(ReactFace)
+            .OnComplete(ResetPose);
+        PlayAnim(tween);
+    }
+
+    /// <summary>Đóng băng: mèo run lên vài nhịp ngang (biên độ giảm dần).</summary>
+    public void PlayShiver(float delay)
+    {
+        if (IsPreview || !gameObject.activeInHierarchy) return;
+        Tween tween = DOVirtual.Float(0f, 1f, shiverDuration, p =>
+                transform.position = _basePosition + new Vector3(Mathf.Sin(p * Mathf.PI * 14f) * shiverStrength * (1f - p), 0f, 0f))
+            .SetDelay(delay)
+            .SetEase(Ease.Linear)
+            .OnComplete(ResetPose);
+        PlayAnim(tween);
+    }
+
+    /// <summary>
+    /// Độ trong của mèo mờ Hint (nhấp nháy). Số giữ đặc: số mờ để lộ số nhạt của ô bên dưới, 2 số chồng lẫn khó đọc.
+    /// </summary>
+    public void SetAlpha(float alpha)
+    {
+        SetTint(Color.white, alpha);
+        numberText.color = _numberBaseColor;
+    }
+
+    /// <summary>Đổi sang 1 biểu cảm khác (mèo vừa đặt / mèo kề bên phản ứng).</summary>
+    public void ReactFace()
+    {
+        GameplayVisuals visuals = GameplayVisuals.Instance;
+        if (visuals == null || face == null || !face.gameObject.activeSelf || _faceWidth <= 0f) return;
+        CatFaceAnimation anim = visuals.GetRandomFace();
+        for (int i = 0; i < 3 && anim == _faceAnim; i++) anim = visuals.GetRandomFace(); // tránh trùng mặt cũ
+        if (anim == null || anim.frames.Count == 0) return;
+        _faceAnim = anim;
+        face.Play(anim, visuals.faceFps, _faceWidth);
+    }
+
+    private void ResetPose()
+    {
+        transform.position = _basePosition;
+        transform.localScale = Vector3.one;
     }
 
     /// <summary>
@@ -277,6 +373,8 @@ public class PlacedBlockView : MonoBehaviour
         if (single) pos += new Vector3(0f, -_cellSize * 0.28f, 0f); // khối 1 ô: mặt nhỏ dưới số
 
         face.transform.position = new Vector3(pos.x, pos.y, BlockZ - 0.06f);
+        _faceWidth = faceWidth;
+        _faceAnim = anim;
         face.Play(anim, visuals.faceFps, faceWidth);
     }
 
@@ -343,13 +441,25 @@ public class PlacedBlockView : MonoBehaviour
         _anim = t;
     }
 
-    /// <summary>Phóng to nhẹ rồi về kích thước chuẩn.</summary>
+    /// <summary>
+    /// Khối "đáp" xuống: dẹt (ngang to, dọc thấp) -> dài -> dẹt nhẹ -> đứng yên, biên độ tắt dần.
+    /// Đáy khối giữ nguyên chỗ (dịch tâm theo chiều cao) để trông như rơi xuống chạm đất.
+    /// </summary>
     private Tween PopIn()
     {
         transform.localScale = Vector3.one;
-        return transform.DOScale(1f + popScale, popDuration * 0.5f)
-            .SetEase(Ease.OutSine)
-            .SetLoops(2, LoopType.Yoyo);
+        return DOVirtual.Float(0f, 1f, squashDuration, p =>
+            {
+                Vector2 s = FeelCurves.Squash(p, squashAmount, squashWobbles);
+                transform.localScale = new Vector3(s.x, s.y, 1f);
+                transform.position = _basePosition + new Vector3(0f, FeelCurves.BottomAnchorOffset(s.y, _bodySize.y), 0f);
+            })
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                transform.localScale = Vector3.one;
+                transform.position = _basePosition;
+            });
     }
 
     /// <summary>

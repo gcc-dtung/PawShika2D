@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-09 17:15 |
+| Trạng thái | Đã push |
+| Commit | `db32b48` "Old-Core: đồng hồ thay 3 mạng, Đóng băng, chạm gỡ khối, rung mới" (nhánh `Old-Core`) |
+| Thời gian push | 2026-10-10 20:29 |
+| Cập nhật lần cuối | 2026-10-10 20:29 |
 
 ## Tóm tắt
 

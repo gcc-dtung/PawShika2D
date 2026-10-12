@@ -20,6 +20,8 @@ public static class GameplayVisualsSetup
     private const string FaceAtlas = FaceFolder + "/ingame_cat_face_03.atlas.txt";
     private const string PraiseFolder = Root + "/02_Cat_Characters_Spine/Praise_Badges";
     private const string Bubble = Root + "/03_Gameplay_Blocks_Grid/Grid_Cells/Circle.png";
+    private const string HintFrame = Root + "/03_Gameplay_Blocks_Grid/Boosters_Obstacles/khung_reveal.png";
+    private const int HintFrameBorder = 44;  // px, khung_reveal 169x169 bo góc
     private const string OutputPath = "Assets/_Project/Resources/GameplayVisuals.asset";
 
     private const int BlockBorder = 48;      // px, sprite khối 160x160
@@ -54,6 +56,7 @@ public static class GameplayVisualsSetup
         }
 
         visuals.bubbleSprite = LoadSprite(Bubble);
+        visuals.hintCellFrame = LoadSprite(HintFrame, new Vector4(HintFrameBorder, HintFrameBorder, HintFrameBorder, HintFrameBorder));
         visuals.praiseSprites = Directory.GetFiles(PraiseFolder, "*.png")
             .Select(p => LoadSprite(p.Replace('\\', '/')))
             .Where(s => s != null)

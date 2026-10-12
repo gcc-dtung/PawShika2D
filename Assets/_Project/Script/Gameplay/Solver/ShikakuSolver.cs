@@ -76,11 +76,35 @@ public static class ShikakuSolver
         bool[] done = new bool[state.open.Count];
         int nodes = 0;
 
-        bool found = Backtrack(candidates, done, state.blocked, needCoverage, result, ref nodes, ref aborted);
+        int count = 0;
+        bool found = Backtrack(candidates, done, state.blocked, needCoverage, 1, ref count, result, ref nodes, ref aborted);
         if (aborted) return false;
 
         if (found) solution = result;
         return found;
+    }
+
+    /// <summary>
+    /// Đếm số lời giải của level chưa đặt khối nào, dừng khi đủ <paramref name="limit"/> (vd. 2 để biết có đúng 1 lời giải).
+    /// aborted = quá giới hạn tìm kiếm (kết quả không chắc).
+    /// </summary>
+    public static int CountSolutions(LevelDefinition level, int limit, out bool aborted)
+    {
+        aborted = false;
+        if (limit <= 0 || !BuildState(level, null, null, null, out State state)) return 0;
+
+        List<List<RectInt>> candidates = new List<List<RectInt>>(state.open.Count);
+        foreach (Clue c in state.open)
+        {
+            List<RectInt> list = BuildCandidates(c, state);
+            if (list.Count == 0) return 0;
+            candidates.Add(list);
+        }
+
+        int count = 0, nodes = 0;
+        Backtrack(candidates, new bool[state.open.Count], state.blocked, false, limit, ref count,
+            new List<RectInt>(state.open.Count), ref nodes, ref aborted);
+        return count;
     }
 
     /// <summary>Các vùng có thể đặt cho clue (chưa xét clue khác có còn chỗ hay không).</summary>
@@ -161,8 +185,9 @@ public static class ShikakuSolver
         return true;
     }
 
+    /// <summary>Tìm lời giải; dừng (trả true) khi đã thấy đủ <paramref name="limit"/> lời giải, result giữ lời giải cuối.</summary>
     private static bool Backtrack(List<List<RectInt>> candidates, bool[] done, bool[,] occupied, bool needCoverage,
-        List<RectInt> result, ref int nodes, ref bool aborted)
+        int limit, ref int found, List<RectInt> result, ref int nodes, ref bool aborted)
     {
         if (++nodes > MaxNodes)
         {
@@ -208,7 +233,7 @@ public static class ShikakuSolver
                     if (!occupied[x, y] && !coverable[x, y]) return false;
         }
 
-        if (best < 0) return true; // Mọi clue đã có khối
+        if (best < 0) return ++found >= limit; // Mọi clue đã có khối
 
         done[best] = true;
         foreach (RectInt r in bestOptions)
@@ -216,7 +241,7 @@ public static class ShikakuSolver
             SetCells(r, occupied, true);
             result.Add(r);
 
-            if (Backtrack(candidates, done, occupied, needCoverage, result, ref nodes, ref aborted)) return true;
+            if (Backtrack(candidates, done, occupied, needCoverage, limit, ref found, result, ref nodes, ref aborted)) return true;
 
             result.RemoveAt(result.Count - 1);
             SetCells(r, occupied, false);

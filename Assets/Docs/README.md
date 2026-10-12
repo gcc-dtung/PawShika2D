@@ -37,7 +37,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 | Loại | Hiển thị | Luật |
 | --- | --- | --- |
 | Ô khóa | Ổ khóa mèo + số bước | Mỗi khối đặt đúng làm mọi khóa giảm 1. Về 0 thì lộ số. Còn khóa thì không chọn được. |
-| Ô ẩn | `?` | Không kiểm tra số ô; solver quyết định đúng/sai. Đặt đúng thì lộ số. |
+| Ô ẩn | `?` | Không kiểm tra số ô; số thật chỉ dùng để chấm khi lưới kín. Không bao giờ lộ số (khối mèo đặt lên cũng hiện `?`). |
 | Mũi tên ngang | Mũi tên mờ | Khối phải rộng hơn cao |
 | Mũi tên dọc | Mũi tên mờ, xoay 90° | Khối phải cao hơn rộng |
 

@@ -33,7 +33,7 @@ Thả   ─► GridManager.EndSelection ─► BoardModel.Check(rect)
           ├ BlockedCell / ClueCount / Locked / WrongShape / WrongSize → onInvalidMove (KHÔNG trừ mạng)
           └ Ready → BoardModel.IsSolvableWith(rect)?
                  ├ không → PlacedBlockView.PlayReject + onMistake + LivesManager.LoseLife
-                 └ có    → BoardModel.Place (giảm khóa, lộ "?") → onBlockPlaced → IsFull? → onGameWin
+                 └ có    → BoardModel.Place (giảm khóa; "?" giữ ẩn) → onBlockPlaced → IsFull? → onGameWin
 ```
 
 `BoardModel.Check` kiểm tra theo thứ tự (dừng ở lỗi đầu tiên):

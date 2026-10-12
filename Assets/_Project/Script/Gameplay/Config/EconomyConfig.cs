@@ -15,6 +15,8 @@ public class EconomyConfig : ScriptableObject
     [Min(0)] public int winCoinRewardHard = 20;
     [Tooltip("Level Very Hard. gamePlay_CoinWinLevelExpert trong RemoteConfig gốc")]
     [Min(0)] public int winCoinRewardVeryHard = 30;
+    [Tooltip("Coin cộng thêm cho mỗi sao đạt được (StarRating): 3 sao ở level Normal = 10 + 3 x 5")]
+    [Min(0)] public int coinsPerStar = 5;
 
     [Header("Thêm giờ (hết giờ trong màn, MoreTimePopup)")]
     [Tooltip("Số giây cộng khi xem quảng cáo")]
@@ -31,7 +33,10 @@ public class EconomyConfig : ScriptableObject
     [Header("Quảng cáo (giả lập khi chưa có SDK)")]
     [Min(0)] public float adsSimulatedDuration = 0.5f;
 
-    /// <summary>Coin thưởng khi thắng level có độ khó <paramref name="difficulty"/>.</summary>
+    /// <summary>Coin thưởng khi thắng: theo độ khó + coinsPerStar cho mỗi sao (0..3).</summary>
+    public int WinCoinReward(LevelDifficulty difficulty, int stars) => WinCoinReward(difficulty) + coinsPerStar * Mathf.Max(0, stars);
+
+    /// <summary>Coin thưởng khi thắng level có độ khó <paramref name="difficulty"/> (chưa tính sao).</summary>
     public int WinCoinReward(LevelDifficulty difficulty)
     {
         switch (difficulty)

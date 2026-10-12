@@ -16,10 +16,12 @@ public class SaveData
 
     public int currentLevel;
     public int coins;
+    public int stars; // ví sao: cộng số sao mỗi lần thắng (StarWallet), tiêu ở Vòng quay may mắn
     public List<BoosterSave> boosters = new List<BoosterSave>();
     public EnergySave energy = new EnergySave();
     public SettingsSave settings = new SettingsSave();
     public DailySave daily = new DailySave();
+    public DailyChallengeSave challenge = new DailyChallengeSave();
     public ClockSave clock = new ClockSave();
     public ProfileSave profile = new ProfileSave();
     public bool noAds; // đã mua Remove Ads / No Ads Bundle
@@ -92,6 +94,7 @@ public class LevelStatSave
     public int boosters;         // booster đã dùng
     public float playSeconds;    // tổng thời gian ở trạng thái Playing
     public float bestWinSeconds; // lượt thắng nhanh nhất (0 = chưa thắng)
+    public int bestStars;        // số sao cao nhất khi thắng (0..3, xem cùng wins > 0)
 }
 
 /// <summary>Hồ sơ người chơi máy này (PlayerProfileService) + chỉ số (ProfileStatsRecorder).</summary>
@@ -122,4 +125,13 @@ public class DailySave
 {
     public long cycleStart = -1; // ngày bắt đầu chu kỳ điểm danh (số ngày từ 1/1/1970 theo lịch máy), -1 = chưa có
     public int claimedMask;      // bit i = đã nhận quà ngày i + 1
+}
+
+/// <summary>Daily Challenge (DailyChallengeModel): ngày mở khóa, các ngày đã thắng, quà mốc đã nhận.</summary>
+[Serializable]
+public class DailyChallengeSave
+{
+    public long startDay = -1;                              // ngày mở khóa (số ngày từ 1/1/1970 theo lịch), -1 = chưa mở; ngày trước đó không tính lỡ
+    public List<int> doneDays = new List<int>();            // các ngày đã thắng (số ngày từ 1/1/1970)
+    public List<int> claimedGifts = new List<int>();        // quà mốc đã nhận (DailyChallengeModel.GiftKey: năm, tháng, mốc)
 }

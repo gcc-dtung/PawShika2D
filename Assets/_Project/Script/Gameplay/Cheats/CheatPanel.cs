@@ -225,7 +225,7 @@ public class CheatPanel : MonoBehaviour
         EnergyManager en = EnergyManager.Instance;
         string energy = en != null ? (en.IsInfinite ? "∞" : $"{en.Current}/{en.Max}") : "-";
         return $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount} · {screen} · {state}\n" +
-               $"Coin {CoinWallet.Balance} · Giờ {DebugCheats.TimerStatus} · Năng lượng {energy}";
+               $"Coin {CoinWallet.Balance} · ★ {StarWallet.Balance} · Giờ {DebugCheats.TimerStatus} · Năng lượng {energy}";
     }
 
     // ---------- Tab: Level + thắng / thua ----------
@@ -286,13 +286,22 @@ public class CheatPanel : MonoBehaviour
 
     private void DrawResources()
     {
-        Header("Coin");
+        Header($"Coin · {CoinWallet.Balance}");
         using (new GUILayout.HorizontalScope())
         {
             if (Btn("+100")) DebugCheats.AddCoins(100);
             if (Btn("+1000")) DebugCheats.AddCoins(1000);
             if (Btn("+10000")) DebugCheats.AddCoins(10000);
             if (Btn("= 0")) DebugCheats.SetCoins(0);
+        }
+
+        Header($"Sao ★ (Vòng quay may mắn) · {StarWallet.Balance}");
+        using (new GUILayout.HorizontalScope())
+        {
+            if (Btn("+10")) DebugCheats.AddStars(10);
+            if (Btn("+50")) DebugCheats.AddStars(50);
+            if (Btn("-10")) DebugCheats.AddStars(-10);
+            if (Btn("= 0")) DebugCheats.SetStars(0);
         }
 
         Header($"Đồng hồ trong ván · {DebugCheats.TimerStatus}");

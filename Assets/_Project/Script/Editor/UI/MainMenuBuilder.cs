@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Dựng điều hướng Main Menu trong Canvas_Menu của scene đang mở:
-/// - Panels: ShopPanel | HomePanel | ProgressPanel (HomePanel có sẵn thì giữ nguyên, chỉ chuyển vào Panels)
+/// - Panels: ShopPanel | HomePanel | DailyPanel (HomePanel có sẵn thì giữ nguyên, chỉ chuyển vào Panels; DailyPanel do DailyChallengeBuilder dựng)
 /// - AlwayOn/TabBar: thanh tab dưới (home_tab2 nền, home_tab1 tab đang chọn, home_tab3 vạch ngăn)
 /// - MainMenuNavigator trên Canvas_Menu
 /// - HomePanel/Background (BackgroundCover: phủ kín mọi tỉ lệ màn hình), HomePanel/PlayButton (PLAY / Level n)
@@ -14,7 +14,7 @@ using UnityEngine.UI;
 /// - TopBar: avatar | năng lượng | coin | cài đặt (theo home_demo3 của bản gốc), chỉ hiện ở tab Home
 /// - ScreenFlow trên Manager: chuyển Menu <-> màn chơi
 /// Chữ dùng font Fredoka Bold + viền (GameFontSetup).
-/// Chạy lại được: dựng lại TabBar, TopBar, PlayButton, Starter, NoAds, ShopPanel, ProgressPanel; không đụng phần khác của HomePanel.
+/// Chạy lại được: dựng lại TabBar, TopBar, PlayButton, Starter, NoAds, ShopPanel, DailyPanel; không đụng phần khác của HomePanel.
 /// </summary>
 public static class MainMenuBuilder
 {
@@ -29,8 +29,8 @@ public static class MainMenuBuilder
     private const float SelectedWidth = 408f;  // home_tab1 408x292
     private const float SelectedHeight = 292f;
 
-    private static readonly string[] TabNames = { "Shop", "Home", "Progress" };
-    private static readonly string[] TabIcons = { Icons + "icon_shop.png", Icons + "icon_home.png", Icons + "icon_cup.png" };
+    private static readonly string[] TabNames = { "Shop", "Home", "Daily" };
+    private static readonly string[] TabIcons = { Icons + "icon_shop.png", Icons + "icon_home.png", Icons + "icon_daily.png" };
 
     [MenuItem("Tools/PawBlock/Builders/Build Main Menu", priority = 104)]
     public static void Build()
@@ -70,16 +70,17 @@ public static class MainMenuBuilder
 
         PopupBuilder.DestroyChild(panels, "ShopPanel");
         PopupBuilder.DestroyChild(panels, "ProgressPanel");
+        PopupBuilder.DestroyChild(panels, DailyChallengeBuilder.PanelName);
         RectTransform shop = ShopBuilder.BuildPanel(panels);
-        RectTransform progress = BuildProgressPlaceholder(panels);
+        RectTransform dailyPanel = DailyChallengeBuilder.BuildPanel(panels);
         // Nội dung tràn ra ngoài panel (vd. home_bg 2048px) không được đè panel bên cạnh khi trượt
-        foreach (Transform p in new[] { shop, home, progress })
+        foreach (Transform p in new[] { shop, home, dailyPanel })
         {
             if (p.GetComponent<RectMask2D>() == null) Undo.AddComponent<RectMask2D>(p.gameObject);
         }
         shop.SetSiblingIndex(0);
         home.SetSiblingIndex(1);
-        progress.SetSiblingIndex(2);
+        dailyPanel.SetSiblingIndex(2);
 
         // ---------- AlwayOn / TabBar ----------
         Transform alwaysOn = canvas.Find("AlwayOn");
@@ -109,6 +110,7 @@ public static class MainMenuBuilder
 
         MenuTabButton[] tabs = new MenuTabButton[TabNames.Length];
         for (int i = 0; i < TabNames.Length; i++) tabs[i] = BuildTab(bar, i);
+        DailyChallengeBuilder.SetupTab(tabs[MainMenuNavigator.DailyTab].transform);
 
         // ---------- Home: nền phủ kín, nút PLAY ----------
         Transform homeBg = home.Find("Background");
@@ -120,7 +122,7 @@ public static class MainMenuBuilder
         // Xóa cả bản cũ nằm thẳng trong HomePanel / AlwayOn
         RectTransform homeZone = UIZoneBuilder.Ensure(home, true, false, false, false);
         homeZone.SetSiblingIndex(home.Find("PlayButton").GetSiblingIndex()); // trên nền, cùng lớp với nút PLAY
-        foreach (string old in new[] { "Starter", "NoAds", "Daily", "TopBar" })
+        foreach (string old in new[] { "Starter", "NoAds", "Daily", "Lucky", "TopBar" })
         {
             PopupBuilder.DestroyChild(home, old);
             PopupBuilder.DestroyChild(homeZone, old);
@@ -129,6 +131,7 @@ public static class MainMenuBuilder
         MenuShortcutButton starter = BuildStarter(homeZone);
         MenuShortcutButton noAds = BuildNoAds(homeZone);
         MenuShortcutButton daily = BuildDaily(homeZone);
+        MenuShortcutButton lucky = BuildLucky(homeZone);
 
         // Thanh trên chỉ thuộc tab Home (trượt đi cùng panel)
         RectTransform topBar = PopupBuilder.NewUI("TopBar", homeZone);
@@ -150,7 +153,7 @@ public static class MainMenuBuilder
         so.FindProperty("tabBar").objectReferenceValue = bar;
         so.FindProperty("selectedBackground").objectReferenceValue = selected;
         so.FindProperty("selectedWidth").floatValue = SelectedWidth;
-        SetArray(so.FindProperty("panels"), shop, (RectTransform)home, progress);
+        SetArray(so.FindProperty("panels"), shop, (RectTransform)home, dailyPanel);
         SetArray(so.FindProperty("tabs"), tabs);
         so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -164,6 +167,8 @@ public static class MainMenuBuilder
         PopupBuilder.Assign(starter, "navigator", nav);
         PopupBuilder.Assign(noAds, "navigator", nav);
         PopupBuilder.Assign(daily, "navigator", nav);
+        PopupBuilder.Assign(lucky, "navigator", nav);
+        LuckyWheelBuilder.WireButton(lucky.GetComponent<LuckyWheelButton>());
         GameFlowUI flow = Object.FindFirstObjectByType<GameFlowUI>(FindObjectsInactive.Include);
         if (flow != null)
         {
@@ -189,7 +194,7 @@ public static class MainMenuBuilder
         nav.LayoutInEditor();
 
         EditorSceneManager.MarkSceneDirty(canvasGo.scene);
-        Debug.Log("[MainMenuBuilder] Đã dựng thanh tab Shop | Home | Progress trong Canvas_Menu.");
+        Debug.Log("[MainMenuBuilder] Đã dựng thanh tab Shop | Home | Daily trong Canvas_Menu.");
     }
 
     private static MenuTabButton BuildTab(Transform bar, int index)
@@ -446,6 +451,78 @@ public static class MainMenuBuilder
     }
 
     /// <summary>
+    /// Nút "Lucky" (Vòng quay may mắn) đối xứng nút Daily bên phải: khung daily_back + ruy băng daily_ribbon, sao to star_2,
+    /// chấm đỏ khi đủ sao quay, ô nhỏ dưới nút hiện số sao đang có. Bấm mở LuckyWheelPopup (LuckyWheelButton).
+    /// </summary>
+    private static MenuShortcutButton BuildLucky(Transform home)
+    {
+        RectTransform root = TopCenter(PopupBuilder.NewUI("Lucky", home), new Vector2(400f, -615f), new Vector2(210f, 210f));
+        Image hit = root.gameObject.AddComponent<Image>();
+        hit.color = new Color(1f, 1f, 1f, 0f);
+        Button b = root.gameObject.AddComponent<Button>();
+        b.transition = Selectable.Transition.None;
+
+        RectTransform content = PopupBuilder.NewUI("Content", root);
+        content.sizeDelta = root.sizeDelta;
+        PopupBuilder.Icon(content, "Back", IconSprite("daily_back"), 205f);
+        Image star = PopupBuilder.Icon(content, "Star", PopupBuilder.UI + "Icons/star_2.png", 120f);
+        star.rectTransform.anchoredPosition = new Vector2(0f, 16f);
+        SetPivotKeepPlace(star.rectTransform, new Vector2(0.5f, 0.1f));
+        PopupBuilder.Icon(content, "Ribbon", IconSprite("daily_ribbon"), 205f);
+        TMP_Text label = PopupBuilder.Text(content, "Label", "Lucky", new Vector2(0f, -72f), new Vector2(200f, 50f), 40f, Color.white);
+        Outline(label, GameFontSetup.OutlinePurple());
+        label.enableWordWrapping = false;
+
+        Image badge = PopupBuilder.Icon(content, "Badge", IconSprite("badge_red"), 52f);
+        badge.rectTransform.anchoredPosition = new Vector2(66f, 68f);
+        TMP_Text mark = PopupBuilder.Text(badge.transform, "Mark", "!", new Vector2(0f, 2f), new Vector2(52f, 52f), 40f, Color.white);
+        mark.font = GameFontSetup.Font;
+
+        // Số sao đang có (ô kem dưới nút)
+        RectTransform pill = PopupBuilder.NewUI("Stars", root);
+        pill.anchoredPosition = new Vector2(0f, -128f);
+        pill.sizeDelta = new Vector2(150f, 56f);
+        Image pillBg = pill.gameObject.AddComponent<Image>();
+        pillBg.sprite = PopupBuilder.LoadSprite(Pill);
+        pillBg.type = Image.Type.Sliced;
+        pillBg.raycastTarget = false;
+        Image pillStar = PopupBuilder.Icon(pill, "Icon", PopupBuilder.UI + "Icons/star.png", 52f);
+        pillStar.rectTransform.anchoredPosition = new Vector2(-52f, 2f);
+        TMP_Text count = PopupBuilder.Text(pill, "Count", "0", new Vector2(18f, 1f), new Vector2(100f, 50f), 38f, PillText);
+        count.enableWordWrapping = false;
+
+        MenuShortcutButton s = Shortcut(root, star.rectTransform, 2.6f, 1.8f, 10f, 0.08f, 10f);
+        SerializedObject so = new SerializedObject(s);
+        so.FindProperty("tab").intValue = -1; // không chuyển tab: LuckyWheelButton mở popup
+        so.FindProperty("badge").objectReferenceValue = badge.gameObject;
+        so.ApplyModifiedPropertiesWithoutUndo();
+        LuckyWheelButton lucky = Undo.AddComponent<LuckyWheelButton>(root.gameObject);
+        PopupBuilder.Assign(lucky, "shortcut", s);
+        PopupBuilder.Assign(lucky, "starsText", count);
+        return s;
+    }
+
+    /// <summary>Dựng lại riêng nút Lucky trong scene đang mở (Build Lucky Wheel gọi).</summary>
+    internal static LuckyWheelButton RebuildLucky()
+    {
+        MainMenuNavigator nav = Object.FindFirstObjectByType<MainMenuNavigator>(FindObjectsInactive.Include);
+        Transform zone = nav != null ? nav.transform.Find("Panels/HomePanel/" + UIZoneBuilder.ZoneName) : null;
+        if (zone == null)
+        {
+            Debug.LogError("[MainMenuBuilder] Không tìm thấy HomePanel/UIZone. Chạy Build Main Menu trước.");
+            return null;
+        }
+        Transform old = zone.Find("Lucky");
+        Transform daily = zone.Find("Daily");
+        int index = old != null ? old.GetSiblingIndex() : (daily != null ? daily.GetSiblingIndex() + 1 : zone.childCount);
+        if (old != null) Undo.DestroyObjectImmediate(old.gameObject);
+        MenuShortcutButton lucky = BuildLucky(zone);
+        lucky.transform.SetSiblingIndex(index);
+        PopupBuilder.Assign(lucky, "navigator", nav);
+        return lucky.GetComponent<LuckyWheelButton>();
+    }
+
+    /// <summary>
     /// Nhịp lắc đo từ video bản gốc (30 fps): Starter ~2 s / lần, No Ads ~3 s / lần, lệch pha nhau; mỗi lần ~0.65 s.
     /// No Ads nhấc ít hơn nhưng to ra nhiều hơn, nghiêng nhẹ hơn.
     /// </summary>
@@ -540,27 +617,6 @@ public static class MainMenuBuilder
         return rt;
     }
 
-
-    /// <summary>Khung tạm cho Progress: lên level nào nhận quà gì (thay Daily Challenge của bản gốc).</summary>
-    private static RectTransform BuildProgressPlaceholder(Transform parent)
-    {
-        RectTransform panel = PopupBuilder.Stretch(PopupBuilder.NewUI("ProgressPanel", parent));
-        panel.gameObject.AddComponent<Image>().color = new Color(0.36f, 0.31f, 0.9f);
-
-        Image cup = PopupBuilder.Icon(panel, "Cup", Icons + "icon_cup.png", 300f);
-        cup.rectTransform.anchorMin = cup.rectTransform.anchorMax = new Vector2(0.5f, 1f);
-        cup.rectTransform.anchoredPosition = new Vector2(0f, -330f);
-
-        Placeholder(panel, "PROGRESS", "Reach levels to earn rewards\nComing soon");
-        return panel;
-    }
-
-    private static void Placeholder(RectTransform panel, string title, string subtitle)
-    {
-        PopupBuilder.Text(panel, "Title", title, new Vector2(0f, 60f), new Vector2(900f, 140f), 110f, Color.white);
-        TMP_Text sub = PopupBuilder.Text(panel, "Subtitle", subtitle, new Vector2(0f, -80f), new Vector2(900f, 160f), 50f, new Color(1f, 1f, 1f, 0.7f));
-        sub.fontStyle = FontStyles.Normal;
-    }
 
     // ---------- Tiện ích ----------
 

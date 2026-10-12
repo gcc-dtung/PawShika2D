@@ -15,7 +15,7 @@ MonoBehaviour:
   boosterDatas:
   - boosterType: 0
     name: Hint
-    detail: Hint will automatically complete one correct region!
+    detail: Hint shows where one correct region goes!
     levelUnlock: 5
     valueStart: 3
     valueOneBuy: 3

@@ -14,6 +14,14 @@ public enum PlacementResult
     WrongSize     // sai số ô
 }
 
+/// <summary>Trạng thái vùng đang kéo, cho phản hồi trong lúc kéo (bong bóng đếm ô, âm thanh).</summary>
+public enum SelectionHint
+{
+    Neutral, // đang kéo, chưa đủ / chưa có ô số
+    Ready,   // thả tay là đặt được
+    Invalid  // chắc chắn sai: thừa ô, 2 ô số, ô số khóa, sai hướng mà đã đủ ô
+}
+
 public readonly struct PlacementCheck
 {
     public readonly PlacementResult Result;
@@ -30,6 +38,36 @@ public readonly struct PlacementCheck
     }
 
     public bool IsReady => Result == PlacementResult.Ready;
+
+    /// <summary>
+    /// Sai "chắc chắn" mới báo Invalid; còn kéo tiếp có thể thành đúng (thiếu ô, chưa có ô số,
+    /// sai hướng khi chưa đủ ô, ô "?") thì Neutral.
+    /// </summary>
+    public SelectionHint Hint
+    {
+        get
+        {
+            switch (Result)
+            {
+                case PlacementResult.Ready:
+                    return SelectionHint.Ready;
+                case PlacementResult.BlockedCell:
+                case PlacementResult.Locked:
+                    return SelectionHint.Invalid;
+                case PlacementResult.ClueCount:
+                    int clues = 0;
+                    if (Cells != null) foreach (CellModel cell in Cells) if (cell.HasClue) clues++;
+                    return clues > 1 ? SelectionHint.Invalid : SelectionHint.Neutral;
+                case PlacementResult.WrongShape:
+                case PlacementResult.WrongSize:
+                    ClueCell clue = ClueCell != null ? ClueCell.Clue : null;
+                    if (clue == null || clue.IsHidden || Cells == null) return SelectionHint.Neutral;
+                    return Cells.Count >= clue.Value ? SelectionHint.Invalid : SelectionHint.Neutral;
+                default:
+                    return SelectionHint.Neutral;
+            }
+        }
+    }
 }
 
 /// <summary>
@@ -185,30 +223,56 @@ public class BoardModel
         return res;
     }
 
-    /// <summary>Gỡ 1 khối (chạm khối / booster đặt đè). Ổ khóa đã mở và số "?" đã lộ giữ nguyên.</summary>
+    /// <summary>Gỡ 1 khối (chạm khối / booster đặt đè). Ổ khóa tính lại: bớt 1 khối thì khóa lại 1 bước.</summary>
     public bool Remove(BlockModel block)
     {
         if (block == null || !_blocks.Remove(block)) return false;
         block.Release();
+        SyncLocks(null);
         return true;
     }
 
-    /// <summary>Đặt khối từ 1 vùng đã Ready, tô màu <paramref name="color"/>. Các ô vừa mở khóa được thêm vào <paramref name="unlocked"/>.</summary>
+    /// <summary>
+    /// Vùng có đặt được không nếu gỡ <paramref name="replaced"/> trước (booster đặt đè khối sai).
+    /// Gỡ khối làm ổ khóa đóng lại nên phải thử gỡ thật rồi trả lưới về như cũ.
+    /// </summary>
+    public bool CanPlaceReplacing(RectInt rect, List<BlockModel> replaced)
+    {
+        foreach (BlockModel b in replaced) { _blocks.Remove(b); b.Release(); }
+        SyncLocks(null);
+        bool ready = Check(rect).IsReady;
+        foreach (BlockModel b in replaced) { _blocks.Add(b); b.Occupy(); }
+        SyncLocks(null);
+        return ready;
+    }
+
+    /// <summary>
+    /// Đặt khối từ 1 vùng đã Ready, tô màu <paramref name="color"/>. Các ô vừa mở khóa được thêm vào <paramref name="unlocked"/>.
+    /// Ô "?" không bao giờ lộ số: Check không xét số ô của "?" nên khối đặt lên có thể sai số, lộ số thật là lộ đáp án.
+    /// Số thật vẫn dùng để chấm (IsSolved).
+    /// </summary>
     public BlockModel Place(PlacementCheck check, ColorType color, List<CellModel> unlocked)
     {
-        check.ClueCell.RevealClue();
-
         BlockModel block = new BlockModel(check.Rect, check.Cells, check.ClueCell, color);
         block.Occupy();
         _blocks.Add(block);
 
-        // [MECHANIC] Cơ chế phản ứng khi 1 khối được đặt (đếm bước, lộ số...)
-        // Mỗi khối đặt làm mọi ổ khóa giảm 1 (gỡ khối không khóa lại)
+        // [MECHANIC] Cơ chế phản ứng khi 1 khối được đặt (đếm bước...)
+        SyncLocks(unlocked);
+        return block;
+    }
+
+    /// <summary>
+    /// Ổ khóa còn lại = số bước gốc - số khối khác đang trên lưới (khối nằm trên chính ô đó không tính).
+    /// Đặt khối thì mọi ổ khóa giảm 1, gỡ khối thì khóa lại 1. Ô vừa mở khóa được thêm vào <paramref name="unlocked"/>.
+    /// </summary>
+    private void SyncLocks(List<CellModel> unlocked)
+    {
         foreach (CellModel cell in _cells.Values)
         {
-            if (cell.StepLock()) unlocked?.Add(cell);
+            int others = _blocks.Count - (cell.IsOccupied && cell.Block.ClueCell == cell ? 1 : 0);
+            if (cell.SyncLock(others)) unlocked?.Add(cell);
         }
-        return block;
     }
 
     /// <summary>
@@ -242,5 +306,6 @@ public class BoardModel
     {
         foreach (BlockModel b in _blocks) b.Release();
         _blocks.Clear();
+        SyncLocks(null);
     }
 }

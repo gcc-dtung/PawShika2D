@@ -23,6 +23,9 @@ public class MainMenuNavigator : MonoBehaviour
 
     /// <summary>Thứ tự tab Shop trong thanh tab (CoinHUD, ScreenFlow mở Shop bằng số này).</summary>
     public const int ShopTab = 0;
+    public const int HomeTab = 1;
+    /// <summary>Tab Daily Challenge (về Menu sau ván Daily thì mở tab này).</summary>
+    public const int DailyTab = 2;
 
     [Header("Chuyển động")]
     [SerializeField] private float selectedWidth = 408f;
