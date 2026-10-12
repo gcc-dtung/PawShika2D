@@ -49,9 +49,11 @@ namespace PawBlock.Features.Gameplay
             _intros.Sort((a, b) => a.Order.CompareTo(b.Order));
         }
 
-        private void OnLevelLoaded(LevelLoadedEvent e)
+        private void OnLevelLoaded(LevelLoadedEvent loaded)
         {
             Stop();
+            // LevelManager dựng lưới (GridSpawner.Spawn) trước khi phát event nên LevelData là level vừa nạp
+            LevelIntroContext e = new LevelIntroContext(loaded.Number, gridSpawner != null ? gridSpawner.LevelData : null, loaded.IsDaily);
             List<ILevelIntro> pending = new List<ILevelIntro>();
             foreach (ILevelIntro intro in _intros)
             {
@@ -63,7 +65,7 @@ namespace PawBlock.Features.Gameplay
             _run = StartCoroutine(Run(pending, e));
         }
 
-        private IEnumerator Run(List<ILevelIntro> pending, LevelLoadedEvent level)
+        private IEnumerator Run(List<ILevelIntro> pending, LevelIntroContext level)
         {
             foreach (ILevelIntro intro in pending)
             {

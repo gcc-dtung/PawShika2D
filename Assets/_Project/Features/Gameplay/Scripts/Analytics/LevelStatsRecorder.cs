@@ -69,7 +69,7 @@ namespace PawBlock.Features.Gameplay
         private void OnLevelLoaded(LevelLoadedEvent e)
         {
             CloseAttempt(); // đang dở mà nạp level khác / chơi lại = bỏ cuộc
-            _levelId = e.Level != null && !e.IsDaily ? e.Level.name : null; // Daily (sinh theo ngày) không ghi số liệu level
+            _levelId = !e.IsDaily ? e.LevelId : null; // Daily (sinh theo ngày) không ghi số liệu level
             _levelNumber = e.Number;
             _ended = false;
             _attemptSeconds = 0f;

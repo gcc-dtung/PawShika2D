@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Gameplay;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyChallenge
 {

@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using PawBlock.Features.DailyReward;
 using PawBlock.Features.Gameplay;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyChallenge
 {

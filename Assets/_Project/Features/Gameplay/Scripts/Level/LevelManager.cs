@@ -97,7 +97,7 @@ namespace PawBlock.Features.Gameplay
             gridSpawner.Spawn(level);
             _hasRevived = false;
             SetState(GameState.Playing);
-            EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level));
+            EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level != null ? level.name : null));
             Debug.Log($"[LevelManager] Level {CurrentLevelNumber}/{database.Count}: {level.name} ({level.size}x{level.Height})");
         }
 
@@ -130,7 +130,7 @@ namespace PawBlock.Features.Gameplay
             gridSpawner.Spawn(level);
             _hasRevived = false;
             SetState(GameState.Playing);
-            EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level, true));
+            EventBus<LevelLoadedEvent>.Raise(new LevelLoadedEvent(CurrentLevelNumber, level != null ? level.name : null, true));
             Debug.Log($"[LevelManager] Daily {DailyChallengeModel.DateOf(day):yyyy-MM-dd}: {level.name} ({level.size}x{level.Height})");
         }
 
@@ -229,6 +229,24 @@ namespace PawBlock.Features.Gameplay
             Debug.Log($"[LevelManager] State -> {state}");
             InputGate.Set(this, state != GameState.Playing);
             EventBus<GameStateChangedEvent>.Raise(new GameStateChangedEvent(state));
+            RaiseResult(state);
+        }
+
+        /// <summary>Kết quả ván cho feature khác (Profile, DailyChallenge, Economy), kèm dữ liệu để không phải hỏi lại LevelManager.</summary>
+        private void RaiseResult(GameState state)
+        {
+            if (_isPractice || (state != GameState.Won && state != GameState.Lost)) return;
+            LevelDefinition level = CurrentLevel;
+            string id = level != null ? level.name : null;
+            if (state == GameState.Won)
+            {
+                bool isHard = level != null && level.difficulty != LevelDifficulty.Normal;
+                EventBus<LevelCompletedEvent>.Raise(new LevelCompletedEvent(CurrentLevelNumber, id, IsDaily, IsDaily ? DailyDay : -1, isHard));
+            }
+            else
+            {
+                EventBus<LevelFailedEvent>.Raise(new LevelFailedEvent(CurrentLevelNumber, id, IsDaily));
+            }
         }
 
         private void SetPractice(bool practice)

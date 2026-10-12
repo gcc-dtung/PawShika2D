@@ -5,21 +5,6 @@ using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyReward
 {
-    public enum DailyRewardKind
-    {
-        Coin,
-        Booster,
-        InfiniteEnergy // amount = phút
-    }
-
-    [Serializable]
-    public class DailyRewardItem
-    {
-        public DailyRewardKind kind;
-        public BoosterType booster; // chỉ dùng khi kind = Booster
-        public int amount;
-    }
-
     [Serializable]
     public class DailyRewardDay
     {

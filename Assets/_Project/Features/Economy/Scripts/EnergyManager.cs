@@ -12,7 +12,7 @@ namespace PawBlock.Features.Economy
     /// Thua 1 level (state Lost) tốn 1; tối đa 5; hồi 1 sau 30 phút (gamePlay_TimeRefillHeart = 1800 của bản gốc).
     /// Lưu trong SaveData.energy: số năng lượng, mốc bắt đầu hồi, hạn vô hạn (unix giây).
     /// </summary>
-    public class EnergyManager : Singleton<EnergyManager>
+    public class EnergyManager : Singleton<EnergyManager>, IEnergyService
     {
         [Header("Events")]
         public UnityEvent<int, int> onEnergyChanged = new UnityEvent<int, int>(); // (hiện tại, tối đa)

@@ -30,6 +30,7 @@ namespace PawBlock.Core.Foundation
 
         private static SaveData _data;
         private static bool _dirty;
+        private static bool _memoryOnly; // test: không đọc / ghi file (UseInMemoryForTests)
 
         public static string FilePath => Path.Combine(Application.persistentDataPath, FileName);
         private static string TempPath => FilePath + ".tmp";
@@ -52,11 +53,24 @@ namespace PawBlock.Core.Foundation
         {
             _data = null;
             _dirty = false;
+            _memoryOnly = false;
+        }
+
+        /// <summary>
+        /// Chỉ cho test: dùng <paramref name="data"/> trong bộ nhớ, không đọc / ghi save.json của máy.
+        /// Gọi lại với null khi xong để lần dùng sau đọc lại file như bình thường. Bỏ khi có ISaveService (P3 Refactor).
+        /// </summary>
+        public static void UseInMemoryForTests(SaveData data)
+        {
+            _data = data;
+            _memoryOnly = data != null;
+            _dirty = false;
         }
 
         /// <summary>Có thay đổi cần ghi.</summary>
         public static void MarkDirty()
         {
+            if (_memoryOnly) return;
             _dirty = true;
             if (Application.isPlaying) SaveRunner.Ensure();
             else Save();
@@ -65,7 +79,7 @@ namespace PawBlock.Core.Foundation
         /// <summary>Ghi ngay (nếu có thay đổi, hoặc force).</summary>
         public static void Save(bool force = false)
         {
-            if (_data == null || (!_dirty && !force)) return;
+            if (_data == null || _memoryOnly || (!_dirty && !force)) return;
             _data.version = SaveData.CurrentVersion;
             _data.savedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             if (Write(JsonUtility.ToJson(_data, true))) _dirty = false;

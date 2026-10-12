@@ -40,9 +40,9 @@ namespace PawBlock.Features.Gameplay
         public int Order => 20;
         public float StartDelay => startDelay;
 
-        public bool ShouldPlay(LevelLoadedEvent level) => !level.IsDaily && NextToUnlock(level.Number) != null;
+        public bool ShouldPlay(LevelIntroContext level) => !level.IsDaily && NextToUnlock(level.Number) != null;
 
-        public void Play(LevelLoadedEvent level, Action onDone)
+        public void Play(LevelIntroContext level, Action onDone)
         {
             BoosterData data = NextToUnlock(level.Number);
             BoosterButton button = data != null ? BoosterButton.Find(data.boosterType) : null;

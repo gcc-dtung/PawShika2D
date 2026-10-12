@@ -165,6 +165,7 @@ namespace PawBlock.Features.Economy
         {
             _onReady = null;
             Finish();
+            EventBus<ShopOpenRequestedEvent>.Raise(new ShopOpenRequestedEvent()); // P4: Game nghe thay cho dòng dưới
             if (ScreenFlow.Instance != null) ScreenFlow.Instance.ShowShop();
         }
 

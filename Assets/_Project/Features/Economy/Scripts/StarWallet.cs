@@ -1,15 +1,20 @@
 using System;
 using UnityEngine;
+using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Economy
 {
     /// <summary>
     /// Ví sao (SaveData.stars): mỗi lần thắng cộng số sao của ván (LevelStars), Vòng quay may mắn tiêu sao.
-    /// Giống CoinWallet: sự kiện Changed(số dư mới, thay đổi).
+    /// Giống CoinWallet: sự kiện Changed(số dư mới, thay đổi); feature khác dùng qua ICurrencyWallet (new StarWallet()).
     /// </summary>
-    public static class StarWallet
+    public sealed class StarWallet : ICurrencyWallet
     {
+        int ICurrencyWallet.Balance => Balance;
+        bool ICurrencyWallet.TrySpend(int amount) => TrySpend(amount);
+        void ICurrencyWallet.Add(int amount) => Add(amount);
+
         public static event Action<int, int> Changed;
 
         public static int Balance => SaveSystem.Data.stars;
@@ -34,6 +39,7 @@ namespace PawBlock.Features.Economy
             SaveSystem.Data.stars = Mathf.Max(0, value);
             SaveSystem.MarkDirty();
             Changed?.Invoke(Balance, delta);
+            EventBus<StarsBalanceChangedEvent>.Raise(new StarsBalanceChangedEvent(Balance, delta));
         }
     }
 }

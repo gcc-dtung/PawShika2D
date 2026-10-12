@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Gameplay
@@ -37,9 +36,9 @@ namespace PawBlock.Features.Gameplay
         public int Order => 10;
         public float StartDelay => startDelay;
 
-        public bool ShouldPlay(LevelLoadedEvent level) => popup != null && NewMechanics(level.Level).Count > 0;
+        public bool ShouldPlay(LevelIntroContext level) => popup != null && NewMechanics(level.Level).Count > 0;
 
-        public void Play(LevelLoadedEvent level, Action onDone)
+        public void Play(LevelIntroContext level, Action onDone)
         {
             _queue.Clear();
             foreach (Kind kind in NewMechanics(level.Level)) _queue.Enqueue(kind);

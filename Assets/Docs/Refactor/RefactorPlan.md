@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0, P1 xong (2026-10-12), tiếp P2 |
+| Trạng thái | P0, P1, P2 xong (2026-10-12), tiếp P3 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-12 |
@@ -220,11 +220,37 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 > Danh sách là **dự kiến**. Khi làm, interface nào không có feature thứ hai gọi thì **không tạo** (guide 4.2).
 
 **Sửa**
-- [ ] Nơi phát: thêm `EventBus<…>.Raise(...)` cạnh code cũ.
-- [ ] Các class "sở hữu" cài interface (chưa đổi nơi gọi).
+- [x] Nơi phát: thêm `EventBus<…>.Raise(...)` cạnh code cũ.
+- [x] Các class "sở hữu" cài interface (chưa đổi nơi gọi).
 
 **Kiểm tra:** compile; test; smoke test; thêm unit test cho `CoinWallet` / `BoosterInventory` qua interface.
 **Xong khi:** mọi event / interface trong bảng có ít nhất 1 nơi phát / cài đặt; `Core/Contracts` không có logic.
+
+**Kết quả P2** (rà từng mục với code thật, guide 4.2: chỉ tạo khi feature khác dùng):
+
+| Mục | Làm | Phát / cài đặt ở | Bên nghe / gọi ở feature khác (P4 chuyển sang) |
+| --- | --- | --- | --- |
+| `CoinsChangedEvent(balance, delta)` | Có | `CoinWallet.Set` | Profile (`coinsEarned`), Game (âm coin) |
+| `StarsBalanceChangedEvent(balance, delta)` | Có | `StarWallet.Set` | LuckyWheel (nút, popup) |
+| `LevelCompletedEvent(number, levelId, isDaily, dailyDay, isHard)` | Có | `LevelManager.SetState(Won)`, không phát khi tutorial | Profile, DailyChallenge |
+| `LevelFailedEvent(number, levelId, isDaily)` | Có | `LevelManager.SetState(Lost)` | Economy (trừ năng lượng), Profile |
+| `BoosterUsedEvent(type)` | Có (mới, plan chưa có) | `BoosterManager.Consume` | Profile (`BoosterManager.onBoosterUsed`) |
+| `ShopOpenRequestedEvent` | Có | `RefillEnergyPopup.GoShop` | Game (`ScreenFlow.ShowShop`) |
+| `LevelStartedEvent` | Không | — | Trùng `LevelLoadedEvent` đã có |
+| `EnergyChangedEvent`, `BoosterCountChangedEvent` | Không | — | Chỉ feature sở hữu tự nghe |
+| `RefillEnergyRequestedEvent`, `BuyBoosterRequestedEvent` | Không | — | Chỉ Game mở 2 popup này |
+| `ICurrencyWallet` (`Balance`, `TrySpend`, `Add`) | Có, dùng chung cho coin và sao (thay `IStarWallet`) | `CoinWallet`, `StarWallet` (`static class` → `sealed class`, cài tường minh; API static giữ tới P3) | Gameplay, Shop, DailyReward, LuckyWheel |
+| `IBoosterInventory` (`GetCount`, `Add` theo `BoosterType`) | Có | `BoosterManager` (giữ `BoosterDatabase`; `BoosterInventory` là static theo `BoosterData`) | Shop, DailyReward |
+| `IEnergyService` (`ConsumeOne`, `AddInfinite`) | Có | `EnergyManager` | Gameplay (`QuitLevelPopup`), Shop, DailyReward |
+| `IRewardGranter` (`Grant(DailyRewardItem)`) | Có (mới, plan chưa có) | `DailyRewardManager` (gọi `GrantItem` static) | DailyChallenge (quà mốc), LuckyWheel (ô trúng) |
+| `ISettingsService`, `IAdsFreeStatus` | Không | — | Settings nằm ở `AudioManager` (Core) mà feature được gọi; NoAds chỉ Shop đọc |
+
+- `LevelLoadedEvent`: bỏ field `LevelDefinition Level` (Contracts phụ thuộc Gameplay), thay `string LevelId`. Intro đầu level (`ILevelIntro`) nhận struct nội bộ Gameplay `LevelIntroContext` (số, `LevelDefinition`, Daily) do `LevelIntroSequencer` ghép từ `GridSpawner.LevelData`.
+- `SaveSystem.UseInMemoryForTests(data)`: test chạy trên save trong bộ nhớ, không ghi `save.json`; bỏ khi có `ISaveService` (P3).
+- Test mới: `CurrencyWalletTests` 15, `BoosterInventoryTests` 6, `RewardGranterTests` 2. Smoke test Play mode: mọi event mới phát đúng dữ liệu, không lỗi Console.
+- `using` sai chiều: 89 → 86 (hết `Core.Contracts → Features.Gameplay`; 2 database không còn cần DailyReward), xem [Dependencies.md](Dependencies.md).
+- **Lỗi có sẵn phát hiện (chưa sửa, làm commit `fix:` riêng):** `FeelPlayModeTests` vào Play mode với `SampleScene` đang mở → game chạy thật và **ghi `save.json` của máy** (chắc chắn `clock.lastTrustedUtc` mỗi lần chạy; 1 lần thấy thêm 1 ván thắng nhưng không loại trừ được do chơi tay). Cách sửa: test tự mở scene rỗng, hoặc dùng save bộ nhớ (lưu ý `ResetStatics` khi vào Play mode).
+- Thêm `IRewardGranter` + chuyển `DailyRewardItem` / `DailyRewardKind` sang `Core/Contracts/Types` (DailyChallenge, LuckyWheel cùng gọi `DailyRewardManager.GrantItem`); dữ liệu quà trong 3 database đọc đúng (10 / 11 / 8 món), asset không đổi. Test: 23 mới → 127 / 127.
 
 ---
 
@@ -416,9 +442,9 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Thêm namespace + `using` cho 199 file | 4 | 0.5 | 100% | Script tự bọc + dò `using` |
 | | | Tách GameEvents, BoosterType, GameState, SoundId sang Contracts | 1 | 0.1 | 100% | |
 | | | Kiểm tra Missing Script, test, smoke test | 1 | 0.5 | 100% | |
-| P2 Contracts | Event + interface | Định nghĩa ~10 event, phát song song code cũ | 2 | | 0% | |
-| | | ~6 interface, cài vào class sở hữu | 2 | | 0% | |
-| | | Unit test qua interface | 1 | | 0% | |
+| P2 Contracts | Event + interface | Định nghĩa ~10 event, phát song song code cũ | 2 | 0.5 | 100% | 6 event (4 trong plan bỏ vì không có bên nghe) |
+| | | ~6 interface, cài vào class sở hữu | 2 | 0.4 | 100% | 3 interface; `LevelIntroContext` |
+| | | Unit test qua interface | 1 | 0.5 | 100% | 23 test; save trong bộ nhớ |
 | P3 Service + Save | Bootstrap, save theo phần | `ISaveService` + `JsonFileSaveService` (giữ tmp / bak / runner) | 3 | | 0% | |
 | | | Save class từng feature + `SaveMigrator` v1 → v2 + test 3 file mẫu | 4 | | 0% | Không được mất dữ liệu |
 | | | Sửa 21 file dùng `SaveSystem.Data` | 4 | | 0% | |
@@ -446,7 +472,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **3.5** | **12%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **4.9** | **16%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 

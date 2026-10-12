@@ -5,6 +5,7 @@ using PawBlock.Core.Foundation;
 using PawBlock.Features.Economy;
 using PawBlock.Features.Gameplay;
 using PawBlock.Game;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.DailyReward
 {
@@ -14,7 +15,7 @@ namespace PawBlock.Features.DailyReward
     /// - Sang ngày mới (qua nửa đêm khi đang mở game, quay lại app) thì tự cập nhật.
     /// - autoOpen: mở game lần đầu trong ngày mà chưa nhận thì tự mở popup (GameFlowUI) khi đang ở Main Menu.
     /// </summary>
-    public class DailyRewardManager : Singleton<DailyRewardManager>
+    public class DailyRewardManager : Singleton<DailyRewardManager>, IRewardGranter
     {
         [SerializeField] private DailyRewardDatabase database;
         [SerializeField] private bool autoOpen = true;
@@ -133,6 +134,8 @@ namespace PawBlock.Features.DailyReward
             onClaimed?.Invoke(day);
             onChanged?.Invoke();
         }
+
+        void IRewardGranter.Grant(DailyRewardItem item) => GrantItem(item);
 
         /// <summary>Trao 1 món quà (coin / booster / năng lượng vô hạn). Daily Challenge dùng chung.</summary>
         public static void GrantItem(DailyRewardItem item)

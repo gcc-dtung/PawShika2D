@@ -1,5 +1,4 @@
 using System;
-using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -17,10 +16,10 @@ namespace PawBlock.Features.Gameplay
         float StartDelay { get; }
 
         /// <summary>Level vừa nạp có cần chạy intro này không. Hỏi lúc nạp level và hỏi lại ngay trước khi chạy.</summary>
-        bool ShouldPlay(LevelLoadedEvent level);
+        bool ShouldPlay(LevelIntroContext level);
 
         /// <summary>Bắt đầu chạy; xong thì gọi <paramref name="onDone"/> đúng 1 lần.</summary>
-        void Play(LevelLoadedEvent level, Action onDone);
+        void Play(LevelIntroContext level, Action onDone);
 
         /// <summary>Hủy giữa chừng (nạp level khác): tắt giao diện, không gọi onDone.</summary>
         void Cancel();

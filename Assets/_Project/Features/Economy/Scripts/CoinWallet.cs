@@ -1,12 +1,21 @@
 using System;
 using UnityEngine;
+using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Economy
 {
-    /// <summary>Số coin của người chơi, lưu trong SaveData. Shop / IAP (Giai đoạn 6) sẽ cộng vào đây.</summary>
-    public static class CoinWallet
+    /// <summary>
+    /// Số coin của người chơi, lưu trong SaveData. Shop / IAP (Giai đoạn 6) sẽ cộng vào đây.
+    /// Feature khác dùng qua ICurrencyWallet (new CoinWallet(): mọi instance cùng đọc / ghi SaveData);
+    /// API static giữ tới P3 (Refactor) thì chuyển hẳn sang instance.
+    /// </summary>
+    public sealed class CoinWallet : ICurrencyWallet
     {
+        int ICurrencyWallet.Balance => Balance;
+        bool ICurrencyWallet.TrySpend(int amount) => TrySpend(amount);
+        void ICurrencyWallet.Add(int amount) => Add(amount);
+
         /// <summary>(số dư mới, thay đổi)</summary>
         public static event Action<int, int> Changed;
 
@@ -32,6 +41,7 @@ namespace PawBlock.Features.Economy
             SaveSystem.Data.coins = Mathf.Max(0, value);
             SaveSystem.MarkDirty();
             Changed?.Invoke(Balance, delta);
+            EventBus<CoinsChangedEvent>.Raise(new CoinsChangedEvent(Balance, delta));
         }
     }
 }

@@ -56,9 +56,9 @@ namespace PawBlock.Features.Gameplay
         public int Order => 0;
         public float StartDelay => 0f;
 
-        public bool ShouldPlay(LevelLoadedEvent level) => StyleOf(level.Level) != null;
+        public bool ShouldPlay(LevelIntroContext level) => StyleOf(level.Level) != null;
 
-        public void Play(LevelLoadedEvent level, Action onDone)
+        public void Play(LevelIntroContext level, Action onDone)
         {
             DifficultyStyle style = StyleOf(level.Level);
             if (style == null)

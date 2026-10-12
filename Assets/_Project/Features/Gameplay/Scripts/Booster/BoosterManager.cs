@@ -15,7 +15,7 @@ namespace PawBlock.Features.Gameplay
     /// Nút trên HUD chỉ gọi Press(type); popup mua nghe onBuyRequested. Lượt chỉ bị trừ khi booster thực sự có tác dụng.
     /// Tutorial mở khóa (BoosterTutorial): BeginTutorial(type) -> chỉ nút đó bấm được; bấm -> TutorialPressed, lần dùng này miễn phí.
     /// </summary>
-    public class BoosterManager : Singleton<BoosterManager>, IBoosterHost
+    public class BoosterManager : Singleton<BoosterManager>, IBoosterHost, IBoosterInventory
     {
         [SerializeField] private BoosterDatabase database;
         [Tooltip("Khoảng cách giữa các khối Reveal tự đặt")]
@@ -89,6 +89,20 @@ namespace PawBlock.Features.Gameplay
         // ---------- Trạng thái nút ----------
 
         public BoosterData Get(BoosterType type) => database != null ? database.Get(type) : null;
+
+        // ---------- IBoosterInventory (Shop, DailyReward) ----------
+
+        public int GetCount(BoosterType type)
+        {
+            BoosterData data = Get(type);
+            return data != null ? BoosterInventory.Get(data) : 0;
+        }
+
+        public void Add(BoosterType type, int amount)
+        {
+            BoosterData data = Get(type);
+            if (data != null) BoosterInventory.Add(data, amount);
+        }
 
         /// <summary>Đã qua tutorial mở khóa, hoặc đang trong tutorial của chính booster này.</summary>
         public bool IsUnlocked(BoosterType type)
@@ -184,6 +198,7 @@ namespace PawBlock.Features.Gameplay
             else if (data != null) BoosterInventory.TryConsume(data);
             LastTarget = target;
             onBoosterUsed?.Invoke(type);
+            EventBus<BoosterUsedEvent>.Raise(new BoosterUsedEvent(type));
         }
 
         public bool IsHintShowing => _hint != null && _hint.IsShowing;
