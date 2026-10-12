@@ -428,6 +428,7 @@ GameObject:
   - component: {fileID: 9692274}
   - component: {fileID: 9692273}
   - component: {fileID: 9692272}
+  - component: {fileID: 9692275}
   m_Layer: 5
   m_Name: Done
   m_TagString: Untagged
@@ -537,6 +538,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9692270}
   m_CullTransparentMesh: 1
+--- !u!114 &9692275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9692270}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 971535646}
+  selectable: {fileID: 9692272}
+  faceGraphic: {fileID: 971535647}
+  tintTargets:
+  - {fileID: 9692273}
+  - {fileID: 971535647}
+  - {fileID: 813478764}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &10063830
 GameObject:
   m_ObjectHideFlags: 0
@@ -3317,6 +3345,7 @@ GameObject:
   - component: {fileID: 62795060}
   - component: {fileID: 62795062}
   - component: {fileID: 62795061}
+  - component: {fileID: 62795063}
   m_Layer: 5
   m_Name: Day1
   m_TagString: Untagged
@@ -3432,6 +3461,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &62795063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 62795059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 62795062}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 146388883}
+  - {fileID: 1858576765}
+  - {fileID: 120690612}
+  - {fileID: 520868008}
+  - {fileID: 899383381}
+  - {fileID: 126641970}
+  - {fileID: 1394554043}
+  - {fileID: 1849626296}
+  - {fileID: 1391515389}
+  - {fileID: 408400405}
+  - {fileID: 1295919539}
+  - {fileID: 1857804611}
+  - {fileID: 449445548}
+  - {fileID: 978096173}
+  - {fileID: 1235650995}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &64532966
 GameObject:
   m_ObjectHideFlags: 0
@@ -3807,6 +3875,7 @@ GameObject:
   - component: {fileID: 69065471}
   - component: {fileID: 69065470}
   - component: {fileID: 69065469}
+  - component: {fileID: 69065472}
   m_Layer: 5
   m_Name: CoinButton
   m_TagString: Untagged
@@ -3916,6 +3985,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 69065467}
   m_CullTransparentMesh: 1
+--- !u!114 &69065472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69065467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 280768372}
+  selectable: {fileID: 69065469}
+  faceGraphic: {fileID: 280768373}
+  tintTargets:
+  - {fileID: 69065470}
+  - {fileID: 280768373}
+  - {fileID: 158841170}
+  - {fileID: 703052368}
+  - {fileID: 1568183642}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &71780338
 GameObject:
   m_ObjectHideFlags: 0
@@ -4274,6 +4372,7 @@ GameObject:
   - component: {fileID: 80181465}
   - component: {fileID: 80181464}
   - component: {fileID: 80181463}
+  - component: {fileID: 80181466}
   m_Layer: 5
   m_Name: HomeButton
   m_TagString: Untagged
@@ -4383,6 +4482,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 80181461}
   m_CullTransparentMesh: 1
+--- !u!114 &80181466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 80181461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 80181463}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 80181464}
+  - {fileID: 814254806}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &82617376
 GameObject:
   m_ObjectHideFlags: 0
@@ -5486,6 +5611,7 @@ GameObject:
   - component: {fileID: 87870601}
   - component: {fileID: 87870600}
   - component: {fileID: 87870599}
+  - component: {fileID: 87870602}
   m_Layer: 5
   m_Name: ClaimButton
   m_TagString: Untagged
@@ -5595,6 +5721,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 87870597}
   m_CullTransparentMesh: 1
+--- !u!114 &87870602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 87870597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 380020226}
+  selectable: {fileID: 87870599}
+  faceGraphic: {fileID: 380020227}
+  tintTargets:
+  - {fileID: 87870600}
+  - {fileID: 380020227}
+  - {fileID: 1423659637}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &88777878
 GameObject:
   m_ObjectHideFlags: 0
@@ -6277,6 +6430,7 @@ GameObject:
   - component: {fileID: 104946358}
   - component: {fileID: 104946357}
   - component: {fileID: 104946356}
+  - component: {fileID: 104946360}
   m_Layer: 5
   m_Name: Coin
   m_TagString: Untagged
@@ -6405,6 +6559,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104946354}
   m_CullTransparentMesh: 1
+--- !u!114 &104946360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104946354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 104946357}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 104946358}
+  - {fileID: 777994218}
+  - {fileID: 534694210}
+  - {fileID: 1326481931}
+  - {fileID: 189038170}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &106438402
 GameObject:
   m_ObjectHideFlags: 0
@@ -7754,6 +7937,7 @@ GameObject:
   - component: {fileID: 128805863}
   - component: {fileID: 128805862}
   - component: {fileID: 128805861}
+  - component: {fileID: 128805864}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -7863,6 +8047,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 128805859}
   m_CullTransparentMesh: 1
+--- !u!114 &128805864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 128805859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1372688256}
+  selectable: {fileID: 128805861}
+  faceGraphic: {fileID: 1372688257}
+  tintTargets:
+  - {fileID: 128805862}
+  - {fileID: 1372688257}
+  - {fileID: 2038617548}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &130329491
 GameObject:
   m_ObjectHideFlags: 0
@@ -10330,6 +10541,7 @@ GameObject:
   - component: {fileID: 176186778}
   - component: {fileID: 176186777}
   - component: {fileID: 176186776}
+  - component: {fileID: 176186779}
   m_Layer: 5
   m_Name: Avatar_9
   m_TagString: Untagged
@@ -10440,6 +10652,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 176186774}
   m_CullTransparentMesh: 1
+--- !u!114 &176186779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176186774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 176186776}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 176186777}
+  - {fileID: 395839414}
+  - {fileID: 1929578633}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &180990577
 GameObject:
   m_ObjectHideFlags: 0
@@ -11420,6 +11659,7 @@ GameObject:
   - component: {fileID: 195153657}
   - component: {fileID: 195153656}
   - component: {fileID: 195153655}
+  - component: {fileID: 195153659}
   m_Layer: 5
   m_Name: Coin
   m_TagString: Untagged
@@ -11548,6 +11788,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 195153653}
   m_CullTransparentMesh: 1
+--- !u!114 &195153659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 195153653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 195153656}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 195153657}
+  - {fileID: 522393022}
+  - {fileID: 1591166800}
+  - {fileID: 1090429213}
+  - {fileID: 1042630262}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &195911056
 GameObject:
   m_ObjectHideFlags: 0
@@ -12459,6 +12728,7 @@ GameObject:
   - component: {fileID: 222637138}
   - component: {fileID: 222637137}
   - component: {fileID: 222637136}
+  - component: {fileID: 222637139}
   m_Layer: 5
   m_Name: OkButton
   m_TagString: Untagged
@@ -12568,6 +12838,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222637134}
   m_CullTransparentMesh: 1
+--- !u!114 &222637139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 222637134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1268475200}
+  selectable: {fileID: 222637136}
+  faceGraphic: {fileID: 1268475201}
+  tintTargets:
+  - {fileID: 222637137}
+  - {fileID: 1268475201}
+  - {fileID: 567852914}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &243178626
 GameObject:
   m_ObjectHideFlags: 0
@@ -12580,6 +12877,7 @@ GameObject:
   - component: {fileID: 243178630}
   - component: {fileID: 243178629}
   - component: {fileID: 243178628}
+  - component: {fileID: 243178631}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -12688,6 +12986,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 243178626}
   m_CullTransparentMesh: 1
+--- !u!114 &243178631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243178626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 243178628}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 243178629}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &245026311
 GameObject:
   m_ObjectHideFlags: 0
@@ -12777,6 +13100,7 @@ GameObject:
   - component: {fileID: 245895728}
   - component: {fileID: 245895727}
   - component: {fileID: 245895726}
+  - component: {fileID: 245895730}
   m_Layer: 5
   m_Name: VibrateToggle
   m_TagString: Untagged
@@ -12906,6 +13230,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 245895724}
   m_CullTransparentMesh: 1
+--- !u!114 &245895730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 245895724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 245895727}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 245895728}
+  - {fileID: 520528915}
+  - {fileID: 134168157}
+  - {fileID: 1344228594}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &246779292
 GameObject:
   m_ObjectHideFlags: 0
@@ -13234,6 +13586,7 @@ GameObject:
   - component: {fileID: 251586565}
   - component: {fileID: 251586564}
   - component: {fileID: 251586563}
+  - component: {fileID: 251586567}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -13275,6 +13628,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayMaterial: {fileID: 2100000, guid: fa1526c2fd2db734c9408b719ff62fb7, type: 2}
   grayTextMaterial: {fileID: 2100000, guid: c4ad33a1ff458b448a355e98425372a4, type: 2}
+  button: {fileID: 251586564}
+  images:
+  - {fileID: 251586565}
+  - {fileID: 1246469827}
+  - {fileID: 1423197586}
+  texts:
+  - {fileID: 1229043209}
 --- !u!114 &251586564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13357,6 +13717,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 251586561}
   m_CullTransparentMesh: 1
+--- !u!114 &251586567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251586561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1246469826}
+  selectable: {fileID: 251586564}
+  faceGraphic: {fileID: 1246469827}
+  tintTargets:
+  - {fileID: 251586565}
+  - {fileID: 1246469827}
+  - {fileID: 1423197586}
+  - {fileID: 1229043209}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &253716373
 GameObject:
   m_ObjectHideFlags: 0
@@ -16550,6 +16938,7 @@ GameObject:
   - component: {fileID: 344168376}
   - component: {fileID: 344168375}
   - component: {fileID: 344168374}
+  - component: {fileID: 344168377}
   m_Layer: 5
   m_Name: Avatar_5
   m_TagString: Untagged
@@ -16660,6 +17049,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 344168372}
   m_CullTransparentMesh: 1
+--- !u!114 &344168377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344168372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 344168374}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 344168375}
+  - {fileID: 1441182266}
+  - {fileID: 549572497}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &348874035
 GameObject:
   m_ObjectHideFlags: 0
@@ -16672,6 +17088,7 @@ GameObject:
   - component: {fileID: 348874039}
   - component: {fileID: 348874038}
   - component: {fileID: 348874037}
+  - component: {fileID: 348874040}
   m_Layer: 5
   m_Name: Avatar_1
   m_TagString: Untagged
@@ -16782,6 +17199,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 348874035}
   m_CullTransparentMesh: 1
+--- !u!114 &348874040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348874035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 348874037}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 348874038}
+  - {fileID: 1657246288}
+  - {fileID: 534396241}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &348979381
 GameObject:
   m_ObjectHideFlags: 0
@@ -16795,6 +17239,7 @@ GameObject:
   - component: {fileID: 348979385}
   - component: {fileID: 348979384}
   - component: {fileID: 348979383}
+  - component: {fileID: 348979387}
   m_Layer: 5
   m_Name: DoubleButton
   m_TagString: Untagged
@@ -16836,6 +17281,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayMaterial: {fileID: 2100000, guid: fa1526c2fd2db734c9408b719ff62fb7, type: 2}
   grayTextMaterial: {fileID: 2100000, guid: c4ad33a1ff458b448a355e98425372a4, type: 2}
+  button: {fileID: 348979384}
+  images:
+  - {fileID: 348979385}
+  - {fileID: 1438681408}
+  - {fileID: 1542010829}
+  - {fileID: 880232990}
+  texts:
+  - {fileID: 476973580}
+  - {fileID: 1828021941}
 --- !u!114 &348979384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16918,6 +17372,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 348979381}
   m_CullTransparentMesh: 1
+--- !u!114 &348979387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 348979381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1438681407}
+  selectable: {fileID: 348979384}
+  faceGraphic: {fileID: 1438681408}
+  tintTargets:
+  - {fileID: 348979385}
+  - {fileID: 1438681408}
+  - {fileID: 1542010829}
+  - {fileID: 476973580}
+  - {fileID: 880232990}
+  - {fileID: 1828021941}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &349225350
 GameObject:
   m_ObjectHideFlags: 0
@@ -17450,6 +17934,7 @@ GameObject:
   - component: {fileID: 356095815}
   - component: {fileID: 356095814}
   - component: {fileID: 356095813}
+  - component: {fileID: 356095818}
   m_Layer: 5
   m_Name: Lucky
   m_TagString: Untagged
@@ -17602,6 +18087,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 356095811}
   m_CullTransparentMesh: 1
+--- !u!114 &356095818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356095811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 356095815}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 356095816}
+  - {fileID: 1959622595}
+  - {fileID: 1204417997}
+  - {fileID: 657377923}
+  - {fileID: 937488893}
+  - {fileID: 2044284369}
+  - {fileID: 1504125973}
+  - {fileID: 516019190}
+  - {fileID: 1716851789}
+  - {fileID: 1694012631}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &364746500
 GameObject:
   m_ObjectHideFlags: 0
@@ -19934,6 +20453,7 @@ GameObject:
   - component: {fileID: 444290555}
   - component: {fileID: 444290554}
   - component: {fileID: 444290553}
+  - component: {fileID: 444290557}
   m_Layer: 5
   m_Name: Coin_5000
   m_TagString: Untagged
@@ -20074,6 +20594,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 444290551}
   m_CullTransparentMesh: 1
+--- !u!114 &444290557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 444290551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 444290554}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 444290555}
+  - {fileID: 284282001}
+  - {fileID: 591039969}
+  - {fileID: 817800521}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &445176077
 GameObject:
   m_ObjectHideFlags: 0
@@ -21350,6 +21898,7 @@ GameObject:
   - component: {fileID: 463876813}
   - component: {fileID: 463876812}
   - component: {fileID: 463876811}
+  - component: {fileID: 463876815}
   m_Layer: 5
   m_Name: Gift14
   m_TagString: Untagged
@@ -21479,6 +22028,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 463876809}
   m_CullTransparentMesh: 1
+--- !u!114 &463876815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463876809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 463876812}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 463876813}
+  - {fileID: 634958958}
+  - {fileID: 550274336}
+  - {fileID: 260111129}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &464476000
 GameObject:
   m_ObjectHideFlags: 0
@@ -22509,6 +23086,7 @@ GameObject:
   - component: {fileID: 500660445}
   - component: {fileID: 500660444}
   - component: {fileID: 500660443}
+  - component: {fileID: 500660447}
   m_Layer: 5
   m_Name: Gift7
   m_TagString: Untagged
@@ -22638,6 +23216,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 500660441}
   m_CullTransparentMesh: 1
+--- !u!114 &500660447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 500660441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 500660444}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 500660445}
+  - {fileID: 927802502}
+  - {fileID: 1473690113}
+  - {fileID: 326513379}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &506055213
 GameObject:
   m_ObjectHideFlags: 0
@@ -25351,6 +25957,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   face: {fileID: 0}
+  selectable: {fileID: 556416541}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 556416542}
+  - {fileID: 1382545166}
+  - {fileID: 1817858727}
+  - {fileID: 641325073}
+  - {fileID: 1209670197}
+  - {fileID: 2046398642}
+  fixedChildren: []
   pressScale: 0.9
   insetScale: 0.94
   pressDuration: 0.08
@@ -25710,6 +26326,7 @@ GameObject:
   - component: {fileID: 563878454}
   - component: {fileID: 563878456}
   - component: {fileID: 563878455}
+  - component: {fileID: 563878457}
   m_Layer: 5
   m_Name: Day4
   m_TagString: Untagged
@@ -25825,6 +26442,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &563878457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 563878453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 563878456}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 618530542}
+  - {fileID: 1068918106}
+  - {fileID: 2088707855}
+  - {fileID: 720795046}
+  - {fileID: 1433101029}
+  - {fileID: 1707550988}
+  - {fileID: 136245140}
+  - {fileID: 142184930}
+  - {fileID: 887827437}
+  - {fileID: 420798824}
+  - {fileID: 1660668605}
+  - {fileID: 495979473}
+  - {fileID: 369996580}
+  - {fileID: 1146960534}
+  - {fileID: 1098018291}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &567406612
 GameObject:
   m_ObjectHideFlags: 0
@@ -32842,6 +33498,7 @@ GameObject:
   - component: {fileID: 608880257}
   - component: {fileID: 608880256}
   - component: {fileID: 608880255}
+  - component: {fileID: 608880258}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -32950,6 +33607,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 608880253}
   m_CullTransparentMesh: 1
+--- !u!114 &608880258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 608880253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 608880255}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 608880256}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &609478779
 GameObject:
   m_ObjectHideFlags: 0
@@ -32963,6 +33645,8 @@ GameObject:
   - component: {fileID: 609478782}
   - component: {fileID: 609478781}
   - component: {fileID: 609478784}
+  - component: {fileID: 609478786}
+  - component: {fileID: 609478785}
   m_Layer: 5
   m_Name: Booster3
   m_TagString: Untagged
@@ -33098,6 +33782,51 @@ MonoBehaviour:
   glow: {fileID: 860952838}
   glowSpin: 90
   button: {fileID: 609478781}
+  press: {fileID: 609478785}
+--- !u!114 &609478785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609478779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 609478781}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 609478782}
+  - {fileID: 860952838}
+  - {fileID: 946812761}
+  - {fileID: 704814137}
+  - {fileID: 111567019}
+  - {fileID: 911715415}
+  - {fileID: 1147997378}
+  - {fileID: 1469905838}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
+--- !u!114 &609478786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609478779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab9a1b8c02dbae40b329c4f299d2fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &612443419
 GameObject:
   m_ObjectHideFlags: 0
@@ -33975,6 +34704,7 @@ GameObject:
   - component: {fileID: 621867732}
   - component: {fileID: 621867731}
   - component: {fileID: 621867730}
+  - component: {fileID: 621867733}
   m_Layer: 5
   m_Name: ContinueButton
   m_TagString: Untagged
@@ -34084,6 +34814,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 621867728}
   m_CullTransparentMesh: 1
+--- !u!114 &621867733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 621867728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 131194816}
+  selectable: {fileID: 621867730}
+  faceGraphic: {fileID: 131194817}
+  tintTargets:
+  - {fileID: 621867731}
+  - {fileID: 131194817}
+  - {fileID: 29344640}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &622259413
 GameObject:
   m_ObjectHideFlags: 0
@@ -35018,6 +35775,7 @@ GameObject:
   - component: {fileID: 645468509}
   - component: {fileID: 645468508}
   - component: {fileID: 645468507}
+  - component: {fileID: 645468510}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -35127,6 +35885,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645468505}
   m_CullTransparentMesh: 1
+--- !u!114 &645468510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645468505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 264892915}
+  selectable: {fileID: 645468507}
+  faceGraphic: {fileID: 264892916}
+  tintTargets:
+  - {fileID: 645468508}
+  - {fileID: 264892916}
+  - {fileID: 881004089}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &647463508
 GameObject:
   m_ObjectHideFlags: 0
@@ -35616,6 +36401,7 @@ GameObject:
   - component: {fileID: 656251783}
   - component: {fileID: 656251785}
   - component: {fileID: 656251784}
+  - component: {fileID: 656251786}
   m_Layer: 5
   m_Name: Day6
   m_TagString: Untagged
@@ -35731,6 +36517,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &656251786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 656251782}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 656251785}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1597870715}
+  - {fileID: 148377293}
+  - {fileID: 780851796}
+  - {fileID: 783678464}
+  - {fileID: 1825321127}
+  - {fileID: 1429139336}
+  - {fileID: 1389501758}
+  - {fileID: 679716387}
+  - {fileID: 132125554}
+  - {fileID: 1445094690}
+  - {fileID: 1036140999}
+  - {fileID: 1514831287}
+  - {fileID: 608823388}
+  - {fileID: 130329494}
+  - {fileID: 1576210594}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &657377920
 GameObject:
   m_ObjectHideFlags: 0
@@ -36489,6 +37314,7 @@ GameObject:
   - component: {fileID: 674534863}
   - component: {fileID: 674534862}
   - component: {fileID: 674534861}
+  - component: {fileID: 674534864}
   m_Layer: 5
   m_Name: Avatar_8
   m_TagString: Untagged
@@ -36599,6 +37425,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 674534859}
   m_CullTransparentMesh: 1
+--- !u!114 &674534864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 674534859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 674534861}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 674534862}
+  - {fileID: 2143717410}
+  - {fileID: 342553878}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &678781825
 GameObject:
   m_ObjectHideFlags: 0
@@ -36611,6 +37464,7 @@ GameObject:
   - component: {fileID: 678781829}
   - component: {fileID: 678781828}
   - component: {fileID: 678781827}
+  - component: {fileID: 678781830}
   m_Layer: 5
   m_Name: Avatar_0
   m_TagString: Untagged
@@ -36721,6 +37575,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 678781825}
   m_CullTransparentMesh: 1
+--- !u!114 &678781830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678781825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 678781827}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 678781828}
+  - {fileID: 1988020964}
+  - {fileID: 947958004}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &679716384
 GameObject:
   m_ObjectHideFlags: 0
@@ -42137,6 +43018,7 @@ GameObject:
   - component: {fileID: 702304556}
   - component: {fileID: 702304555}
   - component: {fileID: 702304554}
+  - component: {fileID: 702304557}
   m_Layer: 5
   m_Name: Avatar_7
   m_TagString: Untagged
@@ -42247,6 +43129,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 702304552}
   m_CullTransparentMesh: 1
+--- !u!114 &702304557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 702304552}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 702304554}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 702304555}
+  - {fileID: 1653625556}
+  - {fileID: 554826129}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &703052365
 GameObject:
   m_ObjectHideFlags: 0
@@ -42453,6 +43362,7 @@ GameObject:
   - component: {fileID: 705862239}
   - component: {fileID: 705862238}
   - component: {fileID: 705862237}
+  - component: {fileID: 705862241}
   m_Layer: 5
   m_Name: Gift21
   m_TagString: Untagged
@@ -42582,6 +43492,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705862235}
   m_CullTransparentMesh: 1
+--- !u!114 &705862241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705862235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 705862238}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 705862239}
+  - {fileID: 519273550}
+  - {fileID: 775959674}
+  - {fileID: 1219343199}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &705936215
 GameObject:
   m_ObjectHideFlags: 0
@@ -42865,6 +43803,7 @@ GameObject:
   - component: {fileID: 712551878}
   - component: {fileID: 712551877}
   - component: {fileID: 712551876}
+  - component: {fileID: 712551879}
   m_Layer: 5
   m_Name: EditName
   m_TagString: Untagged
@@ -42974,6 +43913,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712551874}
   m_CullTransparentMesh: 1
+--- !u!114 &712551879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712551874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 2123623313}
+  selectable: {fileID: 712551876}
+  faceGraphic: {fileID: 2123623314}
+  tintTargets:
+  - {fileID: 712551877}
+  - {fileID: 2123623314}
+  - {fileID: 655875295}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &720795043
 GameObject:
   m_ObjectHideFlags: 0
@@ -43157,6 +44123,7 @@ GameObject:
   - component: {fileID: 723577071}
   - component: {fileID: 723577070}
   - component: {fileID: 723577069}
+  - component: {fileID: 723577072}
   m_Layer: 5
   m_Name: Avatar_2
   m_TagString: Untagged
@@ -43267,6 +44234,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 723577067}
   m_CullTransparentMesh: 1
+--- !u!114 &723577072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723577067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 723577069}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 723577070}
+  - {fileID: 1266131366}
+  - {fileID: 1992389690}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &724405586
 GameObject:
   m_ObjectHideFlags: 0
@@ -43504,6 +44498,7 @@ GameObject:
   - component: {fileID: 728798306}
   - component: {fileID: 728798305}
   - component: {fileID: 728798304}
+  - component: {fileID: 728798308}
   m_Layer: 5
   m_Name: MusicToggle
   m_TagString: Untagged
@@ -43633,6 +44628,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 728798302}
   m_CullTransparentMesh: 1
+--- !u!114 &728798308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 728798302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 728798305}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 728798306}
+  - {fileID: 88777881}
+  - {fileID: 1599731578}
+  - {fileID: 1330102339}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &732249906
 GameObject:
   m_ObjectHideFlags: 0
@@ -43645,6 +44668,7 @@ GameObject:
   - component: {fileID: 732249910}
   - component: {fileID: 732249909}
   - component: {fileID: 732249908}
+  - component: {fileID: 732249911}
   m_Layer: 5
   m_Name: Avatar_11
   m_TagString: Untagged
@@ -43755,6 +44779,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 732249906}
   m_CullTransparentMesh: 1
+--- !u!114 &732249911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 732249906}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 732249908}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 732249909}
+  - {fileID: 1369438339}
+  - {fileID: 78511264}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &732658640
 GameObject:
   m_ObjectHideFlags: 0
@@ -46550,6 +47601,7 @@ GameObject:
   - component: {fileID: 814943778}
   - component: {fileID: 814943777}
   - component: {fileID: 814943776}
+  - component: {fileID: 814943779}
   m_Layer: 5
   m_Name: AdsButton
   m_TagString: Untagged
@@ -46659,6 +47711,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 814943774}
   m_CullTransparentMesh: 1
+--- !u!114 &814943779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 814943774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 814943776}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 814943777}
+  - {fileID: 872847287}
+  - {fileID: 1821695764}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &816222027
 GameObject:
   m_ObjectHideFlags: 0
@@ -46672,6 +47751,7 @@ GameObject:
   - component: {fileID: 816222031}
   - component: {fileID: 816222030}
   - component: {fileID: 816222029}
+  - component: {fileID: 816222033}
   m_Layer: 5
   m_Name: Starter
   m_TagString: Untagged
@@ -46806,6 +47886,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816222027}
   m_CullTransparentMesh: 1
+--- !u!114 &816222033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816222027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 816222030}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 816222031}
+  - {fileID: 539831171}
+  - {fileID: 791842668}
+  - {fileID: 150740890}
+  - {fileID: 2023753586}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &816907371
 GameObject:
   m_ObjectHideFlags: 0
@@ -47220,6 +48329,7 @@ GameObject:
   - component: {fileID: 834279955}
   - component: {fileID: 834279954}
   - component: {fileID: 834279953}
+  - component: {fileID: 834279957}
   m_Layer: 5
   m_Name: Coin_25000
   m_TagString: Untagged
@@ -47360,6 +48470,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 834279951}
   m_CullTransparentMesh: 1
+--- !u!114 &834279957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 834279951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 834279954}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 834279955}
+  - {fileID: 1626764654}
+  - {fileID: 452281279}
+  - {fileID: 139281004}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &838116629
 GameObject:
   m_ObjectHideFlags: 0
@@ -48115,6 +49253,7 @@ GameObject:
   - component: {fileID: 855241448}
   - component: {fileID: 855241447}
   - component: {fileID: 855241446}
+  - component: {fileID: 855241449}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -48223,6 +49362,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 855241444}
   m_CullTransparentMesh: 1
+--- !u!114 &855241449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 855241444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 855241446}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 855241447}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &856944310
 GameObject:
   m_ObjectHideFlags: 0
@@ -52299,6 +53463,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   face: {fileID: 0}
+  selectable: {fileID: 923433368}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 923433369}
+  - {fileID: 1285057198}
+  - {fileID: 1193301384}
+  - {fileID: 2035410812}
+  fixedChildren: []
   pressScale: 0.9
   insetScale: 0.94
   pressDuration: 0.08
@@ -52413,6 +53585,7 @@ GameObject:
   - component: {fileID: 928588956}
   - component: {fileID: 928588958}
   - component: {fileID: 928588957}
+  - component: {fileID: 928588959}
   m_Layer: 5
   m_Name: Day7
   m_TagString: Untagged
@@ -52528,6 +53701,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &928588959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928588955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 928588958}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 121933150}
+  - {fileID: 1329772033}
+  - {fileID: 1917340861}
+  - {fileID: 619123830}
+  - {fileID: 1898854973}
+  - {fileID: 2119384574}
+  - {fileID: 12231875}
+  - {fileID: 353717478}
+  - {fileID: 1252427317}
+  - {fileID: 1148832366}
+  - {fileID: 1893070637}
+  - {fileID: 1245186611}
+  - {fileID: 688104307}
+  - {fileID: 171350683}
+  - {fileID: 82839746}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &935331365
 GameObject:
   m_ObjectHideFlags: 0
@@ -53039,6 +54251,7 @@ GameObject:
   - component: {fileID: 943530458}
   - component: {fileID: 943530457}
   - component: {fileID: 943530460}
+  - component: {fileID: 943530461}
   m_Layer: 5
   m_Name: Avatar
   m_TagString: Untagged
@@ -53163,6 +54376,32 @@ MonoBehaviour:
   avatars: {fileID: 11400000, guid: 1c498278332b59f4a8876e31aee17f81, type: 2}
   avatarImage: {fileID: 1758976868}
   button: {fileID: 943530457}
+--- !u!114 &943530461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 943530455}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 943530457}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 943530458}
+  - {fileID: 1758976868}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &946812758
 GameObject:
   m_ObjectHideFlags: 0
@@ -53367,6 +54606,7 @@ GameObject:
   - component: {fileID: 948605082}
   - component: {fileID: 948605081}
   - component: {fileID: 948605080}
+  - component: {fileID: 948605083}
   m_Layer: 5
   m_Name: Avatar
   m_TagString: Untagged
@@ -53477,6 +54717,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 948605078}
   m_CullTransparentMesh: 1
+--- !u!114 &948605083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948605078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 948605080}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 948605081}
+  - {fileID: 761139477}
+  - {fileID: 438355972}
+  - {fileID: 965216808}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &948786231
 GameObject:
   m_ObjectHideFlags: 0
@@ -54741,6 +56009,7 @@ GameObject:
   - component: {fileID: 985015298}
   - component: {fileID: 985015300}
   - component: {fileID: 985015299}
+  - component: {fileID: 985015301}
   m_Layer: 5
   m_Name: Day5
   m_TagString: Untagged
@@ -54856,6 +56125,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &985015301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 985015297}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 985015300}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 140204843}
+  - {fileID: 1007105466}
+  - {fileID: 198652164}
+  - {fileID: 1764910534}
+  - {fileID: 1526217238}
+  - {fileID: 1801988151}
+  - {fileID: 324273575}
+  - {fileID: 1958248997}
+  - {fileID: 463235858}
+  - {fileID: 78625789}
+  - {fileID: 1246011874}
+  - {fileID: 891057054}
+  - {fileID: 2123765350}
+  - {fileID: 1292626921}
+  - {fileID: 99423177}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &990029022
 GameObject:
   m_ObjectHideFlags: 0
@@ -55312,6 +56620,7 @@ GameObject:
   - component: {fileID: 1005411848}
   - component: {fileID: 1005411847}
   - component: {fileID: 1005411846}
+  - component: {fileID: 1005411850}
   m_Layer: 5
   m_Name: Coin_50000
   m_TagString: Untagged
@@ -55452,6 +56761,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005411844}
   m_CullTransparentMesh: 1
+--- !u!114 &1005411850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1005411844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1005411847}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1005411848}
+  - {fileID: 555449431}
+  - {fileID: 1585027686}
+  - {fileID: 764661789}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1007105464
 GameObject:
   m_ObjectHideFlags: 0
@@ -56165,6 +57502,7 @@ GameObject:
   - component: {fileID: 1034014815}
   - component: {fileID: 1034014814}
   - component: {fileID: 1034014813}
+  - component: {fileID: 1034014816}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -56274,6 +57612,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1034014811}
   m_CullTransparentMesh: 1
+--- !u!114 &1034014816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1034014811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 405431324}
+  selectable: {fileID: 1034014813}
+  faceGraphic: {fileID: 405431325}
+  tintTargets:
+  - {fileID: 1034014814}
+  - {fileID: 405431325}
+  - {fileID: 1216500347}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1036140997
 GameObject:
   m_ObjectHideFlags: 0
@@ -56680,6 +58045,7 @@ GameObject:
   - component: {fileID: 1046327926}
   - component: {fileID: 1046327925}
   - component: {fileID: 1046327924}
+  - component: {fileID: 1046327928}
   m_Layer: 5
   m_Name: PrevMonthButton
   m_TagString: Untagged
@@ -56809,6 +58175,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046327922}
   m_CullTransparentMesh: 1
+--- !u!114 &1046327928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046327922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1046327924}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1046327926}
+  - {fileID: 369534979}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1046376850
 GameObject:
   m_ObjectHideFlags: 0
@@ -57014,6 +58406,7 @@ GameObject:
   - component: {fileID: 1047665881}
   - component: {fileID: 1047665880}
   - component: {fileID: 1047665879}
+  - component: {fileID: 1047665883}
   m_Layer: 5
   m_Name: SoundToggle
   m_TagString: Untagged
@@ -57143,6 +58536,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1047665877}
   m_CullTransparentMesh: 1
+--- !u!114 &1047665883
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1047665877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1047665880}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1047665881}
+  - {fileID: 1887783326}
+  - {fileID: 1510555889}
+  - {fileID: 620410823}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1048504890
 GameObject:
   m_ObjectHideFlags: 0
@@ -57363,6 +58784,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sound: 1
   vibrate: 1
+  clickButtons:
+  - {fileID: 1305075259}
+  - {fileID: 1923732569}
+  - {fileID: 1978117098}
+  - {fileID: 609478781}
+  - {fileID: 1299120213}
+  - {fileID: 1829057924}
+  vibrateButtons:
+  - {fileID: 1305075259}
+  - {fileID: 1299120213}
+  - {fileID: 1829057924}
 --- !u!114 &1056015948
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59583,6 +61015,7 @@ GameObject:
   - component: {fileID: 1099489922}
   - component: {fileID: 1099489924}
   - component: {fileID: 1099489923}
+  - component: {fileID: 1099489925}
   m_Layer: 5
   m_Name: Day3
   m_TagString: Untagged
@@ -59698,6 +61131,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1099489925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099489921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1099489924}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1672389349}
+  - {fileID: 1341110317}
+  - {fileID: 319168593}
+  - {fileID: 1862755156}
+  - {fileID: 2030270346}
+  - {fileID: 1463424735}
+  - {fileID: 1591282034}
+  - {fileID: 1745035773}
+  - {fileID: 1490695691}
+  - {fileID: 1356607439}
+  - {fileID: 939597087}
+  - {fileID: 897546715}
+  - {fileID: 1953728723}
+  - {fileID: 550372165}
+  - {fileID: 752758567}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1099653676
 GameObject:
   m_ObjectHideFlags: 0
@@ -60118,6 +61590,7 @@ GameObject:
   - component: {fileID: 1123639859}
   - component: {fileID: 1123639858}
   - component: {fileID: 1123639857}
+  - component: {fileID: 1123639860}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -60226,6 +61699,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1123639855}
   m_CullTransparentMesh: 1
+--- !u!114 &1123639860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1123639855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1123639857}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1123639858}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1124202243
 GameObject:
   m_ObjectHideFlags: 0
@@ -60414,6 +61912,7 @@ GameObject:
   - component: {fileID: 1127709102}
   - component: {fileID: 1127709101}
   - component: {fileID: 1127709100}
+  - component: {fileID: 1127709103}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -60523,6 +62022,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1127709098}
   m_CullTransparentMesh: 1
+--- !u!114 &1127709103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1127709098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1816611157}
+  selectable: {fileID: 1127709100}
+  faceGraphic: {fileID: 1816611158}
+  tintTargets:
+  - {fileID: 1127709101}
+  - {fileID: 1816611158}
+  - {fileID: 540150720}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1128028657
 GameObject:
   m_ObjectHideFlags: 0
@@ -60958,6 +62484,7 @@ GameObject:
   - component: {fileID: 1142124300}
   - component: {fileID: 1142124299}
   - component: {fileID: 1142124298}
+  - component: {fileID: 1142124302}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -60999,6 +62526,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayMaterial: {fileID: 2100000, guid: fa1526c2fd2db734c9408b719ff62fb7, type: 2}
   grayTextMaterial: {fileID: 2100000, guid: c4ad33a1ff458b448a355e98425372a4, type: 2}
+  button: {fileID: 1142124299}
+  images:
+  - {fileID: 1142124300}
+  - {fileID: 754997028}
+  texts:
+  - {fileID: 1853697669}
 --- !u!114 &1142124299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61081,6 +62614,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1142124296}
   m_CullTransparentMesh: 1
+--- !u!114 &1142124302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1142124296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 754997027}
+  selectable: {fileID: 1142124299}
+  faceGraphic: {fileID: 754997028}
+  tintTargets:
+  - {fileID: 1142124300}
+  - {fileID: 754997028}
+  - {fileID: 1853697669}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1143432149
 GameObject:
   m_ObjectHideFlags: 0
@@ -62110,6 +63670,7 @@ GameObject:
   - component: {fileID: 1171663378}
   - component: {fileID: 1171663380}
   - component: {fileID: 1171663379}
+  - component: {fileID: 1171663381}
   m_Layer: 5
   m_Name: Day2
   m_TagString: Untagged
@@ -62225,6 +63786,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1171663381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171663377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1171663380}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 260432903}
+  - {fileID: 1444192697}
+  - {fileID: 136857140}
+  - {fileID: 478489555}
+  - {fileID: 1076173395}
+  - {fileID: 8684523}
+  - {fileID: 1851151698}
+  - {fileID: 1858069119}
+  - {fileID: 1279549191}
+  - {fileID: 461219751}
+  - {fileID: 246779294}
+  - {fileID: 1517505393}
+  - {fileID: 1550395018}
+  - {fileID: 1246112924}
+  - {fileID: 2019224924}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1182720265
 GameObject:
   m_ObjectHideFlags: 0
@@ -64023,6 +65623,7 @@ GameObject:
   - component: {fileID: 1233381082}
   - component: {fileID: 1233381081}
   - component: {fileID: 1233381080}
+  - component: {fileID: 1233381084}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -64158,6 +65759,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1233381078}
   m_CullTransparentMesh: 1
+--- !u!114 &1233381084
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233381078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 868373611}
+  selectable: {fileID: 1233381081}
+  faceGraphic: {fileID: 868373612}
+  tintTargets:
+  - {fileID: 1233381082}
+  - {fileID: 868373612}
+  - {fileID: 1461982220}
+  - {fileID: 768733734}
+  fixedChildren:
+  - {fileID: 850091756}
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1233626861
 GameObject:
   m_ObjectHideFlags: 0
@@ -64706,6 +66336,7 @@ GameObject:
   - component: {fileID: 1241238148}
   - component: {fileID: 1241238147}
   - component: {fileID: 1241238146}
+  - component: {fileID: 1241238149}
   m_Layer: 5
   m_Name: QuitButton
   m_TagString: Untagged
@@ -64815,6 +66446,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1241238144}
   m_CullTransparentMesh: 1
+--- !u!114 &1241238149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241238144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 2120008816}
+  selectable: {fileID: 1241238146}
+  faceGraphic: {fileID: 2120008817}
+  tintTargets:
+  - {fileID: 1241238147}
+  - {fileID: 2120008817}
+  - {fileID: 1580830952}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1245100745
 GameObject:
   m_ObjectHideFlags: 0
@@ -64827,6 +66485,7 @@ GameObject:
   - component: {fileID: 1245100749}
   - component: {fileID: 1245100748}
   - component: {fileID: 1245100747}
+  - component: {fileID: 1245100750}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -64935,6 +66594,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1245100745}
   m_CullTransparentMesh: 1
+--- !u!114 &1245100750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245100745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1245100747}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1245100748}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1245186608
 GameObject:
   m_ObjectHideFlags: 0
@@ -66890,6 +68574,7 @@ GameObject:
   - component: {fileID: 1288699969}
   - component: {fileID: 1288699968}
   - component: {fileID: 1288699967}
+  - component: {fileID: 1288699970}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -66998,6 +68683,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1288699965}
   m_CullTransparentMesh: 1
+--- !u!114 &1288699970
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1288699965}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1288699967}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1288699968}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1292538041
 GameObject:
   m_ObjectHideFlags: 0
@@ -67571,6 +69281,7 @@ GameObject:
   - component: {fileID: 1299120215}
   - component: {fileID: 1299120214}
   - component: {fileID: 1299120213}
+  - component: {fileID: 1299120216}
   m_Layer: 5
   m_Name: CancelButton
   m_TagString: Untagged
@@ -67679,6 +69390,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1299120211}
   m_CullTransparentMesh: 1
+--- !u!114 &1299120216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1299120211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1299120213}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1299120214}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1302231041
 GameObject:
   m_ObjectHideFlags: 0
@@ -67825,6 +69561,7 @@ GameObject:
   - component: {fileID: 1305075260}
   - component: {fileID: 1305075259}
   - component: {fileID: 1305075258}
+  - component: {fileID: 1305075262}
   m_Layer: 5
   m_Name: SettingsButton
   m_TagString: Untagged
@@ -67947,6 +69684,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1305075256}
   m_CullTransparentMesh: 1
+--- !u!114 &1305075262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1305075256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1305075259}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1305075260}
+  - {fileID: 1915040881}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1308166311
 GameObject:
   m_ObjectHideFlags: 0
@@ -67959,6 +69722,7 @@ GameObject:
   - component: {fileID: 1308166315}
   - component: {fileID: 1308166314}
   - component: {fileID: 1308166313}
+  - component: {fileID: 1308166316}
   m_Layer: 5
   m_Name: Avatar_4
   m_TagString: Untagged
@@ -68069,6 +69833,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1308166311}
   m_CullTransparentMesh: 1
+--- !u!114 &1308166316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308166311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1308166313}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1308166314}
+  - {fileID: 770574418}
+  - {fileID: 66918945}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1309975639
 GameObject:
   m_ObjectHideFlags: 0
@@ -69527,6 +71318,80 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sound: 1
   vibrate: 1
+  clickButtons:
+  - {fileID: 1034014813}
+  - {fileID: 1975429730}
+  - {fileID: 645468507}
+  - {fileID: 1823011626}
+  - {fileID: 1824130443}
+  - {fileID: 1545018420}
+  - {fileID: 1127709100}
+  - {fileID: 128805861}
+  - {fileID: 1989572311}
+  - {fileID: 444290554}
+  - {fileID: 1373334383}
+  - {fileID: 834279954}
+  - {fileID: 1005411847}
+  - {fileID: 1392050876}
+  - {fileID: 1669653328}
+  - {fileID: 104946357}
+  - {fileID: 1233381081}
+  - {fileID: 816222030}
+  - {fileID: 2008576700}
+  - {fileID: 356095815}
+  - {fileID: 1696416193}
+  - {fileID: 943530457}
+  - {fileID: 1925139175}
+  - {fileID: 195153656}
+  - {fileID: 1536378073}
+  - {fileID: 1046327924}
+  - {fileID: 2116206739}
+  - {fileID: 500660444}
+  - {fileID: 463876812}
+  - {fileID: 705862238}
+  - {fileID: 1622385934}
+  - {fileID: 1142124299}
+  - {fileID: 1749851914}
+  - {fileID: 1874791556}
+  - {fileID: 923433368}
+  - {fileID: 556416541}
+  vibrateButtons:
+  - {fileID: 1034014813}
+  - {fileID: 1975429730}
+  - {fileID: 645468507}
+  - {fileID: 1823011626}
+  - {fileID: 1824130443}
+  - {fileID: 1545018420}
+  - {fileID: 1127709100}
+  - {fileID: 128805861}
+  - {fileID: 1989572311}
+  - {fileID: 444290554}
+  - {fileID: 1373334383}
+  - {fileID: 834279954}
+  - {fileID: 1005411847}
+  - {fileID: 1392050876}
+  - {fileID: 1669653328}
+  - {fileID: 104946357}
+  - {fileID: 1233381081}
+  - {fileID: 816222030}
+  - {fileID: 2008576700}
+  - {fileID: 356095815}
+  - {fileID: 1696416193}
+  - {fileID: 943530457}
+  - {fileID: 1925139175}
+  - {fileID: 195153656}
+  - {fileID: 1536378073}
+  - {fileID: 1046327924}
+  - {fileID: 2116206739}
+  - {fileID: 500660444}
+  - {fileID: 463876812}
+  - {fileID: 705862238}
+  - {fileID: 1622385934}
+  - {fileID: 1142124299}
+  - {fileID: 1749851914}
+  - {fileID: 1874791556}
+  - {fileID: 923433368}
+  - {fileID: 556416541}
 --- !u!114 &1335649112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70580,6 +72445,7 @@ GameObject:
   - component: {fileID: 1373334384}
   - component: {fileID: 1373334383}
   - component: {fileID: 1373334382}
+  - component: {fileID: 1373334386}
   m_Layer: 5
   m_Name: Coin_10000
   m_TagString: Untagged
@@ -70720,6 +72586,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1373334380}
   m_CullTransparentMesh: 1
+--- !u!114 &1373334386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373334380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1373334383}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1373334384}
+  - {fileID: 810575118}
+  - {fileID: 1675495736}
+  - {fileID: 1392922690}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1374933936
 GameObject:
   m_ObjectHideFlags: 0
@@ -76629,6 +78523,7 @@ GameObject:
   - component: {fileID: 1392050877}
   - component: {fileID: 1392050876}
   - component: {fileID: 1392050875}
+  - component: {fileID: 1392050879}
   m_Layer: 5
   m_Name: Coin_100000
   m_TagString: Untagged
@@ -76769,6 +78664,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1392050873}
   m_CullTransparentMesh: 1
+--- !u!114 &1392050879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1392050873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1392050876}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1392050877}
+  - {fileID: 861509794}
+  - {fileID: 527273629}
+  - {fileID: 1031298466}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1392083039
 GameObject:
   m_ObjectHideFlags: 0
@@ -77108,6 +79031,7 @@ GameObject:
   - component: {fileID: 1395116677}
   - component: {fileID: 1395116676}
   - component: {fileID: 1395116675}
+  - component: {fileID: 1395116679}
   m_Layer: 5
   m_Name: SpinButton
   m_TagString: Untagged
@@ -77149,6 +79073,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayMaterial: {fileID: 2100000, guid: fa1526c2fd2db734c9408b719ff62fb7, type: 2}
   grayTextMaterial: {fileID: 2100000, guid: c4ad33a1ff458b448a355e98425372a4, type: 2}
+  button: {fileID: 1395116676}
+  images:
+  - {fileID: 1395116677}
+  - {fileID: 2139070930}
+  - {fileID: 66445361}
+  texts:
+  - {fileID: 1422556777}
+  - {fileID: 8741735}
 --- !u!114 &1395116676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77231,6 +79163,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395116673}
   m_CullTransparentMesh: 1
+--- !u!114 &1395116679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1395116673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 2139070929}
+  selectable: {fileID: 1395116676}
+  faceGraphic: {fileID: 2139070930}
+  tintTargets:
+  - {fileID: 1395116677}
+  - {fileID: 2139070930}
+  - {fileID: 1422556777}
+  - {fileID: 66445361}
+  - {fileID: 8741735}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1396089350
 GameObject:
   m_ObjectHideFlags: 0
@@ -80701,6 +82662,7 @@ GameObject:
   - component: {fileID: 1491675850}
   - component: {fileID: 1491675849}
   - component: {fileID: 1491675848}
+  - component: {fileID: 1491675851}
   m_Layer: 5
   m_Name: HomeButton
   m_TagString: Untagged
@@ -80810,6 +82772,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491675846}
   m_CullTransparentMesh: 1
+--- !u!114 &1491675851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1491675846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1491675848}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1491675849}
+  - {fileID: 273215481}
+  - {fileID: 921162554}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1492516466
 GameObject:
   m_ObjectHideFlags: 0
@@ -83355,6 +85344,7 @@ GameObject:
   - component: {fileID: 1536378074}
   - component: {fileID: 1536378073}
   - component: {fileID: 1536378076}
+  - component: {fileID: 1536378077}
   m_Layer: 5
   m_Name: Settings
   m_TagString: Untagged
@@ -83477,6 +85467,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 1536378073}
+--- !u!114 &1536378077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1536378071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1536378073}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1536378074}
+  - {fileID: 1081854339}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1536538526
 GameObject:
   m_ObjectHideFlags: 0
@@ -84092,6 +86108,7 @@ GameObject:
   - component: {fileID: 1545018422}
   - component: {fileID: 1545018421}
   - component: {fileID: 1545018420}
+  - component: {fileID: 1545018423}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -84201,6 +86218,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545018418}
   m_CullTransparentMesh: 1
+--- !u!114 &1545018423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1545018418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 2044510020}
+  selectable: {fileID: 1545018420}
+  faceGraphic: {fileID: 2044510021}
+  tintTargets:
+  - {fileID: 1545018421}
+  - {fileID: 2044510021}
+  - {fileID: 1794989441}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1546790369
 GameObject:
   m_ObjectHideFlags: 0
@@ -84611,6 +86655,7 @@ GameObject:
   - component: {fileID: 1553165849}
   - component: {fileID: 1553165848}
   - component: {fileID: 1553165847}
+  - component: {fileID: 1553165850}
   m_Layer: 5
   m_Name: AdsButton
   m_TagString: Untagged
@@ -84720,6 +86765,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1553165845}
   m_CullTransparentMesh: 1
+--- !u!114 &1553165850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1553165845}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 685371730}
+  selectable: {fileID: 1553165847}
+  faceGraphic: {fileID: 685371731}
+  tintTargets:
+  - {fileID: 1553165848}
+  - {fileID: 685371731}
+  - {fileID: 1694278359}
+  - {fileID: 995749102}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1559131681
 GameObject:
   m_ObjectHideFlags: 0
@@ -85326,6 +87399,7 @@ GameObject:
   - component: {fileID: 1569925144}
   - component: {fileID: 1569925143}
   - component: {fileID: 1569925142}
+  - component: {fileID: 1569925145}
   m_Layer: 5
   m_Name: RetryButton
   m_TagString: Untagged
@@ -85435,6 +87509,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1569925140}
   m_CullTransparentMesh: 1
+--- !u!114 &1569925145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1569925140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1569925142}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1569925143}
+  - {fileID: 450095785}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1570767593
 GameObject:
   m_ObjectHideFlags: 0
@@ -85691,6 +87791,7 @@ GameObject:
   - component: {fileID: 1574356072}
   - component: {fileID: 1574356071}
   - component: {fileID: 1574356070}
+  - component: {fileID: 1574356073}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -85799,6 +87900,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1574356068}
   m_CullTransparentMesh: 1
+--- !u!114 &1574356073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1574356068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1574356070}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1574356071}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1575155033
 GameObject:
   m_ObjectHideFlags: 0
@@ -87658,6 +89784,7 @@ GameObject:
   - component: {fileID: 1622385935}
   - component: {fileID: 1622385934}
   - component: {fileID: 1622385933}
+  - component: {fileID: 1622385937}
   m_Layer: 5
   m_Name: DayCellTemplate
   m_TagString: Untagged
@@ -87783,6 +89910,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1622385931}
   m_CullTransparentMesh: 1
+--- !u!114 &1622385937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1622385931}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1622385934}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1622385935}
+  - {fileID: 1336234653}
+  - {fileID: 1210807340}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1626764651
 GameObject:
   m_ObjectHideFlags: 0
@@ -88913,6 +91067,106 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sound: 1
   vibrate: 1
+  clickButtons:
+  - {fileID: 2083890362}
+  - {fileID: 348979384}
+  - {fileID: 1123639857}
+  - {fileID: 814943776}
+  - {fileID: 1713058426}
+  - {fileID: 80181463}
+  - {fileID: 1569925142}
+  - {fileID: 1840592211}
+  - {fileID: 69065469}
+  - {fileID: 1553165847}
+  - {fileID: 855241446}
+  - {fileID: 62795062}
+  - {fileID: 1171663380}
+  - {fileID: 1099489924}
+  - {fileID: 563878456}
+  - {fileID: 985015300}
+  - {fileID: 656251785}
+  - {fileID: 928588958}
+  - {fileID: 87870599}
+  - {fileID: 1245100747}
+  - {fileID: 728798305}
+  - {fileID: 1047665880}
+  - {fileID: 245895727}
+  - {fileID: 1491675848}
+  - {fileID: 1288699967}
+  - {fileID: 1241238146}
+  - {fileID: 1860229063}
+  - {fileID: 621867730}
+  - {fileID: 222637136}
+  - {fileID: 608880255}
+  - {fileID: 251586564}
+  - {fileID: 1574356070}
+  - {fileID: 948605080}
+  - {fileID: 712551876}
+  - {fileID: 678781827}
+  - {fileID: 348874037}
+  - {fileID: 723577069}
+  - {fileID: 1945691873}
+  - {fileID: 1308166313}
+  - {fileID: 344168374}
+  - {fileID: 1809815246}
+  - {fileID: 702304554}
+  - {fileID: 674534861}
+  - {fileID: 176186776}
+  - {fileID: 1910371618}
+  - {fileID: 732249908}
+  - {fileID: 9692272}
+  - {fileID: 243178628}
+  - {fileID: 1395116676}
+  vibrateButtons:
+  - {fileID: 2083890362}
+  - {fileID: 348979384}
+  - {fileID: 1123639857}
+  - {fileID: 814943776}
+  - {fileID: 1713058426}
+  - {fileID: 80181463}
+  - {fileID: 1569925142}
+  - {fileID: 1840592211}
+  - {fileID: 69065469}
+  - {fileID: 1553165847}
+  - {fileID: 855241446}
+  - {fileID: 62795062}
+  - {fileID: 1171663380}
+  - {fileID: 1099489924}
+  - {fileID: 563878456}
+  - {fileID: 985015300}
+  - {fileID: 656251785}
+  - {fileID: 928588958}
+  - {fileID: 87870599}
+  - {fileID: 1245100747}
+  - {fileID: 728798305}
+  - {fileID: 1047665880}
+  - {fileID: 245895727}
+  - {fileID: 1491675848}
+  - {fileID: 1288699967}
+  - {fileID: 1241238146}
+  - {fileID: 1860229063}
+  - {fileID: 621867730}
+  - {fileID: 222637136}
+  - {fileID: 608880255}
+  - {fileID: 251586564}
+  - {fileID: 1574356070}
+  - {fileID: 948605080}
+  - {fileID: 712551876}
+  - {fileID: 678781827}
+  - {fileID: 348874037}
+  - {fileID: 723577069}
+  - {fileID: 1945691873}
+  - {fileID: 1308166313}
+  - {fileID: 344168374}
+  - {fileID: 1809815246}
+  - {fileID: 702304554}
+  - {fileID: 674534861}
+  - {fileID: 176186776}
+  - {fileID: 1910371618}
+  - {fileID: 732249908}
+  - {fileID: 9692272}
+  - {fileID: 243178628}
+  - {fileID: 1395116676}
 --- !u!114 &1659132042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89360,6 +91614,7 @@ GameObject:
   - component: {fileID: 1669653329}
   - component: {fileID: 1669653328}
   - component: {fileID: 1669653327}
+  - component: {fileID: 1669653331}
   m_Layer: 5
   m_Name: Energy
   m_TagString: Untagged
@@ -89491,6 +91746,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1669653325}
   m_CullTransparentMesh: 1
+--- !u!114 &1669653331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669653325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1669653328}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1669653329}
+  - {fileID: 1712155671}
+  - {fileID: 2140910602}
+  - {fileID: 1929634849}
+  - {fileID: 619986712}
+  - {fileID: 1292538044}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1670451031
 GameObject:
   m_ObjectHideFlags: 0
@@ -90303,6 +92588,7 @@ GameObject:
   - component: {fileID: 1696416194}
   - component: {fileID: 1696416193}
   - component: {fileID: 1696416192}
+  - component: {fileID: 1696416196}
   m_Layer: 5
   m_Name: NoAds
   m_TagString: Untagged
@@ -90437,6 +92723,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1696416190}
   m_CullTransparentMesh: 1
+--- !u!114 &1696416196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1696416190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1696416193}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1696416194}
+  - {fileID: 1140222811}
+  - {fileID: 1068778138}
+  - {fileID: 94719823}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1696818528
 GameObject:
   m_ObjectHideFlags: 0
@@ -91070,6 +93384,7 @@ GameObject:
   - component: {fileID: 1713058428}
   - component: {fileID: 1713058427}
   - component: {fileID: 1713058426}
+  - component: {fileID: 1713058429}
   m_Layer: 5
   m_Name: CoinButton
   m_TagString: Untagged
@@ -91179,6 +93494,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1713058424}
   m_CullTransparentMesh: 1
+--- !u!114 &1713058429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713058424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1713058426}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1713058427}
+  - {fileID: 992820086}
+  - {fileID: 2033465579}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1716851786
 GameObject:
   m_ObjectHideFlags: 0
@@ -92455,6 +94797,7 @@ GameObject:
   - component: {fileID: 1749851915}
   - component: {fileID: 1749851914}
   - component: {fileID: 1749851913}
+  - component: {fileID: 1749851917}
   m_Layer: 5
   m_Name: PlayWithAdsButton
   m_TagString: Untagged
@@ -92496,6 +94839,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayMaterial: {fileID: 2100000, guid: fa1526c2fd2db734c9408b719ff62fb7, type: 2}
   grayTextMaterial: {fileID: 2100000, guid: c4ad33a1ff458b448a355e98425372a4, type: 2}
+  button: {fileID: 1749851914}
+  images:
+  - {fileID: 1749851915}
+  - {fileID: 1744846687}
+  - {fileID: 1542171545}
+  texts:
+  - {fileID: 485223078}
 --- !u!114 &1749851914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92578,6 +94928,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1749851911}
   m_CullTransparentMesh: 1
+--- !u!114 &1749851917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1749851911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1744846686}
+  selectable: {fileID: 1749851914}
+  faceGraphic: {fileID: 1744846687}
+  tintTargets:
+  - {fileID: 1749851915}
+  - {fileID: 1744846687}
+  - {fileID: 485223078}
+  - {fileID: 1542171545}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1753601884
 GameObject:
   m_ObjectHideFlags: 0
@@ -94149,6 +96527,7 @@ GameObject:
   - component: {fileID: 1809815248}
   - component: {fileID: 1809815247}
   - component: {fileID: 1809815246}
+  - component: {fileID: 1809815249}
   m_Layer: 5
   m_Name: Avatar_6
   m_TagString: Untagged
@@ -94259,6 +96638,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1809815244}
   m_CullTransparentMesh: 1
+--- !u!114 &1809815249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809815244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1809815246}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1809815247}
+  - {fileID: 188306365}
+  - {fileID: 625611544}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1814798237
 GameObject:
   m_ObjectHideFlags: 0
@@ -94713,6 +97119,7 @@ GameObject:
   - component: {fileID: 1823011628}
   - component: {fileID: 1823011627}
   - component: {fileID: 1823011626}
+  - component: {fileID: 1823011629}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -94822,6 +97229,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823011624}
   m_CullTransparentMesh: 1
+--- !u!114 &1823011629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1823011624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1930502428}
+  selectable: {fileID: 1823011626}
+  faceGraphic: {fileID: 1930502429}
+  tintTargets:
+  - {fileID: 1823011627}
+  - {fileID: 1930502429}
+  - {fileID: 599416462}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1823335361
 GameObject:
   m_ObjectHideFlags: 0
@@ -94906,6 +97340,7 @@ GameObject:
   - component: {fileID: 1824130445}
   - component: {fileID: 1824130444}
   - component: {fileID: 1824130443}
+  - component: {fileID: 1824130446}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -95015,6 +97450,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824130441}
   m_CullTransparentMesh: 1
+--- !u!114 &1824130446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1824130441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 245026312}
+  selectable: {fileID: 1824130443}
+  faceGraphic: {fileID: 245026313}
+  tintTargets:
+  - {fileID: 1824130444}
+  - {fileID: 245026313}
+  - {fileID: 204911267}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1824499424
 GameObject:
   m_ObjectHideFlags: 0
@@ -95371,6 +97833,7 @@ GameObject:
   - component: {fileID: 1829057926}
   - component: {fileID: 1829057925}
   - component: {fileID: 1829057924}
+  - component: {fileID: 1829057927}
   m_Layer: 5
   m_Name: SkipButton
   m_TagString: Untagged
@@ -95480,6 +97943,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1829057922}
   m_CullTransparentMesh: 1
+--- !u!114 &1829057927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1829057922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1829057924}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1829057925}
+  - {fileID: 106438404}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1830437262
 GameObject:
   m_ObjectHideFlags: 0
@@ -95834,6 +98323,7 @@ GameObject:
   - component: {fileID: 1840592213}
   - component: {fileID: 1840592212}
   - component: {fileID: 1840592211}
+  - component: {fileID: 1840592214}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -95942,6 +98432,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1840592209}
   m_CullTransparentMesh: 1
+--- !u!114 &1840592214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840592209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1840592211}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1840592212}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1842099378
 GameObject:
   m_ObjectHideFlags: 0
@@ -96988,6 +99503,7 @@ GameObject:
   - component: {fileID: 1860229065}
   - component: {fileID: 1860229064}
   - component: {fileID: 1860229063}
+  - component: {fileID: 1860229066}
   m_Layer: 5
   m_Name: CloseButton
   m_TagString: Untagged
@@ -97096,6 +99612,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1860229061}
   m_CullTransparentMesh: 1
+--- !u!114 &1860229066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860229061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1860229063}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1860229064}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1862755153
 GameObject:
   m_ObjectHideFlags: 0
@@ -97739,6 +100280,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   face: {fileID: 0}
+  selectable: {fileID: 1874791556}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1874791557}
+  - {fileID: 952676572}
+  - {fileID: 186456745}
+  - {fileID: 1314189975}
+  fixedChildren: []
   pressScale: 0.9
   insetScale: 0.94
   pressDuration: 0.08
@@ -99245,6 +101794,7 @@ GameObject:
   - component: {fileID: 1910371620}
   - component: {fileID: 1910371619}
   - component: {fileID: 1910371618}
+  - component: {fileID: 1910371621}
   m_Layer: 5
   m_Name: Avatar_10
   m_TagString: Untagged
@@ -99355,6 +101905,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1910371616}
   m_CullTransparentMesh: 1
+--- !u!114 &1910371621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910371616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1910371618}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1910371619}
+  - {fileID: 1604867494}
+  - {fileID: 881462975}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1913470933
 GameObject:
   m_ObjectHideFlags: 0
@@ -99848,6 +102425,8 @@ GameObject:
   - component: {fileID: 1923732570}
   - component: {fileID: 1923732569}
   - component: {fileID: 1923732572}
+  - component: {fileID: 1923732574}
+  - component: {fileID: 1923732573}
   m_Layer: 5
   m_Name: Booster1
   m_TagString: Untagged
@@ -99983,6 +102562,51 @@ MonoBehaviour:
   glow: {fileID: 771744593}
   glowSpin: 90
   button: {fileID: 1923732569}
+  press: {fileID: 1923732573}
+--- !u!114 &1923732573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923732567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1923732569}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1923732570}
+  - {fileID: 771744593}
+  - {fileID: 1303454269}
+  - {fileID: 1159364660}
+  - {fileID: 101444454}
+  - {fileID: 446649911}
+  - {fileID: 492556592}
+  - {fileID: 1887276711}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
+--- !u!114 &1923732574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923732567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab9a1b8c02dbae40b329c4f299d2fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1925139172
 GameObject:
   m_ObjectHideFlags: 0
@@ -99996,6 +102620,7 @@ GameObject:
   - component: {fileID: 1925139176}
   - component: {fileID: 1925139175}
   - component: {fileID: 1925139174}
+  - component: {fileID: 1925139178}
   m_Layer: 5
   m_Name: Energy
   m_TagString: Untagged
@@ -100127,6 +102752,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1925139172}
   m_CullTransparentMesh: 1
+--- !u!114 &1925139178
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1925139172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1925139175}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1925139176}
+  - {fileID: 1954052301}
+  - {fileID: 1479630457}
+  - {fileID: 1575155035}
+  - {fileID: 1525384527}
+  - {fileID: 1046626534}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1929578630
 GameObject:
   m_ObjectHideFlags: 0
@@ -101128,6 +103783,7 @@ GameObject:
   - component: {fileID: 1945691875}
   - component: {fileID: 1945691874}
   - component: {fileID: 1945691873}
+  - component: {fileID: 1945691876}
   m_Layer: 5
   m_Name: Avatar_3
   m_TagString: Untagged
@@ -101238,6 +103894,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1945691871}
   m_CullTransparentMesh: 1
+--- !u!114 &1945691876
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1945691871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1945691873}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1945691874}
+  - {fileID: 772397000}
+  - {fileID: 1162807454}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1953728721
 GameObject:
   m_ObjectHideFlags: 0
@@ -101881,6 +104564,7 @@ GameObject:
   - component: {fileID: 1975429732}
   - component: {fileID: 1975429731}
   - component: {fileID: 1975429730}
+  - component: {fileID: 1975429733}
   m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
@@ -101990,6 +104674,33 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1975429728}
   m_CullTransparentMesh: 1
+--- !u!114 &1975429733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1975429728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1640827688}
+  selectable: {fileID: 1975429730}
+  faceGraphic: {fileID: 1640827689}
+  tintTargets:
+  - {fileID: 1975429731}
+  - {fileID: 1640827689}
+  - {fileID: 594206171}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1978117096
 GameObject:
   m_ObjectHideFlags: 0
@@ -102004,6 +104715,8 @@ GameObject:
   - component: {fileID: 1978117098}
   - component: {fileID: 1978117101}
   - component: {fileID: 1978117102}
+  - component: {fileID: 1978117104}
+  - component: {fileID: 1978117103}
   m_Layer: 5
   m_Name: Booster2
   m_TagString: Untagged
@@ -102139,6 +104852,7 @@ MonoBehaviour:
   glow: {fileID: 1030449058}
   glowSpin: 90
   button: {fileID: 1978117098}
+  press: {fileID: 1978117103}
 --- !u!114 &1978117102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102158,6 +104872,50 @@ MonoBehaviour:
   ringColor: {r: 0.45, g: 0.95, b: 0.35, a: 1}
   numberColor: {r: 0.55, g: 1, b: 0.3, a: 1}
   numberSize: 64
+--- !u!114 &1978117103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978117096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1978117098}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1978117099}
+  - {fileID: 1030449058}
+  - {fileID: 464476003}
+  - {fileID: 316666528}
+  - {fileID: 2021045684}
+  - {fileID: 1110215134}
+  - {fileID: 949639981}
+  - {fileID: 113738986}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
+--- !u!114 &1978117104
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1978117096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ab9a1b8c02dbae40b329c4f299d2fb9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1978422620
 GameObject:
   m_ObjectHideFlags: 0
@@ -102802,6 +105560,7 @@ GameObject:
   - component: {fileID: 1989572312}
   - component: {fileID: 1989572311}
   - component: {fileID: 1989572310}
+  - component: {fileID: 1989572314}
   m_Layer: 5
   m_Name: Coin_1000
   m_TagString: Untagged
@@ -102942,6 +105701,34 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1989572308}
   m_CullTransparentMesh: 1
+--- !u!114 &1989572314
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989572308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 1989572311}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 1989572312}
+  - {fileID: 906123537}
+  - {fileID: 680092975}
+  - {fileID: 1596608356}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &1991307806
 GameObject:
   m_ObjectHideFlags: 0
@@ -103281,6 +106068,7 @@ GameObject:
   - component: {fileID: 2008576700}
   - component: {fileID: 2008576699}
   - component: {fileID: 2008576698}
+  - component: {fileID: 2008576703}
   m_Layer: 5
   m_Name: Daily
   m_TagString: Untagged
@@ -103429,6 +106217,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008576696}
   m_CullTransparentMesh: 1
+--- !u!114 &2008576703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2008576696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 2008576700}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 2008576701}
+  - {fileID: 1504319108}
+  - {fileID: 1573291219}
+  - {fileID: 838259184}
+  - {fileID: 258266166}
+  - {fileID: 560247195}
+  - {fileID: 1864400798}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &2015940749
 GameObject:
   m_ObjectHideFlags: 0
@@ -107366,6 +110185,7 @@ GameObject:
   - component: {fileID: 2083890363}
   - component: {fileID: 2083890362}
   - component: {fileID: 2083890361}
+  - component: {fileID: 2083890365}
   m_Layer: 5
   m_Name: NextButton
   m_TagString: Untagged
@@ -107407,6 +110227,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grayMaterial: {fileID: 2100000, guid: fa1526c2fd2db734c9408b719ff62fb7, type: 2}
   grayTextMaterial: {fileID: 2100000, guid: c4ad33a1ff458b448a355e98425372a4, type: 2}
+  button: {fileID: 2083890362}
+  images:
+  - {fileID: 2083890363}
+  - {fileID: 1150935473}
+  - {fileID: 1792694725}
+  texts:
+  - {fileID: 1203159973}
+  - {fileID: 2023712382}
 --- !u!114 &2083890362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -107489,6 +110317,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083890359}
   m_CullTransparentMesh: 1
+--- !u!114 &2083890365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2083890359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 1150935472}
+  selectable: {fileID: 2083890362}
+  faceGraphic: {fileID: 1150935473}
+  tintTargets:
+  - {fileID: 2083890363}
+  - {fileID: 1150935473}
+  - {fileID: 1203159973}
+  - {fileID: 1792694725}
+  - {fileID: 2023712382}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &2086635417
 GameObject:
   m_ObjectHideFlags: 0
@@ -107983,6 +110840,7 @@ GameObject:
   - component: {fileID: 2116206741}
   - component: {fileID: 2116206740}
   - component: {fileID: 2116206739}
+  - component: {fileID: 2116206743}
   m_Layer: 5
   m_Name: NextMonthButton
   m_TagString: Untagged
@@ -108112,6 +110970,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116206737}
   m_CullTransparentMesh: 1
+--- !u!114 &2116206743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116206737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5879955a8508c4bac2ebbe36844705, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  face: {fileID: 0}
+  selectable: {fileID: 2116206739}
+  faceGraphic: {fileID: 0}
+  tintTargets:
+  - {fileID: 2116206741}
+  - {fileID: 1538640206}
+  fixedChildren: []
+  pressScale: 0.93
+  insetScale: 0.94
+  pressDuration: 0.07
+  darken: 1
+  pressedTint: {r: 0.78, g: 0.78, b: 0.78, a: 1}
+  releaseDuration: 0.18
+  releaseOvershoot: 3
 --- !u!1 &2116258112
 GameObject:
   m_ObjectHideFlags: 0

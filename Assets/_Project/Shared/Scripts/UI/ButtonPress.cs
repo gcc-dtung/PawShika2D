@@ -13,7 +13,8 @@ namespace PawBlock.Shared
     ///   Button đang tô khung (ColorTint) thì chuyển sang tô mặt để khung không tối.
     /// - Nút 1 ảnh: cả nút lún nhỏ và tối đi (tween scale khác trên nút, vd booster nảy, được tạm dừng rồi chạy tiếp).
     /// Thả tay: nảy nhẹ về (OutBack); kéo ra ngoài nút / đang kéo (vuốt): về luôn, không nảy.
-    /// UIButtonPress trên Canvas tự gắn cho mọi Button. Nút không muốn có phản hồi: gắn sẵn ButtonPress rồi bỏ tick.
+    /// UIButtonPress trên Canvas: Editor gắn sẵn cho mọi Button. Nút không muốn có phản hồi: bỏ tick ButtonPress.
+    /// Tham chiếu (Selectable, mặt, Graphic được tô, con đứng yên) do Editor thu sẵn (OnValidate / UIAutoSetup), lúc chạy không tìm.
     /// Chạy theo thời gian thực nên không phụ thuộc timeScale.
     /// </summary>
     [DisallowMultipleComponent]
@@ -21,8 +22,16 @@ namespace PawBlock.Shared
     {
         private static readonly string[] FaceNames = { "Face", "Fill" };
 
-        [Tooltip("Mặt nút (trống: tự tìm con tên Face / Fill). Có mặt thì khung đứng yên, phần bên trong lún xuống")]
+        [Tooltip("Mặt nút (trống: Editor tự tìm con tên Face / Fill). Có mặt thì khung đứng yên, phần bên trong lún xuống")]
         [SerializeField] private RectTransform face;
+
+        [Header("Editor tự điền")]
+        [SerializeField] private Selectable selectable;
+        [SerializeField] private Graphic faceGraphic;
+        [Tooltip("Graphic con được tô tối khi nhấn (trừ phần dưới ButtonPressIgnore)")]
+        [SerializeField] private Graphic[] tintTargets;
+        [Tooltip("Con trực tiếp có ButtonPressIgnore: khung đứng yên")]
+        [SerializeField] private Transform[] fixedChildren;
 
         [Header("Nhấn xuống")]
         [SerializeField] private float pressScale = 0.93f;      // nút 1 ảnh
@@ -36,7 +45,6 @@ namespace PawBlock.Shared
         [Tooltip("Độ nảy khi về (OutBack overshoot)")]
         [SerializeField] private float releaseOvershoot = 3f;
 
-        private Selectable _selectable;
         private bool _inset;
         private readonly List<RectTransform> _parts = new List<RectTransform>();   // phần lún (con trực tiếp, chế độ khung)
         private readonly List<Vector2> _partPos = new List<Vector2>();
@@ -53,22 +61,13 @@ namespace PawBlock.Shared
 
         private void Awake()
         {
-            _selectable = GetComponent<Selectable>();
-            if (face == null)
-            {
-                foreach (string n in FaceNames)
-                {
-                    if (transform.Find(n) is RectTransform f) { face = f; break; }
-                }
-            }
             _inset = face != null;
 
             // Khung đứng yên: Button đang tô khung thì chuyển sang tô mặt (cả màu nhấn lẫn màu tắt)
-            if (_inset && _selectable != null && _selectable.transition == Selectable.Transition.ColorTint
-                && _selectable.targetGraphic != null && _selectable.targetGraphic.transform == transform)
+            if (_inset && selectable != null && selectable.transition == Selectable.Transition.ColorTint
+                && selectable.targetGraphic != null && selectable.targetGraphic.transform == transform)
             {
-                Graphic faceGraphic = face.GetComponent<Graphic>();
-                if (faceGraphic != null) _selectable.targetGraphic = faceGraphic;
+                if (faceGraphic != null) selectable.targetGraphic = faceGraphic;
             }
         }
 
@@ -85,7 +84,7 @@ namespace PawBlock.Shared
         public void OnPointerDown(PointerEventData eventData)
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
-            if (_selectable != null && !_selectable.IsInteractable()) return;
+            if (selectable != null && !selectable.IsInteractable()) return;
 
             _pressed = true;
             Begin();
@@ -182,7 +181,7 @@ namespace PawBlock.Shared
                 foreach (Transform child in transform)
                 {
                     if (!(child is RectTransform rt) || !child.gameObject.activeSelf) continue;
-                    if (child.GetComponent<ButtonPressIgnore>() != null) continue; // khung đứng yên
+                    if (fixedChildren != null && System.Array.IndexOf(fixedChildren, child) >= 0) continue; // khung đứng yên
                     _parts.Add(rt);
                     _partPos.Add(rt.anchoredPosition);
                     _partScale.Add(rt.localScale);
@@ -234,14 +233,16 @@ namespace PawBlock.Shared
             if (on)
             {
                 _tinted.Clear();
-                Graphic selfTinted = _selectable != null && _selectable.transition == Selectable.Transition.ColorTint
-                    ? _selectable.targetGraphic : null;
-                foreach (Graphic g in GetComponentsInChildren<Graphic>())
+                Graphic selfTinted = selectable != null && selectable.transition == Selectable.Transition.ColorTint
+                    ? selectable.targetGraphic : null;
+                if (tintTargets != null)
                 {
-                    if (g == selfTinted) continue;
-                    if (_inset && g.transform == transform) continue; // khung
-                    if (g.GetComponentInParent<ButtonPressIgnore>() != null) continue;
-                    _tinted.Add(g);
+                    foreach (Graphic g in tintTargets)
+                    {
+                        if (g == null || !g.gameObject.activeInHierarchy || g == selfTinted) continue;
+                        if (_inset && g.transform == transform) continue; // khung
+                        _tinted.Add(g);
+                    }
                 }
             }
 
@@ -260,5 +261,54 @@ namespace PawBlock.Shared
             GameObject over = eventData.pointerCurrentRaycast.gameObject;
             return over != null && over.transform.IsChildOf(transform);
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent / Find)
+        private void OnValidate() => EditorCollect();
+
+        /// <summary>Thu lại tham chiếu theo cây con hiện tại; trả về true nếu có đổi.</summary>
+        public bool EditorCollect()
+        {
+            Selectable sel = GetComponent<Selectable>();
+            RectTransform f = face;
+            if (f == null)
+            {
+                foreach (string n in FaceNames)
+                {
+                    if (transform.Find(n) is RectTransform found) { f = found; break; }
+                }
+            }
+            Graphic fg = f != null ? f.GetComponent<Graphic>() : null;
+            var tint = new List<Graphic>();
+            foreach (Graphic g in GetComponentsInChildren<Graphic>(true))
+            {
+                if (g.GetComponentInParent<ButtonPressIgnore>(true) != null) continue;
+                tint.Add(g);
+            }
+            var fixedList = new List<Transform>();
+            foreach (Transform child in transform)
+            {
+                if (child.GetComponent<ButtonPressIgnore>() != null) fixedList.Add(child);
+            }
+            bool changed = sel != selectable || f != face || fg != faceGraphic
+                || !Same(tintTargets, tint) || !Same(fixedChildren, fixedList);
+            selectable = sel;
+            face = f;
+            faceGraphic = fg;
+            tintTargets = tint.ToArray();
+            fixedChildren = fixedList.ToArray();
+            return changed;
+        }
+
+        private static bool Same<T>(T[] a, List<T> b) where T : Object
+        {
+            if (a == null || a.Length != b.Count) return false;
+            for (int i = 0; i < a.Length; i++)
+            {
+                if (a[i] != b[i]) return false;
+            }
+            return true;
+        }
+#endif
     }
 }

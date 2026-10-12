@@ -37,6 +37,7 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Image glow;
         [SerializeField] private float glowSpin = 90f; // độ / giây
         [SerializeField] private Button button;
+        [SerializeField] private ButtonPress press;
 
         private Tween _glowTween;
         private Tween _punch;
@@ -124,7 +125,7 @@ namespace PawBlock.Features.Gameplay
         private void OnUsed(BoosterType used)
         {
             if (used != type) return;
-            if (TryGetComponent(out ButtonPress press) && press.IsPlaying) return; // vừa bấm nút: đang có hiệu ứng nhấn của nút
+            if (press != null && press.IsPlaying) return; // vừa bấm nút: đang có hiệu ứng nhấn của nút
             _punch?.Kill();
             transform.localScale = Vector3.one;
             _punch = transform.DOPunchScale(Vector3.one * 0.15f, 0.3f, 6, 0.6f)
@@ -175,6 +176,7 @@ namespace PawBlock.Features.Gameplay
         // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
         private void OnValidate()
         {
+            if (press == null) press = GetComponent<ButtonPress>();
             if (button == null) button = GetComponent<Button>();
         }
 #endif
