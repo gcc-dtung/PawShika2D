@@ -38,6 +38,7 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private float glowSpin = 90f; // độ / giây
         [SerializeField] private Button button;
         [SerializeField] private ButtonPress press;
+        [SerializeField] private Canvas overlayCanvas;
 
         private Tween _glowTween;
         private Tween _punch;
@@ -51,6 +52,9 @@ namespace PawBlock.Features.Gameplay
         }
 
         public BoosterType Type => type;
+
+        /// <summary>Canvas con (override sorting tắt) để tutorial nhấc nút lên trên nền tối.</summary>
+        public Canvas OverlayCanvas => overlayCanvas;
 
         /// <summary>Nút của booster <paramref name="boosterType"/> trong <paramref name="buttons"/> (Bootstrap truyền), null nếu không có.</summary>
         public static BoosterButton Find(BoosterButton[] buttons, BoosterType boosterType)
@@ -176,8 +180,19 @@ namespace PawBlock.Features.Gameplay
         // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
         private void OnValidate()
         {
+            if (overlayCanvas == null) overlayCanvas = GetComponent<Canvas>();
             if (press == null) press = GetComponent<ButtonPress>();
             if (button == null) button = GetComponent<Button>();
+        }
+#endif
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Canvas + GraphicRaycaster cho tutorial mở khóa. Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            overlayCanvas = EditorChildren.On<Canvas>(gameObject);
+            EditorChildren.On<GraphicRaycaster>(gameObject); // Canvas con cần raycaster riêng để nút nhận chạm
         }
 #endif
     }

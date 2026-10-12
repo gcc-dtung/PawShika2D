@@ -37,6 +37,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField, Range(0f, 1f)] private float frameAlphaMin = 0.55f;
         [Tooltip("Cạnh khung / cạnh ô")]
         [SerializeField] private float frameSize = 0.96f;
+        [Tooltip("Khung mẫu (con tắt sẵn, Editor dựng: Sliced, sortingOrder 9)")]
+        [SerializeField] private SpriteRenderer frameTemplate;
 
         private const int FrameSortingOrder = 9; // trên ô lưới (0..8), dưới khối mèo (20+)
 
@@ -159,6 +161,7 @@ namespace PawBlock.Features.Gameplay
             {
                 for (int y = _rect.yMin; y < _rect.yMax; y++)
                 {
+                    if (frameTemplate == null) return;
                     if (_framesShown == _frames.Count) _frames.Add(NewFrame());
                     SpriteRenderer sr = _frames[_framesShown++];
                     sr.sprite = sprite;
@@ -173,9 +176,8 @@ namespace PawBlock.Features.Gameplay
 
         private SpriteRenderer NewFrame()
         {
-            GameObject go = new GameObject("HintFrame");
-            go.transform.SetParent(transform, false);
-            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
+            SpriteRenderer sr = Instantiate(frameTemplate, transform);
+            sr.name = "HintFrame";
             sr.drawMode = SpriteDrawMode.Sliced;
             sr.sortingOrder = FrameSortingOrder;
             return sr;
@@ -210,5 +212,16 @@ namespace PawBlock.Features.Gameplay
         {
             if (e.State != GameState.Playing) Hide();
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            frameTemplate = EditorChildren.Child<SpriteRenderer>(transform, "HintFrameTemplate", false);
+            frameTemplate.drawMode = SpriteDrawMode.Sliced;
+            frameTemplate.sortingOrder = FrameSortingOrder;
+        }
+#endif
     }
 }

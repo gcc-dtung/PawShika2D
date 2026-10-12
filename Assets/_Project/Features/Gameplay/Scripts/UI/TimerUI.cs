@@ -2,6 +2,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -36,6 +37,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private float addedHold = 0.25f;
         [SerializeField] private float addedFlyDuration = 0.45f;
         [SerializeField] private float addedFontScale = 1.4f;
+        [Tooltip("Chữ \"+Ns\" (bản sao chữ giờ, con cuối của Canvas gốc, Editor dựng sẵn)")]
+        [SerializeField] private TMP_Text addedText;
 
         [Header("Chờ chạm để bắt đầu: nhấp nháy")]
         [SerializeField, Range(0f, 1f)] private float waitingMinAlpha = 0.4f;
@@ -45,7 +48,6 @@ namespace PawBlock.Features.Gameplay
         private Tween _punch;
         private Sequence _added;
         private Tween _waiting;
-        private TMP_Text _addedText;
 
         private void OnEnable()
         {
@@ -126,32 +128,15 @@ namespace PawBlock.Features.Gameplay
         /// </summary>
         private bool FlyAddedText(float seconds)
         {
-            if (timeText == null || timeText.canvas == null) return false;
+            if (timeText == null || addedText == null || timeText.canvas == null) return false;
             Canvas root = timeText.canvas.rootCanvas;
             KillAdded();
 
-            if (_addedText == null)
-            {
-                GameObject go = Instantiate(timeText.gameObject, root.transform);
-                go.name = "TimeAdded";
-                foreach (Component c in go.GetComponents<Component>())
-                {
-                    if (c is UnityEngine.UI.ILayoutElement && !(c is TMP_Text)) Destroy(c); // bỏ LayoutElement của bản gốc
-                }
-                _addedText = go.GetComponent<TMP_Text>();
-                _addedText.raycastTarget = false;
-                RectTransform r = (RectTransform)go.transform;
-                r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
-                r.sizeDelta = new Vector2(400f, 160f);
-                _addedText.alignment = TextAlignmentOptions.Center;
-                _addedText.enableWordWrapping = false;
-            }
-
-            GameObject textGo = _addedText.gameObject;
+            GameObject textGo = addedText.gameObject;
             textGo.SetActive(true);
             textGo.transform.SetAsLastSibling();
-            _addedText.SetText("+{0}s", Mathf.RoundToInt(seconds));
-            _addedText.color = addedColor;
+            addedText.SetText("+{0}s", Mathf.RoundToInt(seconds));
+            addedText.color = addedColor;
             Transform t = textGo.transform;
             Vector3 start = root.transform.position; // giữa màn hình (canvas overlay)
             t.position = start;
@@ -225,5 +210,34 @@ namespace PawBlock.Features.Gameplay
             _punch?.Kill();
             _punch = null;
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            if (timeText == null) return;
+            Transform root = timeText.GetComponentInParent<Canvas>().rootCanvas.transform;
+            if (addedText == null)
+            {
+                Transform old = root.Find("TimeAdded");
+                GameObject go = old != null ? old.gameObject : Instantiate(timeText.gameObject, root);
+                if (old == null) UnityEditor.Undo.RegisterCreatedObjectUndo(go, "Dựng sẵn TimeAdded");
+                go.name = "TimeAdded";
+                foreach (Component c in go.GetComponents<Component>())
+                {
+                    if (c is UnityEngine.UI.ILayoutElement && !(c is TMP_Text)) UnityEditor.Undo.DestroyObjectImmediate(c); // bỏ LayoutElement của bản gốc
+                }
+                addedText = go.GetComponent<TMP_Text>();
+            }
+            addedText.raycastTarget = false;
+            RectTransform r = addedText.rectTransform;
+            r.anchorMin = r.anchorMax = r.pivot = new Vector2(0.5f, 0.5f);
+            r.sizeDelta = new Vector2(400f, 160f);
+            addedText.alignment = TextAlignmentOptions.Center;
+            addedText.enableWordWrapping = false;
+            addedText.gameObject.SetActive(false);
+        }
+#endif
     }
 }

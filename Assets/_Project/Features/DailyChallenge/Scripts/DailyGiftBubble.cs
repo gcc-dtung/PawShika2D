@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using PawBlock.Features.DailyReward;
 using PawBlock.Features.Gameplay;
 using PawBlock.Core.Contracts;
+using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.DailyChallenge
 {
@@ -22,17 +23,18 @@ namespace PawBlock.Features.DailyChallenge
         [SerializeField] private RectTransform arrow;
         [SerializeField] private TMP_Text title;
         [SerializeField] private RectTransform itemRow;
-        [SerializeField] private Image itemIconTemplate; // con: TMP_Text số lượng
+        [Tooltip("Món quà mẫu (icon + số), nhân bản cho từng món")]
+        [SerializeField] private GiftItemView itemTemplate;
         [SerializeField] private Vector2 offset = new Vector2(0f, -120f);
         [Tooltip("Cách mép màn hình tối thiểu (bong thoại không tràn ra ngoài)")]
         [SerializeField] private float edgeMargin = 24f;
         [SerializeField] private Canvas canvas;
 
-        private readonly List<Image> _items = new List<Image>();
+        private readonly List<GiftItemView> _items = new List<GiftItemView>();
 
         private void Awake()
         {
-            if (itemIconTemplate != null) itemIconTemplate.gameObject.SetActive(false);
+            if (itemTemplate != null) itemTemplate.gameObject.SetActive(false);
             // Không tự tắt ở đây: object dựng sẵn ở trạng thái tắt, Awake chạy lần đầu đúng lúc Show bật nó lên
         }
 
@@ -74,20 +76,18 @@ namespace PawBlock.Features.DailyChallenge
 
         private void Fill(IList<DailyRewardItem> items, IRewardIcons icons)
         {
-            foreach (Image i in _items) i.gameObject.SetActive(false);
-            if (items == null || itemIconTemplate == null) return;
+            foreach (GiftItemView i in _items) i.gameObject.SetActive(false);
+            if (items == null || itemTemplate == null) return;
             for (int n = 0; n < items.Count; n++)
             {
                 if (n == _items.Count)
                 {
-                    Image clone = Instantiate(itemIconTemplate, itemRow);
-                    _items.Add(clone);
+                    _items.Add(Instantiate(itemTemplate, itemRow));
                 }
-                Image img = _items[n];
-                img.gameObject.SetActive(true);
-                img.sprite = icons != null ? icons.IconOf(items[n]) : null;
-                TMP_Text amount = img.GetComponentInChildren<TMP_Text>(true);
-                if (amount != null) amount.SetText(AmountOf(items[n]));
+                GiftItemView item = _items[n];
+                item.gameObject.SetActive(true);
+                if (item.Icon != null) item.Icon.sprite = icons != null ? icons.IconOf(items[n]) : null;
+                if (item.Amount != null) item.Amount.SetText(AmountOf(items[n]));
             }
         }
 

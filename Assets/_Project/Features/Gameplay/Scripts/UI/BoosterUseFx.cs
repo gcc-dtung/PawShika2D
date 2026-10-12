@@ -47,79 +47,36 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Color labelColor = Color.white;
         [SerializeField] private Color flashColor = new Color(1f, 0.95f, 0.7f, 1f);
 
-        private RectTransform _root;
-        private Image _dim, _rays, _icon, _flash;
-        private TMP_Text _label;
+        [Header("Object con (Editor dựng sẵn)")]
+        [SerializeField] private RectTransform fxRoot;
+        [SerializeField] private Image fxDim;
+        [SerializeField] private Image fxRays;
+        [SerializeField] private Image fxIcon;
+        [SerializeField] private Image fxFlash;
+        [SerializeField] private TMP_Text fxLabel;
+        [SerializeField] private Canvas canvas;
         private Sequence _seq;
         private BoosterManager _boosters;
 
         private void Awake()
         {
-            _root = NewRect("BoosterFx", transform);
-            _root.anchorMin = Vector2.zero;
-            _root.anchorMax = Vector2.one;
-            _root.offsetMin = _root.offsetMax = Vector2.zero;
-
-            _dim = NewImage("Dim", null, Color.black);
-            RectTransform dimRt = _dim.rectTransform;
-            dimRt.anchorMin = Vector2.zero;
-            dimRt.anchorMax = Vector2.one;
-            dimRt.offsetMin = dimRt.offsetMax = Vector2.zero;
-
-            _rays = NewImage("Rays", ProceduralSprites.Rays, raysColor);
-            _rays.rectTransform.sizeDelta = Vector2.one * raysSize;
-            _icon = NewImage("Icon", null, Color.white);
-            _icon.rectTransform.sizeDelta = Vector2.one * iconSize;
-            _icon.preserveAspect = true;
-            _flash = NewImage("Flash", ProceduralSprites.Dot, flashColor);
-            _flash.rectTransform.sizeDelta = Vector2.one * iconSize;
-
-            _label = CreateLabel();
-            _root.gameObject.SetActive(false);
-        }
-
-        private RectTransform NewRect(string name, Transform parent)
-        {
-            GameObject go = new GameObject(name, typeof(RectTransform));
-            RectTransform rt = (RectTransform)go.transform;
-            rt.SetParent(parent, false);
-            return rt;
-        }
-
-        private Image NewImage(string name, Sprite sprite, Color color)
-        {
-            RectTransform rt = NewRect(name, _root);
-            Image img = rt.gameObject.AddComponent<Image>();
-            img.sprite = sprite;
-            img.color = color;
-            img.raycastTarget = false;
-            return img;
-        }
-
-        /// <summary>Chữ tên booster: lấy font của chữ có sẵn trên HUD (Fredoka) cho đồng bộ.</summary>
-        private TMP_Text CreateLabel()
-        {
-            RectTransform rt = NewRect("Label", _root);
-            rt.sizeDelta = new Vector2(900f, 160f);
-            TextMeshProUGUI label = rt.gameObject.AddComponent<TextMeshProUGUI>();
-            TMP_Text sample = null;
-            foreach (TMP_Text t in GetComponentsInChildren<TMP_Text>(true))
+            if (fxRoot == null || fxDim == null || fxRays == null || fxIcon == null || fxFlash == null || fxLabel == null)
             {
-                if (t == label || t.font == null) continue;
-                sample = t;
-                if (t.font.name.Contains("Fredoka")) break;
+                Debug.LogError($"[BoosterUseFx] Thiếu object con trên {name} (chuột phải component -> Dựng sẵn object con)", this);
+                enabled = false;
+                return;
             }
-            if (sample != null)
-            {
-                label.font = sample.font;
-                label.fontSharedMaterial = sample.fontSharedMaterial;
-            }
-            label.fontSize = labelFontSize;
-            label.alignment = TextAlignmentOptions.Center;
-            label.enableWordWrapping = false;
-            label.color = labelColor;
-            label.raycastTarget = false;
-            return label;
+            // Sprite sinh lúc chạy, không lưu được vào scene; màu / cỡ theo Inspector
+            fxRays.sprite = ProceduralSprites.Rays;
+            fxRays.color = raysColor;
+            fxRays.rectTransform.sizeDelta = Vector2.one * raysSize;
+            fxIcon.rectTransform.sizeDelta = Vector2.one * iconSize;
+            fxFlash.sprite = ProceduralSprites.Dot;
+            fxFlash.color = flashColor;
+            fxFlash.rectTransform.sizeDelta = Vector2.one * iconSize;
+            fxLabel.fontSize = labelFontSize;
+            fxLabel.color = labelColor;
+            fxRoot.gameObject.SetActive(false);
         }
 
         private void Start()
@@ -137,7 +94,7 @@ namespace PawBlock.Features.Gameplay
         {
             _seq?.Kill(); // OnKill mở khóa thao tác
             _seq = null;
-            if (_root != null) _root.gameObject.SetActive(false);
+            if (fxRoot != null) fxRoot.gameObject.SetActive(false);
         }
 
         private void Play(BoosterType type)
@@ -147,28 +104,28 @@ namespace PawBlock.Features.Gameplay
             if (data == null) return;
 
             _seq?.Kill();
-            _root.gameObject.SetActive(true);
-            _root.SetAsLastSibling();
+            fxRoot.gameObject.SetActive(true);
+            fxRoot.SetAsLastSibling();
             InputGate.Lock(this);
 
             Vector2 start = ToLocal(ButtonScreenPoint(type), Vector2.zero);
             Vector2 target = ToLocal(TargetScreenPoint(type), Vector2.zero);
 
-            RectTransform icon = _icon.rectTransform, rays = _rays.rectTransform, label = _label.rectTransform, flash = _flash.rectTransform;
-            _icon.sprite = data.icon;
-            _icon.color = Color.white;
+            RectTransform icon = fxIcon.rectTransform, rays = fxRays.rectTransform, label = fxLabel.rectTransform, flash = fxFlash.rectTransform;
+            fxIcon.sprite = data.icon;
+            fxIcon.color = Color.white;
             icon.anchoredPosition = start;
             icon.localScale = Vector3.one * 0.6f;
             rays.anchoredPosition = Vector2.zero;
             rays.localScale = Vector3.one * 0.5f;
             rays.localRotation = Quaternion.identity;
-            _rays.color = WithAlpha(raysColor, 0f);
+            fxRays.color = WithAlpha(raysColor, 0f);
             label.anchoredPosition = new Vector2(0f, -iconSize * centerScale * 0.62f);
             label.localScale = Vector3.zero;
-            _label.SetText((string.IsNullOrEmpty(data.name) ? type.ToString() : data.name).ToUpperInvariant() + "!");
-            _label.alpha = 1f;
-            _dim.color = WithAlpha(Color.black, 0f);
-            _flash.color = WithAlpha(flashColor, 0f);
+            fxLabel.SetText((string.IsNullOrEmpty(data.name) ? type.ToString() : data.name).ToUpperInvariant() + "!");
+            fxLabel.alpha = 1f;
+            fxDim.color = WithAlpha(Color.black, 0f);
+            fxFlash.color = WithAlpha(flashColor, 0f);
 
             float t1 = popDuration + holdDuration;
             float t2 = t1 + flyDuration;
@@ -177,33 +134,33 @@ namespace PawBlock.Features.Gameplay
             // Bật ra giữa màn hình
             seq.Insert(0f, icon.DOAnchorPos(Vector2.zero, popDuration).SetEase(Ease.OutCubic));
             seq.Insert(0f, icon.DOScale(centerScale, popDuration).SetEase(Ease.OutBack));
-            seq.Insert(0f, _dim.DOFade(dimAlpha, popDuration * 0.6f));
-            seq.Insert(popDuration * 0.3f, _rays.DOFade(raysColor.a, popDuration * 0.7f));
+            seq.Insert(0f, fxDim.DOFade(dimAlpha, popDuration * 0.6f));
+            seq.Insert(popDuration * 0.3f, fxRays.DOFade(raysColor.a, popDuration * 0.7f));
             seq.Insert(popDuration * 0.3f, rays.DOScale(1f, popDuration * 0.9f).SetEase(Ease.OutBack));
             seq.Insert(popDuration * 0.45f, label.DOScale(1f, popDuration * 0.8f).SetEase(Ease.OutBack));
 
             // Lao tới mục tiêu
             seq.Insert(t1, icon.DOAnchorPos(target, flyDuration).SetEase(Ease.InCubic));
             seq.Insert(t1, icon.DOScale(0.7f, flyDuration).SetEase(Ease.InCubic));
-            seq.Insert(t1, _rays.DOFade(0f, flyDuration * 0.7f));
+            seq.Insert(t1, fxRays.DOFade(0f, flyDuration * 0.7f));
             seq.Insert(t1, label.DOScale(0f, flyDuration * 0.7f).SetEase(Ease.InBack));
-            seq.Insert(t1, _dim.DOFade(0f, flyDuration + 0.1f));
+            seq.Insert(t1, fxDim.DOFade(0f, flyDuration + 0.1f));
 
             // Tới nơi: icon tắt, lóe sáng tròn tại chỗ
             seq.InsertCallback(t2, () =>
             {
                 InputGate.Unlock(this);
-                _icon.color = WithAlpha(Color.white, 0f);
+                fxIcon.color = WithAlpha(Color.white, 0f);
                 flash.anchoredPosition = target;
                 flash.localScale = Vector3.one * 0.3f;
-                _flash.color = WithAlpha(flashColor, 0.9f);
+                fxFlash.color = WithAlpha(flashColor, 0.9f);
                 AudioManager.Vibrate(HapticType.Light);
             });
             seq.Insert(t2, flash.DOScale(2.4f, 0.28f).SetEase(Ease.OutQuad));
-            seq.Insert(t2, _flash.DOFade(0f, 0.28f).SetEase(Ease.InQuad));
+            seq.Insert(t2, fxFlash.DOFade(0f, 0.28f).SetEase(Ease.InQuad));
 
             seq.OnUpdate(() => rays.Rotate(0f, 0f, -raysSpin * Time.unscaledDeltaTime));
-            seq.OnComplete(() => _root.gameObject.SetActive(false));
+            seq.OnComplete(() => fxRoot.gameObject.SetActive(false));
             seq.OnKill(() =>
             {
                 InputGate.Unlock(this);
@@ -237,20 +194,78 @@ namespace PawBlock.Features.Gameplay
             return null;
         }
 
-        private static Vector2 UiScreenPoint(Transform t)
+        /// <summary>Nút booster / đồng hồ cùng Canvas HUD với hiệu ứng: dùng camera của Canvas đó.</summary>
+        private Vector2 UiScreenPoint(Transform t)
         {
-            Canvas canvas = t.GetComponentInParent<Canvas>();
             Camera uiCam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
             return RectTransformUtility.WorldToScreenPoint(uiCam, t.position);
         }
 
-        /// <summary>Điểm màn hình -> toạ độ trong _root (null = giữa màn hình).</summary>
+        /// <summary>Điểm màn hình -> toạ độ trong fxRoot (null = giữa màn hình).</summary>
         private Vector2 ToLocal(Vector2? screen, Vector2 fallback)
         {
             if (!screen.HasValue) return fallback;
-            Canvas canvas = _root.GetComponentInParent<Canvas>();
             Camera uiCam = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
-            return RectTransformUtility.ScreenPointToLocalPointInRectangle(_root, screen.Value, uiCam, out Vector2 local) ? local : fallback;
+            return RectTransformUtility.ScreenPointToLocalPointInRectangle(fxRoot, screen.Value, uiCam, out Vector2 local) ? local : fallback;
         }
+
+#if UNITY_EDITOR
+        // Editor tự điền tham chiếu (guide 8.3: lúc chạy không GetComponent)
+        private void OnValidate()
+        {
+            if (canvas == null) canvas = GetComponentInParent<Canvas>();
+        }
+#endif
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            fxRoot = EditorChildren.Rect(transform, "BoosterFx", false);
+            fxRoot.anchorMin = Vector2.zero;
+            fxRoot.anchorMax = Vector2.one;
+            fxRoot.offsetMin = fxRoot.offsetMax = Vector2.zero;
+
+            fxDim = BuildImage("Dim", Color.black);
+            RectTransform dimRt = fxDim.rectTransform;
+            dimRt.anchorMin = Vector2.zero;
+            dimRt.anchorMax = Vector2.one;
+            dimRt.offsetMin = dimRt.offsetMax = Vector2.zero;
+            fxRays = BuildImage("Rays", raysColor);
+            fxIcon = BuildImage("Icon", Color.white);
+            fxIcon.preserveAspect = true;
+            fxFlash = BuildImage("Flash", flashColor);
+
+            // Chữ tên booster: font của chữ có sẵn trên HUD (Fredoka) cho đồng bộ
+            TextMeshProUGUI text = EditorChildren.Child<TextMeshProUGUI>(fxRoot, "Label");
+            text.rectTransform.sizeDelta = new Vector2(900f, 160f);
+            TMP_Text sample = null;
+            foreach (TMP_Text t in GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (t == text || t.font == null) continue;
+                sample = t;
+                if (t.font.name.Contains("Fredoka")) break;
+            }
+            if (sample != null)
+            {
+                text.font = sample.font;
+                text.fontSharedMaterial = sample.fontSharedMaterial;
+            }
+            text.alignment = TextAlignmentOptions.Center;
+            text.enableWordWrapping = false;
+            text.raycastTarget = false;
+            fxLabel = text;
+            canvas = GetComponentInParent<Canvas>();
+        }
+
+        private Image BuildImage(string imageName, Color color)
+        {
+            Image img = EditorChildren.Child<Image>(fxRoot, imageName);
+            img.color = color;
+            img.raycastTarget = false;
+            return img;
+        }
+#endif
     }
 }

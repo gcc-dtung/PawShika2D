@@ -39,6 +39,9 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private SpriteRenderer ring;  // viền 9-slice (RingBlock) cho hiệu ứng đủ value
         [Tooltip("Material vẽ sprite thành 1 màu đặc (GUI/Text Shader) cho hiệu ứng lóe sáng khi thắng")]
         [SerializeField] private Material flashMaterial;
+        [Tooltip("Lớp trắng đè thân / tai khi thắng (con có sẵn trong prefab, renderer tắt tới lần flash đầu)")]
+        [SerializeField] private SpriteRenderer bodyFlash;
+        [SerializeField] private SpriteRenderer earsFlash;
 
         [Header("Tai mèo (tính theo tỉ lệ ô)")]
         [SerializeField] private float earWidth = 0.36f;   // bề rộng cặp tai
@@ -89,9 +92,6 @@ namespace PawBlock.Features.Gameplay
         private Tween _anim;     // bật / báo sai
         private Tween _ringAnim; // viền đủ value
         private Tween _flashAnim;
-        private SpriteRenderer _bodyFlash;
-        private SpriteRenderer _earsFlash;
-        private static Material _fallbackFlashMaterial;
         private ColorType _color;
         private float _faceWidth;
         private CatFaceAnimation _faceAnim;
@@ -237,8 +237,8 @@ namespace PawBlock.Features.Gameplay
         public void PlayWinFlash(float delay = 0f, float strength = 0.6f, float rise = 0.08f, float fall = 0.32f)
         {
             _flashAnim?.Kill();
-            SpriteRenderer bodyFlash = EnsureFlash(ref _bodyFlash, body, "BodyFlash");
-            SpriteRenderer earsFlash = ears != null && ears.gameObject.activeSelf ? EnsureFlash(ref _earsFlash, ears, "EarsFlash") : null;
+            SpriteRenderer bodyLayer = SyncFlash(bodyFlash, body);
+            SpriteRenderer earsLayer = ears != null && ears.gameObject.activeSelf ? SyncFlash(earsFlash, ears) : null;
             SetFlash(0f);
 
             Sequence seq = DOTween.Sequence().SetLink(gameObject);
@@ -250,29 +250,16 @@ namespace PawBlock.Features.Gameplay
 
             void SetFlash(float a)
             {
-                if (bodyFlash != null) bodyFlash.color = new Color(1f, 1f, 1f, a);
-                if (earsFlash != null) earsFlash.color = new Color(1f, 1f, 1f, a);
+                if (bodyLayer != null) bodyLayer.color = new Color(1f, 1f, 1f, a);
+                if (earsLayer != null) earsLayer.color = new Color(1f, 1f, 1f, a);
             }
         }
 
-        /// <summary>Lớp trắng đè lên <paramref name="src"/>: cùng sprite / kích thước / thứ tự vẽ, nhích về phía camera.</summary>
-        private SpriteRenderer EnsureFlash(ref SpriteRenderer flash, SpriteRenderer src, string name)
+        /// <summary>Lớp trắng đè lên <paramref name="src"/> (con có sẵn): cùng sprite / kích thước / thứ tự vẽ.</summary>
+        private static SpriteRenderer SyncFlash(SpriteRenderer flash, SpriteRenderer src)
         {
-            if (src == null) return null;
-            if (flash == null)
-            {
-                Material mat = flashMaterial;
-                if (mat == null)
-                {
-                    if (_fallbackFlashMaterial == null) _fallbackFlashMaterial = new Material(Shader.Find("GUI/Text Shader"));
-                    mat = _fallbackFlashMaterial;
-                }
-                GameObject go = new GameObject(name);
-                go.transform.SetParent(src.transform, false);
-                go.transform.localPosition = new Vector3(0f, 0f, -0.001f);
-                flash = go.AddComponent<SpriteRenderer>();
-                flash.sharedMaterial = mat;
-            }
+            if (src == null || flash == null) return null;
+            flash.enabled = true;
             flash.gameObject.layer = src.gameObject.layer;
             flash.sprite = src.sprite;
             flash.drawMode = src.drawMode;
@@ -544,5 +531,27 @@ namespace PawBlock.Features.Gameplay
             });
             return seq;
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: lớp flash thân / tai. Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            if (flashMaterial == null) Debug.LogError($"[PlacedBlockView] Chưa gán flashMaterial trên {name}", this);
+            bodyFlash = BuildFlash(body, "BodyFlash");
+            earsFlash = BuildFlash(ears, "EarsFlash");
+        }
+
+        private SpriteRenderer BuildFlash(SpriteRenderer src, string flashName)
+        {
+            if (src == null) return null;
+            SpriteRenderer flash = EditorChildren.Child<SpriteRenderer>(src.transform, flashName);
+            flash.transform.localPosition = new Vector3(0f, 0f, -0.001f);
+            flash.sharedMaterial = flashMaterial;
+            flash.color = new Color(1f, 1f, 1f, 0f);
+            flash.enabled = false; // bật ở lần flash thắng đầu tiên
+            return flash;
+        }
+#endif
     }
 }

@@ -32,9 +32,12 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Color numberColor = new Color(0.55f, 1f, 0.3f, 1f);
         [SerializeField] private float numberSize = 64f;
 
-        private RectTransform _root;
-        private Image _fill;
-        private TMP_Text _number;
+        [Header("Object con (Editor dựng sẵn)")]
+        [SerializeField] private RectTransform countdownRoot;
+        [SerializeField] private Image disc;
+        [SerializeField] private Image ringBack;
+        [SerializeField] private Image fill;
+        [SerializeField] private TMP_Text number;
         private LevelTimer _timer;
         private Tween _pop;
         private int _shown = -1;
@@ -42,52 +45,28 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            _root = NewRect("FreezeCountdown", transform);
-            _root.sizeDelta = Vector2.one * ringSize;
-
-            NewImage("Disc", ProceduralSprites.Disc, discColor, discSize);
-            NewImage("RingBack", ProceduralSprites.Ring, ringBackColor, ringSize);
-            _fill = NewImage("Ring", ProceduralSprites.Ring, ringColor, ringSize);
-            _fill.type = Image.Type.Filled;
-            _fill.fillMethod = Image.FillMethod.Radial360;
-            _fill.fillOrigin = (int)Image.Origin360.Top;
-            _fill.fillClockwise = false; // vòng hụt dần theo chiều kim đồng hồ ngược như kim đếm lùi
-
-            RectTransform textRt = NewRect("Seconds", _root);
-            textRt.sizeDelta = new Vector2(discSize, discSize);
-            TextMeshProUGUI text = textRt.gameObject.AddComponent<TextMeshProUGUI>();
-            TMP_Text sample = GetComponentInChildren<TMP_Text>(true);
-            if (sample != null && sample != text)
+            if (countdownRoot == null || disc == null || ringBack == null || fill == null || number == null)
             {
-                text.font = sample.font;
-                text.fontSharedMaterial = sample.fontSharedMaterial;
+                Debug.LogError($"[FreezeButtonCountdown] Thiếu object con trên {name} (chuột phải component -> Dựng sẵn object con)", this);
+                enabled = false;
+                return;
             }
-            text.fontSize = numberSize;
-            text.alignment = TextAlignmentOptions.Center;
-            text.color = numberColor;
-            text.raycastTarget = false;
-            _number = text;
-
-            _root.gameObject.SetActive(false);
+            // Sprite sinh lúc chạy, không lưu được vào scene; màu / cỡ theo Inspector
+            countdownRoot.sizeDelta = Vector2.one * ringSize;
+            SetImage(disc, ProceduralSprites.Disc, discColor, discSize);
+            SetImage(ringBack, ProceduralSprites.Ring, ringBackColor, ringSize);
+            SetImage(fill, ProceduralSprites.Ring, ringColor, ringSize);
+            number.rectTransform.sizeDelta = new Vector2(discSize, discSize);
+            number.fontSize = numberSize;
+            number.color = numberColor;
+            countdownRoot.gameObject.SetActive(false);
         }
 
-        private RectTransform NewRect(string name, Transform parent)
+        private static void SetImage(Image img, Sprite sprite, Color color, float size)
         {
-            GameObject go = new GameObject(name, typeof(RectTransform));
-            RectTransform rt = (RectTransform)go.transform;
-            rt.SetParent(parent, false);
-            return rt;
-        }
-
-        private Image NewImage(string name, Sprite sprite, Color color, float size)
-        {
-            RectTransform rt = NewRect(name, _root);
-            rt.sizeDelta = Vector2.one * size;
-            Image img = rt.gameObject.AddComponent<Image>();
             img.sprite = sprite;
             img.color = color;
-            img.raycastTarget = false;
-            return img;
+            img.rectTransform.sizeDelta = Vector2.one * size;
         }
 
         private void OnEnable()
@@ -102,7 +81,7 @@ namespace PawBlock.Features.Gameplay
             _pop?.Kill();
             _pop = null;
             _on = false;
-            if (_root != null) _root.gameObject.SetActive(false);
+            if (countdownRoot != null) countdownRoot.gameObject.SetActive(false);
         }
 
         private void OnFreezeChanged(bool frozen) => SetOn(frozen, false);
@@ -112,24 +91,24 @@ namespace PawBlock.Features.Gameplay
             if (on == _on && !instant) return;
             _on = on;
             _pop?.Kill();
-            _root.SetAsLastSibling(); // trên icon, số lượt
+            countdownRoot.SetAsLastSibling(); // trên icon, số lượt
             if (on)
             {
-                _root.gameObject.SetActive(true);
+                countdownRoot.gameObject.SetActive(true);
                 _shown = -1;
                 Refresh();
-                _root.localScale = instant ? Vector3.one : Vector3.zero;
-                if (!instant) _pop = _root.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true).SetLink(gameObject);
+                countdownRoot.localScale = instant ? Vector3.one : Vector3.zero;
+                if (!instant) _pop = countdownRoot.DOScale(1f, 0.3f).SetEase(Ease.OutBack).SetUpdate(true).SetLink(gameObject);
             }
-            else if (_root.gameObject.activeSelf)
+            else if (countdownRoot.gameObject.activeSelf)
             {
                 if (instant)
                 {
-                    _root.gameObject.SetActive(false);
+                    countdownRoot.gameObject.SetActive(false);
                     return;
                 }
-                _pop = _root.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).SetLink(gameObject)
-                    .OnComplete(() => _root.gameObject.SetActive(false));
+                _pop = countdownRoot.DOScale(0f, 0.2f).SetEase(Ease.InBack).SetUpdate(true).SetLink(gameObject)
+                    .OnComplete(() => countdownRoot.gameObject.SetActive(false));
             }
         }
 
@@ -143,11 +122,49 @@ namespace PawBlock.Features.Gameplay
             if (_timer == null) return;
             float total = Mathf.Max(0.01f, _lives.freezeSeconds);
             float left = _timer.FreezeLeft;
-            _fill.fillAmount = Mathf.Clamp01(left / total);
+            fill.fillAmount = Mathf.Clamp01(left / total);
             int seconds = Mathf.CeilToInt(left);
             if (seconds == _shown) return;
             _shown = seconds;
-            _number.SetText("{0}", seconds);
+            number.SetText("{0}", seconds);
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            countdownRoot = EditorChildren.Rect(transform, "FreezeCountdown", false);
+            disc = BuildImage("Disc");
+            ringBack = BuildImage("RingBack");
+            fill = BuildImage("Ring");
+            fill.type = Image.Type.Filled;
+            fill.fillMethod = Image.FillMethod.Radial360;
+            fill.fillOrigin = (int)Image.Origin360.Top;
+            fill.fillClockwise = false; // vòng hụt dần theo chiều kim đồng hồ ngược như kim đếm lùi
+
+            TextMeshProUGUI text = EditorChildren.Child<TextMeshProUGUI>(countdownRoot, "Seconds");
+            TMP_Text sample = null;
+            foreach (TMP_Text t in GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (t != text) { sample = t; break; }
+            }
+            if (sample != null)
+            {
+                text.font = sample.font;
+                text.fontSharedMaterial = sample.fontSharedMaterial;
+            }
+            text.alignment = TextAlignmentOptions.Center;
+            text.raycastTarget = false;
+            number = text;
+        }
+
+        private Image BuildImage(string imageName)
+        {
+            Image img = EditorChildren.Child<Image>(countdownRoot, imageName);
+            img.raycastTarget = false;
+            return img;
+        }
+#endif
     }
 }

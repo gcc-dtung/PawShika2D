@@ -60,6 +60,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private UIConfetti confetti;
         [SerializeField] private RectTransform flyLayer;
         [SerializeField] private Sprite coinSprite;
+        [Tooltip("Coin bay mẫu (con tắt sẵn của flyLayer, Editor dựng)")]
+        [SerializeField] private Image coinTemplate;
         [Tooltip("Giây / 1 vòng lật của coin bay (xoay quanh trục Y, canvas Overlay vẽ thành đồng xu lật)")]
         [SerializeField] private float coinSpinPeriod = 0.45f;
 
@@ -279,6 +281,7 @@ namespace PawBlock.Features.Gameplay
             for (int i = 0; i < count; i++)
             {
                 Image coin = GetCoin();
+                if (coin == null) break;
                 RectTransform rt = coin.rectTransform;
                 rt.position = start;
                 rt.localScale = Vector3.zero;
@@ -338,12 +341,14 @@ namespace PawBlock.Features.Gameplay
                     return c;
                 }
             }
-            GameObject go = new GameObject("FlyCoin", typeof(RectTransform), typeof(Image));
+            if (coinTemplate == null) return null;
+            Image img = Instantiate(coinTemplate, flyLayer != null ? flyLayer : transform);
+            img.name = "FlyCoin";
+            GameObject go = img.gameObject;
             go.layer = gameObject.layer;
-            RectTransform rt = (RectTransform)go.transform;
-            rt.SetParent(flyLayer != null ? flyLayer : transform, false);
+            go.SetActive(true);
+            RectTransform rt = img.rectTransform;
             rt.sizeDelta = new Vector2(86f, 86f);
-            Image img = go.GetComponent<Image>();
             img.sprite = coinSprite;
             img.preserveAspect = true;
             img.raycastTarget = false;
@@ -375,5 +380,15 @@ namespace PawBlock.Features.Gameplay
             if (nextButton != null) nextButton.interactable = interactable;
             if (doubleButton != null) doubleButton.interactable = interactable;
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            coinTemplate = EditorChildren.Child<Image>(flyLayer != null ? flyLayer : transform, "FlyCoinTemplate", false);
+            coinTemplate.raycastTarget = false;
+        }
+#endif
     }
 }

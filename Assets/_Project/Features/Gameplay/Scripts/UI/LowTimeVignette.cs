@@ -27,28 +27,25 @@ namespace PawBlock.Features.Gameplay
         [SerializeField, Range(0f, 1f)] private float pulseAlpha = 0.4f;  // đỉnh mỗi nhịp
         [SerializeField] private float pulseDuration = 0.45f;
         [SerializeField] private float fadeDuration = 0.35f;
+        [Tooltip("Ảnh viền (con đầu tiên, phủ cả màn, Editor dựng sẵn)")]
+        [SerializeField] private Image vignette;
 
-        private Image _image;
         private LevelTimer _timer;
         private Tween _tween;
         private bool _on;
 
         private void Awake()
         {
-            GameObject go = new GameObject("LowTimeVignette", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
-            RectTransform rt = (RectTransform)go.transform;
-            rt.SetParent(transform, false);
-            rt.SetAsFirstSibling(); // dưới các nút HUD
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.offsetMin = Vector2.zero;
-            rt.offsetMax = Vector2.zero;
-
-            _image = go.GetComponent<Image>();
-            _image.sprite = ProceduralSprites.Vignette;
-            _image.raycastTarget = false;
+            if (vignette == null)
+            {
+                Debug.LogError($"[LowTimeVignette] Thiếu ảnh viền trên {name} (chuột phải component -> Dựng sẵn object con)", this);
+                enabled = false;
+                return;
+            }
+            vignette.sprite = ProceduralSprites.Vignette; // sprite sinh lúc chạy, không lưu được vào scene
+            vignette.raycastTarget = false;
             SetAlpha(0f);
-            go.SetActive(false);
+            vignette.gameObject.SetActive(false);
         }
 
         private void OnEnable()
@@ -81,10 +78,10 @@ namespace PawBlock.Features.Gameplay
             _tween?.Kill();
             _tween = null;
             _on = false;
-            if (_image != null)
+            if (vignette != null)
             {
                 SetAlpha(0f);
-                _image.gameObject.SetActive(false);
+                vignette.gameObject.SetActive(false);
             }
         }
 
@@ -112,16 +109,16 @@ namespace PawBlock.Features.Gameplay
             _on = show;
             if (show)
             {
-                _image.gameObject.SetActive(true);
+                vignette.gameObject.SetActive(true);
                 Pulse();
             }
             else
             {
                 _tween?.Kill();
-                _tween = _image.DOFade(0f, fadeDuration)
+                _tween = vignette.DOFade(0f, fadeDuration)
                     .SetUpdate(true)
-                    .SetLink(_image.gameObject)
-                    .OnComplete(() => _image.gameObject.SetActive(false));
+                    .SetLink(vignette.gameObject)
+                    .OnComplete(() => vignette.gameObject.SetActive(false));
             }
         }
 
@@ -129,9 +126,9 @@ namespace PawBlock.Features.Gameplay
         private void Pulse()
         {
             _tween?.Kill();
-            Sequence seq = DOTween.Sequence().SetUpdate(true).SetLink(_image.gameObject);
-            seq.Append(_image.DOFade(pulseAlpha, pulseDuration * 0.25f).SetEase(Ease.OutQuad));
-            seq.Append(_image.DOFade(baseAlpha, pulseDuration * 0.75f).SetEase(Ease.InOutSine));
+            Sequence seq = DOTween.Sequence().SetUpdate(true).SetLink(vignette.gameObject);
+            seq.Append(vignette.DOFade(pulseAlpha, pulseDuration * 0.25f).SetEase(Ease.OutQuad));
+            seq.Append(vignette.DOFade(baseAlpha, pulseDuration * 0.75f).SetEase(Ease.InOutSine));
             _tween = seq;
         }
 
@@ -139,7 +136,23 @@ namespace PawBlock.Features.Gameplay
         {
             Color c = color;
             c.a = a;
-            _image.color = c;
+            vignette.color = c;
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            vignette = EditorChildren.Child<Image>(transform, "LowTimeVignette", false);
+            RectTransform rt = vignette.rectTransform;
+            rt.SetAsFirstSibling(); // dưới các nút HUD
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = Vector2.zero;
+            rt.offsetMax = Vector2.zero;
+            vignette.raycastTarget = false;
+        }
+#endif
     }
 }

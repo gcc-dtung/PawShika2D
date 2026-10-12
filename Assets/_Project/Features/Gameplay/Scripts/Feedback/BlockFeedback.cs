@@ -33,6 +33,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private float dustDuration = 0.45f;
         [SerializeField, Range(0f, 1f)] private float dustWhiten = 0.35f; // màu mèo pha trắng cho nổi trên thân cùng màu
         [SerializeField] private int dustSortingOrder = 26;              // trên khối (20–22), dưới khung chọn (30)
+        [Tooltip("Hạt bụi mẫu (con tắt sẵn, Editor dựng): pool nhân bản")]
+        [SerializeField] private SpriteRenderer dustTemplate;
 
         [Header("Mèo kề bên phản ứng")]
         [SerializeField] private bool neighbourNudge = true;
@@ -54,6 +56,11 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
+            if (dustTemplate == null)
+            {
+                Debug.LogError($"[BlockFeedback] Thiếu dustTemplate trên {name} (chuột phải component -> Dựng sẵn object con)", this);
+                dust = false;
+            }
             _dustPool = new ObjectPool<SpriteRenderer>(
                 createFunc: CreateDust,
                 actionOnGet: sr => sr.gameObject.SetActive(true),
@@ -65,9 +72,8 @@ namespace PawBlock.Features.Gameplay
 
         private SpriteRenderer CreateDust()
         {
-            GameObject go = new GameObject("Dust");
-            go.transform.SetParent(transform, false);
-            SpriteRenderer sr = go.AddComponent<SpriteRenderer>();
+            SpriteRenderer sr = Instantiate(dustTemplate, transform);
+            sr.name = "Dust";
             sr.sprite = ProceduralSprites.Dot;
             sr.sortingOrder = dustSortingOrder;
             return sr;
@@ -198,5 +204,14 @@ namespace PawBlock.Features.Gameplay
                 if (grid.TryGetView(block, out PlacedBlockView view)) view.PlayShiver(i++ * shiverStagger);
             }
         }
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            dustTemplate = EditorChildren.Child<SpriteRenderer>(transform, "DustTemplate", false);
+        }
+#endif
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using PawBlock.Core.Foundation;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -37,6 +38,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Sprite sparkSprite;
         [SerializeField] private int sparkCount = 6;
         [SerializeField] private float sparkSize = 34f;
+        [Tooltip("Bông tuyết mẫu (con tắt sẵn, Editor dựng)")]
+        [SerializeField] private Image sparkTemplate;
         [SerializeField] private float twinkleDuration = 0.9f;
         [SerializeField] private int shardCount = 10;
         [SerializeField] private float shardDistance = 170f;
@@ -235,13 +238,13 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Pool bông tuyết (đủ cho cả lấp lánh và mảnh vỡ), con của lớp băng, tắt sẵn.</summary>
         private void BuildSparks()
         {
-            if (sparkSprite == null) return;
+            if (sparkSprite == null || sparkTemplate == null) return;
             int n = Mathf.Max(sparkCount, shardCount);
             for (int i = 0; i < n; i++)
             {
-                GameObject go = new GameObject("Spark_" + i, typeof(RectTransform), typeof(Image));
-                go.transform.SetParent(transform, false);
-                Image img = go.GetComponent<Image>();
+                Image img = Instantiate(sparkTemplate, transform);
+                img.name = "Spark_" + i;
+                GameObject go = img.gameObject;
                 img.sprite = sparkSprite;
                 img.raycastTarget = false;
                 img.rectTransform.sizeDelta = Vector2.one * sparkSize;
@@ -284,6 +287,16 @@ namespace PawBlock.Features.Gameplay
         private void OnValidate()
         {
             if (image == null) image = GetComponent<Image>();
+        }
+#endif
+
+#if UNITY_EDITOR
+        /// <summary>Editor: Dựng sẵn object con (thay cho tạo lúc chạy). Chạy 1 lần (menu chuột phải component) rồi lưu scene / prefab.</summary>
+        [ContextMenu("Dựng sẵn object con")]
+        public void EditorBuild()
+        {
+            sparkTemplate = EditorChildren.Child<Image>(transform, "SparkTemplate", false);
+            sparkTemplate.raycastTarget = false;
         }
 #endif
     }
