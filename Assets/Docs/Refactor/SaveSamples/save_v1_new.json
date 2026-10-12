@@ -1,0 +1,49 @@
+{
+    "version": 1,
+    "savedAt": 1791534544,
+    "currentLevel": 0,
+    "coins": 0,
+    "stars": 0,
+    "boosters": [],
+    "energy": {
+        "energy": -1,
+        "refillStart": 0,
+        "infiniteUntil": 0
+    },
+    "settings": {
+        "music": true,
+        "sound": true,
+        "vibrate": true
+    },
+    "daily": {
+        "cycleStart": -1,
+        "claimedMask": 0
+    },
+    "challenge": {
+        "startDay": -1,
+        "doneDays": [],
+        "claimedGifts": []
+    },
+    "clock": {
+        "lastTrustedUtc": 1791534544
+    },
+    "profile": {
+        "playerId": "37111965",
+        "name": "Player 1965",
+        "avatar": 0,
+        "createdAt": 1791534544,
+        "firstTryWins": 0,
+        "coinsEarned": 0,
+        "levelsCleared": 0,
+        "hardWins": 0,
+        "boostersUsed": 0,
+        "winStreak": 0,
+        "bestWinStreak": 0
+    },
+    "noAds": false,
+    "tutorialDone": false,
+    "allLevelsCleared": false,
+    "unlockedBoosters": [],
+    "seenMechanics": [],
+    "levelStats": []
+}

@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa bắt đầu |
+| Trạng thái | P0 xong (2026-10-12), tiếp P1 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-12 |
@@ -140,20 +140,20 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Mục tiêu:** có điểm so sánh trước / sau và công cụ tự kiểm tra; chưa đổi code game.
 
 **Thêm**
-- [ ] Nhánh `refactor/p0-chuan-bi` từ nhánh hiện tại sau khi push xong việc đang dở.
-- [ ] `.editorconfig` ở gốc repo: Allman, bắt buộc `{}`, access modifier tường minh, quy tắc đặt tên (guide 6.1, 7.1). Mức **warning**, không error (vì code cũ chưa sửa).
-- [ ] Package `Microsoft.Unity.Analyzers` (qua NuGet / IDE).
-- [ ] `Docs/Refactor/ProjectConventions.md`: ngoại lệ riêng dự án:
+- [x] Nhánh từ `Day-7` sau khi push xong việc đang dở. Dùng nhánh `Refactor` (Windows không phân biệt hoa thường: đã có `Refactor` thì không tạo được `refactor/...`); các giai đoạn sau: `Refactor-P1-...`.
+- [x] `.editorconfig` ở gốc repo: Allman, bắt buộc `{}`, access modifier tường minh, quy tắc đặt tên (guide 6.1, 7.1). Mức **warning**, không error (vì code cũ chưa sửa).
+- [x] Package `Microsoft.Unity.Analyzers` (qua NuGet / IDE): không thêm DLL vào project; Rider có sẵn inspection Unity, VS Code dùng bản kèm extension Unity (xem `ProjectConventions.md` mục 5).
+- [x] `Docs/Refactor/ProjectConventions.md`: ngoại lệ riêng dự án:
   - Quy tắc DOTween hiện có (giữ tween trong field, `SetLink`, `Kill` trong `OnDisable`, `OnKill` chỉ xóa field nếu đúng tween).
   - Comment tiếng Việt.
   - Format chỉ áp cho file đang sửa.
   - Menu Editor giữ `Tools/PawBlock/…`.
-- [ ] `Docs/Refactor/Baseline.md`: ghi mốc:
-  - Kết quả 46 test.
+- [x] `Docs/Refactor/Baseline.md`: ghi mốc:
+  - Kết quả test (hiện 104 ca, không phải 46).
   - Số **Batches / SetPass** (Frame Debugger) ở 3 màn: Menu, màn chơi level 10x10, popup Win.
   - **Build Report** (Android): tổng dung lượng, top 20 asset nặng.
-  - Danh sách smoke test (mục 6) đã chạy qua.
-- [ ] Sao lưu 3 file `save.json` mẫu (người mới; đã chơi ~30 level có booster / daily / profile; có năng lượng vô hạn đang chạy) vào `Docs/Refactor/SaveSamples/` để test migrate ở P3.
+  - Danh sách smoke test (mục 6) đã chạy qua (P0 chạy được một phần qua MCP, phần còn lại chạy tay).
+- [x] Sao lưu 3 file `save.json` mẫu (người mới; đã chơi ~30 level có booster / daily / profile; có năng lượng vô hạn đang chạy) vào `Docs/Refactor/SaveSamples/` để test migrate ở P3.
 
 **Kiểm tra / Xong khi:** Baseline.md có đủ số liệu; IDE hiện cảnh báo analyzer; không file game nào đổi.
 
@@ -406,10 +406,10 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 
 | Topic | Mô tả | Task | Time | Real Time | Tiến độ | Note |
 | --- | --- | --- | --- | --- | --- | --- |
-| P0 Chuẩn bị | Mốc so sánh, công cụ | Nhánh, chạy test, smoke test lần đầu | 1 | | 0% | |
-| | | Frame Debugger 3 màn + Build Report Android | 1.5 | | 0% | |
-| | | `.editorconfig` + Unity Analyzers | 1 | | 0% | |
-| | | `ProjectConventions.md`, `Baseline.md`, lưu 3 save mẫu | 1 | | 0% | |
+| P0 Chuẩn bị | Mốc so sánh, công cụ | Nhánh, chạy test, smoke test lần đầu | 1 | 0.5 | 100% | Smoke test một phần |
+| | | Frame Debugger 3 màn + Build Report Android | 1.5 | 0.5 | 100% | Đo bằng Profiler counter + build qua MCP |
+| | | `.editorconfig` + Unity Analyzers | 1 | 0.5 | 100% | |
+| | | `ProjectConventions.md`, `Baseline.md`, lưu 3 save mẫu | 1 | 0.5 | 100% | |
 | P1 Thư mục + namespace | Không đổi logic | Tạo cây thư mục, di chuyển 199 file trong Unity | 3 | | 0% | |
 | | | Thêm namespace + `using` cho 199 file | 4 | | 0% | |
 | | | Tách GameEvents, BoosterType, GameState, SoundId sang Contracts | 1 | | 0% | |
@@ -444,7 +444,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | | **0%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **2** | **4%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 

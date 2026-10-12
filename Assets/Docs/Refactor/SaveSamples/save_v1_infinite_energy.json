@@ -1,0 +1,301 @@
+{
+    "version": 1,
+    "savedAt": 1791774882,
+    "currentLevel": 22,
+    "coins": 2135,
+    "stars": 7,
+    "boosters": [
+        {
+            "type": "Shield",
+            "count": 3
+        },
+        {
+            "type": "Hint",
+            "count": 15
+        },
+        {
+            "type": "Reveal",
+            "count": 31
+        },
+        {
+            "type": "Freeze",
+            "count": 28
+        }
+    ],
+    "energy": {
+        "energy": 0,
+        "refillStart": 1791774882,
+        "infiniteUntil": 4102444800
+    },
+    "settings": {
+        "music": false,
+        "sound": true,
+        "vibrate": true
+    },
+    "daily": {
+        "cycleStart": 20735,
+        "claimedMask": 15
+    },
+    "challenge": {
+        "startDay": 20737,
+        "doneDays": [
+            20737
+        ],
+        "claimedGifts": []
+    },
+    "clock": {
+        "lastTrustedUtc": 1791774881
+    },
+    "profile": {
+        "playerId": "37111965",
+        "name": "Player 1965",
+        "avatar": 0,
+        "createdAt": 1791534544,
+        "firstTryWins": 9,
+        "coinsEarned": 3035,
+        "levelsCleared": 39,
+        "hardWins": 4,
+        "boostersUsed": 46,
+        "winStreak": 22,
+        "bestWinStreak": 22
+    },
+    "noAds": false,
+    "tutorialDone": true,
+    "allLevelsCleared": false,
+    "unlockedBoosters": [
+        "Hint",
+        "Freeze",
+        "Reveal"
+    ],
+    "seenMechanics": [
+        "Lock",
+        "Hidden",
+        "Constraint"
+    ],
+    "levelStats": [
+        {
+            "id": "Level_Custom_Level01_4x4",
+            "level": 1,
+            "attempts": 1,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 0,
+            "boosters": 0,
+            "playSeconds": 9.726655960083008,
+            "bestWinSeconds": 9.726655960083008,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_002",
+            "level": 2,
+            "attempts": 1,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 0,
+            "boosters": 0,
+            "playSeconds": 4.71490478515625,
+            "bestWinSeconds": 4.71490478515625,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_003",
+            "level": 3,
+            "attempts": 2,
+            "wins": 2,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 0,
+            "boosters": 0,
+            "playSeconds": 10.984522819519043,
+            "bestWinSeconds": 5.31927490234375,
+            "bestStars": 3
+        },
+        {
+            "id": "Level_005",
+            "level": 4,
+            "attempts": 1,
+            "wins": 0,
+            "losses": 1,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 3,
+            "boosters": 0,
+            "playSeconds": 10.11085319519043,
+            "bestWinSeconds": 0.0,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_159",
+            "level": 12,
+            "attempts": 4,
+            "wins": 3,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 3,
+            "boosters": 2,
+            "playSeconds": 94.89354705810547,
+            "bestWinSeconds": 21.339290618896484,
+            "bestStars": 3
+        },
+        {
+            "id": "Level_156",
+            "level": 13,
+            "attempts": 4,
+            "wins": 2,
+            "losses": 1,
+            "quits": 0,
+            "outOfTime": 2,
+            "mistakes": 9,
+            "boosters": 3,
+            "playSeconds": 90.75857543945312,
+            "bestWinSeconds": 15.920284271240234,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_023",
+            "level": 14,
+            "attempts": 1,
+            "wins": 0,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 2,
+            "boosters": 1,
+            "playSeconds": 0.0,
+            "bestWinSeconds": 0.0,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_008",
+            "level": 15,
+            "attempts": 2,
+            "wins": 2,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 6,
+            "boosters": 0,
+            "playSeconds": 25.814002990722656,
+            "bestWinSeconds": 9.366541862487793,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_204",
+            "level": 16,
+            "attempts": 2,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 0,
+            "boosters": 0,
+            "playSeconds": 22.604999542236328,
+            "bestWinSeconds": 22.604999542236328,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_176",
+            "level": 35,
+            "attempts": 1,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 2,
+            "boosters": 0,
+            "playSeconds": 53.4021110534668,
+            "bestWinSeconds": 53.4021110534668,
+            "bestStars": 0
+        },
+        {
+            "id": "Level_146",
+            "level": 36,
+            "attempts": 14,
+            "wins": 4,
+            "losses": 0,
+            "quits": 1,
+            "outOfTime": 1,
+            "mistakes": 10,
+            "boosters": 3,
+            "playSeconds": 176.3682861328125,
+            "bestWinSeconds": 19.446327209472656,
+            "bestStars": 3
+        },
+        {
+            "id": "Level_043",
+            "level": 37,
+            "attempts": 5,
+            "wins": 3,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 26,
+            "boosters": 8,
+            "playSeconds": 185.98355102539062,
+            "bestWinSeconds": 19.62734031677246,
+            "bestStars": 3
+        },
+        {
+            "id": "Level_196",
+            "level": 38,
+            "attempts": 15,
+            "wins": 2,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 6,
+            "boosters": 21,
+            "playSeconds": 53.87238693237305,
+            "bestWinSeconds": 20.078048706054688,
+            "bestStars": 3
+        },
+        {
+            "id": "Level_139",
+            "level": 10,
+            "attempts": 1,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 1,
+            "boosters": 0,
+            "playSeconds": 28.332195281982422,
+            "bestWinSeconds": 28.332195281982422,
+            "bestStars": 3
+        },
+        {
+            "id": "Level_086",
+            "level": 39,
+            "attempts": 4,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 13,
+            "boosters": 1,
+            "playSeconds": 122.50003814697266,
+            "bestWinSeconds": 122.50003814697266,
+            "bestStars": 2
+        },
+        {
+            "id": "Level_046",
+            "level": 22,
+            "attempts": 1,
+            "wins": 1,
+            "losses": 0,
+            "quits": 0,
+            "outOfTime": 0,
+            "mistakes": 5,
+            "boosters": 3,
+            "playSeconds": 38.53662872314453,
+            "bestWinSeconds": 38.53662872314453,
+            "bestStars": 2
+        }
+    ]
+}
