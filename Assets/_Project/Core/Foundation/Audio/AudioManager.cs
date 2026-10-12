@@ -52,7 +52,7 @@ namespace PawBlock.Core.Foundation
                 if (value == MusicOn) return;
                 _settings.music = value;
                 MarkSettingsDirty();
-                if (Instance != null) Instance.ApplyMusicSetting();
+                if (HasInstance) Instance.ApplyMusicSetting();
                 SettingsChanged?.Invoke();
             }
         }
@@ -65,7 +65,7 @@ namespace PawBlock.Core.Foundation
                 if (value == SoundOn) return;
                 _settings.sound = value;
                 MarkSettingsDirty();
-                if (!value && Instance != null) Instance.StopAllSounds();
+                if (!value && HasInstance) Instance.StopAllSounds();
                 SettingsChanged?.Invoke();
             }
         }
@@ -96,8 +96,9 @@ namespace PawBlock.Core.Foundation
             if (playMusicOnStart && database != null && database.music != null) PlayMusic(database.music);
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             _musicFade?.Kill();
             _musicPitch?.Kill();
         }
@@ -107,13 +108,13 @@ namespace PawBlock.Core.Foundation
         /// <summary>Phát âm (bỏ qua khi tắt Âm thanh, chưa gán clip, hoặc đang trong cooldown).</summary>
         public static void Play(SoundId id)
         {
-            if (Instance != null) Instance.PlaySound(id, 1f);
+            if (HasInstance) Instance.PlaySound(id, 1f);
         }
 
         /// <summary>Phát âm với cao độ nhân thêm <paramref name="pitch"/> (1 = giữ nguyên), vd. tick kéo cao dần.</summary>
         public static void PlayPitched(SoundId id, float pitch)
         {
-            if (Instance != null) Instance.PlaySound(id, 1f, pitch);
+            if (HasInstance) Instance.PlaySound(id, 1f, pitch);
         }
 
         /// <summary>Phát âm với xác suất <paramref name="chance"/> (0..1), vd. tiếng mèo không phải lần nào cũng kêu.</summary>

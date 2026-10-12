@@ -7,14 +7,32 @@ namespace PawBlock.Features.Gameplay
     /// Object ẩn (tự tạo khi mặt mèo đầu tiên chạy, sống qua đổi scene): 1 Update duy nhất chạy khung hình cho mọi CatFaceAnimator,
     /// thay vì mỗi khối mèo một Update.
     /// </summary>
-    public class CatFaceTicker : DontDestroyOnLoadSingleton<CatFaceTicker>
+    public class CatFaceTicker : MonoBehaviour
     {
-        /// <summary>Không đặt sẵn trong scene: chưa có thì tạo (Awake của lớp cha giữ Instance + DontDestroyOnLoad).</summary>
+        private static CatFaceTicker _instance;
+
+        /// <summary>Không đặt sẵn trong scene: chưa có thì tạo (Awake giữ instance + DontDestroyOnLoad).</summary>
         public static void Ensure()
         {
-            if (Instance != null) return;
+            if (_instance != null) return;
             // Không DontSave: Editor không hủy object DontSave khi thoát Play (rò sang Edit mode)
             new GameObject("[CatFaceTicker]") { hideFlags = HideFlags.HideInHierarchy }.AddComponent<CatFaceTicker>();
+        }
+
+        private void Awake()
+        {
+            if (_instance != null && _instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance == this) _instance = null;
         }
 
         private void Update() => CatFaceAnimator.TickAll(Time.time);

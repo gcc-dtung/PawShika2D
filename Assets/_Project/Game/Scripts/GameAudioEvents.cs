@@ -147,7 +147,7 @@ namespace PawBlock.Game
         /// <summary>Nhạc nhanh lên khi đang chơi mà sắp hết giờ (không đóng băng); còn lại về bình thường.</summary>
         private void RefreshMusicPitch()
         {
-            if (AudioManager.Instance == null) return;
+            if (!AudioManager.HasInstance) return;
             bool playing = _levels == null || _levels.State == GameState.Playing;
             bool hurry = playing && _timer != null && _timer.IsLow && !_timer.IsFrozen && !_timer.IsTimeUp;
             AudioManager.Instance.SetMusicPitch(hurry ? lowTimeMusicPitch : 1f);

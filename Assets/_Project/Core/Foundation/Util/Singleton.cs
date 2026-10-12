@@ -3,58 +3,46 @@ using UnityEngine;
 namespace PawBlock.Core.Foundation
 {
     /// <summary>
-    /// 1 instance trong scene, truy cập qua Instance (tự tìm nếu chưa Awake).
+    /// Singleton cho **hạ tầng** (guide 3, hiện chỉ AudioManager): 1 instance đặt sẵn trong scene, đăng ký ở Awake,
+    /// xóa ở OnDestroy. Không tự tìm / tự tạo; thiếu thì Instance báo lỗi rõ. Hỏi mà không muốn báo lỗi: HasInstance.
+    /// Game logic không dùng: nhận dependency qua Init từ GameBootstrap.
     /// Bản trùng chỉ hủy chính component đó (không hủy cả GameObject, tránh xóa nhầm component khác đặt chung).
-    /// Code mới: ưu tiên [SerializeField] tham chiếu hoặc EventBus thay vì gọi .Instance từ khắp nơi.
     /// </summary>
     public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
-        private static T _ins;
+        private static T _instance;
 
         public static T Instance
         {
             get
             {
-                if (_ins == null) _ins = FindFirstObjectByType<T>();
-                return _ins;
+                if (_instance == null)
+                {
+                    Debug.LogError($"[Singleton] {typeof(T).Name} chưa có trong scene (hoặc chưa Awake)");
+                }
+                return _instance;
             }
         }
 
+        public static bool HasInstance => _instance != null;
+
         protected virtual void Awake()
         {
-            if (_ins == null || _ins == this)
+            if (_instance == null || _instance == this)
             {
-                _ins = this as T;
+                _instance = this as T;
                 return;
             }
-            Debug.LogWarning($"[Singleton] Có 2 {typeof(T).Name} ({_ins.name}, {name}): hủy component trùng trên {name}");
+            Debug.LogWarning($"[Singleton] Có 2 {typeof(T).Name} ({_instance.name}, {name}): hủy component trùng trên {name}");
             Destroy(this);
         }
-    }
 
-    /// <summary>Như Singleton nhưng sống qua các scene. Bản trùng (scene nạp lại) hủy cả GameObject của nó.</summary>
-    public class DontDestroyOnLoadSingleton<T> : MonoBehaviour where T : MonoBehaviour
-    {
-        private static T _ins;
-
-        public static T Instance
+        protected virtual void OnDestroy()
         {
-            get
+            if (_instance == this)
             {
-                if (_ins == null) _ins = FindFirstObjectByType<T>();
-                return _ins;
+                _instance = null;
             }
-        }
-
-        protected virtual void Awake()
-        {
-            if (_ins == null || _ins == this)
-            {
-                _ins = this as T;
-                DontDestroyOnLoad(gameObject);
-                return;
-            }
-            Destroy(gameObject);
         }
     }
 }
