@@ -53,7 +53,7 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 - Test của dự án nằm trong `Assembly-CSharp-Editor` (`<module>/Tests/Editor/`, từ P1), tới P6 mới tách asmdef.
 - Chạy test **lọc theo assembly `Assembly-CSharp-Editor`**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
 - Test đụng tới save (ví, kho booster, quà...) **bắt buộc** gọi `SaveSystem.UseInMemoryForTests(new SaveData { ... })` ở `[SetUp]` và `UseInMemoryForTests(null)` ở `[TearDown]`: ở Edit mode `MarkDirty()` ghi thẳng `save.json` của máy. P3 thay bằng `ISaveService` giả.
-- `FeelPlayModeTests` hiện vẫn ghi `save.json` khi vào Play mode (lỗi có sẵn, xem RefactorPlan P2): chạy cả bộ test thì sao lưu save trước, hoặc chạy lọc theo tên class.
+- Test vào Play mode (`EnterPlayMode`): save bộ nhớ không giữ được (`ResetStatics` chạy lại, `TrustedClock` tự ghi giờ) → sao lưu byte các file save ở `[OneTimeSetUp]`, trả lại ở `[OneTimeTearDown]` sau `UseInMemoryForTests(null)` (mẫu: `FeelPlayModeTests`).
 
 ## 7. Namespace và thư mục (từ P1)
 

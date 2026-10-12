@@ -249,7 +249,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 - `SaveSystem.UseInMemoryForTests(data)`: test chạy trên save trong bộ nhớ, không ghi `save.json`; bỏ khi có `ISaveService` (P3).
 - Test mới: `CurrencyWalletTests` 15, `BoosterInventoryTests` 6, `RewardGranterTests` 2. Smoke test Play mode: mọi event mới phát đúng dữ liệu, không lỗi Console.
 - `using` sai chiều: 89 → 86 (hết `Core.Contracts → Features.Gameplay`; 2 database không còn cần DailyReward), xem [Dependencies.md](Dependencies.md).
-- **Lỗi có sẵn phát hiện (chưa sửa, làm commit `fix:` riêng):** `FeelPlayModeTests` vào Play mode với `SampleScene` đang mở → game chạy thật và **ghi `save.json` của máy** (chắc chắn `clock.lastTrustedUtc` mỗi lần chạy; 1 lần thấy thêm 1 ván thắng nhưng không loại trừ được do chơi tay). Cách sửa: test tự mở scene rỗng, hoặc dùng save bộ nhớ (lưu ý `ResetStatics` khi vào Play mode).
+- **Lỗi có sẵn, đã sửa ở commit `fix:` riêng:** `FeelPlayModeTests` (mở scene trống rồi vào Play mode) **ghi `save.json` của máy**: `TrustedClock.Boot` (`RuntimeInitializeOnLoadMethod`) tự đồng bộ giờ server rồi ghi `clock.lastTrustedUtc`. `UseInMemoryForTests` không giữ được qua Play mode (`ResetStatics`). Sửa: test giữ nguyên byte `save.json` / `.bak` / `.tmp` trước cả nhóm, xong thì bỏ save trong bộ nhớ và trả lại file. Ván thắng thấy 1 lần trong save lúc 13:01 không phải do test (test chạy scene trống).
 - Thêm `IRewardGranter` + chuyển `DailyRewardItem` / `DailyRewardKind` sang `Core/Contracts/Types` (DailyChallenge, LuckyWheel cùng gọi `DailyRewardManager.GrantItem`); dữ liệu quà trong 3 database đọc đúng (10 / 11 / 8 món), asset không đổi. Test: 23 mới → 127 / 127.
 
 ---

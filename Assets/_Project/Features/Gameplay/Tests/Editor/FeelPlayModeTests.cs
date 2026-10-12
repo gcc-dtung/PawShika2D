@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -25,6 +26,44 @@ namespace PawBlock.Features.Gameplay.Tests
         private const float Eps = 1e-4f;
 
         private SceneSetup[] _sceneSetup;
+        private readonly Dictionary<string, byte[]> _saveFiles = new Dictionary<string, byte[]>();
+
+        private static string[] SaveFilePaths =>
+            new[] { SaveSystem.FilePath, SaveSystem.FilePath + ".bak", SaveSystem.FilePath + ".tmp" };
+
+        /// <summary>
+        /// Vào Play mode thì TrustedClock tự đồng bộ giờ và ghi save, kể cả trong scene trống; UseInMemoryForTests không
+        /// giữ được vì SaveSystem.ResetStatics chạy lại mỗi lần vào Play. Nên giữ nguyên byte save.json / .bak / .tmp của máy
+        /// trước cả nhóm test, xong thì trả lại (file test tạo thêm thì xóa).
+        /// </summary>
+        [OneTimeSetUp]
+        public void BackupSave()
+        {
+            _saveFiles.Clear();
+            foreach (string path in SaveFilePaths)
+            {
+                _saveFiles[path] = File.Exists(path) ? File.ReadAllBytes(path) : null;
+            }
+        }
+
+        [OneTimeTearDown]
+        public void RestoreSave()
+        {
+            // Dữ liệu save trong bộ nhớ là bản của Play mode (Domain Reload tắt): bỏ để lần dùng sau đọc lại file
+            SaveSystem.UseInMemoryForTests(null);
+            foreach (KeyValuePair<string, byte[]> file in _saveFiles)
+            {
+                if (file.Value != null)
+                {
+                    File.WriteAllBytes(file.Key, file.Value);
+                }
+                else if (File.Exists(file.Key))
+                {
+                    File.Delete(file.Key);
+                }
+            }
+            _saveFiles.Clear();
+        }
 
         /// <summary>Scene đang mở có thay đổi chưa lưu thì bỏ qua test (mở scene trống sẽ làm mất thay đổi đó).</summary>
         private void OpenEmptyScene()

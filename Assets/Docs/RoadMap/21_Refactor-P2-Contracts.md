@@ -5,13 +5,14 @@
 | Trạng thái | Chưa push |
 | Commit | |
 | Thời gian push | |
-| Cập nhật lần cuối | 2026-10-12 13:12 |
+| Cập nhật lần cuối | 2026-10-12 14:00 |
 
 ## Tóm tắt
 
 | Giờ | Đợt | Kết quả |
 | --- | --- | --- |
-| 13:12 (12/10) | Refactor P2 – contracts và event | 6 event + 4 interface trong `Core/Contracts`, phát / cài song song code cũ (chưa đổi nơi gọi); `LevelLoadedEvent` hết phụ thuộc Gameplay; type quà sang Contracts; `SaveSystem` có chế độ bộ nhớ cho test; 23 test mới (127 / 127). Phát hiện `FeelPlayModeTests` ghi save thật (chưa sửa) |
+| 13:12 (12/10) | Refactor P2 – contracts và event | 6 event + 4 interface trong `Core/Contracts`, phát / cài song song code cũ (chưa đổi nơi gọi); `LevelLoadedEvent` hết phụ thuộc Gameplay; type quà sang Contracts; `SaveSystem` có chế độ bộ nhớ cho test; 23 test mới (127 / 127). Phát hiện `FeelPlayModeTests` ghi save thật |
+| 14:00 (12/10) | fix: test Play mode ghi save của máy | `FeelPlayModeTests` sao lưu / trả lại byte `save.json` / `.bak` / `.tmp`; nguyên nhân là `TrustedClock` tự đồng bộ giờ khi vào Play mode. 127 / 127, save không đổi |
 
 ---
 
@@ -79,9 +80,9 @@ Rà từng mục trong bảng dự kiến của plan với code thật, giữ qu
 - Đổi `LevelLoadedEvent` làm 3 intro (đọc `level.Level` với tên biến khác `e`) lỗi compile CS1061, lần dò đầu bỏ sót → chuyển sang `LevelIntroContext`.
 - Script thêm `using` lại thêm nhầm 2 `using` do tên type nằm trong chuỗi (như P1) → bỏ.
 
-### Lỗi có sẵn phát hiện (chưa sửa)
+### Lỗi có sẵn phát hiện (sửa ở mục 14:00 bên dưới)
 
-`FeelPlayModeTests` vào Play mode với `SampleScene` đang mở → game chạy thật, **ghi `save.json` của máy** (chắc chắn `clock.lastTrustedUtc`; 1 lần thấy thêm 1 ván thắng, không loại trừ do chơi tay). Theo nguyên tắc plan, sửa ở commit `fix:` riêng.
+Test Play mode ghi `save.json` của máy.
 
 ### Kiểm tra
 
@@ -89,3 +90,14 @@ Rà từng mục trong bảng dự kiến của plan với code thật, giữ qu
 - Dữ liệu quà 3 database đọc đúng sau khi type đổi namespace (10 / 11 / 8 món, khớp YAML); không asset / scene / prefab nào đổi.
 - Smoke test Play mode qua MCP, nghe mọi event mới bằng log: vào level 39 (`LevelLoadedEvent` id `Level_086`; băng HARD nhận đúng level qua context), Đóng băng (`BoosterUsedEvent`, nút 28 → 27), cộng / tiêu 1 coin (2 `CoinsChangedEvent`), thắng (`StarsBalanceChangedEvent` +3, `LevelCompletedEvent` hard = true), thua (`LevelFailedEvent`, popup Failed), popup nạp năng lượng → Shop (`ShopOpenRequestedEvent`). Console 0 lỗi. Save trả về bản trước khi test.
 - Build Android (IL2CPP) 0 lỗi / 0 cảnh báo.
+
+## 14:00 (12/10) – fix: test Play mode ghi save của máy
+
+**Lỗi:** chạy test (Test Runner) làm đổi `save.json` của máy: `clock.lastTrustedUtc` mỗi lần chạy.
+
+**Nguyên nhân:** `FeelPlayModeTests` đã mở scene trống, nhưng vào Play mode thì `TrustedClock.Boot` (`[RuntimeInitializeOnLoadMethod(AfterSceneLoad)]`) tự đồng bộ giờ server và ghi `SaveSystem.Data.clock` → `SaveRunner` ghi file. `SaveSystem.UseInMemoryForTests` (P2) không giữ qua Play mode vì `ResetStatics` (`SubsystemRegistration`) chạy lại; dự án tắt Domain Reload nên dữ liệu save của Play mode còn trong bộ nhớ sau khi thoát. Ván thắng thấy trong save lúc 13:01 không phải do test (scene trống, không có LevelManager) – nhiều khả năng do chơi tay.
+
+**Sửa:** `FeelPlayModeTests` thêm `[OneTimeSetUp]` đọc byte `save.json` / `.bak` / `.tmp` (ghi nhớ file nào không có), `[OneTimeTearDown]` gọi `SaveSystem.UseInMemoryForTests(null)` (bỏ bản Play mode trong bộ nhớ) rồi ghi trả byte, xóa file test tạo thêm. Không đổi code game.
+
+**Kiểm tra:** md5 `save.json` + `.bak` trước / sau chạy 7 test Play mode và cả bộ 127 test: giống hệt; dữ liệu trong bộ nhớ Editor khớp file (coin, clock), `IsDirty = false`; không còn `.tmp`.
+
