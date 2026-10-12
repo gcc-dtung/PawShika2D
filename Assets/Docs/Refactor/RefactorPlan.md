@@ -5,10 +5,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0–P5 xong (2026-10-12), tiếp P6 |
+| Trạng thái | P0–P6 xong (2026-10-13), tiếp P7 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
-| Cập nhật lần cuối | 2026-10-12 |
+| Cập nhật lần cuối | 2026-10-13 |
 
 ---
 
@@ -392,15 +392,27 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Mục tiêu:** compiler tự chặn phụ thuộc sai (guide 4.1).
 
 **Thêm**
-- [ ] DOTween: *Tools > Demigiant > DOTween Utility Panel > Create ASMDEF* để có assembly `DOTween.Modules`.
-- [ ] Runtime: `PawBlock.Core.Foundation`, `PawBlock.Core.Contracts`, `PawBlock.Shared`, `PawBlock.Gameplay`, `PawBlock.Meta`, `PawBlock.Game` (reference theo bảng guide 4.1; thêm `Unity.TextMeshPro`, `DOTween.Modules`, `spine-unity` nơi cần).
-- [ ] Editor-only cho **mỗi** thư mục `Editor/`: `PawBlock.<Module>.Editor`.
-- [ ] Test: `PawBlock.<Module>.UnitTests` (Editor only), `…IntegrationTests` cho `FeelPlayModeTests`.
+- [x] DOTween: *Tools > Demigiant > DOTween Utility Panel > Create ASMDEF* để có assembly `DOTween.Modules`.
+- [x] Runtime: `PawBlock.Core.Foundation`, `PawBlock.Core.Contracts`, `PawBlock.Shared`, `PawBlock.Gameplay`, `PawBlock.Meta`, `PawBlock.Game` (reference theo bảng guide 4.1; thêm `Unity.TextMeshPro`, `DOTween.Modules`, `spine-unity` nơi cần).
+- [x] Editor-only cho **mỗi** thư mục `Editor/`: `PawBlock.<Module>.Editor`.
+- [x] Test: `PawBlock.<Module>.UnitTests` (Editor only), `…IntegrationTests` cho `FeelPlayModeTests`.
 
 **Sửa:** mọi lỗi compile xuất hiện = phụ thuộc sai còn sót → sửa bằng event / contract (P2) hoặc chuyển type về Contracts. **Không** thêm reference ngược để "cho chạy".
 
 **Kiểm tra:** compile sạch; Test Runner thấy đủ 46+ test; build Android thành công (bắt lỗi `using UnityEditor` lọt vào runtime).
 **Xong khi:** `Assembly-CSharp` không còn script nào của dự án.
+
+**Kết quả P6** (2 commit trên nhánh `Refactor-P6-Asmdef`):
+
+| Bước | Nội dung |
+| --- | --- |
+| 6.1 | Gỡ phụ thuộc sai còn lại trước khi tạo asmdef (76 → 1 `using`): `LivesEnergyConfig` / `EconomyConfig` về Gameplay (Meta nhận số qua `Init`); `IDailyLevelLoader` + `DailyLevelLoader` (Gameplay sinh và nạp level Daily), `DayNumber` (Foundation); `MenuShortcutButton` về Shared, CoinHUD / Starter / No Ads mở Shop qua `ShopOpenRequestedEvent`; `IMenuPopups.OpenQuitLevel`; `GridGeometry.StickyCell`; `RewardText` (Shared); 13 builder dựng UI nhiều feature về `Game/Editor/Builders` |
+| 6.2 | `DOTween.Modules` (ASMDEFManager của DOTween); 6 runtime (`PawBlock.Core.Contracts`, `.Core.Foundation`, `.Shared`, `.Gameplay`, `.Meta`, `.Game`), 4 Editor, 4 Test (`PawBlock.Meta.Tests` + 3 `.asmref`). Compile sạch ngay lần đầu |
+
+- Khác plan: test đặt tên `PawBlock.<Module>.Tests` (theo namespace, mục 7 ProjectConventions), không tách `UnitTests` / `IntegrationTests` (`FeelPlayModeTests` ở chung `PawBlock.Gameplay.Tests`); builder đa feature chuyển về `Game/Editor` thay vì tách ngay (P7 viết lại); thư mục `Editor/` rỗng của 6 feature Meta đã xóa.
+- Feature Meta chung 1 assembly nên compiler **không** chặn Meta ↔ Meta; còn 1 `using` loại này (`RewardGranterTests` dùng `CoinWallet`, test tích hợp). Feature ↔ Gameplay, feature → Game, Shared → feature, Foundation → feature đều bị chặn (đã thử: Gameplay tham chiếu `PawBlock.Game.ScreenFlow` → lỗi CS0234).
+- Kiểm tra: 160 / 160 test trên 4 assembly test; SampleScene + prefab của dự án 0 Missing Script (2176 Missing Script có sẵn trong prefab art gốc `GameAssets/08_Prefabs`, `ShikaCat_GameAssets/08_Prefabs`: 5 script của bản gốc không có trong dự án, không liên quan P6); build Android 0 lỗi, APK 59.0 MB (P0: 58.9 MB); Play: menu, Daily tự mở, Coin / Starter mở Shop, nạp năng lượng (900 coin), chơi Daily (`Daily_20261013`), Settings → Home hỏi thoát ván, booster, thắng.
+- Ghi nhận trong lúc làm: lệnh dừng Play trả về trước khi Unity thoát hẳn nên `SaveRunner` (P5, ghi save trong `OnDestroy`) từng ghi đè save thật của máy dev sau khi đã trả bản gốc; đã chờ thêm trước khi trả save (save gốc còn nguyên trong bản sao lưu, md5 khớp).
 
 ---
 
@@ -510,9 +522,9 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | P5 Bỏ Find / GetComponent | 57 file / 118 chỗ | GetComponent → SerializeField + Reset, gán lại scene / prefab | 6 | 0.3 | 100% | |
 | | | AddComponent → có sẵn trong prefab | 3 | 0.3 | 100% | |
 | | | Find, Camera.main, transform.Find, registry raycast | 2 | 0.2 | 100% | |
-| P6 Asmdef | 6 runtime + Editor + Test | DOTween asmdef, tạo asmdef, reference | 2 | | 0% | |
-| | | Sửa lỗi compile lộ ra | 3 | | 0% | Khó đoán trước |
-| | | Build Android kiểm tra | 1 | | 0% | |
+| P6 Asmdef | 6 runtime + 4 Editor + 4 Test | DOTween asmdef, tạo asmdef, reference | 2 | 0.3 | 100% | |
+| | | Sửa lỗi compile lộ ra | 3 | 1.0 | 100% | Sửa trước khi tạo asmdef (6.1), compile sạch lần đầu |
+| | | Build Android kiểm tra | 1 | 0.2 | 100% | |
 | P7 UI prefab | PopupView + prefab | Sửa PopupView 4 điểm + GameFlowUI | 2 | | 0% | |
 | | | Widget dùng chung thành prefab | 3 | | 0% | |
 | | | ~17 popup / màn hình / HUD thành prefab, đặt instance | 8 | | 0% | |
@@ -522,7 +534,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **11.8** | **62%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **13.3** | **67%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 

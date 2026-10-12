@@ -5,8 +5,8 @@
 
 | | |
 | --- | --- |
-| Đo lúc | 2026-10-12 23:40, nhánh `Refactor-P5-BoFind` (sau P5) |
-| Tổng | **76** `using` sai chiều trong **49** file (P1: 89 / 57, P2: 86 / 55, P3: 75 / 52, P4: 80 / 53) |
+| Đo lúc | 2026-10-13 03:20, nhánh `Refactor-P6-Asmdef` (sau P6) |
+| Tổng | **1** `using` sai chiều trong **1** file (P1: 89 / 57, P2: 86 / 55, P3: 75 / 52, P4: 80 / 53, P5: 76 / 49). Từ P6 asmdef chặn lúc compile |
 
 ## Quy tắc (guide 4.1)
 
@@ -22,31 +22,20 @@ Core (Foundation, Contracts)  ←  Shared  ←  Features/*  ←  Game
 
 | Từ → tới | Số file | File |
 | --- | --- | --- |
-| Features.Gameplay → Game | 17 | BoosterBuilder, DifficultyBuilder, FreezeBooster, FreezeButtonCountdown, FreezeTutorialDemo, LevelEditorWindow, LevelStars, LevelStatsRecorder, LevelTimer, LosePopup, MoreTimePopup, QuitLevelPopup, StarsBuilder, TimeStarBar, TutorialBuilder, WinPopup, WinScreenBuilder |
-| Features.Gameplay → Features.Economy | 13 | BoosterInventoryTests, BoosterManager, FreezeButtonCountdown, FreezeTutorialDemo, LevelEditorWindow, LevelStars, LevelTimer, MoreTimePopup, QuitLevelPopup, StarRatingTests, StarsBuilder, TimeStarBar, WinPopup |
-| Features.DailyChallenge → Features.Gameplay | 4 | DailyChallengeBuilder, DailyChallengeDatabase, DailyChallengeManager, DailyGiftBubble |
-| Features.Economy → Game | 3 | CoinHUD, EnergyManager, RefillEnergyPopup |
-| Features.DailyChallenge → Features.DailyReward | 3 | DailyChallengeBuilder, DailyChallengePanel, DailyGiftBubble |
-| Features.DailyReward → Game | 3 | DailyRewardBuilder, DailyRewardButton, DailyRewardManager |
-| Features.Profile → Game | 2 | ProfileBuilder, ProfilePopup |
-| Features.Settings → Game | 2 | SettingsBuilder, SettingsPopup |
-| Shared → Game | 3 | BackgroundPatternBuilder, NoticePopup, UIZoneBuilder |
-| Core.Foundation → Features.Gameplay | 2 | FeelCurves, FeelCurvesTests |
-| Features.DailyChallenge → Game | 2 | DailyChallengeBuilder, DailyChallengePanel |
-| Features.DailyReward → Features.Gameplay | 2 | DailyRewardBuilder, DailyRewardSlot |
-| Features.Economy → Features.Gameplay | 2 | EconomyConfig, RefillEnergyPopup |
-| Features.Gameplay → Features.DailyChallenge | 2 | LevelHUD, LevelManager |
-| Features.LuckyWheel → Features.DailyChallenge | 2 | LuckyWheelBuilder, LuckyWheelPopup |
-| Features.LuckyWheel → Features.DailyReward | 2 | LuckyWheelBuilder, LuckyWheelPopup |
-| Features.LuckyWheel → Game | 2 | LuckyWheelBuilder, LuckyWheelButton |
-| Features.Profile → Features.Gameplay | 2 | ProfileBuilder, ProfilePopup |
-| Features.Settings → Features.Gameplay | 2 | SettingsBuilder, SettingsPopup |
-| Shared → Features.Gameplay | 1 | NoticePopup |
-| Features.DailyReward → Features.Economy | 1 | RewardGranterTests |
-| Features.LuckyWheel → Features.Gameplay | 1 | LuckyWheelBuilder |
-| Features.Shop → Features.Economy | 1 | ShopBuilder |
-| Features.Shop → Features.Gameplay | 1 | ShopBuilder |
-| Features.Shop → Game | 1 | ShopBuilder |
+| Features.DailyReward → Features.Economy | 1 | RewardGranterTests (test tích hợp quà → ví coin, cùng assembly `PawBlock.Meta` nên compiler không chặn) |
+
+## Assembly (từ P6)
+
+| Assembly | Thư mục | Được tham chiếu |
+| --- | --- | --- |
+| `PawBlock.Core.Contracts` | `Core/Contracts` | — |
+| `PawBlock.Core.Foundation` | `Core/Foundation` | Contracts, DOTween.Modules |
+| `PawBlock.Shared` | `Shared` | Contracts, Foundation, TMP, UI, DOTween.Modules, UIParticle |
+| `PawBlock.Gameplay` | `Features/Gameplay` | Contracts, Foundation, Shared + TMP, UI, DOTween.Modules, InputSystem, Spine, UIParticle |
+| `PawBlock.Meta` | `Features/` (trừ Gameplay): Economy, Shop, DailyReward, DailyChallenge, LuckyWheel, Profile, Settings | Contracts, Foundation, Shared + TMP, UI, DOTween.Modules, InputSystem |
+| `PawBlock.Game` | `Game` | Tất cả |
+| `*.Editor` | `Core/Foundation/Editor`, `Shared/Editor`, `Features/Gameplay/Editor`, `Game/Editor` | Module chứa nó + những gì module đó được biết; `Game.Editor` biết mọi Editor khác |
+| `*.Tests` | `Core/Foundation/Tests`, `Features/Gameplay/Tests`, `Features/Economy/Tests` (+ asmref DailyChallenge / DailyReward / LuckyWheel), `Game/Tests` | Như module + TestRunner, NUnit |
 
 ## Nhận xét (số liệu lúc P1)
 
@@ -65,6 +54,7 @@ Core (Foundation, Contracts)  ←  Shared  ←  Features/*  ←  Game
 | P3 | 75 / 52 file | Script Shop chỉ dùng contract (còn `ShopBuilder`, P7); `ProfileStatsRecorder` nghe event (hết `→ Economy`, `→ Gameplay`); LuckyWheel / DailyChallenge trao quà qua `IRewardGranter`; ví sao qua `ICurrencyWallet` + event. Còn lại chủ yếu `.Instance` (P4) và builder (P7) |
 | P4 | 80 / 53 file | Hết `.Instance` của game logic. Tăng do `LivesEnergyConfig` (Economy) nay truyền thẳng vào 5 file Gameplay thay vì qua `GameConfig.LivesEnergy` (Game). Các dòng `→ Game` còn lại chủ yếu `GameConfig` / builder: P6 chuyển config con về feature, P7 tách builder |
 | P5 | 76 / 49 file | `IMenuPopups` thay `GameFlowUI` ở nút Settings / Avatar / năng lượng; `UIButtonSounds` dùng marker `NoClickVibrate` thay `BoosterButton` |
+| P6 | 1 / 1 file | Config về Gameplay, `IDailyLevelLoader`, `MenuShortcutButton` về Shared, builder về `Game/Editor`, rồi tạo asmdef: compiler chặn mọi chiều sai trừ Meta ↔ Meta |
 
 ## Cách đo lại
 

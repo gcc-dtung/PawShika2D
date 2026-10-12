@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-12 (P5) |
+| Cập nhật lần cuối | 2026-10-13 (P6) |
 
 ---
 
@@ -50,8 +50,8 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 ## 6. Test
 
-- Test của dự án nằm trong `Assembly-CSharp-Editor` (`<module>/Tests/Editor/`, từ P1), tới P6 mới tách asmdef.
-- Chạy test **lọc theo assembly `Assembly-CSharp-Editor`**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
+- Test của dự án ở `<module>/Tests/Editor/`, assembly `PawBlock.Core.Foundation.Tests`, `PawBlock.Gameplay.Tests`, `PawBlock.Meta.Tests`, `PawBlock.Game.Tests` (từ P6; trước đó `Assembly-CSharp-Editor`).
+- Chạy test **lọc theo 4 assembly trên**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
 - Test đụng tới save (ví, kho booster, quà...) **bắt buộc** dùng `new JsonFileSaveService(null)` (chỉ bộ nhớ) truyền vào constructor / `Init`: save thật ở Edit mode ghi thẳng `save.json` của máy.
 - Test vào Play mode (`EnterPlayMode`): save bộ nhớ không giữ được (`ResetStatics` chạy lại, `TrustedClock` tự ghi giờ) → sao lưu byte các file save ở `[OneTimeSetUp]`, trả lại ở `[OneTimeTearDown]` (mẫu: `FeelPlayModeTests`, gồm cả `save.v1.bak`).
 
@@ -113,3 +113,15 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Test dựng object bằng code | Tạo GameObject tắt, `AddComponent` các component cần, gán field qua `SerializedObject`, rồi bật (mẫu: `FeelPlayModeTests` với `SelectionBoxView`) |
 
 **Ngoại lệ:** `Game/Scripts/Cheats/CheatPanel` tự tạo lúc chạy (`RuntimeInitializeOnLoadMethod`, `AddComponent`, `GetComponent` cho Canvas chặn chạm). Lý do: chỉ là công cụ debug, cả file bọc `#if !DISABLE_CHEATS`; đặt vào scene thì bản build có `DISABLE_CHEATS` sẽ bị Missing Script.
+
+## 11. Assembly Definition (từ P6)
+
+| Quy tắc | Cách làm |
+| --- | --- |
+| Thêm script | Đặt đúng thư mục module là vào đúng assembly; không tạo asmdef mới cho thư mục con |
+| Lỗi "namespace không tồn tại / thiếu assembly reference" | Là phụ thuộc sai: sửa bằng event / contract (Core/Contracts) hoặc để Game nối; **không** thêm reference ngược |
+| Feature Meta | Chung `PawBlock.Meta` (Economy, Shop, DailyReward, DailyChallenge, LuckyWheel, Profile, Settings) nên compiler không chặn Meta ↔ Meta: vẫn theo guide (không `using` feature khác), soát bằng script đo trong [Dependencies.md](Dependencies.md) |
+| Code Editor | Thư mục `Editor/` có asmdef riêng (`includePlatforms: Editor`). Tool dựng UI nhiều feature cùng lúc đặt ở `Game/Editor` |
+| Test mới cho feature Meta | Đặt ở `Features/<Feature>/Tests/Editor/`; thư mục `Tests/` cần file `PawBlock.Meta.Tests.asmref` (như DailyChallenge / DailyReward / LuckyWheel) |
+| `using` thừa | Phải gỡ: `using` tới namespace của assembly không được tham chiếu cũng là lỗi compile |
+| Thư viện | DOTween core (`DOTween.dll`) tự tham chiếu; extension UI / Sprite cần `DOTween.Modules`. TMP: `Unity.TextMeshPro`, UI: `UnityEngine.UI`, Spine: `spine-unity` + `spine-csharp`, UIParticle: `Coffee.UIParticle`, Input: `Unity.InputSystem` |

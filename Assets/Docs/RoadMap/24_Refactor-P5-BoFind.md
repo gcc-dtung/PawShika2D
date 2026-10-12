@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-12 23:45 |
+| Trạng thái | Đã push |
+| Commit | 7 commit `bb0684e` … `f2e3240` (P5.1 – P5.6 + tài liệu), cuối "Refactor P5: tài liệu P5, chốt RoadMap 23" (nhánh `Refactor-P5-BoFind`) |
+| Thời gian push | 2026-10-13 00:20 |
+| Cập nhật lần cuối | 2026-10-13 00:20 |
 
 ## Tóm tắt
 
