@@ -14,6 +14,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class QuitLevelPopup : PopupView
     {
+        private IScreenNavigator _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(IScreenNavigator screens)
+        {
+            _screens = screens;
+        }
+
         [SerializeField] private Button quitButton;
         [SerializeField] private Button closeButton;
 
@@ -38,7 +46,7 @@ namespace PawBlock.Features.Gameplay
         {
             Close();
             if (EnergyManager.Instance != null) EnergyManager.Instance.ConsumeOne("Bỏ dở level");
-            if (ScreenFlow.Instance != null) ScreenFlow.Instance.ShowMenu();
+            if (_screens != null) _screens.ShowMenu();
         }
 
         private void OnCancel()

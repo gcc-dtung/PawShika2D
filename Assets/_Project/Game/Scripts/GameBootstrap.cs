@@ -8,6 +8,9 @@ using PawBlock.Features.Gameplay;
 using PawBlock.Features.LuckyWheel;
 using PawBlock.Features.Profile;
 using PawBlock.Features.Shop;
+using PawBlock.Core.Contracts;
+using PawBlock.Features.Settings;
+using PawBlock.Shared;
 
 namespace PawBlock.Game
 {
@@ -31,6 +34,9 @@ namespace PawBlock.Game
         [SerializeField] private BuyBoosterPopup buyBoosterPopup;
         [SerializeField] private MoreTimePopup moreTimePopup;
         [SerializeField] private WinPopup winPopup;
+        [SerializeField] private LosePopup losePopup;
+        [SerializeField] private QuitLevelPopup quitLevelPopup;
+        [SerializeField] private LevelTimer levelTimer;
         [SerializeField] private BoosterButton[] boosterButtons;
 
         [Header("Economy")]
@@ -48,9 +54,14 @@ namespace PawBlock.Game
         [SerializeField] private AvatarButton avatarButton;
         [SerializeField] private ProfilePopup profilePopup;
         [SerializeField] private ProfileStatsRecorder profileStatsRecorder;
+        [SerializeField] private SettingsPopup settingsPopup;
+        [SerializeField] private NoticePopup noticePopup;
 
         [Header("Game")]
+        [SerializeField] private ScreenFlow screenFlow;
         [SerializeField] private GameFlowUI gameFlowUI;
+        [SerializeField] private GameAudioEvents gameAudioEvents;
+        [SerializeField] private PlayButtonView playButton;
 
         public GameServices Services { get; private set; }
 
@@ -69,6 +80,7 @@ namespace PawBlock.Game
             GameServices s = Services = new GameServices(save, clock, ads, iap);
             GameplaySave gameplay = save.Get<GameplaySave>(GameplaySave.Key);
             Func<int> reachedLevel = () => gameplay.allLevelsCleared ? int.MaxValue : gameplay.currentLevel + 1;
+            IScreenNavigator screens = Require(screenFlow);
 
             // Manager có dữ liệu riêng / lộ contract cho feature khác
             Require(energyManager)?.Init(save, clock);
@@ -78,13 +90,16 @@ namespace PawBlock.Game
             // Gameplay
             Require(levelManager)?.Init(save);
             Require(boosterTutorial)?.Init(save);
-            Require(levelStatsRecorder)?.Init(save);
+            Require(levelStatsRecorder)?.Init(save, screens);
             Require(mechanicIntro)?.Init(save);
             Require(tutorialController)?.Init(save);
             Require(levelStars)?.Init(s.Stars);
             Require(buyBoosterPopup)?.Init(s.Coins);
             Require(moreTimePopup)?.Init(s.Coins, ads);
-            Require(winPopup)?.Init(s.Coins, ads);
+            Require(winPopup)?.Init(s.Coins, ads, screens);
+            Require(losePopup)?.Init(screens);
+            Require(quitLevelPopup)?.Init(screens);
+            Require(levelTimer)?.Init(screens);
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters);
 
             // Economy
@@ -93,18 +108,22 @@ namespace PawBlock.Game
 
             // Meta: chỉ nhận contract của feature khác
             foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
-            Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads);
+            Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads, screens);
             Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock);
-            Require(dailyChallengePanel)?.Init(ads);
+            Require(dailyChallengePanel)?.Init(ads, screens);
             Require(luckyWheelButton)?.Init(s.Stars);
             Require(luckyWheelPopup)?.Init(s.Stars, dailyRewardManager);
             Require(avatarButton)?.Init(s.Profile);
-            Require(profilePopup)?.Init(s.Profile);
+            Require(profilePopup)?.Init(s.Profile, screens);
             Require(profileStatsRecorder)?.Init(s.Profile);
+            Require(settingsPopup)?.Init(screens);
+            Require(noticePopup)?.Init(screens);
 
             // Game
-            Require(gameFlowUI)?.Init(s.Profile, iap);
-            DebugCheats.Init(s);
+            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow);
+            Require(gameAudioEvents)?.Init(screenFlow);
+            Require(playButton)?.Init(screenFlow);
+            DebugCheats.Init(s, new GameScene { Screens = screenFlow });
         }
 
         private void OnDestroy()

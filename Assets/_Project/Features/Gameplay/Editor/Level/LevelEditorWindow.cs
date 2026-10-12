@@ -892,7 +892,8 @@ namespace PawBlock.Features.Gameplay
             // Chờ 1 frame để ScreenFlow.Start (mở Menu) chạy xong rồi mới vào màn chơi
             EditorApplication.delayCall += () =>
             {
-                if (EditorApplication.isPlaying && ScreenFlow.Instance != null) ScreenFlow.Instance.Play();
+                ScreenFlow screens = EditorApplication.isPlaying ? Object.FindFirstObjectByType<ScreenFlow>() : null; // Editor được tìm (guide 8.3)
+                if (screens != null) screens.Play();
             };
         }
     }

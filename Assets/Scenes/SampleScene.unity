@@ -57488,6 +57488,9 @@ MonoBehaviour:
   buyBoosterPopup: {fileID: 1766585799}
   moreTimePopup: {fileID: 1383001587}
   winPopup: {fileID: 156642231}
+  losePopup: {fileID: 170904531}
+  quitLevelPopup: {fileID: 841797986}
+  levelTimer: {fileID: 82617383}
   boosterButtons:
   - {fileID: 1923732572}
   - {fileID: 1978117101}
@@ -57520,7 +57523,12 @@ MonoBehaviour:
   avatarButton: {fileID: 943530460}
   profilePopup: {fileID: 2043603488}
   profileStatsRecorder: {fileID: 82617396}
+  settingsPopup: {fileID: 1823335363}
+  noticePopup: {fileID: 1794426284}
+  screenFlow: {fileID: 82617387}
   gameFlowUI: {fileID: 622904678}
+  gameAudioEvents: {fileID: 1918377220}
+  playButton: {fileID: 1233381080}
 --- !u!4 &1059018816
 Transform:
   m_ObjectHideFlags: 0

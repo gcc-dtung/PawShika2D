@@ -19,6 +19,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelTimer : Singleton<LevelTimer>
     {
+        private IScreenNavigator _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(IScreenNavigator screens)
+        {
+            _screens = screens;
+        }
+
         [SerializeField] private GridSpawner gridSpawner;
         [Tooltip("Level mới: đồng hồ chỉ bắt đầu chạy khi người chơi chạm màn hình lần đầu")]
         [SerializeField] private bool waitForFirstTouch = true;
@@ -186,7 +194,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (_timeUp || IsPractice || DebugPaused || _total <= 0f) return false;
             if (LevelManager.Instance != null && !LevelManager.Instance.IsPlaying) return false;
-            if (ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu) return false;
+            if (_screens != null && _screens.IsMenu) return false;
             GridManager gm = GridManager.Instance;
             if (gm == null || gm.Board == null || gm.IsGameWon) return false;
             if (gridSpawner != null && gridSpawner.IsIntroPlaying) return false;

@@ -16,9 +16,16 @@ namespace PawBlock.Game
     public static class DebugCheats
     {
         private static GameServices _services;
+        private static GameScene _scene;
 
-        /// <summary>GameBootstrap gọi lúc mở game (Play mode); chưa gọi thì lệnh tài nguyên / save bỏ qua.</summary>
-        public static void Init(GameServices services) => _services = services;
+        /// <summary>GameBootstrap gọi lúc mở game (Play mode); chưa gọi thì mọi lệnh bỏ qua.</summary>
+        public static void Init(GameServices services, GameScene scene)
+        {
+            _services = services;
+            _scene = scene;
+        }
+
+        private static ScreenFlow Screens => _scene?.Screens;
 
         public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
         public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
@@ -29,7 +36,7 @@ namespace PawBlock.Game
 
         public static int LevelCount => LevelManager.Instance != null ? LevelManager.Instance.LevelCount : 0;
         public static int CurrentLevel => LevelManager.Instance != null ? LevelManager.Instance.CurrentLevelNumber : 0;
-        public static bool InMenu => ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu;
+        public static bool InMenu => Screens != null && Screens.IsMenu;
 
         /// <summary>Nạp level số <paramref name="number"/> (bắt đầu từ 1). Đang ở Menu thì chỉ đổi level (nút PLAY hiện số mới).</summary>
         public static void GoToLevel(int number)
@@ -43,7 +50,7 @@ namespace PawBlock.Game
         {
             if (LevelManager.Instance == null) return;
             LevelManager.Instance.LoadLevel(Mathf.Clamp(number, 1, Mathf.Max(1, LevelCount)) - 1);
-            if (InMenu) ScreenFlow.Instance.EnterGameNow(); // EnterGame nạp lại level hiện tại từ đầu
+            if (InMenu) Screens.EnterGameNow(); // EnterGame nạp lại level hiện tại từ đầu
         }
 
         public static void NextLevel() => GoToLevel(CurrentLevel >= LevelCount ? 1 : CurrentLevel + 1);
@@ -257,7 +264,7 @@ namespace PawBlock.Game
         /// <summary>Chơi lại tutorial từ bước 1 (xong / Skip thì về level đang chơi).</summary>
         public static void PlayTutorial()
         {
-            if (ScreenFlow.Instance != null) ScreenFlow.Instance.EnterTutorial();
+            if (Screens != null) Screens.EnterTutorial();
         }
 
         /// <summary>Bỏ cờ đã xem popup cơ chế (Hướng / Khóa / "?"): nạp level có cơ chế là hiện lại.</summary>

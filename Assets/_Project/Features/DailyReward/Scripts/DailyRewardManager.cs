@@ -15,6 +15,7 @@ namespace PawBlock.Features.DailyReward
     /// </summary>
     public class DailyRewardManager : Singleton<DailyRewardManager>, IRewardGranter
     {
+        private IScreenNavigator _screens;
         private ISaveService _save;
         private DailyRewardSave _data;
         private ICurrencyWallet _coins;
@@ -26,7 +27,7 @@ namespace PawBlock.Features.DailyReward
         /// <summary>
         /// GameBootstrap gọi trước Start: section "dailyReward", nơi nhận quà (ví coin, kho booster, năng lượng – đều qua contract).
         /// </summary>
-        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads)
+        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads, IScreenNavigator screens)
         {
             _clock = clock;
             _ads = ads;
@@ -36,6 +37,7 @@ namespace PawBlock.Features.DailyReward
             _boosters = boosters;
             _energy = energy;
             _model = null;
+            _screens = screens;
         }
 
         [SerializeField] private DailyRewardDatabase database;
@@ -195,7 +197,7 @@ namespace PawBlock.Features.DailyReward
 
         private void AutoOpen()
         {
-            if (!CanClaimToday || ScreenFlow.Instance == null || !ScreenFlow.Instance.IsMenu) return;
+            if (!CanClaimToday || _screens == null || !_screens.IsMenu) return;
             GameFlowUI flow = FindFirstObjectByType<GameFlowUI>();
             if (flow != null) flow.OpenDailyReward();
         }

@@ -13,6 +13,14 @@ namespace PawBlock.Game
     /// </summary>
     public class GameAudioEvents : MonoBehaviour
     {
+        private ScreenFlow _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(ScreenFlow screens)
+        {
+            _screens = screens;
+        }
+
         [Header("Tiếng mèo kèm theo (xác suất mỗi lần)")]
         [SerializeField, Range(0f, 1f)] private float catHappyChance = 0.35f;
         [SerializeField, Range(0f, 1f)] private float catSadChance = 0.8f;
@@ -162,7 +170,7 @@ namespace PawBlock.Game
         private void OnGridSpawned(List<CellView> cells)
         {
             RefreshMusicPitch();
-            if (ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu) return;
+            if (_screens != null && _screens.IsMenu) return;
             AudioManager.Play(SoundId.LevelStart);
         }
 

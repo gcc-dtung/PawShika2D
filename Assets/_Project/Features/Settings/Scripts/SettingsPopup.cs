@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using PawBlock.Features.Gameplay;
 using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Settings
 {
@@ -14,6 +15,14 @@ namespace PawBlock.Features.Settings
     /// </summary>
     public class SettingsPopup : PopupView
     {
+        private IScreenNavigator _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(IScreenNavigator screens)
+        {
+            _screens = screens;
+        }
+
         [SerializeField] private Button closeButton;
         [SerializeField] private Button homeButton;
         [SerializeField] private TMP_Text versionText;
@@ -41,7 +50,7 @@ namespace PawBlock.Features.Settings
 
         protected override void OnOpen()
         {
-            bool inMenu = ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu;
+            bool inMenu = _screens != null && _screens.IsMenu;
             if (homeButton != null) homeButton.gameObject.SetActive(!inMenu);
             if (panel != null)
             {
@@ -71,13 +80,13 @@ namespace PawBlock.Features.Settings
             Close();
             _pausedGame = false;
             // Đang trong ván: cảnh báo mất năng lượng; ván vẫn tạm dừng, popup Quit lo chơi tiếp / về Home
-            bool inGame = ScreenFlow.Instance != null && !ScreenFlow.Instance.IsMenu;
+            bool inGame = _screens != null && !_screens.IsMenu;
             if (inGame && quitPopup != null)
             {
                 quitPopup.Open();
                 return;
             }
-            if (ScreenFlow.Instance != null) ScreenFlow.Instance.ShowMenu();
+            if (_screens != null) _screens.ShowMenu();
         }
     }
 }

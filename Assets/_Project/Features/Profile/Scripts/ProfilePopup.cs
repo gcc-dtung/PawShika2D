@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using PawBlock.Features.Gameplay;
 using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Profile
 {
@@ -15,10 +16,15 @@ namespace PawBlock.Features.Profile
     /// </summary>
     public class ProfilePopup : PopupView
     {
+        private IScreenNavigator _screens;
         private PlayerProfileService _service;
 
         /// <summary>GameBootstrap gọi: hồ sơ người chơi máy này.</summary>
-        public void Init(PlayerProfileService service) => _service = service;
+        public void Init(PlayerProfileService service, IScreenNavigator screens)
+        {
+            _service = service;
+            _screens = screens;
+        }
 
         [Header("Thẻ người chơi")]
         [SerializeField] private AvatarDatabase avatars;
@@ -95,7 +101,7 @@ namespace PawBlock.Features.Profile
             if (avatarPicker != null) avatarPicker.SetActive(false);
             SetEditing(false);
             LevelManager lm = LevelManager.Instance;
-            _pausedGame = lm != null && lm.IsPlaying && (ScreenFlow.Instance == null || !ScreenFlow.Instance.IsMenu);
+            _pausedGame = lm != null && lm.IsPlaying && (_screens == null || !_screens.IsMenu);
             if (_pausedGame) lm.Pause();
         }
 

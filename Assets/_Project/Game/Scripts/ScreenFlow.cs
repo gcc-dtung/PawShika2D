@@ -13,7 +13,7 @@ namespace PawBlock.Game
     /// - Lần đầu mở game (TutorialController.Pending): vào thẳng tutorial thay cho Menu.
     /// Popup nằm ở Canvas_Popup riêng nên dùng được ở cả 2 màn. Đổi màn thì phát ScreenChangedEvent (EventBus).
     /// </summary>
-    public class ScreenFlow : Singleton<ScreenFlow>
+    public class ScreenFlow : MonoBehaviour, IScreenNavigator
     {
         [SerializeField] private GameObject menuCanvas;
         [SerializeField] private GameObject hudCanvas;
@@ -26,6 +26,7 @@ namespace PawBlock.Game
         private void Start()
         {
             EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
+            EventBus<ShopOpenRequestedEvent>.Subscribe(OnShopRequested);
             if (TutorialController.Pending) EnterTutorial(); // lần đầu mở game: vào thẳng tutorial, xong thì vào level 1
             else if (startInMenu) ShowMenu();
             else EnterGame();
@@ -45,7 +46,10 @@ namespace PawBlock.Game
         private void OnDestroy()
         {
             EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
+            EventBus<ShopOpenRequestedEvent>.Unsubscribe(OnShopRequested);
         }
+
+        private void OnShopRequested(ShopOpenRequestedEvent _) => ShowShop();
 
         /// <summary>Về Main Menu: tab Home, hoặc tab Daily nếu vừa chơi level Daily.</summary>
         public void ShowMenu()

@@ -4,12 +4,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Game;
 using PawBlock.Shared;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>Thua level (đã từ chối hồi mạng): chơi lại từ đầu.</summary>
     public class LosePopup : PopupView
     {
+        private IScreenNavigator _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(IScreenNavigator screens)
+        {
+            _screens = screens;
+        }
+
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private Button retryButton;
         [SerializeField] private Button homeButton;
@@ -35,7 +44,7 @@ namespace PawBlock.Features.Gameplay
         private void OnHome()
         {
             Close();
-            if (ScreenFlow.Instance != null) ScreenFlow.Instance.ShowMenu();
+            if (_screens != null) _screens.ShowMenu();
         }
 
         private void OnRetry()

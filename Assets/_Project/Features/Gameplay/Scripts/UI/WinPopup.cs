@@ -23,14 +23,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class WinPopup : PopupView
     {
+        private IScreenNavigator _screens;
         private ICurrencyWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (Economy, qua contract), quảng cáo có thưởng.</summary>
-        public void Init(ICurrencyWallet coins, IAdsService ads)
+        public void Init(ICurrencyWallet coins, IAdsService ads, IScreenNavigator screens)
         {
             _coins = coins;
             _ads = ads;
+            _screens = screens;
         }
 
         [Header("Thành phần")]
@@ -304,7 +306,7 @@ namespace PawBlock.Features.Gameplay
             {
                 Close();
                 LevelManager lm = LevelManager.Instance;
-                if (lm != null && lm.IsDaily && ScreenFlow.Instance != null) ScreenFlow.Instance.ShowMenu(); // Daily: về tab Daily
+                if (lm != null && lm.IsDaily && _screens != null) _screens.ShowMenu(); // Daily: về tab Daily
                 else if (lm != null) lm.NextLevel();
             });
             _claim = seq;

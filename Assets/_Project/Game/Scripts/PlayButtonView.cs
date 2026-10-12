@@ -16,6 +16,14 @@ namespace PawBlock.Game
     [RequireComponent(typeof(Button))]
     public class PlayButtonView : MonoBehaviour
     {
+        private ScreenFlow _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(ScreenFlow screens)
+        {
+            _screens = screens;
+        }
+
         [SerializeField] private TMP_Text levelText;
         [SerializeField] private float breathScale = 1.04f;
         [SerializeField] private float breathDuration = 0.9f;
@@ -87,7 +95,7 @@ namespace PawBlock.Game
 
         private void OnClick()
         {
-            if (ScreenFlow.Instance != null) ScreenFlow.Instance.Play();
+            if (_screens != null) _screens.Play();
         }
 
         private void Refresh()

@@ -26,10 +26,15 @@ namespace PawBlock.Features.DailyChallenge
     /// </summary>
     public class DailyChallengePanel : MonoBehaviour
     {
+        private IScreenNavigator _screens;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: quảng cáo có thưởng (chơi bù ngày lỡ).</summary>
-        public void Init(IAdsService ads) => _ads = ads;
+        public void Init(IAdsService ads, IScreenNavigator screens)
+        {
+            _ads = ads;
+            _screens = screens;
+        }
 
         [Header("Đầu trang")]
         [SerializeField] private TMP_Text monthLabel;
@@ -241,8 +246,8 @@ namespace PawBlock.Features.DailyChallenge
         private void Play(long day)
         {
             DailyChallengeManager m = Manager;
-            if (m == null || !m.CanPlay(day) || ScreenFlow.Instance == null) return;
-            ScreenFlow.Instance.PlayDaily(() => m.Load(day));
+            if (m == null || !m.CanPlay(day) || _screens == null) return;
+            _screens.PlayDaily(() => m.Load(day));
         }
 
         /// <summary>Chơi bù ngày đã lỡ: xem quảng cáo có thưởng trước (như PlayWithAdsButton gốc).</summary>

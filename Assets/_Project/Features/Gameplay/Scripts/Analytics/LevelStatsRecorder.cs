@@ -17,14 +17,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStatsRecorder : MonoBehaviour
     {
+        private IScreenNavigator _screens;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save)
+        public void Init(ISaveService save, IScreenNavigator screens)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
+            _screens = screens;
         }
 
         private LevelStatSave _current;  // lượt đang chơi, null nếu không có
@@ -176,7 +178,7 @@ namespace PawBlock.Features.Gameplay
             _playingSince = -1f;
         }
 
-        private static bool InMenu => ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu;
+        private bool InMenu => _screens != null && _screens.IsMenu;
         private static bool IsPractice => LevelManager.Instance != null && LevelManager.Instance.IsPractice;
 
         private LevelStatSave Get(string id, int number)

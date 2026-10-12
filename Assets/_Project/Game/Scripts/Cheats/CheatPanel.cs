@@ -10,7 +10,7 @@ using PawBlock.Features.Gameplay;
 namespace PawBlock.Game
 {
     /// <summary>
-    /// Cheat Panel trong game (chạy cả bản build APK): bấm nhanh 10 lần vào góc trên trái màn hình
+    /// Cheat Panel trong game (chạy cả bản build APK): bấm nhanh 3 lần vào góc trên trái màn hình
     /// (hoặc phím F1 / ` khi có bàn phím) để mở. Gọi DebugCheats nên giống hệt Debug Panel trong Editor.
     /// Vẽ bằng IMGUI, tự tạo lúc mở game, không cần đặt gì vào scene. Lúc mở có 1 Canvas trong suốt phủ
     /// toàn màn hình để chặn chạm xuống UI / lưới bên dưới.
@@ -18,10 +18,10 @@ namespace PawBlock.Game
     /// </summary>
     public class CheatPanel : MonoBehaviour
     {
-        // Vùng bấm mở panel: góc trên trái (tỉ lệ theo màn hình), đủ 10 lần, mỗi lần cách nhau không quá TapGap giây
+        // Vùng bấm mở panel: góc trên trái (tỉ lệ theo màn hình), đủ 3 lần, mỗi lần cách nhau không quá TapGap giây
         private const float ZoneWidth = 0.25f;
         private const float ZoneHeight = 0.08f;
-        private const int TapsToOpen = 10;
+        private const int TapsToOpen = 3;
         private const float TapGap = 0.5f;
 
         private const float RefWidth = 720f; // kích thước tham chiếu để phóng chữ / nút theo màn hình

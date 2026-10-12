@@ -19,14 +19,16 @@ namespace PawBlock.Game
     /// </summary>
     public class GameFlowUI : MonoBehaviour
     {
+        private ScreenFlow _screens;
         private PlayerProfileService _profile;
         private IIAPService _iap;
 
         /// <summary>GameBootstrap gọi trước OnEnable: hồ sơ người chơi (popup hồ sơ), IAP (báo mua lỗi).</summary>
-        public void Init(PlayerProfileService profile, IIAPService iap)
+        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens)
         {
             _profile = profile;
             _iap = iap;
+            _screens = screens;
         }
 
         [SerializeField] private WinPopup winPopup;
@@ -81,7 +83,7 @@ namespace PawBlock.Game
         public void OpenSettings()
         {
             if (settingsPopup == null || settingsPopup.IsOpen) return;
-            bool inMenu = ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu;
+            bool inMenu = _screens != null && _screens.IsMenu;
             if (!inMenu && LevelManager.Instance != null && !LevelManager.Instance.IsPlaying) return;
             settingsPopup.Open();
         }
@@ -120,7 +122,7 @@ namespace PawBlock.Game
         public void OpenEnergyRefill()
         {
             if (refillEnergyPopup == null || refillEnergyPopup.IsOpen) return;
-            bool inMenu = ScreenFlow.Instance != null && ScreenFlow.Instance.IsMenu;
+            bool inMenu = _screens != null && _screens.IsMenu;
             if (!inMenu && LevelManager.Instance != null && !LevelManager.Instance.IsPlaying) return; // đang có popup khác
             refillEnergyPopup.ShowOptional();
         }

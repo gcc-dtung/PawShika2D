@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Features.Gameplay;
 using PawBlock.Game;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Shared
 {
@@ -13,6 +14,14 @@ namespace PawBlock.Shared
     /// </summary>
     public class NoticePopup : PopupView
     {
+        private IScreenNavigator _screens;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(IScreenNavigator screens)
+        {
+            _screens = screens;
+        }
+
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text messageText;
         [SerializeField] private Button continueButton;
@@ -42,7 +51,7 @@ namespace PawBlock.Shared
         protected override void OnOpen()
         {
             LevelManager lm = LevelManager.Instance;
-            _pausedGame = lm != null && lm.IsPlaying && (ScreenFlow.Instance == null || !ScreenFlow.Instance.IsMenu);
+            _pausedGame = lm != null && lm.IsPlaying && (_screens == null || !_screens.IsMenu);
             if (_pausedGame) lm.Pause();
         }
 
