@@ -74,20 +74,13 @@ namespace PawBlock.Game
         [Header("Economy")]
         [SerializeField] private EnergyManager energyManager;
         [SerializeField] private RefillEnergyPopup refillEnergyPopup;
-        [SerializeField] private CoinHUD[] coinHuds;
-        [SerializeField] private EnergyHUD[] energyHuds;
 
         [Header("Meta")]
-        [SerializeField] private ShopCardView[] shopCards;
         [SerializeField] private DailyRewardManager dailyRewardManager;
         [SerializeField] private DailyChallengeManager dailyChallengeManager;
         [SerializeField] private DailyChallengePanel dailyChallengePanel;
-        [SerializeField] private DailyTabBadge dailyTabBadge;
-        [SerializeField] private DailyRewardButton dailyRewardButton;
         [SerializeField] private DailyRewardPopup dailyRewardPopup;
-        [SerializeField] private LuckyWheelButton luckyWheelButton;
         [SerializeField] private LuckyWheelPopup luckyWheelPopup;
-        [SerializeField] private AvatarButton avatarButton;
         [SerializeField] private ProfilePopup profilePopup;
         [SerializeField] private ProfileStatsRecorder profileStatsRecorder;
         [SerializeField] private SettingsPopup settingsPopup;
@@ -98,8 +91,10 @@ namespace PawBlock.Game
         [Header("Game")]
         [SerializeField] private ScreenFlow screenFlow;
         [SerializeField] private GameFlowUI gameFlowUI;
+        [SerializeField] private ShopPanel shopPanel;
+        [SerializeField] private HomePanel homePanel;
+        [SerializeField] private MenuTabBar menuTabBar;
         [SerializeField] private GameAudioEvents gameAudioEvents;
-        [SerializeField] private PlayButtonView playButton;
 
         public GameServices Services { get; private set; }
 
@@ -168,20 +163,13 @@ namespace PawBlock.Game
 
             // Economy
             Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager, economy.refillAdsEnergy, economy.refillCoinCost);
-            foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
-            foreach (EnergyHUD hud in energyHuds) Require(hud)?.Init(energyManager, gameFlowUI);
 
             // Meta: chỉ nhận contract của feature khác
-            foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
             Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads, screens, boosterManager, gameFlowUI);
             Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock, dailyLevelLoader);
             Require(dailyChallengePanel)?.Init(ads, screens, dailyRewardManager, dailyChallengeManager);
-            Require(dailyTabBadge)?.Init(dailyChallengeManager);
-            Require(dailyRewardButton)?.Init(dailyRewardManager, gameFlowUI);
             Require(dailyRewardPopup)?.Init(dailyRewardManager);
-            Require(luckyWheelButton)?.Init(s.Stars);
             Require(luckyWheelPopup)?.Init(s.Stars, dailyRewardManager, dailyRewardManager);
-            Require(avatarButton)?.Init(s.Profile, gameFlowUI);
             Require(profilePopup)?.Init(s.Profile, screens, levelManager);
             Require(profileStatsRecorder)?.Init(s.Profile);
             Require(settingsPopup)?.Init(screens, levelManager, gameFlowUI);
@@ -191,8 +179,11 @@ namespace PawBlock.Game
             // Game
             Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager, boosterManager, energyManager, popups);
             Require(screenFlow)?.Init(levelManager, gridManager, tutorialController);
+            // Main Menu: mỗi tab tự nối view con của nó
+            Require(shopPanel)?.Init(s.Shop, s.Coins, energyManager, gameFlowUI);
+            Require(homePanel)?.Init(screenFlow, levelManager, s.Profile, s.Stars, dailyRewardManager, s.Coins, energyManager, gameFlowUI);
+            Require(menuTabBar)?.Init(dailyChallengeManager);
             Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer, gridSpawner);
-            Require(playButton)?.Init(screenFlow, levelManager);
             DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager, DailyReward = dailyRewardManager, LivesEnergy = lives, MoreTime = moreTimePopup });
         }
 

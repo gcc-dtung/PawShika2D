@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
+using PawBlock.Shared;
 
 namespace PawBlock.Features.DailyChallenge
 {
@@ -22,7 +23,7 @@ namespace PawBlock.Features.DailyChallenge
     /// - Vừa thắng 1 ngày rồi về tab: thanh tiến trình chạy lên + chữ "+1" bay, ô ngày nảy.
     /// Dựng bởi Tools/PawBlock/Builders/Build Daily Challenge.
     /// </summary>
-    public class DailyChallengePanel : MonoBehaviour
+    public class DailyChallengePanel : MenuPanel
     {
         private DailyChallengeManager _challenge;
         private IRewardIcons _rewardIconSource;

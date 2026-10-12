@@ -4158,6 +4158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449543467f17e6a4b8c2f52b74f36c16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rect: {fileID: 36053613917540986}
   monthLabel: {fileID: 5838663391986754435}
   prevMonthButton: {fileID: 3470634264760076231}
   nextMonthButton: {fileID: 9207578693591976036}
