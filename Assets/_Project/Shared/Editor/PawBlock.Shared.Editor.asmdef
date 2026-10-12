@@ -1,0 +1,24 @@
+{
+    "name": "PawBlock.Shared.Editor",
+    "rootNamespace": "",
+    "references": [
+        "PawBlock.Core.Contracts",
+        "PawBlock.Core.Foundation",
+        "PawBlock.Shared",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "DOTween.Modules",
+        "Coffee.UIParticle"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,33 @@
+{
+    "name": "PawBlock.Game.Editor",
+    "rootNamespace": "",
+    "references": [
+        "PawBlock.Core.Contracts",
+        "PawBlock.Core.Foundation",
+        "PawBlock.Shared",
+        "PawBlock.Gameplay",
+        "PawBlock.Meta",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "DOTween.Modules",
+        "Unity.InputSystem",
+        "spine-unity",
+        "spine-csharp",
+        "Coffee.UIParticle",
+        "PawBlock.Game",
+        "PawBlock.Core.Foundation.Editor",
+        "PawBlock.Shared.Editor",
+        "PawBlock.Gameplay.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

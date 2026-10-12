@@ -1,0 +1,31 @@
+{
+    "name": "PawBlock.Meta.Tests",
+    "rootNamespace": "",
+    "references": [
+        "PawBlock.Core.Contracts",
+        "PawBlock.Core.Foundation",
+        "PawBlock.Shared",
+        "PawBlock.Meta",
+        "Unity.TextMeshPro",
+        "UnityEngine.UI",
+        "DOTween.Modules",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll",
+        "DOTween.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
