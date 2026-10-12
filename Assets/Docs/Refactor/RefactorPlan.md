@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0–P4 xong (2026-10-12), tiếp P5 |
+| Trạng thái | P0–P5 xong (2026-10-12), tiếp P6 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-12 |
@@ -369,6 +369,22 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Kiểm tra:** grep các API trên ngoài `Editor/`, `Tests/` chỉ còn trong `Reset` / `OnValidate`; Console không có `NullReferenceException`; smoke test.
 **Xong khi:** grep sạch.
 
+**Kết quả P5** (6 commit trên nhánh `Refactor-P5-BoFind`): grep runtime (bỏ `Editor/`, `Tests/`, khối `#if UNITY_EDITOR`) từ **118** chỗ / 57 file còn **2** chỗ trong `CheatPanel` (ngoại lệ, [ProjectConventions.md](ProjectConventions.md) mục 10).
+
+| Bước | Nội dung |
+| --- | --- |
+| 5.1 | Find trong scene: `GridSpawner`, `Camera`, `TimerUI`, `TutorialHand`, `HintMarker`, danh sách `ILevelIntro`, nút booster do Bootstrap truyền qua `Init`; `IMenuPopups` (GameFlowUI cài) cho nút Settings / Daily / Avatar / năng lượng và DailyReward tự mở popup (hết `[SerializeField] GameFlowUI` ở feature); bỏ fallback Find / `Camera.main` ở field đã gán |
+| 5.2 | GetComponent cùng object / con / cha (26 script): `[SerializeField]` + `OnValidate` (`#if UNITY_EDITOR`) tự điền khi trống; đã gọi lại cho scene + 3 prefab |
+| 5.3 | `Shared/Editor/UIAutoSetup` (khi lưu scene / vào Play): `UIButtonPress` gắn sẵn `ButtonPress` (88 nút), `ButtonPress` / `UIButtonSounds` / `UIGrayscaleWhenDisabled` thu danh sách con vào field; marker `NoClickVibrate` thay kiểm tra `BoosterButton` (hết `Shared → Gameplay`) |
+| 5.4 | Registry `Collider2D → CellView` trong `GridSpawner` cho raycast của `DragAndDropController` |
+| 5.5 | `SaveRunner`, `TrustedClockRunner` (trên GameBootstrap), `CatFaceTicker` (trên Manager) đặt sẵn; `AudioManager` có sẵn Music + 8 Sfx con |
+| 5.6 | UI / sprite dựng bằng code chuyển thành object con dựng sẵn bằng `[ContextMenu] EditorBuild` (`Core/Foundation/Util/EditorChildren`): hiệu ứng booster, vòng đếm Freeze, viền đỏ, chữ "+Ns", đèn rọi tutorial, Canvas nút booster, lớp flash khối; pool nhân bản từ mẫu tắt sẵn (bụi, khung Hint, bông tuyết, coin bay); `GiftItemView` cho bong thoại quà |
+
+- Khác plan: GetComponent dùng `OnValidate` tự điền (không cần `Reset` riêng, chạy cả khi gắn component); thêm `IMenuPopups`; sprite sinh lúc chạy (`ProceduralSprites`) không lưu được vào scene nên vẫn gán ở `Awake` (object đã có sẵn); `CheatPanel` giữ tự tạo (ngoại lệ).
+- Hành vi giữ nguyên, có 1 khác biệt nhỏ: Canvas + GraphicRaycaster của nút booster có từ đầu (trước chỉ thêm khi tutorial mở khóa chạy lần đầu, sau đó giữ luôn).
+- Kiểm tra: 160 / 160 test (`FeelPlayModeTests` dựng `SelectionBoxView` có sẵn renderer); Play với `save_v1_played.json` sau mỗi bước: 5 nút mở popup, nhấn nút (lún + tô), rung / không rung, nút xám, kéo chọn / chạm gỡ khối, nhạc / SFX / ghi save / đồng bộ giờ, mặt mèo, bong thoại quà, tutorial booster (đèn rọi, nút nhận chạm), bụi, khung Hint, hiệu ứng booster, Freeze (bông tuyết, vòng đếm), "+15s", viền đỏ, thắng (flash 12 khối, 12 coin bay), cheat thua; Console 0 lỗi. Save thật của máy dev trả về bản gốc (md5 khớp).
+- `using` sai chiều: 80 → 76 ([Dependencies.md](Dependencies.md)).
+
 ---
 
 ### P6 – Assembly Definition
@@ -491,9 +507,9 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | LevelTimer, EnergyManager | 3.5 | 0.2 | 100% | |
 | | | Daily*, LevelStars, TutorialController | 3 | 0.2 | 100% | |
 | | | GameConfig / GameplayVisuals ra khỏi Resources; cờ static; Singleton an toàn | 2.5 | 0.9 | 100% | |
-| P5 Bỏ Find / GetComponent | ~58 file | GetComponent → SerializeField + Reset, gán lại scene / prefab | 6 | | 0% | |
-| | | AddComponent → có sẵn trong prefab | 3 | | 0% | |
-| | | Find, Camera.main, transform.Find, registry raycast | 2 | | 0% | |
+| P5 Bỏ Find / GetComponent | 57 file / 118 chỗ | GetComponent → SerializeField + Reset, gán lại scene / prefab | 6 | 0.3 | 100% | |
+| | | AddComponent → có sẵn trong prefab | 3 | 0.3 | 100% | |
+| | | Find, Camera.main, transform.Find, registry raycast | 2 | 0.2 | 100% | |
 | P6 Asmdef | 6 runtime + Editor + Test | DOTween asmdef, tạo asmdef, reference | 2 | | 0% | |
 | | | Sửa lỗi compile lộ ra | 3 | | 0% | Khó đoán trước |
 | | | Build Android kiểm tra | 1 | | 0% | |
@@ -506,7 +522,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **11.0** | **52%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **11.8** | **62%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 

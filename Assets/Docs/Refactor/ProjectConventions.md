@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-12 (P4) |
+| Cập nhật lần cuối | 2026-10-12 (P5) |
 
 ---
 
@@ -96,3 +96,20 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Hàm tính dùng config | Nhận config làm tham số (`LevelTimer.ComputeSeconds(level, cells, cfg)`), không đọc static |
 | Cờ trạng thái | Thuộc tính instance (`TutorialController.IsActive` / `IsPending`), không `static bool` |
 | Cheat / Debug Panel | `DebugCheats` (Game) dùng `GameServices` + `GameScene` do Bootstrap điền; feature không dùng `GameScene` |
+
+## 10. Không tìm / lấy / gắn component lúc chạy (từ P5)
+
+| Cần | Cách làm trong dự án |
+| --- | --- |
+| Component trên cùng object / con / cha | `[SerializeField]` + `OnValidate()` trong `#if UNITY_EDITOR` tự điền khi trống (chạy cả khi gắn component, mở scene). Script cũ chưa điền: gọi lại OnValidate rồi lưu scene / prefab |
+| Object khác trong scene dùng chung (GridSpawner, Camera, nút booster…) | Bootstrap truyền qua `Init`; field Inspector đã gán thì giữ, không thêm fallback Find |
+| Nút ở feature mở popup chung | `IMenuPopups` (GameFlowUI cài), không `[SerializeField] GameFlowUI` |
+| Danh sách con thay đổi theo hierarchy (ButtonPress, âm nút, nút xám) | Hàm `EditorCollect()` + `Shared/Editor/UIAutoSetup` chạy khi lưu scene / vào Play (menu `Tools/PawBlock/UI/Setup Buttons`). Nút mới dưới Canvas có `UIButtonPress` tự được gắn `ButtonPress` khi lưu scene |
+| Object con UI / sprite trước đây dựng bằng code | `[ContextMenu("Dựng sẵn object con")] public void EditorBuild()` dùng `EditorChildren.Child / On / Rect` (có Undo, có rồi thì dùng lại) rồi lưu. Lúc chạy chỉ dùng field; thiếu thì `LogError` + tắt component |
+| Nhiều object cùng loại lúc chạy (pool) | `Instantiate(template)` với template là con tắt sẵn (component trả về trực tiếp, không GetComponent) |
+| Sprite sinh lúc chạy (`ProceduralSprites`) | Không lưu được vào scene: object có sẵn, sprite gán ở `Awake` |
+| Raycast / va chạm | Registry `Dictionary<Collider2D, T>` do nơi spawn đăng ký (vd `GridSpawner.TryGetCell`) |
+| Runner hạ tầng (ghi save, đồng bộ giờ, tick mặt mèo) | Component đặt sẵn trong scene; service nhận qua `AttachRunner` / constructor. Không có runner (công cụ Editor, test): save ghi ngay, đồng hồ dùng giờ máy |
+| Test dựng object bằng code | Tạo GameObject tắt, `AddComponent` các component cần, gán field qua `SerializedObject`, rồi bật (mẫu: `FeelPlayModeTests` với `SelectionBoxView`) |
+
+**Ngoại lệ:** `Game/Scripts/Cheats/CheatPanel` tự tạo lúc chạy (`RuntimeInitializeOnLoadMethod`, `AddComponent`, `GetComponent` cho Canvas chặn chạm). Lý do: chỉ là công cụ debug, cả file bọc `#if !DISABLE_CHEATS`; đặt vào scene thì bản build có `DISABLE_CHEATS` sẽ bị Missing Script.

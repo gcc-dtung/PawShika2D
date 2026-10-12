@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-12 22:30 |
+| Trạng thái | Đã push |
+| Commit | 10 commit `ed95848` … `7cd283b` (P4.1 – P4.11 + tài liệu), cuối "Refactor P4: tài liệu P4, chốt RoadMap 22" (nhánh `Refactor-P4-BoSingleton`) |
+| Thời gian push | 2026-10-12 23:00 |
+| Cập nhật lần cuối | 2026-10-12 23:00 |
 
 ## Tóm tắt
 
