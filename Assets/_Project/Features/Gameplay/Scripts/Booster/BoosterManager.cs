@@ -16,18 +16,20 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterManager : Singleton<BoosterManager>, IBoosterHost, IBoosterInventory
     {
+        private GridManager _grid;
         private ISaveService _save;
         private GameplaySave _data;
         private BoosterInventory _inventory;
         private ICurrencyWallet _coins;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay" (booster đã mở), kho lượt, ví coin (mua lượt).</summary>
-        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins)
+        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins, GridManager grid)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _inventory = inventory;
             _coins = coins;
+            _grid = grid;
         }
 
         /// <summary>Kho lượt booster (BoosterButton, Debug).</summary>
@@ -71,7 +73,7 @@ namespace PawBlock.Features.Gameplay
         public BoosterType? TutorialTarget { get; private set; }
 
         // IBoosterHost
-        public GridManager Grid => GridManager.Instance;
+        public GridManager Grid => _grid;
         public LevelTimer Timer => LevelTimer.Instance;
 
         protected override void Awake()

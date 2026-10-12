@@ -17,6 +17,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class GameplayFeedback : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [Header("Prefab")]
         [SerializeField] private SpriteRenderer praisePrefab;
 
@@ -90,10 +98,10 @@ namespace PawBlock.Features.Gameplay
         private void Start()
         {
             _spawner = FindFirstObjectByType<GridSpawner>();
-            if (GridManager.Instance == null) return;
-            GridManager.Instance.onBlockPlaced.AddListener(OnBlockPlaced);
-            GridManager.Instance.onMistake.AddListener(OnMistake);
-            GridManager.Instance.onGameWin.AddListener(OnGameWin);
+            if (_grid == null) return;
+            _grid.onBlockPlaced.AddListener(OnBlockPlaced);
+            _grid.onMistake.AddListener(OnMistake);
+            _grid.onGameWin.AddListener(OnGameWin);
         }
 
         // Tắt component: hủy mọi tween. Chữ khen chạy nốt tới cuối (complete) để trả về pool; camera về vị trí gốc.
@@ -109,10 +117,10 @@ namespace PawBlock.Features.Gameplay
 
         private void OnDestroy()
         {
-            if (GridManager.Instance == null) return;
-            GridManager.Instance.onBlockPlaced.RemoveListener(OnBlockPlaced);
-            GridManager.Instance.onMistake.RemoveListener(OnMistake);
-            GridManager.Instance.onGameWin.RemoveListener(OnGameWin);
+            if (_grid == null) return;
+            _grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
+            _grid.onMistake.RemoveListener(OnMistake);
+            _grid.onGameWin.RemoveListener(OnGameWin);
         }
 
         private void OnBlockPlaced(BlockModel block)
@@ -121,7 +129,7 @@ namespace PawBlock.Features.Gameplay
             PlayRipple(block.Rect);
 
             // Combo: lần nào cũng khen, chữ mạnh / to dần; đặt lẻ: như cũ (khối đủ lớn, theo xác suất)
-            int combo = GridManager.Instance.Combo;
+            int combo = _grid.Combo;
             int tier = FeelCurves.PraiseTier(combo, PraiseTiers.Length);
             if (tier == 0 && (block.Area < praiseMinCells || Random.value > praiseChance)) return;
 
@@ -131,7 +139,7 @@ namespace PawBlock.Features.Gameplay
             SpriteRenderer sr = _praisePool.Get();
             sr.sprite = praise;
             sr.color = Color.white;
-            sr.transform.position = GridManager.Instance.Board.Geometry.RectCenter(block.Rect) + new Vector3(0f, 0f, -1f);
+            sr.transform.position = _grid.Board.Geometry.RectCenter(block.Rect) + new Vector3(0f, 0f, -1f);
             PlayPraise(sr, 1f + tier * comboPraiseScaleStep);
         }
 

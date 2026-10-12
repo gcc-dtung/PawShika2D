@@ -8,6 +8,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class DragAndDropController : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [SerializeField] private Camera cam;
         [SerializeField] private LayerMask cellLayer;
         [SerializeField] private DragCountBubble countBubble;
@@ -51,7 +59,7 @@ namespace PawBlock.Features.Gameplay
         public void StartDrag(Vector2 pos)
         {
             if (_isDragging || _isTapping) return;
-            GridManager gm = GridManager.Instance;
+            GridManager gm = _grid;
             if (!gm || gm.IsInputLocked) return;
 
             // Bắt đầu phải chạm trúng 1 ô
@@ -80,14 +88,14 @@ namespace PawBlock.Features.Gameplay
         {
             if (_isTapping)
             {
-                GridManager g = GridManager.Instance;
+                GridManager g = _grid;
                 CellView over = GetCellAtPosition(pos);
                 BlockModel tapped = g != null && g.Board != null ? g.Board.GetBlockAt(_tapCell) : null;
                 if (over == null || tapped == null || g.Board.GetBlockAt(over.Position) != tapped) _isTapping = false;
                 return;
             }
             if (!_isDragging) return;
-            GridManager gm = GridManager.Instance;
+            GridManager gm = _grid;
             if (!gm || gm.IsInputLocked)
             {
                 CancelDrag();
@@ -104,11 +112,11 @@ namespace PawBlock.Features.Gameplay
             if (_isTapping)
             {
                 _isTapping = false;
-                if (GridManager.Instance != null) GridManager.Instance.TryRemoveBlockAt(_tapCell);
+                if (_grid != null) _grid.TryRemoveBlockAt(_tapCell);
                 return;
             }
             if (!_isDragging) return;
-            GridManager gm = GridManager.Instance;
+            GridManager gm = _grid;
             if (gm == null || gm.IsInputLocked)
             {
                 CancelDrag();
@@ -121,7 +129,7 @@ namespace PawBlock.Features.Gameplay
 
         private void CancelDrag()
         {
-            if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
+            if (_grid != null) _grid.CancelSelection();
             ResetDrag();
         }
 
@@ -140,8 +148,8 @@ namespace PawBlock.Features.Gameplay
 
         private void UpdateBubble(Vector2 screenPos)
         {
-            if (!countBubble || !GridManager.Instance) return;
-            GridManager gm = GridManager.Instance;
+            if (!countBubble || !_grid) return;
+            GridManager gm = _grid;
             countBubble.Show(ScreenToWorld(screenPos), gm.SelectionCellCount, gm.SelectionHint);
         }
     }

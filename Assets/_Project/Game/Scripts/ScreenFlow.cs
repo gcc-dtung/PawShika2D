@@ -15,12 +15,14 @@ namespace PawBlock.Game
     /// </summary>
     public class ScreenFlow : MonoBehaviour, IScreenNavigator
     {
+        private GridManager _grid;
         private LevelManager _levels;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelManager levels)
+        public void Init(LevelManager levels, GridManager grid)
         {
             _levels = levels;
+            _grid = grid;
         }
 
         [SerializeField] private GameObject menuCanvas;
@@ -64,7 +66,7 @@ namespace PawBlock.Game
         {
             bool daily = _levels != null && _levels.IsDaily;
             IsMenu = true;
-            if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
+            if (_grid != null) _grid.CancelSelection();
             if (_levels != null) _levels.Pause();
             if (hudCanvas != null) hudCanvas.SetActive(false);
             if (menuCanvas != null) menuCanvas.SetActive(true);

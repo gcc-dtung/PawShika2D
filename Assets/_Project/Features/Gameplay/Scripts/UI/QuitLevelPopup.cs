@@ -14,14 +14,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class QuitLevelPopup : PopupView
     {
+        private GridManager _grid;
         private LevelManager _levels;
         private IScreenNavigator _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(IScreenNavigator screens, LevelManager levels)
+        public void Init(IScreenNavigator screens, LevelManager levels, GridManager grid)
         {
             _screens = screens;
             _levels = levels;
+            _grid = grid;
         }
 
         [SerializeField] private Button quitButton;
@@ -39,7 +41,7 @@ namespace PawBlock.Features.Gameplay
             LevelManager lm = _levels;
             if (lm != null && lm.IsPlaying)
             {
-                if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
+                if (_grid != null) _grid.CancelSelection();
                 lm.Pause();
             }
         }

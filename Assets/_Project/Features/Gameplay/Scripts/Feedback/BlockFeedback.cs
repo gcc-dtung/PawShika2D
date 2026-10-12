@@ -15,6 +15,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BlockFeedback : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [Header("Hạt bụi khi đặt khối")]
         [SerializeField] private bool dust = true;
         [SerializeField, Range(0, 32)] private int dustCount = 12;
@@ -67,7 +75,7 @@ namespace PawBlock.Features.Gameplay
         {
             _spawner = FindFirstObjectByType<GridSpawner>();
             _timer = LevelTimer.Instance;
-            GridManager grid = GridManager.Instance;
+            GridManager grid = _grid;
             if (grid != null)
             {
                 grid.onBlockPlaced.AddListener(OnBlockPlaced);
@@ -78,7 +86,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnDestroy()
         {
-            GridManager grid = GridManager.Instance;
+            GridManager grid = _grid;
             if (grid != null)
             {
                 grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
@@ -98,7 +106,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnBlockPlaced(BlockModel block)
         {
-            GridManager grid = GridManager.Instance;
+            GridManager grid = _grid;
             if (block == null || grid == null || grid.Board == null) return;
             GridGeometry geometry = grid.Board.Geometry;
 
@@ -182,7 +190,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (!frozen) return;
 
-            GridManager grid = GridManager.Instance;
+            GridManager grid = _grid;
             if (grid == null || grid.Board == null) return;
             int i = 0;
             foreach (BlockModel block in grid.Board.Blocks)

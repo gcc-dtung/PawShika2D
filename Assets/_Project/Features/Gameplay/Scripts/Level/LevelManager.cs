@@ -18,15 +18,17 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelManager : MonoBehaviour, IGamePause
     {
+        private GridManager _grid;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay" (level đang chơi đã lưu).</summary>
-        public void Init(ISaveService save)
+        public void Init(ISaveService save, GridManager grid)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _currentIndex = _data.currentLevel;
+            _grid = grid;
         }
 
         [SerializeField] private int currentLevel = 0;
@@ -67,7 +69,7 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            if (GridManager.Instance != null) GridManager.Instance.onGameWin.AddListener(OnWin);
+            if (_grid != null) _grid.onGameWin.AddListener(OnWin);
             if (LevelTimer.Instance != null) LevelTimer.Instance.onTimeUp.AddListener(OnTimeUp);
             if (!TutorialController.Pending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
         }
@@ -80,7 +82,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnDestroy()
         {
-            if (GridManager.Instance != null) GridManager.Instance.onGameWin.RemoveListener(OnWin);
+            if (_grid != null) _grid.onGameWin.RemoveListener(OnWin);
             if (LevelTimer.Instance != null) LevelTimer.Instance.onTimeUp.RemoveListener(OnTimeUp);
         }
 
@@ -185,6 +187,11 @@ namespace PawBlock.Features.Gameplay
         // ---------- Trạng thái ----------
 
         /// <summary>Popup mở giữa ván (xác nhận chơi lại...): khóa thao tác trên lưới.</summary>
+        public void CancelDrag()
+        {
+            if (_grid != null) _grid.CancelSelection();
+        }
+
         public void Pause()
         {
             if (_state == GameState.Playing) SetState(GameState.Paused);

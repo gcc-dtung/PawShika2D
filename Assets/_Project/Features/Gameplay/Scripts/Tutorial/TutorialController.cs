@@ -13,16 +13,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TutorialController : Singleton<TutorialController>
     {
+        private GridManager _grid;
         private LevelManager _levels;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save, LevelManager levels)
+        public void Init(ISaveService save, LevelManager levels, GridManager grid)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _levels = levels;
+            _grid = grid;
         }
 
         [SerializeField] private TutorialView view;
@@ -43,22 +45,22 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            if (GridManager.Instance != null)
+            if (_grid != null)
             {
-                GridManager.Instance.onGameWin.AddListener(OnStepWon);
-                GridManager.Instance.onBlockPlaced.AddListener(OnBlockPlaced);
-                GridManager.Instance.onBlockRemoved.AddListener(OnBlockPlaced);
+                _grid.onGameWin.AddListener(OnStepWon);
+                _grid.onBlockPlaced.AddListener(OnBlockPlaced);
+                _grid.onBlockRemoved.AddListener(OnBlockPlaced);
             }
             if (view != null && view.SkipButton != null) view.SkipButton.onClick.AddListener(Skip);
         }
 
         private void OnDisable()
         {
-            if (GridManager.Instance != null)
+            if (_grid != null)
             {
-                GridManager.Instance.onGameWin.RemoveListener(OnStepWon);
-                GridManager.Instance.onBlockPlaced.RemoveListener(OnBlockPlaced);
-                GridManager.Instance.onBlockRemoved.RemoveListener(OnBlockPlaced);
+                _grid.onGameWin.RemoveListener(OnStepWon);
+                _grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
+                _grid.onBlockRemoved.RemoveListener(OnBlockPlaced);
             }
             if (view != null && view.SkipButton != null) view.SkipButton.onClick.RemoveListener(Skip);
             _pending?.Kill();
@@ -99,8 +101,8 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Bàn tay kéo mẫu cho số đầu tiên (theo thứ tự gợi ý) chưa có khối đúng; hết gợi ý thì ẩn.</summary>
         private void ShowHint()
         {
-            if (!Active || hand == null || GridManager.Instance == null || GridManager.Instance.Board == null) return;
-            BoardModel board = GridManager.Instance.Board;
+            if (!Active || hand == null || _grid == null || _grid.Board == null) return;
+            BoardModel board = _grid.Board;
             foreach (var hint in _steps[_index].hints)
             {
                 CellModel cell = board.GetCell(hint.clue);

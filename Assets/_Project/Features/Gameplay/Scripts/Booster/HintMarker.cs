@@ -16,6 +16,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class HintMarker : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [SerializeField, Range(0f, 1f)] private float ghostAlphaMin = 0.25f;
         [SerializeField, Range(0f, 1f)] private float ghostAlphaMax = 0.6f;
         [SerializeField] private float pulsePeriod = 1f;
@@ -33,7 +41,6 @@ namespace PawBlock.Features.Gameplay
         private TutorialHand _hand;
         private Tween _delay;
         private Tween _pulse;
-        private GridManager _grid;
         private GridSpawner _spawner;
         private readonly List<SpriteRenderer> _frames = new List<SpriteRenderer>();
         private int _framesShown;
@@ -62,7 +69,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _grid = GridManager.Instance;
             if (_grid != null) _grid.onBlockPlaced.AddListener(OnBlockPlaced);
             _spawner = FindFirstObjectByType<GridSpawner>();
             if (_spawner != null) _spawner.gridCellEvent.AddListener(OnGridSpawned); // cả màn tutorial (không phát LevelLoadedEvent)
@@ -98,7 +104,7 @@ namespace PawBlock.Features.Gameplay
             _framesShown = 0;
             if (_ghost != null)
             {
-                if (GridManager.Instance != null) GridManager.Instance.ReturnGhost(_ghost);
+                if (_grid != null) _grid.ReturnGhost(_ghost);
                 _ghost = null;
             }
             if (_hand != null) _hand.Stop();
@@ -110,7 +116,7 @@ namespace PawBlock.Features.Gameplay
         private void Appear()
         {
             _delay = null;
-            GridManager gm = GridManager.Instance;
+            GridManager gm = _grid;
             if (!_showing || gm == null || gm.Board == null) return;
 
             _ghost = gm.RentGhost(_rect);

@@ -15,6 +15,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class GameHapticEvents : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [SerializeField] private bool onBlockPlaced = true;
         [SerializeField] private bool onClueUnlocked = true;
         [Tooltip("Tick rất nhẹ mỗi khi ngón tay đang kéo chạm sang ô khác")]
@@ -22,13 +30,11 @@ namespace PawBlock.Features.Gameplay
         [Tooltip("Tick mỗi giây khi sắp hết giờ")]
         [SerializeField] private bool onLowTimeTick = true;
 
-        private GridManager _grid;
         private LevelTimer _timer;
         private BoosterManager _booster;
 
         private void Start()
         {
-            _grid = GridManager.Instance;
             _timer = LevelTimer.Instance;
             _booster = BoosterManager.Instance;
 

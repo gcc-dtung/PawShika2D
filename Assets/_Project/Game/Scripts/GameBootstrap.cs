@@ -25,6 +25,14 @@ namespace PawBlock.Game
     {
         [Header("Gameplay")]
         [SerializeField] private LevelManager levelManager;
+        [SerializeField] private GridManager gridManager;
+        [SerializeField] private DragAndDropController dragAndDrop;
+        [SerializeField] private HintMarker hintMarker;
+        [SerializeField] private TutorialHand tutorialHand;
+        [SerializeField] private BlockFeedback blockFeedback;
+        [SerializeField] private DragFeedback dragFeedback;
+        [SerializeField] private GameplayFeedback gameplayFeedback;
+        [SerializeField] private GameHapticEvents gameHapticEvents;
         [SerializeField] private BoosterManager boosterManager;
         [SerializeField] private BoosterTutorial boosterTutorial;
         [SerializeField] private LevelStatsRecorder levelStatsRecorder;
@@ -89,27 +97,34 @@ namespace PawBlock.Game
 
             // Manager có dữ liệu riêng / lộ contract cho feature khác
             Require(energyManager)?.Init(save, clock);
-            Require(boosterManager)?.Init(save, s.Boosters, s.Coins);
+            Require(boosterManager)?.Init(save, s.Boosters, s.Coins, gridManager);
             s.Shop = new ShopService(save, s.Coins, boosterManager, energyManager, iap);
 
             // Gameplay
-            Require(levelManager)?.Init(save);
+            Require(levelManager)?.Init(save, gridManager);
             Require(boosterTutorial)?.Init(save);
-            Require(levelStatsRecorder)?.Init(save, screens, levelManager);
+            Require(levelStatsRecorder)?.Init(save, screens, levelManager, gridManager);
             Require(mechanicIntro)?.Init(save);
-            Require(tutorialController)?.Init(save, levelManager);
+            Require(tutorialController)?.Init(save, levelManager, gridManager);
             Require(levelStars)?.Init(s.Stars, levelManager);
             Require(buyBoosterPopup)?.Init(s.Coins, levelManager);
             Require(moreTimePopup)?.Init(s.Coins, ads, levelManager);
             Require(winPopup)?.Init(s.Coins, ads, screens, levelManager);
             Require(losePopup)?.Init(screens, levelManager);
-            Require(quitLevelPopup)?.Init(screens, levelManager);
-            Require(levelTimer)?.Init(screens, levelManager);
+            Require(quitLevelPopup)?.Init(screens, levelManager, gridManager);
+            Require(levelTimer)?.Init(screens, levelManager, gridManager);
             Require(gridSpawner)?.Init(levelManager);
             Require(levelHud)?.Init(levelManager);
-            Require(levelIntroSequencer)?.Init(levelManager);
+            Require(levelIntroSequencer)?.Init(levelManager, gridManager);
             Require(lowTimeVignette)?.Init(levelManager);
             Require(mechanicIntroPopup)?.Init(levelManager);
+            Require(dragAndDrop)?.Init(gridManager);
+            Require(hintMarker)?.Init(gridManager);
+            Require(tutorialHand)?.Init(gridManager);
+            Require(blockFeedback)?.Init(gridManager);
+            Require(dragFeedback)?.Init(gridManager);
+            Require(gameplayFeedback)?.Init(gridManager);
+            Require(gameHapticEvents)?.Init(gridManager);
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters);
 
             // Economy
@@ -131,10 +146,10 @@ namespace PawBlock.Game
 
             // Game
             Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager);
-            Require(screenFlow)?.Init(levelManager);
-            Require(gameAudioEvents)?.Init(screenFlow, levelManager);
+            Require(screenFlow)?.Init(levelManager, gridManager);
+            Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager);
             Require(playButton)?.Init(screenFlow, levelManager);
-            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager });
+            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager });
         }
 
         private void OnDestroy()

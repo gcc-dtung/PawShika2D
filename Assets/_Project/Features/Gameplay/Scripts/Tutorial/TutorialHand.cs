@@ -10,6 +10,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TutorialHand : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [SerializeField] private SpriteRenderer sprite;
         [Tooltip("Thời gian trượt từ ô đầu tới ô cuối")]
         [SerializeField] private float moveDuration = 0.9f;
@@ -33,7 +41,7 @@ namespace PawBlock.Features.Gameplay
         private void Update()
         {
             // Người chơi đang kéo: ẩn để không che, thả tay thì hiện lại
-            if (sprite != null) sprite.enabled = GridManager.Instance == null || !GridManager.Instance.IsSelecting;
+            if (sprite != null) sprite.enabled = _grid == null || !_grid.IsSelecting;
         }
 
         /// <summary>Lặp động tác kéo từ from tới to (tọa độ world).</summary>

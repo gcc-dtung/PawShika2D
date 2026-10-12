@@ -33,7 +33,7 @@ namespace PawBlock.Features.Gameplay.Tests
             // EditMode: AddComponent không chạy Awake nên không đăng ký Singleton
             _go = new GameObject("BoosterManager (test)");
             BoosterManager manager = _go.AddComponent<BoosterManager>();
-            manager.Init(_save, new BoosterInventory(_save), new Economy.CoinWallet(_save));
+            manager.Init(_save, new BoosterInventory(_save), new Economy.CoinWallet(_save), null);
             var so = new SerializedObject(manager);
             so.FindProperty("database").objectReferenceValue = _db;
             so.ApplyModifiedPropertiesWithoutUndo();

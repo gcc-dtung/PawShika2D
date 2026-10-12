@@ -10,6 +10,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class DragFeedback : MonoBehaviour
     {
+        private GridManager _grid;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(GridManager grid)
+        {
+            _grid = grid;
+        }
+
         [SerializeField] private bool clueHighlight = true;
 
         private GridSpawner _spawner;
@@ -21,13 +29,13 @@ namespace PawBlock.Features.Gameplay
         {
             _spawner = FindFirstObjectByType<GridSpawner>();
             if (_spawner != null) _spawner.gridCellEvent.AddListener(OnGridSpawned);
-            if (GridManager.Instance != null) GridManager.Instance.onSelectionChanged.AddListener(OnSelectionChanged);
+            if (_grid != null) _grid.onSelectionChanged.AddListener(OnSelectionChanged);
         }
 
         private void OnDestroy()
         {
             if (_spawner != null) _spawner.gridCellEvent.RemoveListener(OnGridSpawned);
-            if (GridManager.Instance != null) GridManager.Instance.onSelectionChanged.RemoveListener(OnSelectionChanged);
+            if (_grid != null) _grid.onSelectionChanged.RemoveListener(OnSelectionChanged);
         }
 
         private void OnDisable() => ClearAll();
@@ -40,7 +48,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnSelectionChanged(int count, SelectionHint hint)
         {
-            GridManager grid = GridManager.Instance;
+            GridManager grid = _grid;
             if (!clueHighlight || count == 0 || grid == null || !grid.IsSelecting || _spawner == null || _spawner.GetGrid == null)
             {
                 ClearAll();

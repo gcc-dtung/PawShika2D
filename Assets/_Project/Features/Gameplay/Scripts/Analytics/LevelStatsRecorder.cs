@@ -17,18 +17,20 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStatsRecorder : MonoBehaviour
     {
+        private GridManager _grid;
         private LevelManager _levels;
         private IScreenNavigator _screens;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels)
+        public void Init(ISaveService save, IScreenNavigator screens, LevelManager levels, GridManager grid)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _screens = screens;
             _levels = levels;
+            _grid = grid;
         }
 
         private LevelStatSave _current;  // lượt đang chơi, null nếu không có
@@ -46,10 +48,10 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            if (GridManager.Instance != null)
+            if (_grid != null)
             {
-                GridManager.Instance.onBlockRemoved.AddListener(OnBlockRemoved);
-                GridManager.Instance.onBlockPlaced.AddListener(OnBlockPlaced);
+                _grid.onBlockRemoved.AddListener(OnBlockRemoved);
+                _grid.onBlockPlaced.AddListener(OnBlockPlaced);
             }
             if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.AddListener(OnBoosterUsed);
         }
@@ -63,10 +65,10 @@ namespace PawBlock.Features.Gameplay
 
         private void OnDestroy()
         {
-            if (GridManager.Instance != null)
+            if (_grid != null)
             {
-                GridManager.Instance.onBlockRemoved.RemoveListener(OnBlockRemoved);
-                GridManager.Instance.onBlockPlaced.RemoveListener(OnBlockPlaced);
+                _grid.onBlockRemoved.RemoveListener(OnBlockRemoved);
+                _grid.onBlockPlaced.RemoveListener(OnBlockPlaced);
             }
             if (BoosterManager.Instance != null) BoosterManager.Instance.onBoosterUsed.RemoveListener(OnBoosterUsed);
         }

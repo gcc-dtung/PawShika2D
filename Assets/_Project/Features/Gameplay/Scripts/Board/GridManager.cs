@@ -11,7 +11,7 @@ namespace PawBlock.Features.Gameplay
     /// Luật nằm ở BoardModel; script này chỉ điều phối và phát event.
     /// Cơ chế thời gian (như bản gốc): vùng hợp luật là đặt luôn, không hỏi lời giải; đặt sai thì chạm khối để gỡ.
     /// </summary>
-    public class GridManager : Singleton<GridManager>
+    public class GridManager : MonoBehaviour
     {
         [SerializeField] private GridSpawner gridSpawner;
         [SerializeField] private SelectionBoxView selectionBox;
@@ -70,9 +70,8 @@ namespace PawBlock.Features.Gameplay
         public int Combo => ComboTracker.Count;
         private ComboCounter ComboTracker => _combo ??= new ComboCounter(comboWindow);
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             if (selectionBox == null) Debug.LogError("[GridManager] Chưa gán SelectionBoxView");
             if (blockPrefab == null) Debug.LogError("[GridManager] Chưa gán PlacedBlock prefab");
             if (blockRoot == null) blockRoot = transform;

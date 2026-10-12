@@ -65,7 +65,7 @@ namespace PawBlock.Features.Settings
             _pausedGame = !inMenu && lm != null && lm.IsPlaying;
             if (_pausedGame)
             {
-                if (GridManager.Instance != null) GridManager.Instance.CancelSelection();
+                lm.CancelDrag();
                 lm.Pause();
             }
         }

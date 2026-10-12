@@ -29,6 +29,7 @@ namespace PawBlock.Game
 
         /// <summary>LevelManager trong scene (Cheat Panel, Debug Panel đọc trạng thái ván).</summary>
         public static LevelManager Levels => _scene?.Levels;
+        private static GridManager Grid => _scene?.Grid;
 
         public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
         public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
@@ -65,7 +66,7 @@ namespace PawBlock.Game
         /// <summary>Đặt hết khối còn lại theo lời giải -> thắng thật (lưới lóe sáng, màn thắng).</summary>
         public static void WinNow()
         {
-            GridManager gm = GridManager.Instance;
+            GridManager gm = Grid;
             if (gm == null || gm.Board == null || gm.IsGameWon) return;
             if (!gm.Board.TrySolveHint(out List<RectInt> rects) || rects == null)
             {
@@ -78,7 +79,7 @@ namespace PawBlock.Game
         /// <summary>Đặt đúng 1 khối của lời giải (như Hint, không tốn booster).</summary>
         public static void SolveOneBlock()
         {
-            GridManager gm = GridManager.Instance;
+            GridManager gm = Grid;
             if (gm == null || gm.Board == null || gm.IsGameWon) return;
             if (gm.Board.TrySolveHint(out List<RectInt> rects) && rects != null) PlaceAll(gm, rects, 1);
         }

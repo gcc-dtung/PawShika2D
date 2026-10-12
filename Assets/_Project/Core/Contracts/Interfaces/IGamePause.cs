@@ -13,5 +13,8 @@ namespace PawBlock.Core.Contracts
 
         /// <summary>Paused -> Playing.</summary>
         void Resume();
+
+        /// <summary>Hủy thao tác kéo đang dở trên lưới (trước khi mở popup che màn chơi).</summary>
+        void CancelDrag();
     }
 }

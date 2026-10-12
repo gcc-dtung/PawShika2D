@@ -57479,6 +57479,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelManager: {fileID: 82617382}
+  gridManager: {fileID: 82617377}
+  dragAndDrop: {fileID: 82617379}
+  hintMarker: {fileID: 82617399}
+  tutorialHand: {fileID: 845060299}
+  blockFeedback: {fileID: 82617397}
+  dragFeedback: {fileID: 82617398}
+  gameplayFeedback: {fileID: 82617381}
+  gameHapticEvents: {fileID: 1918377223}
   boosterManager: {fileID: 82617385}
   boosterTutorial: {fileID: 82617390}
   levelStatsRecorder: {fileID: 82617395}
