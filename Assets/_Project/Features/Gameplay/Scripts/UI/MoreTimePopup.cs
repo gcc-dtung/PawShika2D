@@ -43,7 +43,7 @@ namespace PawBlock.Features.Gameplay
             if (closeButton != null) closeButton.onClick.AddListener(OnClose);
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             EconomyConfig eco = _economy;
             if (coinCostText != null) coinCostText.SetText(eco.moreTimeCoinCost.ToString());

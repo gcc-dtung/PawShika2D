@@ -48,7 +48,7 @@ namespace PawBlock.Features.Settings
             }
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             bool inMenu = _screens != null && _screens.IsMenu;
             if (homeButton != null) homeButton.gameObject.SetActive(!inMenu);

@@ -46,9 +46,9 @@ namespace PawBlock.Shared
         }
 
         // Thông báo (vd mua thất bại) giữ qua lần nạp level
-        protected override bool CloseOnLevelLoad => false;
+        public override bool CloseOnLevelLoad => false;
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             IGamePause lm = _pause;
             _pausedGame = lm != null && lm.IsPlaying && (_screens == null || !_screens.IsMenu);

@@ -103,7 +103,7 @@ namespace PawBlock.Features.Gameplay
             foreach (Image c in _coinPool) if (c != null) c.gameObject.SetActive(false);
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             _claimed = false;
             _shownCoins = _coins.Balance;

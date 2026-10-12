@@ -36,7 +36,7 @@ namespace PawBlock.Features.Gameplay
             if (closeButton != null) closeButton.onClick.AddListener(OnCancel);
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             LevelManager lm = _levels;
             if (lm != null && lm.IsPlaying)

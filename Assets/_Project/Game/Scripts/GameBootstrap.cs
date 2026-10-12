@@ -93,6 +93,7 @@ namespace PawBlock.Game
         [SerializeField] private SettingsPopup settingsPopup;
         [SerializeField] private SettingsButton[] settingsButtons;
         [SerializeField] private NoticePopup noticePopup;
+        [SerializeField] private PopupView[] popups;
 
         [Header("Game")]
         [SerializeField] private ScreenFlow screenFlow;
@@ -188,7 +189,7 @@ namespace PawBlock.Game
             foreach (SettingsButton b in settingsButtons) Require(b)?.Init(gameFlowUI);
 
             // Game
-            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager, boosterManager, energyManager);
+            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager, boosterManager, energyManager, popups);
             Require(screenFlow)?.Init(levelManager, gridManager, tutorialController);
             Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer, gridSpawner);
             Require(playButton)?.Init(screenFlow, levelManager);

@@ -15,10 +15,11 @@ namespace PawBlock.Game
     /// <summary>
     /// Nối trạng thái ván (GameStateChangedEvent) với các popup.
     /// Có component này trong scene thì LevelManager không tự chuyển level / chơi lại nữa (AutoAdvance = false).
-    /// Đổi level thì popup tự đóng (PopupView nghe LevelLoadedEvent), ở đây không cần liệt kê lại.
+    /// Đổi level (LevelLoadedEvent) thì đóng mọi popup đang mở có CloseOnLevelLoad (PopupView không biết level).
     /// </summary>
     public class GameFlowUI : MonoBehaviour, IMenuPopups
     {
+        private PopupView[] _popups;
         private EnergyManager _energy;
         private BoosterManager _boosterManager;
         private LevelManager _levels;
@@ -27,7 +28,7 @@ namespace PawBlock.Game
         private IIAPService _iap;
 
         /// <summary>GameBootstrap gọi trước OnEnable: hồ sơ người chơi (popup hồ sơ), IAP (báo mua lỗi).</summary>
-        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels, BoosterManager boosterManager, EnergyManager energy)
+        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels, BoosterManager boosterManager, EnergyManager energy, PopupView[] popups)
         {
             _profile = profile;
             _iap = iap;
@@ -35,6 +36,7 @@ namespace PawBlock.Game
             _levels = levels;
             _boosterManager = boosterManager;
             _energy = energy;
+            _popups = popups;
         }
 
         [SerializeField] private WinPopup winPopup;
@@ -48,12 +50,6 @@ namespace PawBlock.Game
         [SerializeField] private RefillEnergyPopup refillEnergyPopup;
         [SerializeField] private ProfilePopup profilePopup;
 
-        private PopupView[] AllPopups => new PopupView[]
-        {
-            winPopup, moreTimePopup, losePopup, settingsPopup, quitLevelPopup,
-            noticePopup, dailyRewardPopup, buyBoosterPopup, refillEnergyPopup, profilePopup
-        };
-
         [Header("Hết level")]
         [SerializeField] private string comingSoonTitle = "COMING SOON";
         [SerializeField, TextArea] private string comingSoonMessage = "You cleared all {0} levels!\nNew levels are on the way.\nPlay again from Level 1.";
@@ -61,13 +57,14 @@ namespace PawBlock.Game
         private void Awake()
         {
             EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
+            EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
             EventBus<AllLevelsCompletedEvent>.Subscribe(OnAllLevelsCompleted);
             if (_levels != null) _levels.AutoAdvance = false; // popup quyết định sang level kế / chơi lại
         }
 
         private void Start()
         {
-            foreach (PopupView popup in AllPopups)
+            foreach (PopupView popup in _popups ?? new PopupView[0])
             {
                 if (popup != null) popup.CloseImmediate();
             }
@@ -79,6 +76,7 @@ namespace PawBlock.Game
         private void OnDestroy()
         {
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
+            EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
             EventBus<AllLevelsCompletedEvent>.Unsubscribe(OnAllLevelsCompleted);
             if (_levels != null) _levels.AutoAdvance = true;
             if (_boosterManager != null) _boosterManager.onBuyRequested.RemoveListener(OnBuyBooster);
@@ -120,6 +118,15 @@ namespace PawBlock.Game
         {
             if (noticePopup != null) noticePopup.Show(message, title, onClose);
             else Debug.Log($"[GameFlowUI] {title}: {message}");
+        }
+
+        private void OnLevelLoaded(LevelLoadedEvent _)
+        {
+            if (_popups == null) return;
+            foreach (PopupView popup in _popups)
+            {
+                if (popup != null && popup.IsOpen && popup.CloseOnLevelLoad) popup.CloseImmediate();
+            }
         }
 
         private void OnPurchaseFailed(string productId, string reason) => ShowNotice(reason);

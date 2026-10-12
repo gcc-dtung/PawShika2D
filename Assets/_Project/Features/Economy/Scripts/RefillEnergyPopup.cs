@@ -54,7 +54,7 @@ namespace PawBlock.Features.Economy
         public bool IsRequired => IsOpen && _required;
 
         // Popup chờ năng lượng (bắt buộc) giữ nguyên qua lần nạp level
-        protected override bool CloseOnLevelLoad => !_required;
+        public override bool CloseOnLevelLoad => !_required;
 
         protected override void Awake()
         {
@@ -80,7 +80,7 @@ namespace PawBlock.Features.Economy
             Open();
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             IGamePause lm = _pause;
             _pausedByMe = lm != null && lm.IsPlaying;

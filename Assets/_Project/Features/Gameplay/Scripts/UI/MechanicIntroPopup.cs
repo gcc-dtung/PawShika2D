@@ -47,7 +47,7 @@ namespace PawBlock.Features.Gameplay
             Open();
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             LevelManager lm = _levels;
             _pausedGame = lm != null && lm.IsPlaying;

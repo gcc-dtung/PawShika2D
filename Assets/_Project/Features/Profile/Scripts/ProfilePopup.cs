@@ -96,7 +96,7 @@ namespace PawBlock.Features.Profile
             Open();
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             if (avatarPicker != null) avatarPicker.SetActive(false);
             SetEditing(false);

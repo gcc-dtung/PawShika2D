@@ -40,7 +40,7 @@ namespace PawBlock.Features.DailyReward
             }
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             DailyRewardManager m = _rewards;
             if (m == null) return;

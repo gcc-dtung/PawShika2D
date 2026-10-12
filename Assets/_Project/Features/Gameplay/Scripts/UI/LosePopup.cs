@@ -34,7 +34,7 @@ namespace PawBlock.Features.Gameplay
             if (homeButton != null) homeButton.onClick.AddListener(OnHome);
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             LevelManager lm = _levels;
             if (titleText == null || lm == null) return;

@@ -44,7 +44,7 @@ namespace PawBlock.Features.Gameplay
             Open();
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             if (_levels != null) _levels.Pause();
 

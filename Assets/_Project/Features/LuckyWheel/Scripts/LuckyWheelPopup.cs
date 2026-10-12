@@ -80,7 +80,7 @@ namespace PawBlock.Features.LuckyWheel
             _spinning = false;
         }
 
-        protected override void OnOpen()
+        protected override void OnOpened()
         {
             if (resultRow != null) resultRow.gameObject.SetActive(false);
             if (costText != null && database != null) costText.SetText("{0}", database.spinCost);

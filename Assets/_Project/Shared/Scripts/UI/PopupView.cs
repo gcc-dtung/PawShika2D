@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using PawBlock.Core.Contracts;
@@ -6,13 +7,14 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Shared
 {
     /// <summary>
-    /// Base popup: nền tối mờ dần + bảng bật lên (scale 0.6 -> vượt nhẹ -> 1, Ease.OutBack). Tween chạy theo thời gian thực
+    /// Base popup (guide 10.6): nền tối mờ dần + bảng bật lên (scale 0.6 -> vượt nhẹ -> 1, Ease.OutBack). Tween chạy theo thời gian thực
     /// nên không phụ thuộc timeScale. Popup tắt thì hủy tween.
     /// Cấu trúc: root (CanvasGroup) / Dim (Image chắn raycast) / Panel.
-    /// Nạp level mới (LevelLoadedEvent) thì popup đang mở tự đóng ngay, trừ khi lớp con đặt CloseOnLevelLoad = false.
+    /// Lớp con nhận dữ liệu bằng hàm riêng rồi gọi Open(); dùng hook OnOpened / OnClosed, không override Open / Close.
+    /// Không biết luật game: nạp level mới thì GameFlowUI (Game) đóng popup đang mở có CloseOnLevelLoad.
     /// </summary>
     [RequireComponent(typeof(CanvasGroup))]
-    public class PopupView : MonoBehaviour
+    public abstract class PopupView : MonoBehaviour
     {
         [SerializeField] protected RectTransform panel;
         [SerializeField] private float showDuration = 0.28f;
@@ -23,27 +25,23 @@ namespace PawBlock.Shared
 
         public bool IsOpen { get; private set; }
 
+        /// <summary>Đã đóng hẳn (hết hiệu ứng đóng, hoặc CloseImmediate khi đang mở).</summary>
+        public event Action<PopupView> Closed;
+
+        /// <summary>Nạp level mới (kể cả bằng menu debug) thì đóng ngay khi đang mở. Popup tự quyết, vd Notice giữ lại.</summary>
+        public virtual bool CloseOnLevelLoad => true;
+
         protected virtual void Awake()
         {
         }
 
         protected virtual void OnEnable()
         {
-            EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
         }
 
         protected virtual void OnDisable()
         {
-            EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
             KillAnim();
-        }
-
-        /// <summary>Đổi level (kể cả bằng menu debug) thì đóng ngay; popup đang chạy hiệu ứng đóng thì để chạy nốt.</summary>
-        protected virtual bool CloseOnLevelLoad => true;
-
-        private void OnLevelLoaded(LevelLoadedEvent _)
-        {
-            if (IsOpen && CloseOnLevelLoad) CloseImmediate();
         }
 
         public void Open()
@@ -53,7 +51,7 @@ namespace PawBlock.Shared
             IsOpen = true;
             group.interactable = true;
             group.blocksRaycasts = true;
-            OnOpen();
+            OnOpened();
             AudioManager.Play(SoundId.PopupOpen);
 
             group.alpha = 0f;
@@ -74,18 +72,34 @@ namespace PawBlock.Shared
             Sequence seq = NewSequence();
             seq.Join(group.DOFade(0f, hideDuration).SetEase(Ease.Linear));
             if (panel != null) seq.Join(panel.DOScale(0.85f, hideDuration).SetEase(Ease.Linear));
-            seq.OnComplete(() => gameObject.SetActive(false));
+            seq.OnComplete(() =>
+            {
+                gameObject.SetActive(false);
+                NotifyClosed();
+            });
         }
 
         /// <summary>Tắt ngay, không chạy hiệu ứng (đổi level...).</summary>
         public void CloseImmediate()
         {
+            bool pending = IsOpen || _anim != null; // đang mở, hoặc đang chạy hiệu ứng đóng dở
             IsOpen = false;
             KillAnim();
             gameObject.SetActive(false);
+            if (pending) NotifyClosed();
         }
 
-        protected virtual void OnOpen() { }
+        /// <summary>Vừa mở (trước hiệu ứng mở): lớp con vẽ dữ liệu, chọn nút...</summary>
+        protected virtual void OnOpened() { }
+
+        /// <summary>Đã đóng hẳn.</summary>
+        protected virtual void OnClosed() { }
+
+        private void NotifyClosed()
+        {
+            OnClosed();
+            Closed?.Invoke(this);
+        }
 
         private Sequence NewSequence()
         {

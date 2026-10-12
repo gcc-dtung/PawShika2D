@@ -16325,7 +16325,6 @@ MonoBehaviour:
   hideDuration: 0.15
   group: {fileID: 319460733}
   database: {fileID: 11400000, guid: 0fa5a7346d6888643bfc3836df279936, type: 2}
-  rewardIcons: {fileID: 11400000, guid: 57e3b4856aa57a049b37604b26c933d7, type: 2}
   wheel: {fileID: 26727148}
   pointer: {fileID: 180990578}
   segmentImages:
@@ -60702,6 +60701,19 @@ MonoBehaviour:
   - {fileID: 1305075258}
   - {fileID: 1536378076}
   noticePopup: {fileID: 1794426284}
+  popups:
+  - {fileID: 1766585799}
+  - {fileID: 2015940751}
+  - {fileID: 170904531}
+  - {fileID: 319460732}
+  - {fileID: 1572696192}
+  - {fileID: 1383001587}
+  - {fileID: 1794426284}
+  - {fileID: 2043603488}
+  - {fileID: 841797986}
+  - {fileID: 2049676040}
+  - {fileID: 1823335363}
+  - {fileID: 156642231}
   screenFlow: {fileID: 82617387}
   gameFlowUI: {fileID: 622904678}
   gameAudioEvents: {fileID: 1918377220}
@@ -67030,7 +67042,6 @@ MonoBehaviour:
   - {fileID: 463876811}
   - {fileID: 705862237}
   giftBubble: {fileID: 1598107556}
-  rewardIcons: {fileID: 11400000, guid: 57e3b4856aa57a049b37604b26c933d7, type: 2}
   grid: {fileID: 1057488187}
   cellTemplate: {fileID: 1622385933}
   frameDone: {fileID: 21300000, guid: c401d2903ed7971489efc73421f76c06, type: 3}
