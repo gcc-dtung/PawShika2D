@@ -16,43 +16,37 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelStars : MonoBehaviour
     {
+        private LevelTimer _timer;
+        private GridSpawner _gridSpawner;
         private LivesEnergyConfig _lives;
         private LevelManager _levels;
         private ICurrencyWallet _stars;
 
         /// <summary>GameBootstrap gọi: ví sao (Economy, qua contract) – thắng thì cộng số sao của ván.</summary>
-        public void Init(ICurrencyWallet stars, LevelManager levels, LivesEnergyConfig lives)
+        public void Init(ICurrencyWallet stars, LevelManager levels, LivesEnergyConfig lives, LevelTimer timer, GridSpawner gridSpawner)
         {
             _stars = stars;
             _levels = levels;
             _lives = lives;
+            _timer = timer;
+            _gridSpawner = gridSpawner;
         }
-
-        [SerializeField] private LevelTimer timer;
-        [SerializeField] private GridSpawner gridSpawner;
 
         private readonly StarTracker _tracker = new StarTracker();
 
         public int Stars => _tracker.Stars;
 
-        private void Awake()
-        {
-            if (timer == null) timer = GetComponent<LevelTimer>();
-            if (timer == null) timer = FindFirstObjectByType<LevelTimer>();
-            if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
-        }
-
         private void OnEnable()
         {
-            if (timer != null) timer.onTimeChanged.AddListener(OnTimeChanged);
-            if (gridSpawner != null) gridSpawner.gridCellEvent.AddListener(OnGridSpawned);
+            if (_timer != null) _timer.onTimeChanged.AddListener(OnTimeChanged);
+            if (_gridSpawner != null) _gridSpawner.gridCellEvent.AddListener(OnGridSpawned);
             EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
         }
 
         private void OnDisable()
         {
-            if (timer != null) timer.onTimeChanged.RemoveListener(OnTimeChanged);
-            if (gridSpawner != null) gridSpawner.gridCellEvent.RemoveListener(OnGridSpawned);
+            if (_timer != null) _timer.onTimeChanged.RemoveListener(OnTimeChanged);
+            if (_gridSpawner != null) _gridSpawner.gridCellEvent.RemoveListener(OnGridSpawned);
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
         }
 

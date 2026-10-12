@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Game;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Profile
 {
@@ -11,16 +11,20 @@ namespace PawBlock.Features.Profile
         private PlayerProfileService _service;
 
         /// <summary>GameBootstrap gọi trước OnEnable.</summary>
-        public void Init(PlayerProfileService service) => _service = service;
+        public void Init(PlayerProfileService service, IMenuPopups popups)
+        {
+            _service = service;
+            _popups = popups;
+        }
+
+        private IMenuPopups _popups;
 
         [SerializeField] private AvatarDatabase avatars;
         [SerializeField] private Image avatarImage;
-        [SerializeField] private GameFlowUI gameFlow;
 
         private void Awake()
         {
             GetComponent<Button>().onClick.AddListener(OnClick);
-            if (gameFlow == null) gameFlow = FindFirstObjectByType<GameFlowUI>(FindObjectsInactive.Include);
         }
 
         private void OnEnable()
@@ -36,7 +40,7 @@ namespace PawBlock.Features.Profile
 
         private void OnClick()
         {
-            if (gameFlow != null) gameFlow.OpenProfile();
+            _popups?.OpenProfile();
         }
 
         private void Refresh()

@@ -15,16 +15,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterTutorial : MonoBehaviour, ILevelIntro
     {
+        private BoosterButton[] _buttons;
         private BoosterManager _boosterManager;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay".</summary>
-        public void Init(ISaveService save, BoosterManager boosterManager)
+        public void Init(ISaveService save, BoosterManager boosterManager, BoosterButton[] buttons)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _boosterManager = boosterManager;
+            _buttons = buttons;
         }
 
         [SerializeField] private BoosterTutorialView view;
@@ -57,7 +59,7 @@ namespace PawBlock.Features.Gameplay
         public void Play(LevelIntroContext level, Action onDone)
         {
             BoosterData data = NextToUnlock(level.Number);
-            BoosterButton button = data != null ? BoosterButton.Find(data.boosterType) : null;
+            BoosterButton button = data != null ? BoosterButton.Find(_buttons, data.boosterType) : null;
             if (data == null || button == null || view == null || _boosters == null)
             {
                 // Không có giao diện: mở khóa luôn để người chơi không bị kẹt booster

@@ -27,6 +27,9 @@ namespace PawBlock.Game
         [SerializeField] private GameConfig config;
         [SerializeField] private GameplayVisuals visuals;
 
+        [Header("Scene")]
+        [SerializeField] private Camera mainCamera;
+
         [Header("Gameplay")]
         [SerializeField] private LevelManager levelManager;
         [SerializeField] private GridManager gridManager;
@@ -62,6 +65,7 @@ namespace PawBlock.Game
         [SerializeField] private LevelIntroSequencer levelIntroSequencer;
         [SerializeField] private LowTimeVignette lowTimeVignette;
         [SerializeField] private MechanicIntroPopup mechanicIntroPopup;
+        [SerializeField] private DifficultyIntro difficultyIntro;
         [SerializeField] private BoosterButton[] boosterButtons;
 
         [Header("Economy")]
@@ -84,6 +88,7 @@ namespace PawBlock.Game
         [SerializeField] private ProfilePopup profilePopup;
         [SerializeField] private ProfileStatsRecorder profileStatsRecorder;
         [SerializeField] private SettingsPopup settingsPopup;
+        [SerializeField] private SettingsButton[] settingsButtons;
         [SerializeField] private NoticePopup noticePopup;
 
         [Header("Game")]
@@ -116,16 +121,16 @@ namespace PawBlock.Game
 
             // Manager có dữ liệu riêng / lộ contract cho feature khác
             Require(energyManager)?.Init(save, clock, lives);
-            Require(boosterManager)?.Init(save, s.Boosters, s.Coins, gridManager, levelTimer, lives);
+            Require(boosterManager)?.Init(save, s.Boosters, s.Coins, gridManager, levelTimer, lives, hintMarker);
             s.Shop = new ShopService(save, s.Coins, boosterManager, energyManager, iap);
 
             // Gameplay
             Require(levelManager)?.Init(save, gridManager, levelTimer, tutorialController);
-            Require(boosterTutorial)?.Init(save, boosterManager);
+            Require(boosterTutorial)?.Init(save, boosterManager, boosterButtons);
             Require(levelStatsRecorder)?.Init(save, screens, levelManager, gridManager, boosterManager, levelStars);
             Require(mechanicIntro)?.Init(save);
             Require(tutorialController)?.Init(save, levelManager, gridManager);
-            Require(levelStars)?.Init(s.Stars, levelManager, lives);
+            Require(levelStars)?.Init(s.Stars, levelManager, lives, levelTimer, gridSpawner);
             Require(buyBoosterPopup)?.Init(s.Coins, levelManager, boosterManager);
             Require(moreTimePopup)?.Init(s.Coins, ads, levelManager, economy);
             Require(winPopup)?.Init(s.Coins, ads, screens, levelManager, levelStars, economy);
@@ -134,17 +139,17 @@ namespace PawBlock.Game
             Require(levelTimer)?.Init(screens, levelManager, gridManager, lives);
             Require(gridSpawner)?.Init(levelManager);
             Require(levelHud)?.Init(levelManager);
-            Require(levelIntroSequencer)?.Init(levelManager, gridManager, tutorialController);
+            Require(levelIntroSequencer)?.Init(levelManager, gridManager, tutorialController, gridSpawner, new ILevelIntro[] { boosterTutorial, mechanicIntro, difficultyIntro });
             Require(lowTimeVignette)?.Init(levelManager, levelTimer);
             Require(mechanicIntroPopup)?.Init(levelManager);
             Require(dragAndDrop)?.Init(gridManager, boosterManager);
-            Require(hintMarker)?.Init(gridManager, visuals);
+            Require(hintMarker)?.Init(gridManager, visuals, gridSpawner, tutorialHand);
             Require(tutorialHand)?.Init(gridManager);
-            Require(blockFeedback)?.Init(gridManager, levelTimer);
-            Require(dragFeedback)?.Init(gridManager);
-            Require(gameplayFeedback)?.Init(gridManager, visuals);
+            Require(blockFeedback)?.Init(gridManager, levelTimer, gridSpawner);
+            Require(dragFeedback)?.Init(gridManager, gridSpawner);
+            Require(gameplayFeedback)?.Init(gridManager, visuals, gridSpawner, Require(mainCamera));
             Require(gameHapticEvents)?.Init(gridManager, boosterManager, levelTimer);
-            Require(boosterUseFx)?.Init(boosterManager);
+            Require(boosterUseFx)?.Init(boosterManager, boosterButtons, timerUI, mainCamera);
             Require(freezeOverlayFx)?.Init(boosterManager, levelTimer);
             Require(revealBanner)?.Init(boosterManager);
             Require(gridManager)?.Init(levelTimer, visuals);
@@ -158,30 +163,31 @@ namespace PawBlock.Game
             // Economy
             Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager, economy);
             foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
-            foreach (EnergyHUD hud in energyHuds) Require(hud)?.Init(energyManager);
+            foreach (EnergyHUD hud in energyHuds) Require(hud)?.Init(energyManager, gameFlowUI);
 
             // Meta: chỉ nhận contract của feature khác
             foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
-            Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads, screens, boosterManager);
+            Require(dailyRewardManager)?.Init(save, s.Coins, boosterManager, energyManager, clock, ads, screens, boosterManager, gameFlowUI);
             Require(dailyChallengeManager)?.Init(save, dailyRewardManager, reachedLevel, clock, levelManager);
             Require(dailyChallengePanel)?.Init(ads, screens, dailyRewardManager, dailyChallengeManager);
             Require(dailyTabBadge)?.Init(dailyChallengeManager);
-            Require(dailyRewardButton)?.Init(dailyRewardManager);
+            Require(dailyRewardButton)?.Init(dailyRewardManager, gameFlowUI);
             Require(dailyRewardPopup)?.Init(dailyRewardManager);
             Require(luckyWheelButton)?.Init(s.Stars);
             Require(luckyWheelPopup)?.Init(s.Stars, dailyRewardManager, dailyRewardManager);
-            Require(avatarButton)?.Init(s.Profile);
+            Require(avatarButton)?.Init(s.Profile, gameFlowUI);
             Require(profilePopup)?.Init(s.Profile, screens, levelManager);
             Require(profileStatsRecorder)?.Init(s.Profile);
             Require(settingsPopup)?.Init(screens, levelManager);
             Require(noticePopup)?.Init(screens, levelManager);
+            foreach (SettingsButton b in settingsButtons) Require(b)?.Init(gameFlowUI);
 
             // Game
             Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager, boosterManager, energyManager);
             Require(screenFlow)?.Init(levelManager, gridManager, tutorialController);
-            Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer);
+            Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer, gridSpawner);
             Require(playButton)?.Init(screenFlow, levelManager);
-            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager, DailyReward = dailyRewardManager, LivesEnergy = lives });
+            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager, DailyReward = dailyRewardManager, LivesEnergy = lives, MoreTime = moreTimePopup });
         }
 
         private void OnDestroy()

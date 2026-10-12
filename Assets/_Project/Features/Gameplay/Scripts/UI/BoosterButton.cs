@@ -51,12 +51,13 @@ namespace PawBlock.Features.Gameplay
 
         public BoosterType Type => type;
 
-        /// <summary>Nút của booster <paramref name="boosterType"/> (kể cả đang ẩn), null nếu không có.</summary>
-        public static BoosterButton Find(BoosterType boosterType)
+        /// <summary>Nút của booster <paramref name="boosterType"/> trong <paramref name="buttons"/> (Bootstrap truyền), null nếu không có.</summary>
+        public static BoosterButton Find(BoosterButton[] buttons, BoosterType boosterType)
         {
-            foreach (BoosterButton b in FindObjectsByType<BoosterButton>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (buttons == null) return null;
+            foreach (BoosterButton b in buttons)
             {
-                if (b.Type == boosterType) return b;
+                if (b != null && b.Type == boosterType) return b;
             }
             return null;
         }

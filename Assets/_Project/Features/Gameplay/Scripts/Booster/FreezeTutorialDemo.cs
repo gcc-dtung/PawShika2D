@@ -35,11 +35,6 @@ namespace PawBlock.Features.Gameplay
         private Tween _demoEnd;
         private bool _showingMessage;
 
-        private void Awake()
-        {
-            if (view == null) view = FindFirstObjectByType<BoosterTutorialView>(FindObjectsInactive.Include);
-        }
-
         private void OnEnable()
         {
             EventBus<BoosterTutorialCompletedEvent>.Subscribe(OnTutorialCompleted);

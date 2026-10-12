@@ -17,18 +17,6 @@ namespace PawBlock.Features.Gameplay
         private PointerEventData _uiPointer;
         private EventSystem _uiPointerOwner;
 
-        private void Awake()
-        {
-            if (dragAndDropController == null)
-            {
-                dragAndDropController = GetComponent<DragAndDropController>();
-                if (dragAndDropController == null)
-                {
-                    dragAndDropController = FindObjectOfType<DragAndDropController>();
-                }
-            }
-        }
-
         private void Update()
         {
             if (dragAndDropController == null) return;

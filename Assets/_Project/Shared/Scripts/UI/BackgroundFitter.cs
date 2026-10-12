@@ -22,7 +22,6 @@ namespace PawBlock.Shared
         private void Awake()
         {
             _renderer = GetComponent<SpriteRenderer>();
-            if (targetCamera == null) targetCamera = Camera.main;
             _baseScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
         }
 

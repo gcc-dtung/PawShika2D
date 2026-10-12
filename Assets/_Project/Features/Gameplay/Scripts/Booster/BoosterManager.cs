@@ -17,6 +17,7 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterManager : MonoBehaviour, IBoosterHost, IBoosterInventory, IBoosterCatalog
     {
+        private HintMarker _hint;
         private LivesEnergyConfig _lives;
         private LevelTimer _timer;
         private GridManager _grid;
@@ -26,7 +27,7 @@ namespace PawBlock.Features.Gameplay
         private ICurrencyWallet _coins;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay" (booster đã mở), kho lượt, ví coin (mua lượt).</summary>
-        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins, GridManager grid, LevelTimer timer, LivesEnergyConfig lives)
+        public void Init(ISaveService save, BoosterInventory inventory, ICurrencyWallet coins, GridManager grid, LevelTimer timer, LivesEnergyConfig lives, HintMarker hint)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
@@ -35,6 +36,7 @@ namespace PawBlock.Features.Gameplay
             _grid = grid;
             _timer = timer;
             _lives = lives;
+            _hint = hint;
         }
 
         /// <summary>Kho lượt booster (BoosterButton, Debug).</summary>
@@ -71,7 +73,6 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Điểm world mà lần dùng booster gần nhất nhắm tới (đọc trong onBoosterUsed); null = mặc định của booster.</summary>
         public Vector3? LastTarget { get; private set; }
 
-        private HintMarker _hint;
         private Tween _afterEffect;
 
         /// <summary>Booster tutorial đang chỉ vào (chỉ nút này bấm được), null nếu không có tutorial.</summary>
@@ -90,9 +91,7 @@ namespace PawBlock.Features.Gameplay
                 effect.Bind(this);
                 _effects[type] = effect;
             }
-            _hint = GetComponent<HintMarker>();
-            if (_hint == null) _hint = gameObject.AddComponent<HintMarker>();
-            _hint.Changed += () => onModeChanged?.Invoke(BoosterType.Hint, _hint.IsShowing); // nút Hint sáng khi gợi ý đang hiện
+            if (_hint != null) _hint.Changed += () => onModeChanged?.Invoke(BoosterType.Hint, _hint.IsShowing); // nút Hint sáng khi gợi ý đang hiện
         }
 
         private void OnEnable()

@@ -37,7 +37,6 @@ namespace PawBlock.Features.Gameplay
         {
             _rect = (RectTransform)transform;
             _canvas = GetComponentInParent<Canvas>();
-            if (targetCamera == null) targetCamera = Camera.main;
             ApplyZoneColor();
         }
 

@@ -11,10 +11,11 @@ namespace PawBlock.Features.DailyReward
     /// Điểm danh hằng ngày: giữ DailyRewardModel (dữ liệu trong SaveData.daily), trao quà, báo đổi trạng thái.
     /// - Claim(day): ô hôm nay nhận luôn; ô đã lỡ (nếu database.recoverMissedWithAd) xem quảng cáo rồi nhận.
     /// - Sang ngày mới (qua nửa đêm khi đang mở game, quay lại app) thì tự cập nhật.
-    /// - autoOpen: mở game lần đầu trong ngày mà chưa nhận thì tự mở popup (GameFlowUI) khi đang ở Main Menu.
+    /// - autoOpen: mở game lần đầu trong ngày mà chưa nhận thì tự mở popup (IMenuPopups) khi đang ở Main Menu.
     /// </summary>
     public class DailyRewardManager : MonoBehaviour, IRewardGranter, IRewardIcons
     {
+        private IMenuPopups _popups;
         private IBoosterCatalog _boosterIcons;
         private IScreenNavigator _screens;
         private ISaveService _save;
@@ -28,7 +29,7 @@ namespace PawBlock.Features.DailyReward
         /// <summary>
         /// GameBootstrap gọi trước Start: section "dailyReward", nơi nhận quà (ví coin, kho booster, năng lượng – đều qua contract).
         /// </summary>
-        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads, IScreenNavigator screens, IBoosterCatalog boosterIcons)
+        public void Init(ISaveService save, ICurrencyWallet coins, IBoosterInventory boosters, IEnergyService energy, IClock clock, IAdsService ads, IScreenNavigator screens, IBoosterCatalog boosterIcons, IMenuPopups popups)
         {
             _clock = clock;
             _ads = ads;
@@ -40,6 +41,7 @@ namespace PawBlock.Features.DailyReward
             _model = null;
             _screens = screens;
             _boosterIcons = boosterIcons;
+            _popups = popups;
         }
 
         [SerializeField] private DailyRewardDatabase database;
@@ -211,8 +213,7 @@ namespace PawBlock.Features.DailyReward
         private void AutoOpen()
         {
             if (!CanClaimToday || _screens == null || !_screens.IsMenu) return;
-            GameFlowUI flow = FindFirstObjectByType<GameFlowUI>();
-            if (flow != null) flow.OpenDailyReward();
+            _popups?.OpenDailyReward();
         }
 
         [ContextMenu("Debug/Next Day")]

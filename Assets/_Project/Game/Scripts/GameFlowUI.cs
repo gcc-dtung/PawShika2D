@@ -17,7 +17,7 @@ namespace PawBlock.Game
     /// Có component này trong scene thì LevelManager không tự chuyển level / chơi lại nữa (AutoAdvance = false).
     /// Đổi level thì popup tự đóng (PopupView nghe LevelLoadedEvent), ở đây không cần liệt kê lại.
     /// </summary>
-    public class GameFlowUI : MonoBehaviour
+    public class GameFlowUI : MonoBehaviour, IMenuPopups
     {
         private EnergyManager _energy;
         private BoosterManager _boosterManager;

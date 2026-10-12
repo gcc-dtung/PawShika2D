@@ -13,9 +13,10 @@ namespace PawBlock.Features.Gameplay
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid)
+        public void Init(GridManager grid, GridSpawner spawner)
         {
             _grid = grid;
+            _spawner = spawner;
         }
 
         [SerializeField] private bool clueHighlight = true;
@@ -27,7 +28,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _spawner = FindFirstObjectByType<GridSpawner>();
             if (_spawner != null) _spawner.gridCellEvent.AddListener(OnGridSpawned);
             if (_grid != null) _grid.onSelectionChanged.AddListener(OnSelectionChanged);
         }

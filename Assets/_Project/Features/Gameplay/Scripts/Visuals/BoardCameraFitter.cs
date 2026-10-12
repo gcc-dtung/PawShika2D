@@ -18,12 +18,6 @@ namespace PawBlock.Features.Gameplay
         [SerializeField, Range(0.5f, 1f)] private float boardWidthRatio = 0.92f;
         [SerializeField, Range(-0.5f, 0.5f)] private float boardCenterOffset = 0.02f; // >0: lưới lệch lên trên
 
-        private void Awake()
-        {
-            if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
-            if (targetCamera == null) targetCamera = Camera.main;
-        }
-
         private void OnEnable()
         {
             if (gridSpawner != null) gridSpawner.gridCellEvent.AddListener(OnGridSpawned);

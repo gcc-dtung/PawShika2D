@@ -23,7 +23,7 @@ namespace PawBlock.Features.DailyReward.Tests
             // EditMode: AddComponent không chạy Awake nên không đăng ký Singleton
             _go = new GameObject("DailyRewardManager (test)");
             DailyRewardManager manager = _go.AddComponent<DailyRewardManager>();
-            manager.Init(_save, new Economy.CoinWallet(_save), null, null, null, null, null, null);
+            manager.Init(_save, new Economy.CoinWallet(_save), null, null, null, null, null, null, null);
             _sut = manager;
         }
 

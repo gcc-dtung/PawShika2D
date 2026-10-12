@@ -80,11 +80,6 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Tạm dừng thêm (Cheat: dừng đồng hồ).</summary>
         public bool DebugPaused { get; set; }
 
-        private void Awake()
-        {
-            if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
-        }
-
         private void OnEnable()
         {
             if (gridSpawner != null) gridSpawner.gridCellEvent.AddListener(OnGridSpawned);

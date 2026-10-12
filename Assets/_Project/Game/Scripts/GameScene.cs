@@ -18,5 +18,6 @@ namespace PawBlock.Game
         public EnergyManager Energy { get; set; }
         public DailyRewardManager DailyReward { get; set; }
         public LivesEnergyConfig LivesEnergy { get; set; }
+        public MoreTimePopup MoreTime { get; set; }
     }
 }

@@ -18,10 +18,11 @@ namespace PawBlock.Features.Gameplay
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid, LevelTimer timer)
+        public void Init(GridManager grid, LevelTimer timer, GridSpawner spawner)
         {
             _grid = grid;
             _timer = timer;
+            _spawner = spawner;
         }
 
         [Header("Hạt bụi khi đặt khối")]
@@ -74,7 +75,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _spawner = FindFirstObjectByType<GridSpawner>();
             GridManager grid = _grid;
             if (grid != null)
             {

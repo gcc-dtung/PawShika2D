@@ -4773,7 +4773,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d95e1a5279e0da4e86e1722e855034b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridSpawner: {fileID: 0}
 --- !u!114 &82617395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4867,8 +4866,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b2942f74dfc62245853c4acffc2910b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: {fileID: 0}
-  gridSpawner: {fileID: 0}
 --- !u!114 &82617401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48731,7 +48728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba552ce837a970b489048dd248902ef4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetCamera: {fileID: 0}
+  targetCamera: {fileID: 519420031}
 --- !u!1 &864342036
 GameObject:
   m_ObjectHideFlags: 0
@@ -53147,7 +53144,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   avatars: {fileID: 11400000, guid: 1c498278332b59f4a8876e31aee17f81, type: 2}
   avatarImage: {fileID: 1758976868}
-  gameFlow: {fileID: 622904678}
 --- !u!1 &946812758
 GameObject:
   m_ObjectHideFlags: 0
@@ -57480,6 +57476,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   config: {fileID: 11400000, guid: e50631488ebb91147b4a526138ef6be3, type: 2}
   visuals: {fileID: 11400000, guid: e6eb500127d857249bbcc3c15e4cb0c9, type: 2}
+  mainCamera: {fileID: 519420031}
   levelManager: {fileID: 82617382}
   gridManager: {fileID: 82617377}
   dragAndDrop: {fileID: 82617379}
@@ -57514,6 +57511,7 @@ MonoBehaviour:
   levelIntroSequencer: {fileID: 82617394}
   lowTimeVignette: {fileID: 1056015949}
   mechanicIntroPopup: {fileID: 1572696192}
+  difficultyIntro: {fileID: 1463359282}
   boosterButtons:
   - {fileID: 1923732572}
   - {fileID: 1978117101}
@@ -57553,6 +57551,9 @@ MonoBehaviour:
   profilePopup: {fileID: 2043603488}
   profileStatsRecorder: {fileID: 82617396}
   settingsPopup: {fileID: 1823335363}
+  settingsButtons:
+  - {fileID: 1305075258}
+  - {fileID: 1536378076}
   noticePopup: {fileID: 1794426284}
   screenFlow: {fileID: 82617387}
   gameFlowUI: {fileID: 622904678}
@@ -67830,7 +67831,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f700fa85d2c8d654a9571dc545230772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameFlow: {fileID: 622904678}
 --- !u!114 &1305075259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -83441,7 +83441,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f700fa85d2c8d654a9571dc545230772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameFlow: {fileID: 622904678}
 --- !u!1 &1536538526
 GameObject:
   m_ObjectHideFlags: 0
@@ -89371,7 +89370,6 @@ MonoBehaviour:
   iconImage: {fileID: 2140910602}
   normalSprite: {fileID: 21300000, guid: 88afd903ac8e16d4a8cf6e4825c797d0, type: 3}
   infiniteSprite: {fileID: 21300000, guid: 12f202aae2158204580577ab6f9e678a, type: 3}
-  gameFlow: {fileID: 622904678}
 --- !u!114 &1669653328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100000,7 +99998,6 @@ MonoBehaviour:
   iconImage: {fileID: 1479630457}
   normalSprite: {fileID: 21300000, guid: 88afd903ac8e16d4a8cf6e4825c797d0, type: 3}
   infiniteSprite: {fileID: 21300000, guid: 12f202aae2158204580577ab6f9e678a, type: 3}
-  gameFlow: {fileID: 622904678}
 --- !u!114 &1925139175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103273,7 +103270,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c4f9d73fc9b753429c175bb44f8a38d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameFlow: {fileID: 622904678}
   shortcut: {fileID: 2008576699}
 --- !u!114 &2008576699
 MonoBehaviour:

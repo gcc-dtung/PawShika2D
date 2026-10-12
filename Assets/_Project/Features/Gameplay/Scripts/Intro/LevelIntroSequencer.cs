@@ -16,19 +16,21 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelIntroSequencer : MonoBehaviour
     {
+        private GridSpawner _gridSpawner;
+        private ILevelIntro[] _introList;
         private TutorialController _tutorial;
         private GridManager _grid;
         private LevelManager _levels;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelManager levels, GridManager grid, TutorialController tutorial)
+        public void Init(LevelManager levels, GridManager grid, TutorialController tutorial, GridSpawner gridSpawner, ILevelIntro[] introList)
         {
             _levels = levels;
             _grid = grid;
             _tutorial = tutorial;
+            _gridSpawner = gridSpawner;
+            _introList = introList;
         }
-
-        [SerializeField] private GridSpawner gridSpawner;
 
         private readonly List<ILevelIntro> _intros = new List<ILevelIntro>();
         private Coroutine _run;
@@ -39,7 +41,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
             CollectIntros();
         }
 
@@ -54,9 +55,12 @@ namespace PawBlock.Features.Gameplay
         private void CollectIntros()
         {
             _intros.Clear();
-            foreach (MonoBehaviour mb in FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            if (_introList != null)
             {
-                if (mb is ILevelIntro intro) _intros.Add(intro);
+                foreach (ILevelIntro intro in _introList)
+                {
+                    if (intro != null) _intros.Add(intro);
+                }
             }
             _intros.Sort((a, b) => a.Order.CompareTo(b.Order));
         }
@@ -65,7 +69,7 @@ namespace PawBlock.Features.Gameplay
         {
             Stop();
             // LevelManager dựng lưới (GridSpawner.Spawn) trước khi phát event nên LevelData là level vừa nạp
-            LevelIntroContext e = new LevelIntroContext(loaded.Number, gridSpawner != null ? gridSpawner.LevelData : null, loaded.IsDaily);
+            LevelIntroContext e = new LevelIntroContext(loaded.Number, _gridSpawner != null ? _gridSpawner.LevelData : null, loaded.IsDaily);
             List<ILevelIntro> pending = new List<ILevelIntro>();
             foreach (ILevelIntro intro in _intros)
             {
@@ -122,7 +126,7 @@ namespace PawBlock.Features.Gameplay
             GridManager gm = _grid;
             if (lm == null || gm == null || gm.Board == null || !lm.IsPlaying || gm.IsSelecting) return false;
             if (_tutorial != null && _tutorial.IsActive) return false;
-            if (gridSpawner != null && gridSpawner.IsIntroPlaying) return false;
+            if (_gridSpawner != null && _gridSpawner.IsIntroPlaying) return false;
             return true;
         }
 

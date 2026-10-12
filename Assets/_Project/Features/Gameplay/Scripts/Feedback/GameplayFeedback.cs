@@ -21,10 +21,12 @@ namespace PawBlock.Features.Gameplay
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid, GameplayVisuals visuals)
+        public void Init(GridManager grid, GameplayVisuals visuals, GridSpawner spawner, Camera cam)
         {
             _grid = grid;
             _visuals = visuals;
+            _spawner = spawner;
+            _cam = cam;
         }
 
         [Header("Prefab")]
@@ -80,7 +82,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            _cam = Camera.main;
             _praisePool = CreatePool(praisePrefab, 4);
         }
 
@@ -99,7 +100,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _spawner = FindFirstObjectByType<GridSpawner>();
             if (_grid == null) return;
             _grid.onBlockPlaced.AddListener(OnBlockPlaced);
             _grid.onMistake.AddListener(OnMistake);

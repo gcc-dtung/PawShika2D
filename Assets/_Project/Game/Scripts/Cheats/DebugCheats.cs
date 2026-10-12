@@ -129,7 +129,7 @@ namespace PawBlock.Game
             {
                 if (e.State != GameState.OutOfTime) return;
                 EventBus<GameStateChangedEvent>.Unsubscribe(onState);
-                MoreTimePopup popup = Object.FindFirstObjectByType<MoreTimePopup>();
+                MoreTimePopup popup = _scene?.MoreTime;
                 if (popup != null && popup.IsOpen) popup.CloseImmediate();
                 lm.GiveUp();
             };

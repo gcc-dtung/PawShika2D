@@ -17,12 +17,18 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class BoosterUseFx : MonoBehaviour
     {
+        private BoosterButton[] _buttons;
+        private TimerUI _timerUI;
+        private Camera _cam;
         private BoosterManager _boosterManager;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(BoosterManager boosterManager)
+        public void Init(BoosterManager boosterManager, BoosterButton[] buttons, TimerUI timerUI, Camera cam)
         {
             _boosterManager = boosterManager;
+            _buttons = buttons;
+            _timerUI = timerUI;
+            _cam = cam;
         }
 
         [Header("Thời gian (tổng nên bằng BoosterManager.effectDelay)")]
@@ -216,7 +222,7 @@ namespace PawBlock.Features.Gameplay
 
         private Vector2? ButtonScreenPoint(BoosterType type)
         {
-            BoosterButton button = BoosterButton.Find(type);
+            BoosterButton button = BoosterButton.Find(_buttons, type);
             return button != null ? UiScreenPoint(button.transform) : (Vector2?)null;
         }
 
@@ -224,9 +230,9 @@ namespace PawBlock.Features.Gameplay
         private Vector2? TargetScreenPoint(BoosterType type)
         {
             Vector3? world = _boosters != null ? _boosters.LastTarget : null;
-            Camera cam = Camera.main;
+            Camera cam = _cam;
             if (world.HasValue && cam != null) return cam.WorldToScreenPoint(world.Value);
-            TimerUI timer = FindFirstObjectByType<TimerUI>();
+            TimerUI timer = _timerUI;
             if (type == BoosterType.Freeze && timer != null) return UiScreenPoint(timer.transform);
             return null;
         }

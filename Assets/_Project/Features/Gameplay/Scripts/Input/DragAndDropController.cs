@@ -28,11 +28,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Awake()
         {
-            if (cam == null)
-            {
-                cam = Camera.main;
-            }
-
             // Nếu cellLayer đang là Nothing (0), tự động lấy Layer "Cell" hoặc toàn bộ layers
             if (cellLayer.value == 0)
             {
@@ -144,7 +139,6 @@ namespace PawBlock.Features.Gameplay
 
         private Vector3 ScreenToWorld(Vector2 screenPos)
         {
-            if (cam == null) cam = Camera.main;
             return cam != null ? cam.ScreenToWorldPoint(screenPos) : Vector3.zero;
         }
 

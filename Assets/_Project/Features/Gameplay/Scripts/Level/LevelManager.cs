@@ -66,11 +66,6 @@ namespace PawBlock.Features.Gameplay
         public int CurrentLevelNumber => _currentIndex + 1;
         public LevelDefinition CurrentLevel => _daily != null ? _daily : database != null ? database.Get(_currentIndex) : null;
 
-        private void Awake()
-        {
-            if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
-        }
-
         private void Start()
         {
             if (_grid != null) _grid.onGameWin.AddListener(OnWin);

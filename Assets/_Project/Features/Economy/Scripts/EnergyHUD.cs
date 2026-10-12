@@ -2,7 +2,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using PawBlock.Game;
+using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Economy
 {
@@ -14,12 +14,14 @@ namespace PawBlock.Features.Economy
     [RequireComponent(typeof(Button))]
     public class EnergyHUD : MonoBehaviour
     {
+        private IMenuPopups _popups;
         private EnergyManager _energy;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(EnergyManager energy)
+        public void Init(EnergyManager energy, IMenuPopups popups)
         {
             _energy = energy;
+            _popups = popups;
         }
 
         [SerializeField] private TMP_Text countText;
@@ -28,7 +30,6 @@ namespace PawBlock.Features.Economy
         [SerializeField] private Image iconImage;
         [SerializeField] private Sprite normalSprite;   // icon_hear_2
         [SerializeField] private Sprite infiniteSprite; // icon_hear_infinity2
-        [SerializeField] private GameFlowUI gameFlow;
 
         private Tween _punch;
         private int _lastCount = -1;
@@ -63,8 +64,7 @@ namespace PawBlock.Features.Economy
         {
             EnergyManager em = _energy;
             if (em == null || em.IsFull || em.IsInfinite) return;
-            if (gameFlow == null) gameFlow = FindFirstObjectByType<GameFlowUI>();
-            if (gameFlow != null) gameFlow.OpenEnergyRefill();
+            _popups?.OpenEnergyRefill();
         }
 
         private void OnEnergyChanged(int current, int max)

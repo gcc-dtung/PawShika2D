@@ -1,25 +1,27 @@
 using UnityEngine;
 using UnityEngine.UI;
+using PawBlock.Core.Contracts;
 using PawBlock.Game;
 
 namespace PawBlock.Features.DailyReward
 {
     /// <summary>
-    /// Nút Daily trên Home: bấm mở popup điểm danh (GameFlowUI). Còn quà hôm nay thì lắc mời bấm + chấm đỏ
+    /// Nút Daily trên Home: bấm mở popup điểm danh (IMenuPopups). Còn quà hôm nay thì lắc mời bấm + chấm đỏ
     /// (MenuShortcutButton.SetAttention), nhận rồi thì đứng yên.
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class DailyRewardButton : MonoBehaviour
     {
+        private IMenuPopups _popups;
         private DailyRewardManager _rewards;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(DailyRewardManager rewards)
+        public void Init(DailyRewardManager rewards, IMenuPopups popups)
         {
             _rewards = rewards;
+            _popups = popups;
         }
 
-        [SerializeField] private GameFlowUI gameFlow;
         [SerializeField] private MenuShortcutButton shortcut;
 
         private void Awake()
@@ -47,7 +49,7 @@ namespace PawBlock.Features.DailyReward
 
         private void OnClick()
         {
-            if (gameFlow != null) gameFlow.OpenDailyReward();
+            _popups?.OpenDailyReward();
         }
     }
 }

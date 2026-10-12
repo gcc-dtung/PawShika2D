@@ -12,18 +12,21 @@ namespace PawBlock.Features.Gameplay
     /// Cell/WaitSameHint gốc: hiện mờ dần rồi nhấp nháy cùng nhịp mèo) + bàn tay diễn động tác kéo từ góc này sang góc kia
     /// (bản sao TutorialHand trong scene). Người chơi tự kéo vào.
     /// Tắt khi: đặt đúng vùng đó (mèo thật thay chỗ), đặt khối khác đè lên vùng, nạp level, ván dừng.
-    /// BoosterManager tự gắn component này (cùng GameObject).
+    /// Đặt sẵn cùng GameObject với BoosterManager (Bootstrap truyền vào BoosterManager).
     /// </summary>
     public class HintMarker : MonoBehaviour
     {
+        private TutorialHand _handTemplate;
         private GameplayVisuals _visuals;
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid, GameplayVisuals visuals)
+        public void Init(GridManager grid, GameplayVisuals visuals, GridSpawner spawner, TutorialHand handTemplate)
         {
             _grid = grid;
             _visuals = visuals;
+            _spawner = spawner;
+            _handTemplate = handTemplate;
         }
 
         [SerializeField, Range(0f, 1f)] private float ghostAlphaMin = 0.25f;
@@ -72,7 +75,6 @@ namespace PawBlock.Features.Gameplay
         private void Start()
         {
             if (_grid != null) _grid.onBlockPlaced.AddListener(OnBlockPlaced);
-            _spawner = FindFirstObjectByType<GridSpawner>();
             if (_spawner != null) _spawner.gridCellEvent.AddListener(OnGridSpawned); // cả màn tutorial (không phát LevelLoadedEvent)
         }
 
@@ -188,11 +190,7 @@ namespace PawBlock.Features.Gameplay
         private TutorialHand EnsureHand()
         {
             if (_hand != null) return _hand;
-            TutorialHand template = null;
-            foreach (TutorialHand h in FindObjectsByType<TutorialHand>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            {
-                if (h != _hand) { template = h; break; }
-            }
+            TutorialHand template = _handTemplate;
             if (template == null) return null;
             _hand = Instantiate(template, template.transform.parent);
             _hand.name = "HintHand";
