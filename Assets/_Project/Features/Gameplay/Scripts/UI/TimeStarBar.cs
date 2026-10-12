@@ -18,6 +18,13 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TimeStarBar : MonoBehaviour
     {
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelTimer timer)
+        {
+            _timer = timer;
+        }
+
         [Tooltip("Vùng chạy của phần còn lại (bên trong viền nền), mốc sao đặt theo chiều rộng vùng này")]
         [SerializeField] private RectTransform fillArea;
         [SerializeField] private Image fill;
@@ -36,7 +43,6 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            _timer = LevelTimer.Instance;
             PlaceMarkers();
             EventBus<StarsChangedEvent>.Subscribe(OnStarsChanged);
             if (_timer != null)

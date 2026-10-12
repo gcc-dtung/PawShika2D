@@ -19,10 +19,11 @@ namespace PawBlock.Features.Gameplay
         private GridManager _grid;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(GridManager grid, BoosterManager boosterManager)
+        public void Init(GridManager grid, BoosterManager boosterManager, LevelTimer timer)
         {
             _grid = grid;
             _boosterManager = boosterManager;
+            _timer = timer;
         }
 
         [SerializeField] private bool onBlockPlaced = true;
@@ -37,7 +38,6 @@ namespace PawBlock.Features.Gameplay
 
         private void Start()
         {
-            _timer = LevelTimer.Instance;
             _booster = _boosterManager;
 
             if (_grid != null)

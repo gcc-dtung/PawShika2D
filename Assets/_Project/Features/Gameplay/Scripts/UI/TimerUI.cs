@@ -14,6 +14,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class TimerUI : MonoBehaviour
     {
+        private LevelTimer _timer;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelTimer timer)
+        {
+            _timer = timer;
+        }
+
         [SerializeField] private Image icon;
         [SerializeField] private TMP_Text timeText;
         [SerializeField] private Color normalColor = Color.white;
@@ -41,7 +49,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = _timer;
             if (timer == null) return;
             timer.onTimeChanged.AddListener(OnTimeChanged);
             timer.onTimeAdded.AddListener(OnTimeAdded);
@@ -57,7 +65,7 @@ namespace PawBlock.Features.Gameplay
             KillPunch();
             KillAdded();
             OnWaitingForTouchChanged(false);
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = _timer;
             if (timer == null) return;
             timer.onTimeChanged.RemoveListener(OnTimeChanged);
             timer.onTimeAdded.RemoveListener(OnTimeAdded);
@@ -103,7 +111,7 @@ namespace PawBlock.Features.Gameplay
 
             if (timeText != null) timeText.SetText("{0}:{1:00}", seconds / 60, seconds % 60);
             RefreshColor();
-            if (tick && LevelTimer.Instance != null && LevelTimer.Instance.IsLow && seconds > 0) Punch();
+            if (tick && _timer != null && _timer.IsLow && seconds > 0) Punch();
         }
 
         private void OnTimeAdded(float seconds)
@@ -180,7 +188,7 @@ namespace PawBlock.Features.Gameplay
         private void RefreshColor()
         {
             if (timeText == null) return;
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = _timer;
             if (timer != null && timer.IsFrozen) timeText.color = frozenColor;
             else if (timer != null && timer.IsLow) timeText.color = warningColor;
             else timeText.color = normalColor;

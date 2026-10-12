@@ -12,5 +12,6 @@ namespace PawBlock.Game
         public LevelManager Levels { get; set; }
         public GridManager Grid { get; set; }
         public BoosterManager Boosters { get; set; }
+        public LevelTimer Timer { get; set; }
     }
 }

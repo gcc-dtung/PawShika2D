@@ -16,9 +16,10 @@ namespace PawBlock.Features.Gameplay
         private LevelManager _levels;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(LevelManager levels)
+        public void Init(LevelManager levels, LevelTimer timer)
         {
             _levels = levels;
+            _timer = timer;
         }
 
         [SerializeField] private Color color = new Color(1f, 0.15f, 0.15f, 1f);
@@ -52,7 +53,6 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            _timer = LevelTimer.Instance;
             if (_timer != null)
             {
                 _timer.onTimeWarning.AddListener(Refresh);

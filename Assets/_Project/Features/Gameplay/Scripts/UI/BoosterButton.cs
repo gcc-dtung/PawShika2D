@@ -15,14 +15,16 @@ namespace PawBlock.Features.Gameplay
     [RequireComponent(typeof(Button))]
     public class BoosterButton : MonoBehaviour
     {
+        private LevelTimer _timer;
         private BoosterManager _boosterManager;
         private BoosterInventory _inventory;
 
         /// <summary>GameBootstrap gọi trước OnEnable: kho lượt booster (vẽ lại số lượt khi đổi).</summary>
-        public void Init(BoosterInventory inventory, BoosterManager boosterManager)
+        public void Init(BoosterInventory inventory, BoosterManager boosterManager, LevelTimer timer)
         {
             _inventory = inventory;
             _boosterManager = boosterManager;
+            _timer = timer;
         }
 
         [SerializeField] private BoosterType type;
@@ -77,7 +79,7 @@ namespace PawBlock.Features.Gameplay
             }
             EventBus<LevelLoadedEvent>.Subscribe(OnLevelLoaded);
             EventBus<BoosterLockChangedEvent>.Subscribe(OnLockChanged);
-            if (LevelTimer.Instance != null) LevelTimer.Instance.onFreezeChanged.AddListener(OnFreeze);
+            if (_timer != null) _timer.onFreezeChanged.AddListener(OnFreeze);
             Refresh();
         }
 
@@ -93,7 +95,7 @@ namespace PawBlock.Features.Gameplay
             }
             EventBus<LevelLoadedEvent>.Unsubscribe(OnLevelLoaded);
             EventBus<BoosterLockChangedEvent>.Unsubscribe(OnLockChanged);
-            if (LevelTimer.Instance != null) LevelTimer.Instance.onFreezeChanged.RemoveListener(OnFreeze);
+            if (_timer != null) _timer.onFreezeChanged.RemoveListener(OnFreeze);
 
             _glowTween?.Kill();
             _glowTween = null;

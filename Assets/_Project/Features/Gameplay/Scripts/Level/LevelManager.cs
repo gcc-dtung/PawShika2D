@@ -18,17 +18,19 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelManager : MonoBehaviour, IGamePause
     {
+        private LevelTimer _timer;
         private GridManager _grid;
         private ISaveService _save;
         private GameplaySave _data;
 
         /// <summary>GameBootstrap gọi trước Start: section "gameplay" (level đang chơi đã lưu).</summary>
-        public void Init(ISaveService save, GridManager grid)
+        public void Init(ISaveService save, GridManager grid, LevelTimer timer)
         {
             _save = save;
             _data = save.Get<GameplaySave>(GameplaySave.Key);
             _currentIndex = _data.currentLevel;
             _grid = grid;
+            _timer = timer;
         }
 
         [SerializeField] private int currentLevel = 0;
@@ -70,7 +72,7 @@ namespace PawBlock.Features.Gameplay
         private void Start()
         {
             if (_grid != null) _grid.onGameWin.AddListener(OnWin);
-            if (LevelTimer.Instance != null) LevelTimer.Instance.onTimeUp.AddListener(OnTimeUp);
+            if (_timer != null) _timer.onTimeUp.AddListener(OnTimeUp);
             if (!TutorialController.Pending) LoadLevel(_currentIndex); // tutorial lần đầu: ScreenFlow chạy tutorial thay vì nạp level
         }
 
@@ -83,7 +85,7 @@ namespace PawBlock.Features.Gameplay
         private void OnDestroy()
         {
             if (_grid != null) _grid.onGameWin.RemoveListener(OnWin);
-            if (LevelTimer.Instance != null) LevelTimer.Instance.onTimeUp.RemoveListener(OnTimeUp);
+            if (_timer != null) _timer.onTimeUp.RemoveListener(OnTimeUp);
         }
 
         public void LoadLevel(int index)
@@ -207,7 +209,7 @@ namespace PawBlock.Features.Gameplay
         {
             if (_state != GameState.OutOfTime) return;
             _hasRevived = true;
-            if (LevelTimer.Instance != null) LevelTimer.Instance.AddTime(seconds);
+            if (_timer != null) _timer.AddTime(seconds);
             SetState(GameState.Playing);
         }
 
@@ -270,7 +272,7 @@ namespace PawBlock.Features.Gameplay
         private void SetPractice(bool practice)
         {
             _isPractice = practice;
-            if (LevelTimer.Instance != null) LevelTimer.Instance.IsPractice = practice;
+            if (_timer != null) _timer.IsPractice = practice;
         }
 
         /// <summary>Hẹn gọi action sau delay giây (thay hẹn cũ nếu có). Manager tắt thì hủy, action không chạy.</summary>

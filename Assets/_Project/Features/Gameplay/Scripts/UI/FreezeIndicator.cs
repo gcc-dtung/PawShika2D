@@ -16,6 +16,14 @@ namespace PawBlock.Features.Gameplay
     [RequireComponent(typeof(Image))]
     public class FreezeIndicator : MonoBehaviour
     {
+        private LevelTimer _timer;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelTimer timer)
+        {
+            _timer = timer;
+        }
+
         [SerializeField, Range(0f, 1f)] private float alpha = 0.85f;
         [SerializeField] private float appearDuration = 0.25f;
         [SerializeField] private float breakDuration = 0.35f;
@@ -64,7 +72,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = _timer;
             if (timer == null) return;
             timer.onFreezeChanged.AddListener(OnFreezeChanged);
             timer.onFreezeEnded.AddListener(OnBroken);
@@ -73,7 +81,7 @@ namespace PawBlock.Features.Gameplay
 
         private void OnDisable()
         {
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = _timer;
             if (timer != null)
             {
                 timer.onFreezeChanged.RemoveListener(OnFreezeChanged);

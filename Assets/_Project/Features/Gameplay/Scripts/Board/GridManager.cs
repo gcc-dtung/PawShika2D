@@ -13,6 +13,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class GridManager : MonoBehaviour
     {
+        private LevelTimer _timer;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelTimer timer)
+        {
+            _timer = timer;
+        }
+
         [SerializeField] private GridSpawner gridSpawner;
         [SerializeField] private SelectionBoxView selectionBox;
 
@@ -56,7 +64,7 @@ namespace PawBlock.Features.Gameplay
 
         public BoardModel Board => _board;
         public bool IsGameWon => _isGameWon;
-        public bool IsGameOver => LevelTimer.Instance != null && LevelTimer.Instance.IsTimeUp;
+        public bool IsGameOver => _timer != null && _timer.IsTimeUp;
         /// <summary>
         /// Khóa kéo thả: trạng thái riêng của lưới + InputGate (ván không Playing, intro / tutorial, Reveal đang tự đặt khối...).
         /// Lớp phủ mới chỉ cần InputGate.Lock(this), không sửa ở đây.

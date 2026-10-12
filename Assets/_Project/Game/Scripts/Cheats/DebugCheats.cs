@@ -31,6 +31,7 @@ namespace PawBlock.Game
         public static LevelManager Levels => _scene?.Levels;
         private static GridManager Grid => _scene?.Grid;
         private static BoosterManager Boosters => _scene?.Boosters;
+        private static LevelTimer Timer => _scene?.Timer;
 
         public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
         public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
@@ -107,7 +108,7 @@ namespace PawBlock.Game
         /// <summary>Hết giờ ngay -> popup Thêm giờ.</summary>
         public static void TimeUp()
         {
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = Timer;
             if (timer == null) return;
             timer.DebugPaused = false;
             timer.ResetFreeze();
@@ -161,7 +162,7 @@ namespace PawBlock.Game
         {
             get
             {
-                LevelTimer t = LevelTimer.Instance;
+                LevelTimer t = Timer;
                 if (t == null) return "-";
                 int s = Mathf.CeilToInt(t.Remaining);
                 string res = $"{s / 60}:{s % 60:00}";
@@ -174,7 +175,7 @@ namespace PawBlock.Game
         /// <summary>Cộng (dương) / trừ (âm) giây trên đồng hồ trong ván. Trừ không làm hết giờ (dùng TimeUp).</summary>
         public static void AddTime(float seconds)
         {
-            LevelTimer t = LevelTimer.Instance;
+            LevelTimer t = Timer;
             if (t == null) return;
             if (seconds >= 0f) t.AddTime(seconds);
             else t.SetRemaining(Mathf.Max(1f, t.Remaining + seconds));
@@ -183,22 +184,22 @@ namespace PawBlock.Game
         /// <summary>Về lại đủ thời gian của level.</summary>
         public static void FullTime()
         {
-            LevelTimer t = LevelTimer.Instance;
+            LevelTimer t = Timer;
             if (t != null) t.SetRemaining(t.Total);
         }
 
-        public static bool TimerPaused => LevelTimer.Instance != null && LevelTimer.Instance.DebugPaused;
+        public static bool TimerPaused => Timer != null && Timer.DebugPaused;
 
         /// <summary>Dừng / chạy tiếp đồng hồ (thử level không lo hết giờ).</summary>
         public static void ToggleTimerPause()
         {
-            if (LevelTimer.Instance != null) LevelTimer.Instance.DebugPaused = !LevelTimer.Instance.DebugPaused;
+            if (Timer != null) Timer.DebugPaused = !Timer.DebugPaused;
         }
 
         /// <summary>Bật đóng băng như booster (không tốn lượt).</summary>
         public static void Freeze()
         {
-            if (LevelTimer.Instance != null) LevelTimer.Instance.Freeze(GameConfig.LivesEnergy.freezeSeconds);
+            if (Timer != null) Timer.Freeze(GameConfig.LivesEnergy.freezeSeconds);
         }
 
         /// <summary>Năng lượng (tim ở Main Menu).</summary>

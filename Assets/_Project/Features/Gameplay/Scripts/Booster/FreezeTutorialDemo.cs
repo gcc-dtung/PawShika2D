@@ -13,6 +13,14 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class FreezeTutorialDemo : MonoBehaviour
     {
+        private LevelTimer _timer;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelTimer timer)
+        {
+            _timer = timer;
+        }
+
         [SerializeField] private BoosterTutorialView view;
         [SerializeField] private string frozenMessage = "The timer is frozen for {0} seconds - take your time!";
         [Tooltip("Chờ sau khi bấm nút Đóng băng rồi mới hiện lời nhắc")]
@@ -55,7 +63,7 @@ namespace PawBlock.Features.Gameplay
         private void StartDemo()
         {
             _demoStart = null;
-            LevelTimer timer = LevelTimer.Instance;
+            LevelTimer timer = _timer;
             if (timer == null || !timer.IsFrozen || view == null) return; // không bật được: bỏ bước này
             view.ShowMessage(string.Format(frozenMessage, Mathf.CeilToInt(GameConfig.LivesEnergy.freezeSeconds)));
             _showingMessage = true;

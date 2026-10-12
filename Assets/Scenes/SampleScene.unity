@@ -57490,6 +57490,11 @@ MonoBehaviour:
   boosterUseFx: {fileID: 1056015950}
   freezeOverlayFx: {fileID: 1942025443}
   revealBanner: {fileID: 1045284869}
+  freezeTutorialDemo: {fileID: 82617393}
+  freezeButtonCountdown: {fileID: 1978117102}
+  freezeIndicator: {fileID: 194329091}
+  timeStarBar: {fileID: 582459294}
+  timerUI: {fileID: 554611924}
   boosterManager: {fileID: 82617385}
   boosterTutorial: {fileID: 82617390}
   levelStatsRecorder: {fileID: 82617395}

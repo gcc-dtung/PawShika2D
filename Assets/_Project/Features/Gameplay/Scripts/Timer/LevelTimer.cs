@@ -17,7 +17,7 @@ namespace PawBlock.Features.Gameplay
     /// Booster Đóng băng (Freeze) dừng đồng hồ freezeSeconds giây. Hết giờ -> onTimeUp.
     /// Level mới / chơi lại: đồng hồ đứng ở tổng thời gian tới khi người chơi chạm màn hình lần đầu (chạm lúc intro / popup không tính).
     /// </summary>
-    public class LevelTimer : Singleton<LevelTimer>
+    public class LevelTimer : MonoBehaviour
     {
         private GridManager _grid;
         private LevelManager _levels;
@@ -78,9 +78,8 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Tạm dừng thêm (Cheat: dừng đồng hồ).</summary>
         public bool DebugPaused { get; set; }
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             if (gridSpawner == null) gridSpawner = FindFirstObjectByType<GridSpawner>();
         }
 

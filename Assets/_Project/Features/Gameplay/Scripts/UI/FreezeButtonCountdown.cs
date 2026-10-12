@@ -14,6 +14,13 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class FreezeButtonCountdown : MonoBehaviour
     {
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(LevelTimer timer)
+        {
+            _timer = timer;
+        }
+
         [SerializeField] private float discSize = 150f;
         [SerializeField] private float ringSize = 176f;
         [SerializeField] private Color discColor = new Color(0.08f, 0.07f, 0.16f, 0.88f);
@@ -82,7 +89,6 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            _timer = LevelTimer.Instance;
             if (_timer != null) _timer.onFreezeChanged.AddListener(OnFreezeChanged);
             SetOn(_timer != null && _timer.IsFrozen, true);
         }

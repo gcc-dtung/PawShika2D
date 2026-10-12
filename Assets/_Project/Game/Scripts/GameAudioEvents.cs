@@ -19,12 +19,13 @@ namespace PawBlock.Game
         private ScreenFlow _screens;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(ScreenFlow screens, LevelManager levels, GridManager grid, BoosterManager boosterManager)
+        public void Init(ScreenFlow screens, LevelManager levels, GridManager grid, BoosterManager boosterManager, LevelTimer timer)
         {
             _screens = screens;
             _levels = levels;
             _grid = grid;
             _boosterManager = boosterManager;
+            _timer = timer;
         }
 
         [Header("Tiếng mèo kèm theo (xác suất mỗi lần)")]
@@ -52,7 +53,6 @@ namespace PawBlock.Game
 
         private void Start()
         {
-            _timer = LevelTimer.Instance;
             _booster = _boosterManager;
             _spawner = FindFirstObjectByType<GridSpawner>();
 

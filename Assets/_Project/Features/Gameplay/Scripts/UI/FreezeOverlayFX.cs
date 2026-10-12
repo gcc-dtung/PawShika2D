@@ -23,9 +23,10 @@ namespace PawBlock.Features.Gameplay
         private BoosterManager _boosterManager;
 
         /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
-        public void Init(BoosterManager boosterManager)
+        public void Init(BoosterManager boosterManager, LevelTimer timer)
         {
             _boosterManager = boosterManager;
+            _timer = timer;
         }
 
         [Header("Đồng hồ + bàn tay (Spine)")]
@@ -75,7 +76,6 @@ namespace PawBlock.Features.Gameplay
 
         private void OnEnable()
         {
-            _timer = LevelTimer.Instance;
             if (_timer == null) return;
             _timer.onFreezeChanged.AddListener(OnFreezeChanged);
             SetBorders(_timer.IsFrozen, true);
