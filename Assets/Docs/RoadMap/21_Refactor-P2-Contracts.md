@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-12 14:00 |
+| Trạng thái | Đã push |
+| Commit | `d9c6cee` "Refactor P2: event và interface trong Core/Contracts" + `09e2de8` "fix: test Play mode không ghi save.json của máy" (nhánh `Refactor-P2-Contracts`) |
+| Thời gian push | 2026-10-12 14:03 |
+| Cập nhật lần cuối | 2026-10-12 14:03 |
 
 ## Tóm tắt
 

@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0, P1, P2 xong (2026-10-12), tiếp P3 |
+| Trạng thái | P0–P3 xong (2026-10-12), tiếp P4 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-12 |
@@ -259,19 +259,19 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Mục tiêu:** bỏ static giữ trạng thái, có một chỗ nối mọi thứ (`GameBootstrap`), mỗi feature sở hữu phần save của mình.
 
 **Thêm**
-- [ ] `Core/Foundation/Save/ISaveService` + `JsonFileSaveService`: một file `save.json`, bên trong là các **section theo key** (`"economy"`, `"gameplay"`, `"profile"`...). API: `Load<T>(key)`, `Save<T>(key, data)`, `MarkDirty()`. Giữ cơ chế an toàn hiện có của `SaveSystem` (ghi `.tmp`, giữ `.bak`, gom ghi qua `SaveRunner`, ghi khi app vào nền).
-- [ ] **Migrate v1 → v2** (`SaveMigrator`): đọc `save.json` cũ (có `version = 1`, các field phẳng), chia vào section tương ứng, ghi `version = 2`, giữ file cũ thành `save.v1.bak`. Giữ luôn bước chuyển từ PlayerPrefs cũ đang có.
-- [ ] Mỗi feature có class save riêng `[Serializable]`: `EconomySave` (coins, stars, energy, noAds), `GameplaySave` (currentLevel, boosters, unlockedBoosters, seenMechanics, tutorialDone, allLevelsCleared, levelStats), `DailyRewardSave`, `DailyChallengeSave`, `ProfileSave`, `SettingsSave`, `ClockSave` (Foundation).
-- [ ] `Core/Foundation/Services`: `IAdsService` + `FakeAdsService` (từ `RewardedAds`: chờ 0.5 s rồi thành công), `IIAPService` + `FakeIAPService` (từ `IAPService`: luôn thất bại), `IClock` + `TrustedClockService` (từ `TrustedClock`).
-- [ ] `Game/GameBootstrap` (`[DefaultExecutionOrder(-1000)]`): tạo service → tạo model / service của feature → `Init(...)` theo thứ tự rõ ràng (guide 4.5). Dài quá 150 dòng → tách `GameplayInstaller`, `MetaInstaller`.
+- [x] `Core/Foundation/Save/ISaveService` + `JsonFileSaveService`: một file `save.json`, bên trong là các **section theo key** (`"economy"`, `"gameplay"`, `"profile"`...). API: `Load<T>(key)`, `Save<T>(key, data)`, `MarkDirty()`. Giữ cơ chế an toàn hiện có của `SaveSystem` (ghi `.tmp`, giữ `.bak`, gom ghi qua `SaveRunner`, ghi khi app vào nền).
+- [x] **Migrate v1 → v2** (`SaveMigrator`): đọc `save.json` cũ (có `version = 1`, các field phẳng), chia vào section tương ứng, ghi `version = 2`, giữ file cũ thành `save.v1.bak`. Giữ luôn bước chuyển từ PlayerPrefs cũ đang có.
+- [x] Mỗi feature có class save riêng `[Serializable]`: `EconomySave` (coins, stars, energy, noAds), `GameplaySave` (currentLevel, boosters, unlockedBoosters, seenMechanics, tutorialDone, allLevelsCleared, levelStats), `DailyRewardSave`, `DailyChallengeSave`, `ProfileSave`, `SettingsSave`, `ClockSave` (Foundation).
+- [x] `Core/Foundation/Services`: `IAdsService` + `FakeAdsService` (từ `RewardedAds`: chờ 0.5 s rồi thành công), `IIAPService` + `FakeIAPService` (từ `IAPService`: luôn thất bại), `IClock` + `TrustedClockService` (từ `TrustedClock`).
+- [x] `Game/GameBootstrap` (`[DefaultExecutionOrder(-1000)]`): tạo service → tạo model / service của feature → `Init(...)` theo thứ tự rõ ràng (guide 4.5). Dài quá 150 dòng → tách `GameplayInstaller`, `MetaInstaller`.
 
 **Sửa**
-- [ ] `CoinWallet`, `StarWallet`, `BoosterInventory`, `PlayerProfileService`, `ShopService`: static → class thường, cài interface P2, nhận `ISaveService` qua constructor. Nơi gọi `CoinWallet.Add(...)` → dùng instance được `Init` truyền vào (12 + 5 + 5 + 5 file).
-- [ ] 21 file đang gọi `SaveSystem.Data.xxx` → đọc / ghi qua phần save của feature mình.
-- [ ] `TrustedClock` (5 file), `RewardedAds` (1), `IAPService` (3) → qua interface.
+- [x] `CoinWallet`, `StarWallet`, `BoosterInventory`, `PlayerProfileService`, `ShopService`: static → class thường, cài interface P2, nhận `ISaveService` qua constructor. Nơi gọi `CoinWallet.Add(...)` → dùng instance được `Init` truyền vào (12 + 5 + 5 + 5 file).
+- [x] 21 file đang gọi `SaveSystem.Data.xxx` → đọc / ghi qua phần save của feature mình.
+- [x] `TrustedClock` (5 file), `RewardedAds` (1), `IAPService` (3) → qua interface.
 
 **Xóa**
-- [ ] `SaveData` dạng phẳng (sau khi migrate chạy đúng), `SaveSystem` static, `RewardedAds`, `IAPService` static.
+- [x] `SaveData` dạng phẳng (sau khi migrate chạy đúng), `SaveSystem` static, `RewardedAds`, `IAPService` static.
 
 **Rủi ro:** mất dữ liệu người chơi nếu migrate sai → **test migrate trước khi xóa code cũ**.
 **Kiểm tra:**
@@ -281,6 +281,21 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 - Smoke test.
 
 **Xong khi:** không còn static giữ trạng thái ngoài hạ tầng có chủ đích (`EventBus`, `InputGate`); Bootstrap là nơi duy nhất tạo service.
+
+**Kết quả P3** (4 commit trên nhánh `Refactor-P3-ServiceSave`):
+
+| Bước | Nội dung |
+| --- | --- |
+| 3.1 | `JsonSections` (tách / ghép object JSON cấp ngoài, JsonUtility không đọc Dictionary), `ISaveService` (`Get<T>(key)` trả object sống, `MarkDirty`, `SaveNow`), `JsonFileSaveService` (giữ `.tmp` / `.bak` / `SaveRunner`, section chưa nạp giữ nguyên văn, `path = null` chỉ bộ nhớ cho test, **không ghi file v1 chưa migrate**). 22 test |
+| 3.2 | Class save về feature sở hữu (`EconomySave`, `ShopSave`, `GameplaySave`, `DailyRewardSave`, `DailyChallengeSave`, `ProfileSave`, `SettingsSave`, `ClockSave`, mỗi class `const Key`); `Game/SaveMigrator` v1 → 8 section + `save.v1.bak` + PlayerPrefs cũ. 11 test với 3 save mẫu (mọi field v1 sang đúng section); thử bản sao save thật: 16 / 16 field khớp chính xác |
+| 3.3 | `GameBootstrap` + `GameServices` + `GameBootstrapCollector` (Editor tự điền 23 tham chiếu khi lưu scene / vào Play, lúc chạy không `Find`); ví / kho / hồ sơ / Shop thành instance; 20 file đọc section qua `Init`; Profile nghe event P2 (thêm `Attempts` vào `LevelCompletedEvent`), LuckyWheel nghe `StarsBalanceChangedEvent`; Profile / DailyChallenge nhận level qua `Func` từ Game; xóa `SaveSystem`, `SaveData` → `Game/SaveDataV1` (chỉ để migrate) |
+| 3.4 | `IAdsService` + `FakeAdsService`, `IIAPService` + `FakeIAPService`, `IClock` + `TrustedClockService` (instance); gỡ `RewardedAds` khỏi scene; xóa `RewardedAds`, `IAPService`, `TrustedClock` |
+
+- Khác plan: `noAds` ở section `"shop"` (dữ liệu của Shop), không ở `EconomySave`; `SettingsSave` do `AudioManager` (Core) sở hữu; interface đặt tên `Get` thay `Load` / `Save` (object sống, sửa rồi `MarkDirty`).
+- Static còn lại: `EventBus`, `InputGate` (chủ đích), `DebugCheats` (chỉ debug, giữ `GameServices`), cờ settings của `AudioManager` (P4 cùng Singleton), class hàm thuần (`FeelCurves`, `ShikakuSolver`...).
+- Kiểm tra: 160 / 160 test; scene + 7 prefab 0 Missing Script; build Android; Play với 3 save mẫu v1 (coin, sao, level, booster, năng lượng, hồ sơ, daily, challenge, settings đúng; file thành v2 + `save.v1.bak`; thắng / booster / Lucky / tắt rung / quảng cáo +30s, x2 / IAP lỗi / đồng bộ giờ ghi và đọc lại đúng); không có file: v2 mặc định + tutorial. Save thật của máy dev **giữ bản v1 gốc** (lần Play đầu sẽ tự migrate).
+- `using` sai chiều: 86 → 75 ([Dependencies.md](Dependencies.md)).
+- Ghi nhận (có sẵn, chưa sửa): `EnergyManager.InfiniteSecondsLeft` ép `(int)` tràn khi hạn vô hạn quá xa (mẫu năm 2100 hiện "00:00"); thực tế quà vô hạn chỉ vài giờ nên không gặp.
 
 ---
 
@@ -445,12 +460,12 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | P2 Contracts | Event + interface | Định nghĩa ~10 event, phát song song code cũ | 2 | 0.5 | 100% | 6 event (4 trong plan bỏ vì không có bên nghe) |
 | | | ~6 interface, cài vào class sở hữu | 2 | 0.4 | 100% | 3 interface; `LevelIntroContext` |
 | | | Unit test qua interface | 1 | 0.5 | 100% | 23 test; save trong bộ nhớ |
-| P3 Service + Save | Bootstrap, save theo phần | `ISaveService` + `JsonFileSaveService` (giữ tmp / bak / runner) | 3 | | 0% | |
-| | | Save class từng feature + `SaveMigrator` v1 → v2 + test 3 file mẫu | 4 | | 0% | Không được mất dữ liệu |
-| | | Sửa 21 file dùng `SaveSystem.Data` | 4 | | 0% | |
-| | | Ads / IAP / Clock service + Fake | 2 | | 0% | |
-| | | Wallet / Inventory / Profile / Shop: static → instance | 3 | | 0% | |
-| | | `GameBootstrap` + nối Init | 3 | | 0% | |
+| P3 Service + Save | Bootstrap, save theo phần | `ISaveService` + `JsonFileSaveService` (giữ tmp / bak / runner) | 3 | 0.5 | 100% | |
+| | | Save class từng feature + `SaveMigrator` v1 → v2 + test 3 file mẫu | 4 | 0.7 | 100% | Không mất dữ liệu: 16 / 16 field save thật |
+| | | Sửa 21 file dùng `SaveSystem.Data` | 4 | 1 | 100% | |
+| | | Ads / IAP / Clock service + Fake | 2 | 0.5 | 100% | |
+| | | Wallet / Inventory / Profile / Shop: static → instance | 3 | 0.5 | 100% | |
+| | | `GameBootstrap` + nối Init | 3 | 0.8 | 100% | Tự điền tham chiếu bằng Editor script |
 | P4 Bỏ Singleton | 12 Singleton + 4 cờ static | ScreenFlow (sửa phụ thuộc ngược) | 2 | | 0% | |
 | | | LevelManager (101 chỗ) | 5 | | 0% | Lớn nhất |
 | | | GridManager, BoosterManager | 5 | | 0% | |
@@ -472,7 +487,7 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **4.9** | **16%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **8.9** | **33%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 

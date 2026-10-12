@@ -5,8 +5,8 @@
 
 | | |
 | --- | --- |
-| Đo lúc | 2026-10-12 13:10, nhánh `Refactor-P2-Contracts` (sau P2) |
-| Tổng | **86** `using` sai chiều trong **55** file (P1: 89 / 57) |
+| Đo lúc | 2026-10-12 15:30, nhánh `Refactor-P3-ServiceSave` (sau P3) |
+| Tổng | **75** `using` sai chiều trong **52** file (P1: 89 / 57, P2: 86 / 55) |
 
 ## Quy tắc (guide 4.1)
 
@@ -23,32 +23,29 @@ Core (Foundation, Contracts)  ←  Shared  ←  Features/*  ←  Game
 | Từ → tới | Số file | File |
 | --- | --- | --- |
 | Features.Gameplay → Game | 17 | BoosterBuilder, DifficultyBuilder, FreezeBooster, FreezeButtonCountdown, FreezeTutorialDemo, LevelEditorWindow, LevelStars, LevelStatsRecorder, LevelTimer, LosePopup, MoreTimePopup, QuitLevelPopup, StarsBuilder, TimeStarBar, TutorialBuilder, WinPopup, WinScreenBuilder |
-| Features.Gameplay → Features.Economy | 10 | BoosterManager, BuyBoosterPopup, LevelStars, LevelTimer, MoreTimePopup, QuitLevelPopup, StarRatingTests, StarsBuilder, TimeStarBar, WinPopup |
-| Features.DailyChallenge → Features.DailyReward | 4 | DailyChallengeBuilder, DailyChallengeManager, DailyChallengePanel, DailyGiftBubble |
+| Features.Gameplay → Features.Economy | 8 | BoosterInventoryTests, LevelStars, LevelTimer, MoreTimePopup, QuitLevelPopup, StarRatingTests, StarsBuilder, TimeStarBar |
 | Features.DailyChallenge → Features.Gameplay | 4 | DailyChallengeBuilder, DailyChallengeDatabase, DailyChallengeManager, DailyGiftBubble |
 | Features.Economy → Game | 4 | CoinHUD, EnergyHUD, EnergyManager, RefillEnergyPopup |
-| Features.DailyReward → Features.Gameplay | 3 | DailyRewardBuilder, DailyRewardManager, DailyRewardSlot |
+| Features.DailyChallenge → Features.DailyReward | 3 | DailyChallengeBuilder, DailyChallengePanel, DailyGiftBubble |
 | Features.DailyReward → Game | 3 | DailyRewardBuilder, DailyRewardButton, DailyRewardManager |
-| Features.Profile → Features.Gameplay | 3 | ProfileBuilder, ProfilePopup, ProfileStatsRecorder |
 | Features.Profile → Game | 3 | AvatarButton, ProfileBuilder, ProfilePopup |
 | Features.Settings → Game | 3 | SettingsBuilder, SettingsButton, SettingsPopup |
 | Shared → Game | 3 | BackgroundPatternBuilder, NoticePopup, UIZoneBuilder |
 | Core.Foundation → Features.Gameplay | 2 | FeelCurves, FeelCurvesTests |
 | Features.DailyChallenge → Game | 2 | DailyChallengeBuilder, DailyChallengePanel |
+| Features.DailyReward → Features.Gameplay | 2 | DailyRewardBuilder, DailyRewardSlot |
 | Features.Economy → Features.Gameplay | 2 | EconomyConfig, RefillEnergyPopup |
 | Features.Gameplay → Features.DailyChallenge | 2 | LevelHUD, LevelManager |
 | Features.LuckyWheel → Features.DailyChallenge | 2 | LuckyWheelBuilder, LuckyWheelPopup |
 | Features.LuckyWheel → Features.DailyReward | 2 | LuckyWheelBuilder, LuckyWheelPopup |
-| Features.LuckyWheel → Features.Economy | 2 | LuckyWheelButton, LuckyWheelPopup |
 | Features.LuckyWheel → Game | 2 | LuckyWheelBuilder, LuckyWheelButton |
+| Features.Profile → Features.Gameplay | 2 | ProfileBuilder, ProfilePopup |
 | Features.Settings → Features.Gameplay | 2 | SettingsBuilder, SettingsPopup |
-| Features.Shop → Features.Economy | 2 | ShopBuilder, ShopService |
-| Features.Shop → Features.Gameplay | 2 | ShopBuilder, ShopService |
 | Shared → Features.Gameplay | 2 | NoticePopup, UIButtonSounds |
-| Core.Foundation → Game | 1 | RewardedAds |
-| Features.DailyReward → Features.Economy | 1 | DailyRewardManager |
+| Features.DailyReward → Features.Economy | 1 | RewardGranterTests |
 | Features.LuckyWheel → Features.Gameplay | 1 | LuckyWheelBuilder |
-| Features.Profile → Features.Economy | 1 | ProfileStatsRecorder |
+| Features.Shop → Features.Economy | 1 | ShopBuilder |
+| Features.Shop → Features.Gameplay | 1 | ShopBuilder |
 | Features.Shop → Game | 1 | ShopBuilder |
 
 ## Nhận xét (số liệu lúc P1)
@@ -65,6 +62,7 @@ Core (Foundation, Contracts)  ←  Shared  ←  Features/*  ←  Game
 | --- | --- | --- |
 | P1 | 89 / 57 file | Lần đầu đo |
 | P2 | 86 / 55 file | Hết `Core.Contracts → Features.Gameplay` (`LevelLoadedEvent` mang `LevelId`); `DailyRewardItem` / `DailyRewardKind` sang Contracts nên 2 database (DailyChallenge, LuckyWheel) bỏ `using DailyReward`. Phần còn lại chờ P4 chuyển nơi gọi sang event / interface của P2 |
+| P3 | 75 / 52 file | Script Shop chỉ dùng contract (còn `ShopBuilder`, P7); `ProfileStatsRecorder` nghe event (hết `→ Economy`, `→ Gameplay`); LuckyWheel / DailyChallenge trao quà qua `IRewardGranter`; ví sao qua `ICurrencyWallet` + event. Còn lại chủ yếu `.Instance` (P4) và builder (P7) |
 
 ## Cách đo lại
 

@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-12 (P2) |
+| Cập nhật lần cuối | 2026-10-12 (P3) |
 
 ---
 
@@ -52,14 +52,14 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 - Test của dự án nằm trong `Assembly-CSharp-Editor` (`<module>/Tests/Editor/`, từ P1), tới P6 mới tách asmdef.
 - Chạy test **lọc theo assembly `Assembly-CSharp-Editor`**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
-- Test đụng tới save (ví, kho booster, quà...) **bắt buộc** gọi `SaveSystem.UseInMemoryForTests(new SaveData { ... })` ở `[SetUp]` và `UseInMemoryForTests(null)` ở `[TearDown]`: ở Edit mode `MarkDirty()` ghi thẳng `save.json` của máy. P3 thay bằng `ISaveService` giả.
-- Test vào Play mode (`EnterPlayMode`): save bộ nhớ không giữ được (`ResetStatics` chạy lại, `TrustedClock` tự ghi giờ) → sao lưu byte các file save ở `[OneTimeSetUp]`, trả lại ở `[OneTimeTearDown]` sau `UseInMemoryForTests(null)` (mẫu: `FeelPlayModeTests`).
+- Test đụng tới save (ví, kho booster, quà...) **bắt buộc** dùng `new JsonFileSaveService(null)` (chỉ bộ nhớ) truyền vào constructor / `Init`: save thật ở Edit mode ghi thẳng `save.json` của máy.
+- Test vào Play mode (`EnterPlayMode`): save bộ nhớ không giữ được (`ResetStatics` chạy lại, `TrustedClock` tự ghi giờ) → sao lưu byte các file save ở `[OneTimeSetUp]`, trả lại ở `[OneTimeTearDown]` (mẫu: `FeelPlayModeTests`, gồm cả `save.v1.bak`).
 
 ## 7. Namespace và thư mục (từ P1)
 
 | Quy tắc | Ví dụ | Lý do |
 | --- | --- | --- |
-| **Một namespace cho mỗi module / feature**, thư mục con không thêm cấp (khác ví dụ `Core.Foundation.Save` của guide 5) | `Core/Foundation/Save/SaveSystem.cs` → `PawBlock.Core.Foundation`; `Features/Gameplay/Scripts/Board/BoardModel.cs` → `PawBlock.Features.Gameplay` | Ít `using`; thư mục con trong một module gọi thẳng nhau (guide 5) |
+| **Một namespace cho mỗi module / feature**, thư mục con không thêm cấp (khác ví dụ `Core.Foundation.Save` của guide 5) | `Core/Foundation/Save/JsonFileSaveService.cs` → `PawBlock.Core.Foundation`; `Features/Gameplay/Scripts/Board/BoardModel.cs` → `PawBlock.Features.Gameplay` | Ít `using`; thư mục con trong một module gọi thẳng nhau (guide 5) |
 | Code Editor dùng **cùng namespace** với module, không thêm `.Editor` | `Features/Gameplay/Editor/Level/LevelEditorWindow.cs` → `PawBlock.Features.Gameplay` | Namespace có đoạn `Editor` che mất class `UnityEditor.Editor` (`: Editor` báo lỗi) |
 | Test: namespace module + `.Tests` | `PawBlock.Features.LuckyWheel.Tests` | Tách khỏi code thật, vẫn thấy type của module |
 | Không đặt type trùng tên namespace (`Gameplay`, `Shop`, `Profile`, `Settings`, `Game`, `Core`…) | — | Trong `PawBlock.*`, tên đó sẽ trỏ vào namespace |
@@ -68,3 +68,18 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 - P1 **không** sửa định dạng (`if` một dòng, `private` thiếu…) dù đụng mọi file: chỉ bọc namespace + thụt lề + `using`, để diff chỉ có thay đổi cơ học. Định dạng sửa dần khi sửa logic từng file (mục 3).
 - Phụ thuộc sai chiều lộ ra sau khi có namespace: xem [Dependencies.md](Dependencies.md).
+
+## 8. Bootstrap, Init và save (từ P3)
+
+| Quy tắc | Cách làm |
+| --- | --- |
+| **GameBootstrap là nơi duy nhất tạo service** | `Game/Scripts/GameBootstrap.cs` (`[DefaultExecutionOrder(-1000)]`): save → migrate → settings, đồng hồ, quảng cáo, IAP → `GameServices` → `Init` từng component. Không `new` service ở chỗ khác |
+| Component cần dependency | Thêm `public void Init(...)`, giữ vào field, **không đọc dependency trong `Awake`** (đọc ở `Init` / `OnEnable` / `Start`). Bootstrap chạy trước `Awake` / `OnEnable` của mọi script khác |
+| Tham chiếu Bootstrap → component | Thêm `[SerializeField]` field (hoặc mảng) vào `GameBootstrap`; `GameBootstrapCollector` (Editor) tự điền khi **lưu scene / vào Play**. Thiếu thì Console báo `[GameBootstrap] Thiếu tham chiếu ...` |
+| Feature khác nhận **contract** | `ICurrencyWallet`, `IBoosterInventory`, `IEnergyService`, `IRewardGranter`; cùng feature được nhận class cụ thể (`CoinWallet` cho `CoinHUD`) |
+| Cần dữ liệu của feature khác (level hiện tại...) | Game truyền `Func<...>` qua `Init` / constructor; không đọc section của feature khác |
+| **Save** | Mỗi feature 1 class `[Serializable]` có `const string Key`, lấy bằng `save.Get<T>(T.Key)` (object sống), sửa rồi `save.MarkDirty()`. Field mới: đặt giá trị mặc định ngay tại khai báo |
+| Đổi cấu trúc save | Thêm bước vào `Game/Scripts/Save/SaveMigrator` + test với file mẫu (`Docs/Refactor/SaveSamples`). `JsonFileSaveService` không cho ghi file đời cũ chưa migrate |
+| Công cụ Editor đọc save | `new JsonFileSaveService(JsonFileSaveService.DefaultPath)` ngoài Play mode; đang Play thì báo người dùng thoát Play trước khi ghi |
+| Test đụng save | `new JsonFileSaveService(null)` (chỉ bộ nhớ) truyền vào constructor / `Init` |
+| Quảng cáo / IAP / giờ | `IAdsService`, `IIAPService`, `IClock`; bản giả `FakeAdsService`, `FakeIAPService`. Tích hợp SDK: thêm class cài interface, đổi 1 dòng trong Bootstrap |
