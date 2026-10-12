@@ -61,7 +61,7 @@ namespace PawBlock.Game
             LevelManager lm = DebugCheats.Levels;
             string screen = DebugCheats.InMenu ? "Main Menu" : "Trong ván";
             string state = lm != null ? lm.State.ToString() : "-";
-            string energy = EnergyManager.Instance != null ? (EnergyManager.Instance.IsInfinite ? "∞" : $"{EnergyManager.Instance.Current}/{EnergyManager.Instance.Max}") : "-";
+            string energy = DebugCheats.Energy != null ? (DebugCheats.Energy.IsInfinite ? "∞" : $"{DebugCheats.Energy.Current}/{DebugCheats.Energy.Max}") : "-";
 
             EditorGUILayout.HelpBox(
                 $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount}   ·   {screen}   ·   {state}\n" +

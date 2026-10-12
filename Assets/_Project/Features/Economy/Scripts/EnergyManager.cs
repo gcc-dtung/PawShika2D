@@ -12,7 +12,7 @@ namespace PawBlock.Features.Economy
     /// Thua 1 level (state Lost) tốn 1; tối đa 5; hồi 1 sau 30 phút (gamePlay_TimeRefillHeart = 1800 của bản gốc).
     /// Lưu trong SaveData.energy: số năng lượng, mốc bắt đầu hồi, hạn vô hạn (unix giây).
     /// </summary>
-    public class EnergyManager : Singleton<EnergyManager>, IEnergyService
+    public class EnergyManager : MonoBehaviour, IEnergyService
     {
         private ISaveService _save;
         private EnergySave _energy;
@@ -55,9 +55,8 @@ namespace PawBlock.Features.Economy
             }
         }
 
-        protected override void Awake()
+        private void Awake()
         {
-            base.Awake();
             if (_model == null && _energy != null) Load();
         }
 

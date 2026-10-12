@@ -228,7 +228,7 @@ namespace PawBlock.Game
             string screen = DebugCheats.InMenu ? "Main Menu" : "Trong ván";
             LevelManager lm = DebugCheats.Levels;
             string state = lm != null ? lm.State.ToString() : "-";
-            EnergyManager en = EnergyManager.Instance;
+            EnergyManager en = DebugCheats.Energy;
             string energy = en != null ? (en.IsInfinite ? "∞" : $"{en.Current}/{en.Max}") : "-";
             return $"Level {DebugCheats.CurrentLevel}/{DebugCheats.LevelCount} · {screen} · {state}\n" +
                    $"Coin {DebugCheats.CoinBalance} · ★ {DebugCheats.StarBalance} · Giờ {DebugCheats.TimerStatus} · Năng lượng {energy}";

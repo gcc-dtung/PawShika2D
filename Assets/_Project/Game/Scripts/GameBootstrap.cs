@@ -64,6 +64,7 @@ namespace PawBlock.Game
         [SerializeField] private EnergyManager energyManager;
         [SerializeField] private RefillEnergyPopup refillEnergyPopup;
         [SerializeField] private CoinHUD[] coinHuds;
+        [SerializeField] private EnergyHUD[] energyHuds;
 
         [Header("Meta")]
         [SerializeField] private ShopCardView[] shopCards;
@@ -119,7 +120,7 @@ namespace PawBlock.Game
             Require(moreTimePopup)?.Init(s.Coins, ads, levelManager);
             Require(winPopup)?.Init(s.Coins, ads, screens, levelManager);
             Require(losePopup)?.Init(screens, levelManager);
-            Require(quitLevelPopup)?.Init(screens, levelManager, gridManager);
+            Require(quitLevelPopup)?.Init(screens, levelManager, gridManager, energyManager);
             Require(levelTimer)?.Init(screens, levelManager, gridManager);
             Require(gridSpawner)?.Init(levelManager);
             Require(levelHud)?.Init(levelManager);
@@ -145,8 +146,9 @@ namespace PawBlock.Game
             foreach (BoosterButton b in boosterButtons) Require(b)?.Init(s.Boosters, boosterManager, levelTimer);
 
             // Economy
-            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager);
+            Require(refillEnergyPopup)?.Init(s.Coins, ads, levelManager, energyManager);
             foreach (CoinHUD hud in coinHuds) Require(hud)?.Init(s.Coins);
+            foreach (EnergyHUD hud in energyHuds) Require(hud)?.Init(energyManager);
 
             // Meta: chỉ nhận contract của feature khác
             foreach (ShopCardView card in shopCards) Require(card)?.Init(s.Shop);
@@ -162,11 +164,11 @@ namespace PawBlock.Game
             Require(noticePopup)?.Init(screens, levelManager);
 
             // Game
-            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager, boosterManager);
+            Require(gameFlowUI)?.Init(s.Profile, iap, screenFlow, levelManager, boosterManager, energyManager);
             Require(screenFlow)?.Init(levelManager, gridManager);
             Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer);
             Require(playButton)?.Init(screenFlow, levelManager);
-            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer });
+            DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager });
         }
 
         private void OnDestroy()

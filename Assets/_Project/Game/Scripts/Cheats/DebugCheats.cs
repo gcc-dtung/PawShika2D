@@ -33,6 +33,9 @@ namespace PawBlock.Game
         private static BoosterManager Boosters => _scene?.Boosters;
         private static LevelTimer Timer => _scene?.Timer;
 
+        /// <summary>Năng lượng trong scene (Cheat Panel, Debug Panel hiển thị).</summary>
+        public static EnergyManager Energy => _scene?.Energy;
+
         public static int CoinBalance => _services != null ? _services.Coins.Balance : 0;
         public static int StarBalance => _services != null ? _services.Stars.Balance : 0;
 
@@ -205,13 +208,13 @@ namespace PawBlock.Game
         /// <summary>Năng lượng (tim ở Main Menu).</summary>
         public static void AddEnergy(int amount)
         {
-            if (EnergyManager.Instance != null) EnergyManager.Instance.Add(amount);
+            if (Energy != null) Energy.Add(amount);
         }
 
-        public static void EnergyFull() { if (EnergyManager.Instance != null) EnergyManager.Instance.DebugFull(); }
-        public static void EnergyEmpty() { if (EnergyManager.Instance != null) EnergyManager.Instance.DebugEmpty(); }
-        public static void EnergySkipRefill() { if (EnergyManager.Instance != null) EnergyManager.Instance.DebugSkip(); }
-        public static void EnergyInfinite(int minutes) { if (EnergyManager.Instance != null) EnergyManager.Instance.AddInfinite(minutes * 60); }
+        public static void EnergyFull() { if (Energy != null) Energy.DebugFull(); }
+        public static void EnergyEmpty() { if (Energy != null) Energy.DebugEmpty(); }
+        public static void EnergySkipRefill() { if (Energy != null) Energy.DebugSkip(); }
+        public static void EnergyInfinite(int minutes) { if (Energy != null) Energy.AddInfinite(minutes * 60); }
 
         public static int BoosterCount(BoosterType type)
         {

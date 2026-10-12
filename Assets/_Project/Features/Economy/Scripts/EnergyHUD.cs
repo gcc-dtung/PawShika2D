@@ -14,6 +14,14 @@ namespace PawBlock.Features.Economy
     [RequireComponent(typeof(Button))]
     public class EnergyHUD : MonoBehaviour
     {
+        private EnergyManager _energy;
+
+        /// <summary>GameBootstrap gọi trước Awake / OnEnable / Start.</summary>
+        public void Init(EnergyManager energy)
+        {
+            _energy = energy;
+        }
+
         [SerializeField] private TMP_Text countText;
         [SerializeField] private TMP_Text timerText;
         [SerializeField] private RectTransform icon;
@@ -32,7 +40,7 @@ namespace PawBlock.Features.Economy
 
         private void OnEnable()
         {
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em == null) return;
             em.onEnergyChanged.AddListener(OnEnergyChanged);
             em.onTick.AddListener(Refresh);
@@ -41,7 +49,7 @@ namespace PawBlock.Features.Economy
 
         private void OnDisable()
         {
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em != null)
             {
                 em.onEnergyChanged.RemoveListener(OnEnergyChanged);
@@ -53,7 +61,7 @@ namespace PawBlock.Features.Economy
 
         private void OnClick()
         {
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em == null || em.IsFull || em.IsInfinite) return;
             if (gameFlow == null) gameFlow = FindFirstObjectByType<GameFlowUI>();
             if (gameFlow != null) gameFlow.OpenEnergyRefill();
@@ -67,7 +75,7 @@ namespace PawBlock.Features.Economy
 
         private void Refresh()
         {
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em == null) return;
 
             bool infinite = em.IsInfinite;

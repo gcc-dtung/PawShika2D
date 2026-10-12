@@ -57521,6 +57521,9 @@ MonoBehaviour:
   coinHuds:
   - {fileID: 195153655}
   - {fileID: 104946356}
+  energyHuds:
+  - {fileID: 1925139174}
+  - {fileID: 1669653327}
   shopCards:
   - {fileID: 1989572310}
   - {fileID: 1373334382}

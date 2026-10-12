@@ -20,16 +20,18 @@ namespace PawBlock.Features.Economy
     /// </summary>
     public class RefillEnergyPopup : PopupView
     {
+        private EnergyManager _energy;
         private IGamePause _pause;
         private CoinWallet _coins;
         private IAdsService _ads;
 
         /// <summary>GameBootstrap gọi: ví coin (nạp bằng coin), quảng cáo có thưởng.</summary>
-        public void Init(CoinWallet coins, IAdsService ads, IGamePause pause)
+        public void Init(CoinWallet coins, IAdsService ads, IGamePause pause, EnergyManager energy)
         {
             _coins = coins;
             _ads = ads;
             _pause = pause;
+            _energy = energy;
         }
 
         [SerializeField] private TMP_Text countText;
@@ -86,7 +88,7 @@ namespace PawBlock.Features.Economy
             if (closeButton != null) closeButton.gameObject.SetActive(!_required || _onCancel != null);
             if (coinCostText != null) coinCostText.SetText("{0}", GameConfig.Economy.refillCoinCost);
 
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em != null)
             {
                 em.onEnergyChanged.RemoveListener(OnEnergyChanged); // Open lại khi đang mở: không đăng ký trùng
@@ -101,7 +103,7 @@ namespace PawBlock.Features.Economy
         {
             base.OnDisable();
             EventBus<GameStateChangedEvent>.Unsubscribe(OnGameState);
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em == null) return;
             em.onEnergyChanged.RemoveListener(OnEnergyChanged);
             em.onTick.RemoveListener(Refresh);
@@ -118,7 +120,7 @@ namespace PawBlock.Features.Economy
         private void Refresh()
         {
             if (!IsOpen) return;
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em == null) return;
 
             if (countText != null) countText.SetText("{0}", em.Current);
@@ -132,7 +134,7 @@ namespace PawBlock.Features.Economy
         {
             if (!IsOpen) return;
             // Chờ năng lượng để chơi tiếp: có rồi thì đóng. Mở từ HUD: đầy rồi thì đóng.
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             bool canPlay = em != null ? em.CanPlay : current > 0; // tính cả năng lượng vô hạn
             if (_required ? canPlay : current >= max) Finish();
             else Refresh();
@@ -145,14 +147,14 @@ namespace PawBlock.Features.Economy
             _ads.Show("refill_energy", ok =>
             {
                 _waitingAd = false;
-                if (ok && EnergyManager.Instance != null) EnergyManager.Instance.Add(GameConfig.Economy.refillAdsEnergy);
+                if (ok && _energy != null) _energy.Add(GameConfig.Economy.refillAdsEnergy);
                 Refresh();
             });
         }
 
         private void OnCoin()
         {
-            EnergyManager em = EnergyManager.Instance;
+            EnergyManager em = _energy;
             if (em == null || em.IsFull) return;
             if (!_coins.TrySpend(GameConfig.Economy.refillCoinCost))
             {

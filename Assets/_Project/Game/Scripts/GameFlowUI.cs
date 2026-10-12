@@ -19,6 +19,7 @@ namespace PawBlock.Game
     /// </summary>
     public class GameFlowUI : MonoBehaviour
     {
+        private EnergyManager _energy;
         private BoosterManager _boosterManager;
         private LevelManager _levels;
         private ScreenFlow _screens;
@@ -26,13 +27,14 @@ namespace PawBlock.Game
         private IIAPService _iap;
 
         /// <summary>GameBootstrap gọi trước OnEnable: hồ sơ người chơi (popup hồ sơ), IAP (báo mua lỗi).</summary>
-        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels, BoosterManager boosterManager)
+        public void Init(PlayerProfileService profile, IIAPService iap, ScreenFlow screens, LevelManager levels, BoosterManager boosterManager, EnergyManager energy)
         {
             _profile = profile;
             _iap = iap;
             _screens = screens;
             _levels = levels;
             _boosterManager = boosterManager;
+            _energy = energy;
         }
 
         [SerializeField] private WinPopup winPopup;
@@ -137,7 +139,7 @@ namespace PawBlock.Game
         /// </summary>
         public void RequestPlay(Action start)
         {
-            if (EnergyManager.Instance == null || EnergyManager.Instance.CanPlay) start?.Invoke();
+            if (_energy == null || _energy.CanPlay) start?.Invoke();
             else if (refillEnergyPopup != null) refillEnergyPopup.ShowRequired(start, () => { });
             else start?.Invoke();
         }
@@ -147,7 +149,7 @@ namespace PawBlock.Game
         {
             LevelManager lm = _levels;
             if (lm == null) return;
-            if (EnergyManager.Instance == null || EnergyManager.Instance.CanPlay) lm.Retry();
+            if (_energy == null || _energy.CanPlay) lm.Retry();
             else if (refillEnergyPopup != null) refillEnergyPopup.ShowRequired(lm.Retry, () => Open(losePopup)); // X -> về lại popup Thua
             else lm.Retry();
         }
