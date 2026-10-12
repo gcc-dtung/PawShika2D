@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PawBlock.Core.Foundation
@@ -13,7 +14,18 @@ namespace PawBlock.Core.Foundation
         private const float FlushDelay = 0.5f;
 
         private static SaveRunner _instance;
+        private readonly List<ISaveService> _services = new List<ISaveService>();
         private float _dirtySince = -1f;
+
+        /// <summary>Hẹn ghi <paramref name="service"/> (JsonFileSaveService.MarkDirty gọi trong Play mode).</summary>
+        public static void Ensure(ISaveService service)
+        {
+            Ensure();
+            if (!_instance._services.Contains(service))
+            {
+                _instance._services.Add(service);
+            }
+        }
 
         public static void Ensure()
         {
@@ -60,6 +72,10 @@ namespace PawBlock.Core.Foundation
             StopAllCoroutines(); // đã ghi sớm (vào nền / thoát): bỏ lượt chờ cũ
             _dirtySince = -1f;
             SaveSystem.Save();
+            foreach (ISaveService service in _services)
+            {
+                service.SaveNow();
+            }
         }
     }
 }
