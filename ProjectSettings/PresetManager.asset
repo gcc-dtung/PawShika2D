@@ -4,4 +4,18 @@
 PresetManager:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_DefaultPresets: {}
+  m_DefaultPresets:
+  - first:
+      m_NativeTypeID: 1006
+      m_ManagedTypePPtr: {fileID: 0}
+      m_ManagedTypeFallback: 
+    second:
+    - m_Preset: {fileID: 2655988077585873504, guid: 0fe9ecc8427047e43b9bb4b400d71506, type: 2}
+      m_Filter: glob:"Assets/_Project/**/Backgrounds/**"
+      m_Disabled: 0
+    - m_Preset: {fileID: 2655988077585873504, guid: 975265c0604ce5043a8b535f199b610b, type: 2}
+      m_Filter: glob:"Assets/_Project/**/Art/UI/**"
+      m_Disabled: 0
+    - m_Preset: {fileID: 2655988077585873504, guid: bea2629f144075e4f9d3433022f44abf, type: 2}
+      m_Filter: glob:"Assets/_Project/**"
+      m_Disabled: 0
