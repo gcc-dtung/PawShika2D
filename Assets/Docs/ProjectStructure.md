@@ -50,7 +50,7 @@ Assets/
 │   │   │                mỗi feature: Scripts/  Prefabs/  Art/  Configs/  Tests/  Docs/ (thư mục rỗng thì không tạo)
 │   │   └── PawBlock.Meta.asmdef
 │   ├── Game/            Scripts/ (GameBootstrap, ScreenFlow, GameFlowUI, Menu/, Save/, Cheats/)  Prefabs/ (MainMenu, Menu/)  Art/  Configs/ (GameConfig)  Editor/  Tests/
-│   ├── Scenes/          SampleScene.unity (scene duy nhất)
+│   ├── Scenes/          Main.unity (scene duy nhất)
 │   └── Settings/        URP 2D, Presets/ (nén texture)
 ├── ThirdParty/
 │   ├── PawBlock/        Bản gốc Paw Block (01_Audio … 11_Original_Atlases_Textures, Texture2D): không sửa, không tham chiếu
@@ -121,7 +121,7 @@ Ai cài / ai dùng từng interface: chú thích trong file và bảng "Phụ th
 
 ---
 
-## Scene `SampleScene`
+## Scene `Main`
 
 ```text
 GameBootstrap        GameBootstrap, SaveRunner, TrustedClockRunner

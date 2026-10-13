@@ -3,7 +3,7 @@
 Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com/store/apps/details?id=com.phoenix.pawblock.puzzle): kéo hình chữ nhật trên lưới để tạo khối mèo, phủ kín lưới trước khi hết giờ. Dự án portfolio (không có tài khoản store / ads thật: IAP và quảng cáo là bản giả lập).
 
 - Unity **2022.3.62f3**, URP 2D, TextMeshPro, uGUI, Input System, DOTween (`Assets/Plugins/Demigiant`), spine-unity 4.1, UI Particle
-- Scene: `Assets/_Project/Scenes/SampleScene.unity`
+- Scene: `Assets/_Project/Scenes/Main.unity`
 - Kiến trúc module, thư mục, class, scene, event: [ProjectStructure.md](ProjectStructure.md)
 - **Tài liệu theo tính năng + hướng dẫn mở rộng (thêm cơ chế, booster, popup…)**: [Features/](Features/00_README.md); mỗi feature có `Assets/_Project/Features/<Tên>/Docs/README.md`
 - Quy tắc code: [Refactor/UnityCodingGuidelines.md](Refactor/UnityCodingGuidelines.md) (chung) + [Refactor/ProjectConventions.md](Refactor/ProjectConventions.md) (riêng dự án); kế hoạch refactor đã làm: [Refactor/RefactorPlan.md](Refactor/RefactorPlan.md)
@@ -47,7 +47,7 @@ Dữ liệu level ShikaCat gốc **không có** ô đặc biệt; cơ chế đư
 
 ## Chạy dự án
 
-1. Mở `Assets/_Project/Scenes/SampleScene.unity`, bấm Play. Scene, prefab, config đã có sẵn; không cần chạy builder nào.
+1. Mở `Assets/_Project/Scenes/Main.unity`, bấm Play. Scene, prefab, config đã có sẵn; không cần chạy builder nào.
    - Lần đầu (save mới, đang ở level 1): vào thẳng **tutorial** 4 bước (Skip để bỏ qua), xong thì vào Level 1.
    - Các lần sau: Main Menu (Home) → **PLAY** để vào level đang chơi. Tab Shop bên trái, tab Daily Challenge bên phải (mở từ level 21).
 2. Công cụ (menu **Tools → PawBlock**, chi tiết [Features/13](Features/13_Editor-Builder-Debug.md)):
