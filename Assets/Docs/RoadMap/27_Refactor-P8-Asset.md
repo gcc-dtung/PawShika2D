@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | — (nhánh `Refactor-P8-Asset`) |
-| Thời gian push | — |
-| Cập nhật lần cuối | 2026-10-13 23:05 |
+| Trạng thái | Đã push |
+| Commit | 5 commit `cf1625a` … `3fbc456` (P8.1 – P8.3 + tài liệu), cuối "Refactor P8: tài liệu P8, chốt RoadMap 26" (nhánh `Refactor-P8-Asset`) |
+| Thời gian push | 2026-10-13 23:02 |
+| Cập nhật lần cuối | 2026-10-13 23:03 |
 
 ## Tóm tắt
 

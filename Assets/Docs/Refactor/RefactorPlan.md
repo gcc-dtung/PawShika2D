@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0–P8 xong (2026-10-13), tiếp P9 (P8 chưa thử trên máy Android thật) |
+| Trạng thái | P0–P9 xong (2026-10-13). Còn: thử trên máy Android thật (P8), nợ nhỏ ghi ở ProjectConventions mục 14 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-13 |
@@ -507,17 +507,31 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 ### P9 – Tài liệu và dọn dẹp
 
 **Thêm**
-- [ ] `Docs/README.md` cho feature lớn: Gameplay, Economy, Shop, DailyChallenge (guide 5).
+- [x] `Docs/README.md` cho feature lớn: Gameplay, Economy, Shop, DailyChallenge (guide 5) – làm cho cả DailyReward, LuckyWheel, Profile.
 
 **Sửa**
-- [ ] `Docs/ProjectStructure.md`: viết lại theo cấu trúc mới (hoặc thay bằng link tới `README.md` từng feature).
-- [ ] `Docs/Features/*`, `HowTo_MoRong.md`, `HowTo_ThemMechanic.md`, `TaskBreakdown.md`: cập nhật đường dẫn, tên class, cách giao tiếp mới.
-- [ ] (Tùy chọn) `SampleScene` → `Main.unity`.
-- [ ] Rà checklist guide mục 15 trên toàn dự án; ghi phần còn nợ vào `ProjectConventions.md`.
+- [x] `Docs/ProjectStructure.md`: viết lại theo cấu trúc mới (hoặc thay bằng link tới `README.md` từng feature).
+- [x] `Docs/Features/*`, `HowTo_MoRong.md`, `HowTo_ThemMechanic.md`, `TaskBreakdown.md`: cập nhật đường dẫn, tên class, cách giao tiếp mới.
+- [x] (Tùy chọn) `SampleScene` → `Main.unity`.
+- [x] Rà checklist guide mục 15 trên toàn dự án; ghi phần còn nợ vào `ProjectConventions.md`.
 
 **Không làm lúc này:** tách `Core/Foundation` thành package UPM (chờ dự án thứ hai, guide 16).
 
 **Xong khi:** tài liệu không còn đường dẫn / tên class cũ.
+
+**Kết quả P9** (6 commit trên nhánh `Refactor-P9-Docs`):
+
+| Bước | Nội dung |
+| --- | --- |
+| 9.1 | `Features/<F>/Docs/README.md` cho 7 feature (Gameplay, Economy, Shop, DailyReward, DailyChallenge, LuckyWheel, Profile): tóm tắt, phụ thuộc (assembly, event, interface, section save, config), class chính, cách Bootstrap nối, ghi chú kiến trúc. Settings (2 script) không cần |
+| 9.2 | `ProjectStructure.md` viết lại: module + chiều phụ thuộc + assembly, cây thư mục mới, class Core / Shared / Game, scene hiện tại, luồng 1 nước đi theo cơ chế thời gian, event giữa / trong module, thứ tự vẽ kiểm lại theo prefab |
+| 9.3 | `Docs/Features` 01–16 + 2 HowTo, `TutorialGuide`, `README`, `DifficultyFormula`: đường dẫn module, save theo section, `Init` thay `.Instance`, prefab thay builder; bỏ mô tả mạng / Khiên còn sót từ trước `Old-Core` (02 đổi tên `02_ThoiGian-VongDoiVan`). `TaskBreakdown` đánh dấu tài liệu lịch sử |
+| 9.4 | Comment trong 24 file code còn nhắc `SaveData`, builder đã xóa, mạng / Khiên → sửa (không đổi code chạy) |
+| 9.5 | `SampleScene` → `Main.unity` (GUID giữ, Build Settings tự theo) |
+| 9.6 | Rà checklist guide 15 bằng script, kết quả + phần còn nợ ở `ProjectConventions` mục 14 |
+
+- Khác plan: ngoài tài liệu trong plan, sửa thêm `README`, `TutorialGuide`, `DifficultyFormula` và comment code; `TaskBreakdown` không viết lại (tài liệu lịch sử, thêm ghi chú đầu file). Phát hiện tài liệu cũ còn mô tả cơ chế mạng / Khiên đã bỏ ở `Old-Core` (trước refactor) – sửa luôn.
+- Kiểm tra: script dò token `` `...` `` trong tài liệu với type / file / thư mục thật; mọi link markdown nội bộ trỏ tới file có thật; nội dung đối chiếu code (listener event, API, save key, menu). 160 / 160 test; Play với save mẫu sau khi đổi tên scene: Menu → PLAY → level 23 bình thường, Console 0 lỗi; save thật của máy giữ nguyên (md5).
 
 ---
 
@@ -564,8 +578,8 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | P8 Asset | Di chuyển, atlas, preset | Di chuyển ThirdParty + Art theo feature | 4 | 0.8 | 100% | Danh sách theo dependency + `MoveAsset` qua MCP |
 | | | Sprite Atlas + Preset texture | 3 | 0.5 | 100% | 7 atlas, 3 preset + override 207 texture |
 | | | Đo lại, so với P0, test máy thật | 2 | 0.4 | 80% | Chưa test máy thật |
-| P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **16.7** | **96%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | 0.8 | 100% | Thêm: README, TutorialGuide, comment code, đổi tên scene, rà checklist |
+| **Tổng** | | | **~112.5** | **17.5** | **99%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 
