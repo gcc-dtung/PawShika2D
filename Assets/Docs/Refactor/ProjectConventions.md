@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-13 (P6) |
+| Cập nhật lần cuối | 2026-10-13 (P7) |
 
 ---
 
@@ -125,3 +125,17 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Test mới cho feature Meta | Đặt ở `Features/<Feature>/Tests/Editor/`; thư mục `Tests/` cần file `PawBlock.Meta.Tests.asmref` (như DailyChallenge / DailyReward / LuckyWheel) |
 | `using` thừa | Phải gỡ: `using` tới namespace của assembly không được tham chiếu cũng là lỗi compile |
 | Thư viện | DOTween core (`DOTween.dll`) tự tham chiếu; extension UI / Sprite cần `DOTween.Modules`. TMP: `Unity.TextMeshPro`, UI: `UnityEngine.UI`, Spine: `spine-unity` + `spine-csharp`, UIParticle: `Coffee.UIParticle`, Input: `Unity.InputSystem` |
+
+## 12. Prefab và popup (từ P7)
+
+| Quy tắc | Cách làm |
+| --- | --- |
+| Sửa UI | Mở prefab trong Prefab Mode (`Features/<F>/Prefabs`, `Shared/Prefabs`, `Game/Prefabs`). Không sửa instance trong scene rồi Apply All. Không còn builder dựng UI (đã xóa ở P7) |
+| Popup mới | Kế thừa `PopupView` (abstract), hàm riêng nhận dữ liệu rồi gọi `Open()`; dùng `OnOpened` / `OnClosed`, không override `Open` / `Close`. Root có `CanvasGroup` + `Canvas` + `GraphicRaycaster`. Thêm instance tắt vào `Canvas_Popup/Popups`; Bootstrap tự thu vào danh sách popup (GameFlowUI đóng khi đổi level nếu `CloseOnLevelLoad`) |
+| Màn hình trộn nhiều feature | Ghép ở `Game/Prefabs` (MainMenu, tab Shop / Home); prefab của feature không lồng prefab feature khác |
+| Script gốc của prefab | Mỗi prefab màn hình / tab có script View ở object gốc, trùng tên prefab (`ShopPanel`, `HomePanel`, `MenuTabBar`, `DailyChallengePanel`): tự giữ tham chiếu view con và nối `Init` cho chúng; Bootstrap chỉ gọi `Init` của gốc. Tab mới của Main Menu: kế thừa `MenuPanel`, thêm vào `MainMenuNavigator.menuPanels` và 1 tab trong `MenuTabBar` |
+| Widget | Dùng `Shared/Prefabs/Widgets` (`CloseButton`, `Button_Primary`, `SettingsButton`); widget có script của feature nằm ở prefab của feature đó (CoinHUD, SettingToggle...) |
+| Gán từ ngoài | Tham chiếu tới object ngoài prefab: qua `Init` từ Bootstrap; nếu là override trên instance thì ghi Tooltip "Gán từ ngoài" (`LuckyWheelButton.popup`, `PlayZone.targetCamera`) |
+| Canvas con | Mỗi popup / tab có Canvas riêng; phần đổi liên tục (đồng hồ, thanh sao, viền đỏ, nút booster) Canvas riêng. Ẩn bằng `SetActive(false)`; **tắt Canvas component là ẩn luôn con** |
+| Danh sách nút / ButtonPress | `UIAutoSetup` chạy khi lưu scene, khi lưu prefab và trước Play; `Tools/PawBlock/UI/Setup Buttons` xử lý cả mọi prefab |
+| Gộp object có sẵn vào prefab | `PrefabUtility.ConvertToPrefabInstance` (khớp theo hierarchy) giữ tham chiếu trong prefab; mảng cấp scene (Bootstrap, UIButtonSounds) thu lại bằng Collector / UIAutoSetup |

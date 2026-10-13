@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-13 03:20 |
+| Trạng thái | Đã push |
+| Commit | 3 commit `eece450` … `e1ec79a` (P6.1, P6.2 + tài liệu), cuối "Refactor P6: tài liệu P6, chốt RoadMap 24" (nhánh `Refactor-P6-Asmdef`) |
+| Thời gian push | 2026-10-13 03:20 |
+| Cập nhật lần cuối | 2026-10-13 03:21 |
 
 ## Tóm tắt
 

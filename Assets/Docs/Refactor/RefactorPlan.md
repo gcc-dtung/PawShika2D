@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0–P6 xong (2026-10-13), tiếp P7 |
+| Trạng thái | P0–P7 xong (2026-10-13), tiếp P8 |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-13 |
@@ -421,10 +421,10 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Mục tiêu:** đúng guide 10.
 
 **Sửa – `PopupView`** (`Shared`)
-- [ ] `[SerializeField] CanvasGroup group` + `Reset()`, bỏ `GetComponent`.
-- [ ] Bỏ nghe `LevelLoadedEvent` khỏi base → `GameFlowUI` (Game) nghe và đóng popup đang mở.
-- [ ] Thêm `event Action<PopupView> Closed`, hook `OnOpened()` / `OnClosed()`; lớp con dùng hook thay vì override `Open` / `Close`.
-- [ ] Đánh dấu `abstract`.
+- [x] `[SerializeField] CanvasGroup group` + `Reset()`, bỏ `GetComponent`.
+- [x] Bỏ nghe `LevelLoadedEvent` khỏi base → `GameFlowUI` (Game) nghe và đóng popup đang mở.
+- [x] Thêm `event Action<PopupView> Closed`, hook `OnOpened()` / `OnClosed()`; lớp con dùng hook thay vì override `Open` / `Close`.
+- [x] Đánh dấu `abstract`.
 
 **Thêm – prefab** (theo guide 10.1, 10.8)
 
@@ -436,16 +436,33 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | MainMenu (ghép các tab), màn chơi tổng | `Game/Prefabs/` |
 | Notice popup | `Shared/Prefabs/` |
 
-- [ ] Instance đặt sẵn trong scene, tắt; mở thì bật (guide 10.4).
-- [ ] Canvas con cho mỗi popup / màn hình; Canvas riêng cho `TimerUI`, `TimeStarBar`, `LowTimeVignette`.
-- [ ] Tắt Raycast Target trên ảnh / chữ không bấm.
+- [x] Instance đặt sẵn trong scene, tắt; mở thì bật (guide 10.4).
+- [x] Canvas con cho mỗi popup / màn hình; Canvas riêng cho `TimerUI`, `TimeStarBar`, `LowTimeVignette`.
+- [x] Tắt Raycast Target trên ảnh / chữ không bấm.
 
 **Sửa – builder**
-- [ ] 15 builder trong `Editor/UI` (đã chia về feature ở P1): xuất prefab bằng `PrefabUtility.SaveAsPrefabAsset` (như `WinScreenBuilder`), không dựng vào scene. `PopupBuilder` tách thành builder của từng feature.
-- [ ] Builder không còn cần → xóa (sau khi prefab đã lưu và chỉnh tay).
+- [x] ~~15 builder trong `Editor/UI` xuất prefab bằng `PrefabUtility.SaveAsPrefabAsset`~~ → không viết lại: prefab đã là nguồn chính (chọn ở bước dưới).
+- [x] Builder không còn cần → xóa (sau khi prefab đã lưu và chỉnh tay).
 
 **Kiểm tra:** mở từng prefab trong Prefab Mode không có tham chiếu `None` ngoài field "gán từ ngoài"; `SampleScene` nhỏ đi rõ rệt; smoke test mọi popup; số Batches ≤ mốc P0.
 **Xong khi:** scene chỉ còn khung + instance prefab.
+
+**Kết quả P7** (6 commit trên nhánh `Refactor-P7-UIPrefab`):
+
+| Bước | Nội dung |
+| --- | --- |
+| 7.1 | `PopupView` abstract; `OnOpen` → `OnOpened`, thêm `OnClosed` + event `Closed`; base không nghe `LevelLoadedEvent`, `GameFlowUI` đóng popup đang mở có `CloseOnLevelLoad` (Bootstrap truyền đủ 12 popup). `group` đã là `[SerializeField]` từ P5 |
+| 7.2 | 12 popup → prefab theo feature (Gameplay 6, Economy, DailyReward, Settings, Profile, LuckyWheel, Shared/Notice), mỗi popup Canvas + GraphicRaycaster riêng, instance tắt sẵn trong `Canvas_Popup/Popups` |
+| 7.3 | `Game/Prefabs/MainMenu` lồng `Game/Prefabs/Menu/ShopPanel`, `HomePanel`, `MenuTabBar` (trộn nhiều feature nên ghép ở Game) và `DailyChallenge/Prefabs/DailyPanel`; `Gameplay/Prefabs/GameplayHUD`; Canvas con cho 3 tab, Canvas riêng (không raycast) cho TimerUI / TimeStarBar / LowTimeVignette; `SettingsButton` về Shared |
+| 7.4 | Widget / item prefab lồng: Shared `CloseButton` (10), `Button_Primary` (6), `SettingsButton` (2); Economy `CoinHUD`, `EnergyHUD`; Settings `SettingToggle` (3); DailyReward `DailyRewardSlot` (7); DailyChallenge `DailyGiftSlot` (3), `DailyDayCell`, `GiftItemView`, `MonthNavButton`; Gameplay `BoosterButton` (3); Profile `AvatarItem` (12); Shop `ShopCoinCard` (6), `ShopBuyButton` (8). Dùng `PrefabUtility.ConvertToPrefabInstance` (khớp theo hierarchy, khác biệt thành override) nên tham chiếu trong prefab giữ nguyên. Raycast Target: tắt thêm 2 chữ (builder đã tắt phần lớn từ trước) |
+| 7.5 | Xóa 15 builder UI (PopupBuilder, MainMenuBuilder + 13 builder; −4 900 dòng) theo lựa chọn của người dùng; `AudioSetup` giữ lại |
+| 7.6 | Theo góp ý của người dùng: mỗi tab Main Menu có script gốc riêng trên prefab. `MenuPanel` (Shared, abstract) + `ShopPanel`, `HomePanel` (Game) tự nối `Init` cho view con; `DailyChallengePanel` kế thừa `MenuPanel`; `MenuTabBar` (Game) lo thanh tab; `MainMenuNavigator` chỉ còn trượt / vuốt panel. Bootstrap bỏ 8 field view con của Menu |
+
+- Khác plan: builder không viết lại mà xóa (prefab là nguồn chính, git giữ code cũ); không làm `PopupFrame` / tab / badge thành prefab (cấu trúc khác nhau giữa các popup, tab Daily khác 2 tab còn lại); mẫu pool trong scene (`DustTemplate`, `HintFrameTemplate`) và vài object gameplay đơn lẻ (`SelectionBox`, `TutorialHand`, `bg`) giữ trong scene.
+- Field "gán từ ngoài" (override trên instance): `LuckyWheelButton.popup`, `PlayZone.targetCamera` (có Tooltip). Field `None` còn lại trong prefab đều là tùy chọn có từ trước.
+- `SampleScene`: **115 792 → 6 193 dòng** YAML.
+- Batches / SetPass (`UnityStats`, cách đo như Baseline): Menu 64 / 39 (P0 63 / 38); màn chơi level 39 **64 / 53** (P0 58 / 46); Win 131–142 / 102–103 (P0 133–136 / 94–97). Màn chơi tăng chủ yếu do Canvas có sẵn trên 3 nút booster từ P5 (+12 batch; trước chỉ thêm lúc tutorial) và 3 Canvas đồng hồ / thanh sao / viền (+6). Đã thử tắt sẵn Canvas nút booster: tắt Canvas component thì nút không vẽ nữa, nên giữ; đổi lại vòng sáng xoay của nút không làm cả HUD dựng lại mỗi frame. Giảm batch để P8 (Sprite Atlas).
+- Kiểm tra: 160 / 160 test; mỗi bước Play với `save_v1_played.json`: 12 popup mở / đóng (cả đường của game: Settings, Profile, Daily tự mở + Claim +300 coin, nạp năng lượng, Notice, Lucky, BuyBooster, QuitLevel, MoreTime, Lose → Retry, Win → Continue), đổi level đóng popup (Notice giữ), 3 tab Menu (ảnh chụp có / không Canvas con giống hệt), raycast trúng nút trong tab, Shop mua → IAP lỗi, đổi avatar, toggle nhạc, lịch Daily 35 ô + bong thoại quà, HUD + Freeze (vòng đếm). Console 0 lỗi.
 
 ---
 
@@ -525,16 +542,16 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | P6 Asmdef | 6 runtime + 4 Editor + 4 Test | DOTween asmdef, tạo asmdef, reference | 2 | 0.3 | 100% | |
 | | | Sửa lỗi compile lộ ra | 3 | 1.0 | 100% | Sửa trước khi tạo asmdef (6.1), compile sạch lần đầu |
 | | | Build Android kiểm tra | 1 | 0.2 | 100% | |
-| P7 UI prefab | PopupView + prefab | Sửa PopupView 4 điểm + GameFlowUI | 2 | | 0% | |
-| | | Widget dùng chung thành prefab | 3 | | 0% | |
-| | | ~17 popup / màn hình / HUD thành prefab, đặt instance | 8 | | 0% | |
-| | | Tách Canvas, Raycast Target | 1.5 | | 0% | |
-| | | Sửa / xóa 15 builder | 5 | | 0% | |
+| P7 UI prefab | PopupView + prefab | Sửa PopupView 4 điểm + GameFlowUI | 2 | 0.3 | 100% | |
+| | | Widget dùng chung thành prefab | 3 | 0.5 | 100% | |
+| | | ~17 popup / màn hình / HUD thành prefab, đặt instance | 8 | 0.6 | 100% | |
+| | | Tách Canvas, Raycast Target | 1.5 | 0.2 | 100% | |
+| | | Sửa / xóa 15 builder | 5 | 0.1 | 100% | Xóa (người dùng chọn) |
 | P8 Asset | Di chuyển, atlas, preset | Di chuyển ThirdParty + Art theo feature | 4 | | 0% | |
 | | | Sprite Atlas + Preset texture | 3 | | 0% | |
 | | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **13.3** | **67%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **15.0** | **84%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 
