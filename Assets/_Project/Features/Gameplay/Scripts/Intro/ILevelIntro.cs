@@ -3,9 +3,9 @@ using System;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// 1 lớp phủ chạy sau khi nạp level (băng HARD, popup cơ chế, tutorial booster...). LevelIntroSequencer tự tìm mọi
-    /// component có interface này trong scene và chạy lần lượt theo Order, mỗi lúc 1 cái, lưới bị khóa trong lúc chạy.
-    /// Thêm intro mới: viết component implement ILevelIntro, đặt vào scene; không sửa sequencer hay GridManager.
+    /// 1 lớp phủ chạy sau khi nạp level (băng HARD, popup cơ chế, tutorial booster...). GameBootstrap truyền danh sách
+    /// intro cho LevelIntroSequencer, sequencer chạy lần lượt theo Order, mỗi lúc 1 cái, lưới bị khóa trong lúc chạy.
+    /// Thêm intro mới: viết component implement ILevelIntro, thêm vào danh sách trong GameBootstrap; không sửa sequencer hay GridManager.
     /// </summary>
     public interface ILevelIntro
     {

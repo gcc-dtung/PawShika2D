@@ -17,8 +17,7 @@ namespace PawBlock.Features.LuckyWheel
 
     /// <summary>
     /// Cấu hình Vòng quay may mắn: giá mỗi lần quay (sao), các ô theo chiều kim đồng hồ từ đỉnh.
-    /// Tạo / bổ sung bằng Tools/PawBlock/Builders/Build Lucky Wheel; sửa trong Inspector, popup tự đọc lúc chạy
-    /// (đổi số ô thì chạy lại builder để vẽ lại vòng).
+    /// Sửa trong Inspector, popup tự đọc lúc chạy (đổi số ô thì sửa vòng trong prefab LuckyWheelPopup cho khớp).
     /// </summary>
     [CreateAssetMenu(menuName = "PawBlock/Lucky Wheel Database", fileName = "LuckyWheelDatabase")]
     public class LuckyWheelDatabase : ScriptableObject

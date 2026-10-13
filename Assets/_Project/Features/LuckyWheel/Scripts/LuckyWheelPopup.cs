@@ -13,7 +13,7 @@ namespace PawBlock.Features.LuckyWheel
     /// Bấm SPIN: trừ sao, chọn ô theo trọng số (LuckyWheelModel.Pick) và trao quà NGAY (tắt app giữa lúc quay vẫn không mất),
     /// rồi vòng quay theo chiều kim đồng hồ spinTurns vòng, chậm dần (OutQuart), mỗi lần kim đi qua 1 ô thì "tick" + kim nảy;
     /// dừng thì ô trúng nhấp sáng, dòng kết quả hiện icon + số, âm nhận thưởng. Thiếu sao: nút xám, dòng gợi ý thắng level để lấy sao.
-    /// Các ô (màu, icon, số) dựng bởi Tools/PawBlock/Builders/Build Lucky Wheel theo database.
+    /// Các ô (màu, icon, số) có sẵn trong prefab LuckyWheelPopup, cùng thứ tự database.segments.
     /// </summary>
     public class LuckyWheelPopup : PopupView
     {

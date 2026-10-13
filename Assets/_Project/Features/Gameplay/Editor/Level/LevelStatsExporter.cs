@@ -9,7 +9,7 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Xuất số liệu chơi thật (SaveData.levelStats, do LevelStatsRecorder ghi) ra CSV để chỉnh đường độ khó:
+    /// Xuất số liệu chơi thật (GameplaySave.levelStats, do LevelStatsRecorder ghi) ra CSV để chỉnh đường độ khó:
     /// Tools → PawBlock → Level Difficulty → "Nạp dữ liệu thực tế" chọn file này để so với độ khó lý thuyết (tương quan Spearman).
     /// - Từ save máy này, hoặc gộp nhiều file save.json của người chơi thử (đặt chung 1 thư mục).
     /// - Cột khóa "name" (tên asset level) nên vẫn khớp khi đã xếp lại thứ tự level.

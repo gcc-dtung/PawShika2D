@@ -12,7 +12,7 @@ namespace PawBlock.Game
     /// - Panel xếp ngang theo thứ tự tab, đổi tab thì trượt ngang; xong thì tắt các panel khuất màn hình.
     /// - Vuốt: panel chạy theo ngón tay (đang ở tab đầu / cuối thì không kéo ra ngoài được), thả tay thì sang tab kề nếu kéo quá swipeThreshold
     ///   bề rộng hoặc vuốt nhanh hơn swipeVelocity, không thì trượt về; thời gian trượt theo quãng còn lại.
-    /// - LayoutInEditor: xếp sẵn trong Editor (builder gọi, hoặc chuột phải component) để scene đúng vị trí khi chưa chạy.
+    /// - LayoutInEditor: xếp sẵn trong Editor (chuột phải component) để scene đúng vị trí khi chưa chạy.
     /// Tween DOTween giữ trong field, kill khi tắt.
     /// </summary>
     public class MainMenuNavigator : MonoBehaviour

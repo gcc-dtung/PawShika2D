@@ -5,8 +5,8 @@ namespace PawBlock.Features.Gameplay
 {
     /// <summary>
     /// Giải Shikaku trên LevelDefinition. Dùng để:
-    /// - Kiểm tra 1 nước đi có SAI không (đặt xong thì lưới không còn lời giải nào) -> trừ mạng.
-    /// - Tìm lời giải khớp với các khối đã đặt (Hint / Reveal ở giai đoạn sau).
+    /// - Kiểm tra lưới còn lời giải không với các khối đã đặt (IsSolvable).
+    /// - Tìm lời giải khớp với các khối đã đặt (Hint / Reveal).
     /// - Kiểm tra level (Editor): giải khi người chơi CHƯA biết số của ô "?" / ô khóa.
     /// Không so với solution lưu sẵn vì 17/205 level ShikaCat có nhiều hơn 1 lời giải.
     /// </summary>

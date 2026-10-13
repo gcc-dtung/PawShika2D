@@ -19,7 +19,7 @@ namespace PawBlock.Features.DailyChallenge
     }
 
     /// <summary>
-    /// Luật Daily Challenge (class C# thuần, dữ liệu trong SaveData.challenge), theo DailyChallengeUI của bản gốc:
+    /// Luật Daily Challenge (class C# thuần, dữ liệu trong DailyChallengeSave), theo DailyChallengeUI của bản gốc:
     /// - Mỗi ngày 1 level (sinh theo seed ngày), thắng thì ngày đó Done. Ngày tính theo lịch (số ngày từ 1/1/1970).
     /// - Ngày mở khóa (startDay) trở về sau mà đã qua, chưa thắng = Missed, chơi bù được (gốc: xem quảng cáo, gần nhất trước).
     /// - Quà theo tháng: thắng đủ 7 / 14 / 21 ngày trong 1 tháng dương lịch thì nhận quà mốc đó (mỗi tháng 1 lần).

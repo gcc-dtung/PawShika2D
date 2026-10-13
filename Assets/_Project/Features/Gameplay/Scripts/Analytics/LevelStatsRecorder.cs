@@ -6,7 +6,7 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Ghi số liệu chơi thật từng level vào SaveData.levelStats để chỉnh đường độ khó theo dữ liệu thật
+    /// Ghi số liệu chơi thật từng level vào GameplaySave.levelStats để chỉnh đường độ khó theo dữ liệu thật
     /// (Tools → PawBlock → Level Stats → Xuất CSV, rồi nạp vào cửa sổ Level Difficulty để so với độ khó lý thuyết).
     /// - 1 lượt = từ lúc nạp level (LevelLoadedEvent, không tính màn tutorial) tới Won / Lost; nạp lại giữa chừng = bỏ cuộc (quit).
     ///   Lượt chỉ được tính khi người chơi thật sự thao tác (đặt / gỡ khối / dùng booster): level nạp sẵn ở nền Menu không bị đếm.

@@ -11,7 +11,7 @@ namespace PawBlock.Core.Foundation
     /// - Nhạc nền: 1 AudioSource lặp, đổi / bật / tắt có fade.
     /// - Hiệu ứng: pool AudioSource (sfxVoices); hết nguồn rảnh thì dùng lại nguồn phát lâu nhất.
     ///   Mỗi âm có cooldown riêng để nhiều sự kiện dồn cùng lúc không bị dội tiếng.
-    /// - Cài đặt Nhạc / Âm thanh / Rung lưu trong SaveData.settings, đổi thì phát SettingsChanged (cho popup cài đặt sau này).
+    /// - Cài đặt Nhạc / Âm thanh / Rung lưu trong section save "settings" (SettingsSave), đổi thì phát SettingsChanged (popup cài đặt, nút toggle nghe).
     /// Gọi: AudioManager.Play(SoundId.Click), AudioManager.Vibrate().
     /// </summary>
     public class AudioManager : Singleton<AudioManager>

@@ -8,7 +8,7 @@ namespace PawBlock.Features.Gameplay
     /// <summary>
     /// Popup giới thiệu cơ chế lần đầu người chơi gặp (Hướng, Khóa, "?"), ảnh minh họa có sẵn của bản gốc.
     /// Là 1 ILevelIntro (Order 10: sau băng HARD, trước tutorial booster). LevelIntroSequencer chờ lưới hiện xong rồi gọi Play:
-    /// level có cơ chế chưa xem thì mở popup (ván tạm dừng), Ok thì lưu SaveData.seenMechanics; nhiều cơ chế mới thì lần lượt từng popup.
+    /// level có cơ chế chưa xem thì mở popup (ván tạm dừng), Ok thì lưu GameplaySave.seenMechanics; nhiều cơ chế mới thì lần lượt từng popup.
     /// Level giới thiệu cơ chế do Mechanic Injector xếp lịch, nên popup rơi đúng vào các level đó.
     /// </summary>
     public class MechanicIntro : MonoBehaviour, ILevelIntro
@@ -23,7 +23,7 @@ namespace PawBlock.Features.Gameplay
             _data = save.Get<GameplaySave>(GameplaySave.Key);
         }
 
-        // [MECHANIC] Popup giới thiệu: thêm Kind + sprite + nhánh trong NewMechanics / ShowNext (TutorialBuilder gán sprite)
+        // [MECHANIC] Popup giới thiệu: thêm Kind + sprite + nhánh trong NewMechanics / ShowNext (sprite gán trên component MechanicIntro trong scene)
         public enum Kind
         {
             Constraint,

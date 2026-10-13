@@ -8,7 +8,7 @@ namespace PawBlock.Features.Gameplay
     /// <summary>
     /// Tutorial lần đầu mở game (như bản gốc): 4 màn nhỏ chơi bằng gameplay thật, có lời nhắc, vạch tiến độ, bàn tay kéo mẫu.
     /// - Chạy khi save chưa có tutorialDone và người chơi còn ở level 1 (người chơi cũ không bị bắt chơi lại).
-    /// - Trong tutorial: đặt sai không trừ mạng (GridManager), thắng màn không hiện màn WELL DONE (LevelManager).
+    /// - Trong tutorial (LevelManager.IsPractice): thắng màn không hiện màn thắng, không phát LevelLoadedEvent / LevelCompletedEvent.
     /// - Xong bước cuối hoặc bấm Skip: lưu tutorialDone, vào thẳng level hiện tại (level 1).
     /// </summary>
     public class TutorialController : MonoBehaviour

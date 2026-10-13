@@ -10,8 +10,8 @@ namespace PawBlock.Game
 {
     /// <summary>
     /// Tự điền tham chiếu của GameBootstrap (mọi field [SerializeField] kiểu Component / Component[]) bằng component
-    /// cùng loại trong scene của nó, kể cả object đang tắt. Chạy khi lưu scene và trước khi vào Play mode, nên builder
-    /// dựng lại UI xong thì lần lưu / Play kế tiếp tham chiếu đã đúng. Chỉ chạy trong Editor (guide 8.3).
+    /// cùng loại trong scene của nó, kể cả object đang tắt. Chạy khi lưu scene và trước khi vào Play mode, nên thêm / đổi
+    /// prefab xong thì lần lưu / Play kế tiếp tham chiếu đã đúng. Chỉ chạy trong Editor (guide 8.3).
     /// Tay: Tools/PawBlock/Game/Collect Bootstrap References.
     /// </summary>
     [InitializeOnLoad]

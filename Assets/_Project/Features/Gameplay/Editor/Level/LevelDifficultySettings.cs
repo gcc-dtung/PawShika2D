@@ -35,7 +35,7 @@ namespace PawBlock.Features.Gameplay
         public float timeT3 = 12f;
         public float timeT4 = 20f;
 
-        [Header("Rủi ro mất mạng (số lần sai kỳ vọng)")]
+        [Header("Rủi ro đặt sai (số lần đặt nhầm kỳ vọng)")]
         [Tooltip("Xác suất đặt sai ở bước kỹ thuật 2 / 3 / không có nước bắt buộc")]
         public float riskT2 = 0.05f;
         public float riskT3 = 0.25f;

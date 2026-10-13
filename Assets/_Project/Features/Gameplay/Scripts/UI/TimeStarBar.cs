@@ -12,7 +12,7 @@ namespace PawBlock.Features.Gameplay
     /// 3 mốc đặt ở 0 / twoStarRatio / threeStarRatio (LivesEnergyConfig), mỗi mốc sao xám (star2) dưới + sao vàng (star) trên.
     /// Thời gian tụt qua mốc (StarsChangedEvent Lost) -> sao vàng phồng lên rồi tan, còn lại sao xám.
     /// Lưới mới -> 3 sao vàng bật lại lần lượt. Đóng băng -> phần còn lại ngả xanh băng.
-    /// Dựng bởi Tools/PawBlock/Builders/Build Stars (StarsBuilder).
+    /// Nằm trong prefab GameplayHUD (UIZone/TopPanel/LevelFrame/TimeBar).
     /// </summary>
     public class TimeStarBar : MonoBehaviour
     {

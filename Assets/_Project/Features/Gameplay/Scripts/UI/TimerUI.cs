@@ -10,7 +10,7 @@ namespace PawBlock.Features.Gameplay
     /// Còn dưới LivesEnergyConfig.warningSeconds: chữ đỏ, icon đập mỗi giây. Đóng băng: chữ xanh băng.
     /// Cộng giờ: chữ "+30s" bật lên giữa màn hình rồi bay vào đồng hồ, chạm tới thì icon nảy.
     /// Đồng hồ đang chờ chạm đầu tiên (level mới): chữ giờ + icon nhấp nháy nhẹ.
-    /// Icon / chữ dựng bởi Tools/PawBlock/Builders/Build Boosters (BoosterBuilder.BuildTimer).
+    /// Icon / chữ có sẵn trong prefab GameplayHUD; chữ "+30s" dựng bằng EditorBuild.
     /// </summary>
     public class TimerUI : MonoBehaviour
     {

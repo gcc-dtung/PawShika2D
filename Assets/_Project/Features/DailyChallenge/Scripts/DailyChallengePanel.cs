@@ -21,7 +21,7 @@ namespace PawBlock.Features.DailyChallenge
     /// - Nút Play xanh: hôm nay chưa thắng. Hết lượt hôm nay mà còn ngày lỡ: nút Play vàng (quảng cáo) chơi bù ngày lỡ gần nhất.
     /// - Chưa tới level mở khóa: lớp khóa phủ lịch, ẩn nút.
     /// - Vừa thắng 1 ngày rồi về tab: thanh tiến trình chạy lên + chữ "+1" bay, ô ngày nảy.
-    /// Dựng bởi Tools/PawBlock/Builders/Build Daily Challenge.
+    /// UI ở prefab DailyPanel (Features/DailyChallenge/Prefabs).
     /// </summary>
     public class DailyChallengePanel : MenuPanel
     {

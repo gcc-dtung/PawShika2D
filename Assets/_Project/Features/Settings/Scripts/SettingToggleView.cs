@@ -13,7 +13,7 @@ namespace PawBlock.Features.Settings
 
     /// <summary>
     /// 1 nút tròn trong popup cài đặt: bật = nền xanh, tắt = nền xám + gạch đỏ. Bấm -> đảo cài đặt trong AudioManager
-    /// (lưu SaveData). Cài đặt đổi ở đâu cũng vẽ lại theo AudioManager.SettingsChanged.
+    /// (lưu section save "settings"). Cài đặt đổi ở đâu cũng vẽ lại theo AudioManager.SettingsChanged.
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class SettingToggleView : MonoBehaviour

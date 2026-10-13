@@ -6,7 +6,7 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.DailyChallenge
 {
     /// <summary>
-    /// Daily Challenge (tab thứ 3 của Menu, như DailyChallengeUI bản gốc): giữ DailyChallengeModel (SaveData.challenge),
+    /// Daily Challenge (tab thứ 3 của Menu, như DailyChallengeUI bản gốc): giữ DailyChallengeModel (section save "dailyChallenge"),
     /// level mỗi ngày do Gameplay sinh và nạp (IDailyLevelLoader: seed = ngày, cùng ngày mọi máy cùng level),
     /// thắng thì đánh dấu ngày, trao quà mốc 7 / 14 / 21 ngày trong tháng.
     /// Ngày lấy theo IClock (giờ server nếu có mạng, chặn chỉnh giờ máy).

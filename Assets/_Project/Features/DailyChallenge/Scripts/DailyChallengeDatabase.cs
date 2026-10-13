@@ -16,8 +16,8 @@ namespace PawBlock.Features.DailyChallenge
     }
 
     /// <summary>
-    /// Cấu hình Daily Challenge: mở từ level nào, quà 3 mốc (nhập từ 10_Data_Configs/DailyChallengeData.txt của bản gốc
-    /// bằng Tools/PawBlock/Builders/Build Daily Challenge). Thông số sinh level mỗi ngày ở DailyLevelLoader (Gameplay).
+    /// Cấu hình Daily Challenge: mở từ level nào, quà 3 mốc (lấy từ DailyChallengeData.txt của bản gốc,
+    /// ThirdParty/PawBlock/10_Data_Configs). Thông số sinh level mỗi ngày ở DailyLevelLoader (Gameplay).
     /// </summary>
     [CreateAssetMenu(menuName = "PawBlock/Daily Challenge Database", fileName = "DailyChallengeDatabase")]
     public class DailyChallengeDatabase : ScriptableObject

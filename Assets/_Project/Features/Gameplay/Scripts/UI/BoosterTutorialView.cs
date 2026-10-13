@@ -50,7 +50,7 @@ namespace PawBlock.Features.Gameplay
         private Tween _handTween;
 
         /// <summary>
-        /// Chỉ khung lời nhắc, không nền tối / bàn tay / nút: lưới vẫn kéo được (bước 2 tutorial Khiên: "kéo sai thử").
+        /// Chỉ khung lời nhắc, không nền tối / bàn tay / nút: lưới vẫn kéo được (bước 2 tutorial Đóng băng: FreezeTutorialDemo).
         /// Khung và chữ không nhận chạm nên không chặn thao tác.
         /// </summary>
         public void ShowMessage(string text)

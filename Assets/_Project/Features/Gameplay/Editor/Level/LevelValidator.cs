@@ -12,7 +12,7 @@ namespace PawBlock.Features.Gameplay
     /// - Có lời giải.
     /// - Level có ô "?" / ô khóa: giải được KHÔNG CẦN ĐOÁN. Mô phỏng người chơi chỉ đặt khối chắc chắn đúng
     ///   (mọi cách đặt khác của clue đó đều làm lưới hết lời giải), trong khi chưa biết số của ô "?"
-    ///   và ô còn khóa. Kẹt giữa chừng = người chơi buộc phải đoán và có thể mất mạng oan.
+    ///   và ô còn khóa. Kẹt giữa chừng = người chơi buộc phải đoán (dễ đặt nhầm, mất thời gian gỡ).
     /// </summary>
     public static class LevelValidator
     {

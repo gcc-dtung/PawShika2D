@@ -10,7 +10,7 @@ namespace PawBlock.Features.Economy
     /// <summary>
     /// Năng lượng ngoài màn chơi (phương án B, Giai đoạn 5), icon cá thay tim để không lẫn với mạng trong màn.
     /// Thua 1 level (state Lost) tốn 1; tối đa 5; hồi 1 sau 30 phút (gamePlay_TimeRefillHeart = 1800 của bản gốc).
-    /// Lưu trong SaveData.energy: số năng lượng, mốc bắt đầu hồi, hạn vô hạn (unix giây).
+    /// Lưu trong section save "economy" (EconomySave.energy): số năng lượng, mốc bắt đầu hồi, hạn vô hạn (unix giây).
     /// </summary>
     public class EnergyManager : MonoBehaviour, IEnergyService
     {

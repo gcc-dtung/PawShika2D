@@ -9,7 +9,7 @@ namespace PawBlock.Features.Gameplay
     /// Mở khóa booster bằng tutorial (như bản gốc): booster khóa tới khi lần đầu vào level >= levelUnlock (BoosterDatabase).
     /// Là 1 ILevelIntro (Order 20, sau băng HARD và popup cơ chế): màn hình tối lại, chỉ nút booster đó sáng + bàn tay chỉ vào,
     /// lời nhắc lấy từ BoosterData.detail. Người chơi phải bấm nút: BoosterManager báo TutorialPressed -> mở khóa
-    /// (lưu SaveData.unlockedBoosters), lần dùng đầu tiên miễn phí. Mỗi lần nạp level chỉ chạy tối đa 1 tutorial (booster mở sớm nhất trước).
+    /// (lưu GameplaySave.unlockedBoosters), lần dùng đầu tiên miễn phí. Mỗi lần nạp level chỉ chạy tối đa 1 tutorial (booster mở sớm nhất trước).
     /// Bước riêng sau khi mở khóa (vd Đóng băng: báo đồng hồ đứng yên) nghe BoosterTutorialCompletedEvent (FreezeTutorialDemo),
     /// nên thêm booster mới không phải sửa class này.
     /// </summary>

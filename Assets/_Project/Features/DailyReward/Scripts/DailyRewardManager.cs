@@ -7,7 +7,7 @@ using PawBlock.Core.Contracts;
 namespace PawBlock.Features.DailyReward
 {
     /// <summary>
-    /// Điểm danh hằng ngày: giữ DailyRewardModel (dữ liệu trong SaveData.daily), trao quà, báo đổi trạng thái.
+    /// Điểm danh hằng ngày: giữ DailyRewardModel (dữ liệu trong section save "dailyReward"), trao quà, báo đổi trạng thái.
     /// - Claim(day): ô hôm nay nhận luôn; ô đã lỡ (nếu database.recoverMissedWithAd) xem quảng cáo rồi nhận.
     /// - Sang ngày mới (qua nửa đêm khi đang mở game, quay lại app) thì tự cập nhật.
     /// - autoOpen: mở game lần đầu trong ngày mà chưa nhận thì tự mở popup (IMenuPopups) khi đang ở Main Menu.
