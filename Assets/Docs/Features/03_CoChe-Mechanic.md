@@ -1,5 +1,7 @@
 # 03 – Cơ chế (Mechanic): Void, Hướng, Khóa, "?"
 
+> Code ở `Assets/_Project/Features/Gameplay/` (`Scripts/Board`, `Scripts/Solver`, `Scripts/Tutorial/MechanicIntro`, `Editor/Level`).
+
 ## Tổng quan
 
 Dữ liệu ShikaCat gốc **không có** cơ chế nào. Cơ chế được gắn vào level bằng **Mechanic Injector** (Editor) hoặc tay trong **Level Editor**, lưu trong `LevelDefinition`.
@@ -44,7 +46,7 @@ Editor: LevelEditorWindow (sửa tay) · LevelValidator (luật dữ liệu + "k
 
 ## Quy tắc "không cần đoán"
 
-Khóa và "?" **giấu thông tin**. Nếu giấu sai chỗ, người chơi phải đoán và mất mạng oan. Vì vậy `LevelValidator` mô phỏng người chơi:
+Khóa và "?" **giấu thông tin**. Nếu giấu sai chỗ, người chơi phải đoán, đặt nhầm rồi mất thời gian gỡ. Vì vậy `LevelValidator` mô phỏng người chơi:
 
 1. Người chơi chưa biết số của ô "?" và ô còn khóa, chưa biết hướng của ô còn khóa.
 2. Mỗi bước chỉ đặt khối **chắc chắn đúng** (mọi cách đặt khác của số đó làm lưới hết lời giải).
@@ -60,7 +62,7 @@ Mechanic Injector chạy Validator sau mỗi lần gắn; sai thì hoàn tác v�
 
 ## Lịch xuất hiện (Mechanic Injector)
 
-`Assets/_Project/Levels/MechanicInjectorSettings.asset`:
+`Assets/_Project/Features/Gameplay/Configs/Levels/MechanicInjectorSettings.asset`:
 
 | Cơ chế | Level giới thiệu | Số level giới thiệu | Số lượng / level |
 | --- | --- | --- | --- |
@@ -73,7 +75,7 @@ Sau giai đoạn giới thiệu: 70 % level có cơ chế, level chia hết cho 
 
 ## Popup giới thiệu (`MechanicIntro`)
 
-Sau khi lưới hiện xong, level có cơ chế người chơi chưa xem → popup (ván tạm dừng). Đã xem lưu ở `SaveData.seenMechanics` (tên `MechanicIntro.Kind`). Void không có popup. Xem lại: Debug Panel → Xem lại popup cơ chế.
+`MechanicIntro` là 1 `ILevelIntro` (Order 10, sau băng HARD, trước tutorial booster). Sau khi lưới hiện xong, level có cơ chế người chơi chưa xem → popup (ván tạm dừng). Đã xem lưu ở section save `"gameplay"` (`GameplaySave.seenMechanics`, tên `MechanicIntro.Kind`). Void không có popup. Xem lại: Debug Panel → Xem lại popup cơ chế.
 
 ## Thêm cơ chế mới
 

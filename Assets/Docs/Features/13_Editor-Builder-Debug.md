@@ -1,62 +1,54 @@
-# 13 – Công cụ Editor: Builder, Debug Panel
+# 13 – Công cụ Editor, Debug Panel, Cheat Panel
 
-Mọi code trong `Script/Editor/` chỉ chạy trong Unity Editor (không vào bản build).
+Code Editor nằm trong thư mục `Editor/` của module sở hữu (`Core/Foundation/Editor`, `Shared/Editor`, `Features/Gameplay/Editor`, `Game/Editor`), assembly `*.Editor` chỉ chạy trong Unity Editor (không vào bản build).
+
+> Từ P7 **không còn builder dựng UI bằng code**: UI là prefab, sửa trong Prefab Mode ([10](10_UI-Menu-Popup.md)). Menu "Builders" còn lại chỉ tạo / điền asset dữ liệu.
 
 ## Menu Tools → PawBlock
 
-| Menu | Việc | Đọc thêm |
+| Menu | Việc | File | Đọc thêm |
+| --- | --- | --- | --- |
+| **Level Editor** | Sửa / tạo / xếp level, ▶ chơi thử | `Features/Gameplay/Editor/Level/LevelEditorWindow` | [04](04_Level-DuLieuVaCongCu.md) |
+| **Level Generator** | Sinh level theo seed hàng loạt | `LevelGeneratorWindow` | [16](16_DailyChallenge.md) |
+| **Mechanic Injector** | Gắn cơ chế tự động theo lịch | `MechanicInjectorWindow` | [04](04_Level-DuLieuVaCongCu.md), [03](03_CoChe-Mechanic.md) |
+| **Level Difficulty** | Độ khó lý thuyết, đánh dấu Hard, so số liệu thật | `LevelDifficultyWindow` | [../DifficultyFormula.md](../DifficultyFormula.md) |
+| **Validate Levels** | Kiểm tra cả database | `LevelValidator` | [04](04_Level-DuLieuVaCongCu.md) |
+| **Debug Panel** (Ctrl + Shift + D) | Cheat khi Play | `Game/Editor/DebugPanelWindow` | bên dưới |
+| **Save Data** → Log / Open Folder / Delete | Xem / xóa `save.json` | `Core/Foundation/Editor/SaveDataMenu` | [11](11_Save.md) |
+| **UI → Setup Buttons** | Gắn `ButtonPress`, thu danh sách nút cho mọi scene / prefab (tự chạy khi lưu scene / prefab, vào Play) | `Shared/Editor/UIAutoSetup` | [10](10_UI-Menu-Popup.md) |
+| **Game → Collect Bootstrap References** | Điền mọi field của `GameBootstrap` (tự chạy khi lưu scene / vào Play) | `Game/Editor/GameBootstrapCollector` | |
+
+### Builders (tạo / điền asset)
+
+| Menu | Việc | File |
 | --- | --- | --- |
-| **Level Editor** | Sửa / tạo / xếp level, ▶ chơi thử | [04](04_Level-DuLieuVaCongCu.md) |
-| **Mechanic Injector** | Gắn cơ chế tự động theo lịch | [04](04_Level-DuLieuVaCongCu.md), [03](03_CoChe-Mechanic.md) |
-| **Level Difficulty** | Độ khó lý thuyết, đánh dấu Hard | [../DifficultyFormula.md](../DifficultyFormula.md) |
-| **Validate Levels** | Kiểm tra cả database | [04](04_Level-DuLieuVaCongCu.md) |
-| **Debug Panel** (Ctrl + Shift + D) | Cheat khi Play | bên dưới |
-| **Save Data** → Log / Open Folder / Delete | Xem / xóa `save.json` | [11](11_Save.md) |
+| Import ShikaCat Levels | 205 level gốc (từ `ThirdParty/ShikaCat`) + `LevelDatabase` (ghi đè thứ tự) | `Features/Gameplay/Editor/Level/ShikaCatLevelImporter` |
+| Reorder Levels | Xếp level theo độ khó + chạy Mechanic Injector | `LevelOrderTool` |
+| Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, `GameplayVisuals.asset` | `Features/Gameplay/Editor/Builders/GameplayVisualsSetup` |
+| Setup Audio | Bổ sung `AudioDatabase`, gán vào `AudioManager` | `Game/Editor/AudioSetup` |
+| Setup Game Config | Nối `GameConfig` tới config của từng feature (tìm theo kiểu) | `Game/Editor/GameConfigSetup` |
+| Apply Game Font | Fredoka làm font mặc định, preset viền | `Shared/Editor/GameFontSetup` |
 
-### Builders (dựng asset / UI bằng code)
+Mọi tool tạo / di chuyển asset qua `AssetDatabase` để giữ GUID; đường dẫn viết cứng trong tool phải đổi theo khi dời thư mục ([ProjectConventions](../Refactor/ProjectConventions.md) mục 13).
 
-| Menu | Dựng |
-| --- | --- |
-| Import ShikaCat Levels | 205 level gốc + `LevelDatabase` (ghi đè thứ tự) |
-| Reorder Levels | Xếp level theo độ khó + chạy Mechanic Injector |
-| Setup Gameplay Visuals | 9-slice khối, cắt atlas mặt mèo, `GameplayVisuals.asset` |
-| Setup Audio | `AudioDatabase`, object `AudioManager`, âm nút |
-| Apply Game Font | Fredoka làm font mặc định, preset viền |
-| Build Popups | `Canvas_Popup/Popups` + mọi popup cơ bản, `GameFlowUI` |
-| Build Notice Popup | Popup NOTICE |
-| Build Main Menu | `Canvas_Menu` (tab, Home, TopBar), `ScreenFlow` |
-| Build UI Zone | Safe area cho HUD / Home |
-| Build Shop | Tab Shop + `ShopDatabase.asset` |
-| Build Boosters | 3 nút booster, RevealBanner, khung băng, `BoosterManager` |
-| Build Settings | Nút bánh răng + `SettingsPopup` |
-| Build Daily Reward | Database, manager, popup, nút Daily |
-| Build Win Screen | Màn WELL DONE, confetti, material lóe sáng |
-| Build Difficulty | `DifficultyTheme`, giao diện Hard / Very Hard |
-| Build Tutorial | TutorialPanel, bàn tay, BoosterTutorial, MechanicIntroPopup + controller |
+### Dựng sẵn object con cho component
 
-**Thứ tự khi dựng lại từ đầu:** Import ShikaCat Levels → Setup Gameplay Visuals → Apply Game Font → Build Popups → Build Main Menu → Build UI Zone → các Build còn lại → Setup Audio → Reorder Levels.
-
-### Viết builder mới
-
-Builder là `static class` trong `Editor/UI/`, có hàm `[MenuItem("Tools/PawBlock/Builders/Build Xxx")]`:
-
-1. Tìm cha bằng đường dẫn cố định (`PopupBuilder.HudRoot`, `Canvas_Popup/Popups`…), **xóa object cũ cùng tên** rồi tạo lại → chạy nhiều lần vẫn ra một kết quả.
-2. Tái dùng tiện ích của `PopupBuilder` (`LoadSprite`, `EnsureSprite`, `Assign` gán field `[SerializeField]` bằng `SerializedObject`…) thay vì viết lại.
-3. Đánh dấu scene đã đổi (`EditorSceneManager.MarkSceneDirty`) để Unity hỏi lưu.
-4. Ghi menu mới vào bảng trên và vào `ProjectStructure.md`.
+Component cần object con (hiệu ứng, overlay...) có `[ContextMenu("EditorBuild")]` dùng `EditorChildren` (`Core/Foundation/Util`) để tạo sẵn trong prefab, thay vì tạo lúc chạy. Tham chiếu tự điền trong `OnValidate` (`#if UNITY_EDITOR`).
 
 ## Debug Panel
 
-Cửa sổ Editor gọi `Gameplay/Cheats/DebugCheats` (static) – chỉ dùng API có sẵn, nên popup / save / hiệu ứng chạy như chơi thật.
+Cửa sổ Editor gọi `Game/Scripts/Cheats/DebugCheats` (static) – chỉ dùng API có sẵn, nên popup / save / hiệu ứng chạy như chơi thật.
 
 | Mục | Lệnh |
 | --- | --- |
-| Level | Trước / Chơi lại / Sau, đổi level, đổi + vào ván, chơi lại tutorial, xem lại popup cơ chế |
-| Thắng / Thua | Thắng ngay, đặt 1 khối đúng, −1 mạng, hết mạng, thua hẳn |
-| Coin | +100 / +1000 / +10000 / = 0 / đặt |
-| Sao ★ (ví sao, Vòng quay may mắn) | +10 / +50 / -10 / = 0 / đặt (`DebugCheats.AddStars` / `SetStars`); Cheat Panel trong game: tab Tài nguyên |
-| Mạng / Năng lượng | +1 mạng, đầy, khiên; năng lượng +1 / đầy / 0 / bỏ qua chờ / vô hạn |
-| Booster | +1 / +10 / = 0 từng loại, mở / khóa tất cả |
+| Level | Trước / Chơi lại / Sau, đổi level, đổi + vào ván, vào ván bỏ qua năng lượng, chơi lại tutorial, xem lại popup cơ chế |
+| Thắng / Thua | Thắng ngay, đặt 1 khối đúng, hết giờ (popup Thêm giờ), thua hẳn |
+| Coin, Sao ★ | +100 / +1000 / +10000 / = 0 / đặt; sao +10 / +50 / −10 / = 0 / đặt |
+| Đồng hồ | −10 s / +10 s / +60 s / đầy giờ / dừng, Đóng băng |
+| Năng lượng | +1 / đầy / 0 / bỏ qua 1 lần chờ / vô hạn 5 phút |
+| Booster | +1 / +10 / = 0 từng loại, tất cả +10, mở / khóa tất cả |
 | Khác | Sang ngày mới, reset điểm danh, tốc độ game, thử IAP, lưu save |
 
-Thêm cheat: thêm hàm static vào `DebugCheats` (gọi API công khai của manager), rồi thêm nút trong `DebugPanelWindow` ở mục tương ứng.
+**Cheat Panel trong bản build** (`Game/Scripts/Cheats/CheatPanel`, IMGUI): bấm nhanh 3 lần góc trên trái màn hình (hoặc F1 / ` khi có bàn phím); gọi cùng `DebugCheats`. Đây là ngoại lệ duy nhất được tự tạo / tìm object lúc chạy ([ProjectConventions](../Refactor/ProjectConventions.md) mục 10).
+
+Thêm cheat: thêm hàm static vào `DebugCheats` (gọi API công khai của component), rồi thêm nút trong `DebugPanelWindow` (và `CheatPanel` nếu cần trong build).

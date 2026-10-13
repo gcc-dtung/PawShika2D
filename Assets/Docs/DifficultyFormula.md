@@ -1,7 +1,7 @@
 # Công thức độ khó lý thuyết của level
 
-Tool: **Tools → PawBlock → Level Difficulty** (`LevelDifficultyWindow`, `LevelDifficultyAnalyzer`).
-Trọng số: `Assets/_Project/Levels/LevelDifficultySettings.asset`, sửa được ngay trong cửa sổ tool; đổi trọng số thì điểm tính lại tức thì.
+Tool: **Tools → PawBlock → Level Difficulty** (`Features/Gameplay/Editor/Level/LevelDifficultyWindow`, `LevelDifficultyAnalyzer`).
+Trọng số: `Assets/_Project/Features/Gameplay/Configs/Levels/LevelDifficultySettings.asset`, sửa được ngay trong cửa sổ tool; đổi trọng số thì điểm tính lại tức thì.
 
 Độ khó lý thuyết đo **lối suy luận** mà level bắt người chơi đi qua, không đo cảm giác hay độ "đẹp". Mục đích là so với số liệu thực tế (tỉ lệ thắng, thời gian, số lần sai) để chỉnh lại công thức.
 
@@ -67,7 +67,7 @@ T = timeBase + timePerCell · A + timeT1 · t₁ + timeT2 · t₂ + timeT3 · t�
   = 5 + 0.15 · A + 3 · t₁ + 6 · t₂ + 12 · t₃ + 20 · t₄
 ```
 
-**Rủi ro mất mạng (số lần đặt sai kỳ vọng)**
+**Rủi ro đặt sai (số lần đặt nhầm kỳ vọng; từ thời có mạng, giờ là số lần phải gỡ khối)**
 
 ```text
 R = riskT2 · t₂ + riskT3 · t₃ + riskT4 · t₄ = 0.05 · t₂ + 0.25 · t₃ + 0.3 · t₄

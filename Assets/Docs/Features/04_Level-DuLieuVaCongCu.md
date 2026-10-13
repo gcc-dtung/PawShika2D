@@ -1,5 +1,7 @@
 # 04 – Level: dữ liệu và công cụ
 
+> Asset level ở `Assets/_Project/Features/Gameplay/Configs/Levels/` (viết tắt `Levels/`); tool ở `Features/Gameplay/Editor/Level/`; code chạy ở `Features/Gameplay/Scripts/Level/`.
+
 ## Dữ liệu
 
 | Asset | Nội dung |
@@ -8,7 +10,8 @@
 | `Levels/ShikaCat/Level_001..205` | Level gốc nhập từ JSON ShikaCat – **không sửa tay** (Mechanic Injector đọc từ đây) |
 | `Levels/Mechanic/Level_NNN` | Bản đã gắn cơ chế, thay bản gốc trong database |
 | `Levels/Custom/` | Level tự làm bằng Level Editor (Level 1 = `Level_Custom_Level01_4x4`) |
-| `Configs/DifficultyTheme.asset` | Giao diện level Hard / Very Hard |
+| `Levels/Test/`, `Levels/Generated/` | Level thử; level do Level Generator lưu (tạo khi lưu lần đầu) |
+| `Features/Gameplay/Configs/DifficultyTheme.asset` | Giao diện level Hard / Very Hard |
 
 `LevelDefinition`:
 
@@ -19,23 +22,23 @@
 | `clues[]` | `id`, `x`, `y`, `value`, `color`, `mechanic` (xem [03](03_CoChe-Mechanic.md)) |
 | `solution[]` | Lời giải tham khảo – game **không** dựa vào, chỉ tool dùng |
 | `difficulty` | `Normal` / `Hard` / `VeryHard` |
-| `rules.mistakeLimit` | Chưa dùng |
+| `rules.timeLimit` | Giây của level (0 = tự tính, [02](02_ThoiGian-VongDoiVan.md)) |
 
 ## Luồng nạp level lúc chơi
 
-`LevelManager.LoadLevel(index)` → lưu `SaveData.currentLevel` → `GridSpawner.Spawn(level)` (sinh ô, phát `gridCellEvent`) → `GridManager` tạo `BoardModel` mới, `LivesManager` reset mạng, `BoardCameraFitter` căn camera → `EventBus<LevelLoadedEvent>` (HUD, popup tự đóng, `BoosterManager`, `LevelIntroSequencer` → băng HARD / popup cơ chế / tutorial booster cùng nghe).
+`LevelManager.LoadLevel(index)` → lưu `GameplaySave.currentLevel` (section `"gameplay"`) → `GridSpawner.Spawn(level)` (sinh ô, phát `gridCellEvent`) → `GridManager` tạo `BoardModel` mới, `LevelTimer` tính lại giờ, `LevelStars` về 3 sao, `BoardCameraFitter` căn camera → `EventBus<LevelLoadedEvent>` (HUD, `GameFlowUI` đóng popup, `BoosterManager`, `LevelIntroSequencer` → băng HARD / popup cơ chế / tutorial booster cùng nghe). Daily Challenge: `LevelManager.LoadDaily(level, day)` với level sinh trong bộ nhớ ([16](16_DailyChallenge.md)).
 
 ## Công cụ Editor
 
 | Menu | Việc | File |
 | --- | --- | --- |
-| Tools → PawBlock → **Level Editor** | Vẽ khối (số tự = diện tích), đặt số / Void / xóa; sửa hướng, khóa, "?", Hard; Kiểm tra; Giải; ▶ Chơi thử vào thẳng level; đổi thứ tự, nhân bản | `Editor/Level/LevelEditorWindow` |
-| Tools → PawBlock → **Level Generator** | Sinh hàng loạt level theo seed (preset Easy / Normal / Hard / Daily, đúng 1 lời giải), xem độ khó, lưu vào `Levels/Generated` (+ cuối database). Chi tiết: [16_DailyChallenge.md](16_DailyChallenge.md) | `Editor/Level/LevelGeneratorWindow`, `Gameplay/Level/Generator/LevelGenerator` |
-| Tools → PawBlock → **Validate Levels** | Chạy `LevelValidator` cho cả database, log lỗi / cảnh báo | `Editor/Level/LevelValidator` |
+| Tools → PawBlock → **Level Editor** | Vẽ khối (số tự = diện tích), đặt số / Void / xóa; sửa hướng, khóa, "?", Hard; Kiểm tra; Giải; ▶ Chơi thử vào thẳng level; đổi thứ tự, nhân bản | `LevelEditorWindow` |
+| Tools → PawBlock → **Level Generator** | Sinh hàng loạt level theo seed (preset Easy / Normal / Hard / Daily, đúng 1 lời giải), xem độ khó, lưu vào `Levels/Generated` (+ cuối database). Chi tiết: [16_DailyChallenge.md](16_DailyChallenge.md) | `LevelGeneratorWindow`, `Scripts/Level/LevelGenerator` |
+| Tools → PawBlock → **Validate Levels** | Chạy `LevelValidator` cho cả database, log lỗi / cảnh báo | `LevelValidator` |
 | Tools → PawBlock → **Mechanic Injector** | Gắn cơ chế theo lịch: Xem trước → Áp dụng / Khôi phục bản gốc | `MechanicInjector*` |
 | Tools → PawBlock → **Level Difficulty** | Độ khó lý thuyết D, biểu đồ, tick Hard / Very Hard, xuất / nạp CSV | `LevelDifficulty*`, công thức: [../DifficultyFormula.md](../DifficultyFormula.md) |
-| Builders → **Reorder Levels** | Xếp ShikaCat theo độ khó, đỉnh ...9 / nghỉ ...0, đánh dấu Hard, rồi chạy lại Injector | `Editor/Level/LevelOrderTool` |
-| Builders → **Import ShikaCat Levels** | JSON → 205 `LevelDefinition` + database (**ghi đè thứ tự**, mất bản Mechanic trong database) | `Editor/Level/ShikaCatLevelImporter` |
+| Builders → **Reorder Levels** | Xếp ShikaCat theo độ khó, đỉnh ...9 / nghỉ ...0, đánh dấu Hard, rồi chạy lại Injector | `LevelOrderTool` |
+| Builders → **Import ShikaCat Levels** | JSON → 205 `LevelDefinition` + database (**ghi đè thứ tự**, mất bản Mechanic trong database) | `ShikaCatLevelImporter` |
 
 ### LevelValidator kiểm tra gì
 
@@ -75,8 +78,8 @@ Cùng settings + cùng seed = kết quả y hệt (hash FNV-1a). Đổi `seed` =
 | --- | --- |
 | Thêm level tay | Level Editor → Mới (vào `Levels/Custom`) → Kiểm tra → đặt vị trí trong database |
 | Đổi lịch cơ chế | Sửa `MechanicInjectorSettings.asset` → Mechanic Injector → Xem trước → Áp dụng |
-| Thêm mức khó mới (vd. Nightmare) | Thêm giá trị **cuối** `LevelDifficulty` (`Gameplay/Level/DifficultyTheme.cs`), thêm 1 `DifficultyStyle` trong `DifficultyTheme.asset` (HUD, nút PLAY, băng intro đọc qua `theme.Get(difficulty)` nên tự nhận). Rồi xem các chỗ so sánh trực tiếp: `DifficultyBuilder` (tạo style mặc định), `LevelOrderTool` (đánh dấu tự động), `MechanicInjector.MakeNormalPlan` (số cơ chế), `BoosterTutorial` (bỏ qua level khó) |
-| Thêm trường cho level (vd. số mạng riêng) | Thêm field vào `LevelDefinition` (giá trị mặc định = hành vi cũ), sửa Level Editor để chỉnh, đọc ở runtime |
+| Thêm mức khó mới (vd. Nightmare) | Thêm giá trị **cuối** `LevelDifficulty` (`Scripts/Level/DifficultyTheme.cs`), thêm 1 `DifficultyStyle` trong `DifficultyTheme.asset` (HUD, nút PLAY, băng intro đọc qua `theme.Get(difficulty)` nên tự nhận). Rồi xem các chỗ so sánh trực tiếp: `EconomyConfig.WinCoinReward` (coin thắng), `LevelOrderTool` (đánh dấu tự động), `MechanicInjector.MakeNormalPlan` (số cơ chế), `BoosterTutorial` (bỏ qua level khó) |
+| Thêm trường cho level (vd. booster cấm dùng) | Thêm field vào `LevelDefinition` (giá trị mặc định = hành vi cũ), sửa Level Editor để chỉnh, đọc ở runtime |
 
 ## Lưu ý
 

@@ -1,51 +1,53 @@
 # 07 – Coin, Shop, IAP, quảng cáo có thưởng
 
+> Code: ví ở `Features/Economy`, Shop ở `Features/Shop`, service ads / IAP ở `Core/Foundation/Services` (đều trong `Assets/_Project/`). README: [Economy](../../_Project/Features/Economy/Docs/README.md), [Shop](../../_Project/Features/Shop/Docs/README.md).
+
 ## Tính năng làm gì
 
-- **Coin**: nhận khi thắng (+10, x2 bằng ads), Daily, Shop; tiêu cho booster, hồi mạng, nạp năng lượng.
+- **Coin**: nhận khi thắng (theo độ khó + sao, x2 bằng ads), Daily, Lucky Wheel, Shop; tiêu cho booster, thêm giờ, nạp năng lượng.
 - **Shop** (tab bên trái Main Menu): Starter Pack, Remove Ads, No Ads Bundle, Special Bundle, lưới gói Coin; giá VND.
 - **IAP** (mua bằng tiền thật): **chưa có SDK** → luôn thất bại, hiện "Purchase Failed!" như bản gốc.
-- **Quảng cáo có thưởng**: **giả lập**, luôn thành công sau 0.5 s.
+- **Quảng cáo có thưởng**: **giả lập**, luôn thành công sau `EconomyConfig.adsSimulatedDuration` (0.5 s).
 
-> Dự án portfolio: không có tài khoản store / ads thật. Hai service đã tách sẵn để thay SDK mà không sửa nơi gọi.
+> Dự án portfolio: không có tài khoản store / ads thật. Hai service đã tách sau interface để thay SDK mà không sửa nơi gọi.
 
 ## File liên quan
 
 | File | Việc |
 | --- | --- |
-| `Gameplay/Economy/CoinWallet` | Static: `Balance`, `Add`, `TrySpend`, `CanAfford`, event `Changed`; lưu `SaveData.coins` |
-| `Gameplay/Economy/ShopDatabase` (+ asset) | `ShopProduct`: `productId`, tên, `ShopSection`, giá, hình, coin / hint / shield / reveal / `infiniteMinutes` / `removeAds`, tem giảm giá |
-| `Gameplay/Economy/ShopService` | `Buy(product)` → `IAPService.Purchase` → thành công thì `Grant` → event `Purchased` |
-| `Gameplay/Economy/IAPService` | Static, **chỗ gắn SDK thanh toán** |
-| `Gameplay/Economy/RewardedAds` | Trên `Manager`, **chỗ gắn SDK quảng cáo**: `RewardedAds.Show(placement, ok => …)` |
-| `UI/Menu/ShopCardView`, `CoinHUD` | Thẻ gói, số coin |
-| `Editor/UI/ShopBuilder` | Dựng tab Shop |
+| `Features/Economy/Scripts/CoinWallet` (`ICurrencyWallet`) | Class C# thuần: `Balance`, `Add`, `TrySpend`, `CanAfford`, event `Changed` + `CoinsChangedEvent`; lưu section `"economy"` |
+| `Features/Shop/Scripts/ShopDatabase` (+ `Configs/ShopDatabase.asset`) | `ShopProduct`: `productId`, tên, `ShopSection`, giá, hình, coin / hint / shield (= Đóng băng) / reveal / `infiniteMinutes` / `removeAds`, tem giảm giá |
+| `Features/Shop/Scripts/ShopService` | `Buy(product)` → `IIAPService.Purchase` → thành công thì `Grant` → event `Purchased`; `NoAds` (section `"shop"`) |
+| `Core/Foundation/Services/IIAPService`, `FakeIAPService` | **Chỗ gắn SDK thanh toán** |
+| `Core/Foundation/Services/IAdsService`, `FakeAdsService` | **Chỗ gắn SDK quảng cáo**: `Show(placement, ok => …)` |
+| `Features/Shop/Scripts/ShopCardView`, `Features/Economy/Scripts/CoinHUD` | Thẻ gói (prefab `ShopCoinCard`, `ShopBuyButton`), số coin |
+| `Game/Prefabs/Menu/ShopPanel` (+ `Game/Scripts/Menu/ShopPanel`) | Tab Shop: ghép thẻ Shop + HUD coin / năng lượng, tự `Init` cho thẻ |
 
 ## Luồng mua
 
 ```text
 ShopCardView (bấm giá) ─► ShopService.Buy(product)
-                             └► IAPService.Purchase(productId, ok)
-                                  ├ ok    → ShopService.Grant: CoinWallet.Add, BoosterInventory.Add,
-                                  │          EnergyManager.AddInfinite, SaveData.noAds → Purchased
-                                  └ fail  → IAPService.PurchaseFailed → GameFlowUI.ShowNotice("Purchase Failed!")
+                             └► IIAPService.Purchase(productId, ok)
+                                  ├ ok    → ShopService.Grant: ICurrencyWallet.Add, IBoosterInventory.Add,
+                                  │          IEnergyService.AddInfinite, noAds → Purchased
+                                  └ fail  → IIAPService.PurchaseFailed → GameFlowUI: NoticePopup "Purchase Failed!"
 ```
 
 ## Gắn SDK thật
 
-| Service | Thay | Giữ nguyên |
+| Service | Làm | Giữ nguyên |
 | --- | --- | --- |
-| `IAPService` | Thân `Purchase` (gọi Unity IAP / Google Play Billing), gọi `Succeed` / `Fail` trong callback; `IsInitialized` | Chữ ký `Purchase(productId, onDone)` và 2 event |
-| `RewardedAds` | Thân `ShowAd` (MAX / AdMob), gọi `onDone(true)` khi được thưởng | `Show(placement, onDone)`, `IsShowing` |
+| IAP | Viết class cài `IIAPService` (Unity IAP / Google Play Billing): gọi `onDone` + `PurchaseSucceeded` / `PurchaseFailed` trong callback | Chữ ký `Purchase(productId, onDone)` và 2 event |
+| Quảng cáo | Viết class cài `IAdsService` (MAX / AdMob): gọi `onDone(true)` khi được thưởng | `Show(placement, onDone)` |
 
-Nơi gọi ads hiện có: `ReviveLivesPopup` (+1 mạng), `WinPopup` ("win_x2"), `RefillEnergyPopup` (+1 năng lượng), `DailyRewardManager` (nhận bù ngày lỡ).
+Rồi thay `new FakeIAPService()` / `new FakeAdsService(...)` trong `GameBootstrap`. Nơi gọi ads hiện có: `MoreTimePopup` (+30 s), `WinPopup` (x2 coin), `RefillEnergyPopup` (+1 năng lượng), `DailyRewardManager` (nhận bù ngày lỡ), `DailyChallengePanel` (chơi bù ngày lỡ).
 
 ## Sửa / mở rộng
 
 | Muốn | Làm |
 | --- | --- |
-| Đổi giá / nội dung gói | Sửa `Configs/ShopDatabase.asset` |
-| Thêm gói vào mục có sẵn | Thêm `ShopProduct` vào asset → chạy **Build Shop** |
+| Đổi giá / nội dung gói | Sửa `Features/Shop/Configs/ShopDatabase.asset` (thẻ đọc lúc chạy) |
+| Thêm gói vào mục có sẵn | Thêm `ShopProduct` vào asset → mở prefab `Game/Prefabs/Menu/ShopPanel`, nhân bản 1 thẻ (`ShopCoinCard` / dòng gói), đặt `productId` |
 | Thêm loại quà mới trong gói (vd. booster mới) | Thêm field vào `ShopProduct`, trao trong `ShopService.Grant`, hiển thị trong `ShopCardView` |
 | Ẩn quảng cáo khi đã mua No Ads | Kiểm tra `ShopService.NoAds` (interstitial chưa có; rewarded vẫn cho xem vì người chơi chủ động) |
 

@@ -2,12 +2,14 @@
 
 Tổng hợp các hiệu ứng "feel" đã làm cho gameplay (nhánh `Day-7`, 10/10/2026): hiệu ứng làm gì, nằm ở script nào, số mặc định, chỉnh / tắt ở đâu, test nào kiểm tra.
 
+> Đường dẫn tính từ `Assets/_Project/Features/Gameplay/Scripts/` (trừ khi ghi rõ). Hàm thuần / sprite vẽ bằng code / DOTween setup ở `Core/Foundation` vì không dính luật game.
+
 Nguyên tắc chung:
 
-- Công thức (đường cong squash, sóng ô, cao độ, combo, ô "dính"…) là **hàm thuần** trong `Gameplay/Feedback/FeelCurves.cs`. View chỉ gọi các hàm này trong tween, nên test được mà không cần Play mode.
+- Công thức (đường cong squash, sóng ô, cao độ, combo…) là **hàm thuần** trong `Core/Foundation/Feedback/FeelCurves.cs` (ô "dính": `GridGeometry.StickyCell`). View chỉ gọi các hàm này trong tween, nên test được mà không cần Play mode.
 - Hiệu ứng nghe **event có sẵn** (`GridManager`, `LevelTimer`, `EventBus`) và không sửa luật chơi. Tắt một component là tắt cả nhóm hiệu ứng của nó.
-- Không thêm ảnh mới: chấm tròn, thanh viên thuốc, viền đỏ, tấm băng đều vẽ bằng code (`Gameplay/Feedback/ProceduralSprites.cs`).
-- DOTween được khởi tạo sẵn 500 tween / 150 sequence lúc mở game (`Gameplay/Util/TweenSetup.cs`), tránh tự nới sức chứa giữa lúc chơi.
+- Không thêm ảnh mới: chấm tròn, thanh viên thuốc, viền đỏ, tấm băng đều vẽ bằng code (`Core/Foundation/Feedback/ProceduralSprites.cs`).
+- DOTween được khởi tạo sẵn 500 tween / 150 sequence lúc mở game (`Core/Foundation/Util/TweenSetup.cs`), tránh tự nới sức chứa giữa lúc chơi.
 - Số liệu chỉnh trong Inspector. Bảng dưới ghi **giá trị mặc định**.
 
 ## Tổng quan
@@ -15,30 +17,30 @@ Nguyên tắc chung:
 | # | Nhóm | Hiệu ứng | Script chính |
 | --- | --- | --- | --- |
 | 1 | Kéo | Bong bóng số phóng to khi hiện, thu nhỏ khi ẩn, chữ nảy khi đổi số | `Input/DragCountBubble` |
-| 2 | Kéo | Bong bóng đổi màu: tím (đang kéo) / xanh (đủ) / đỏ (sai) | `DragCountBubble`, `Core/BoardModel` (`PlacementCheck.Hint`) |
+| 2 | Kéo | Bong bóng đổi màu: tím (đang kéo) / xanh (đủ) / đỏ (sai) | `DragCountBubble`, `Board/BoardModel` (`PlacementCheck.Hint`) |
 | 3 | Kéo | Bong bóng bám ngón tay mượt | `DragCountBubble` |
-| 4 | Kéo | Tick cao dần theo số ô + "ding" khi đủ | `Audio/GameAudioEvents` |
-| 5 | Kéo | Ô số trong vùng kéo phóng to; phủ ≥ 2 ô số thì lắc | `Feedback/DragFeedback`, `Core/CellView` |
-| 6 | Kéo | Ô dưới ngón tay "dính" ở ranh giới 2 ô | `Core/GridManager`, `FeelCurves.StickyCell` |
+| 4 | Kéo | Tick cao dần theo số ô + "ding" khi đủ | `Game/Scripts/GameAudioEvents` |
+| 5 | Kéo | Ô số trong vùng kéo phóng to; phủ ≥ 2 ô số thì lắc | `Feedback/DragFeedback`, `Board/CellView` |
+| 6 | Kéo | Ô dưới ngón tay "dính" ở ranh giới 2 ô | `Board/GridManager`, `GridGeometry.StickyCell` |
 | 7 | Thả tay | Vùng sai: khung xám, co lại, mờ dần + tiếng "bụp" + rung mềm | `Input/SelectionBoxView`, `GameAudioEvents`, `GameHapticEvents` |
 | 8 | Đặt khối | Squash & stretch (dẹt rồi dài, đáy đứng yên) | `Block/PlacedBlockView` |
 | 9 | Đặt khối | Ô trống quanh khối nảy lan như sóng | `Feedback/GameplayFeedback` |
 | 10 | Đặt khối | Hạt bụi màu mèo bung ra từ mép khối | `Feedback/BlockFeedback` |
 | 11 | Đặt khối | Mèo vừa đặt đổi biểu cảm; mèo kề bên nhảy nhẹ + đổi mặt | `PlacedBlockView`, `BlockFeedback` |
 | 12 | Combo | Đặt nhanh liên tiếp: âm cao dần, chữ khen mạnh / to dần | `GridManager` (đếm), `GameAudioEvents`, `GameplayFeedback` |
-| 13 | Tiến độ | Thanh thời gian 3 mốc sao dưới khung LEVEL (thay thanh % ô cũ), mất sao thì sao vàng tan | `UI/HUD/TimeStarBar`, xem [15_Sao.md](15_Sao.md) |
+| 13 | Tiến độ | Thanh thời gian 3 mốc sao dưới khung LEVEL (thay thanh % ô cũ), mất sao thì sao vàng tan | `UI/TimeStarBar`, xem [15_Sao.md](15_Sao.md) |
 | 14 | Thắng | Khối cuối: slow-motion + camera zoom nhẹ | `GameplayFeedback` |
-| 15 | Đồng hồ | Dưới 10 s: viền đỏ đập theo giây + nhạc nhanh lên | `UI/HUD/LowTimeVignette`, `GameAudioEvents`, `AudioManager` |
-| 16 | Đồng hồ | Cộng giờ: chữ "+30s" bay vào đồng hồ | `UI/HUD/TimerUI` |
-| 17 | Đồng hồ | Đóng băng như bản gốc: Spine đồng hồ + bàn tay bấm nút, nổ hạt, viền `ice_effect` + tuyết; nút đếm ngược | `UI/HUD/FreezeOverlayFX`, `FreezeButtonCountdown`, `BlockFeedback` |
+| 15 | Đồng hồ | Dưới 10 s: viền đỏ đập theo giây + nhạc nhanh lên | `UI/LowTimeVignette`, `GameAudioEvents`, `AudioManager` |
+| 16 | Đồng hồ | Cộng giờ: chữ "+30s" bay vào đồng hồ | `UI/TimerUI` |
+| 17 | Đồng hồ | Đóng băng như bản gốc: Spine đồng hồ + bàn tay bấm nút, nổ hạt, viền `ice_effect` + tuyết; nút đếm ngược | `UI/FreezeOverlayFX`, `FreezeButtonCountdown`, `BlockFeedback` |
 | 18 | Gỡ khối | Mèo nhảy bật lên rồi rơi xuống mờ dần; ô bên dưới nảy lại | `PlacedBlockView`, `BlockFeedback` |
-| 19 | Booster | Icon bay ra giữa màn hình (tia sáng, chữ tên) rồi lao tới mục tiêu; Hint gợi ý bằng mèo mờ + bàn tay | `UI/HUD/BoosterUseFx`, `Booster/HintMarker` |
+| 19 | Booster | Icon bay ra giữa màn hình (tia sáng, chữ tên) rồi lao tới mục tiêu; Hint gợi ý bằng mèo mờ + bàn tay | `UI/BoosterUseFx`, `Booster/HintMarker` |
 
 ---
 
 ## 1. Lúc kéo
 
-### 1.1 Bong bóng đếm ô (`Gameplay/Input/DragCountBubble.cs`)
+### 1.1 Bong bóng đếm ô (`Input/DragCountBubble.cs`)
 
 | Hiệu ứng | Mặc định | Field |
 | --- | --- | --- |
@@ -55,7 +57,7 @@ Nguyên tắc chung:
   - **Invalid**: chắc chắn sai (thừa ô, ≥ 2 ô số, ô số còn khóa, vùng chứa ô bị chặn, sai hướng mà đã đủ ô).
   - **Neutral**: kéo tiếp còn có thể đúng (thiếu ô, chưa có ô số, ô "?").
 
-### 1.2 Âm tick khi kéo (`Gameplay/Audio/GameAudioEvents.cs`)
+### 1.2 Âm tick khi kéo (`Game/Scripts/GameAudioEvents.cs`)
 
 | Âm | Khi nào | Clip | Field |
 | --- | --- | --- | --- |
@@ -65,7 +67,7 @@ Nguyên tắc chung:
 - Cao độ = `0.9 × 2^(nửa cung / 12)`, theo thang ngũ cung nên dễ nghe. Quá mảng thì giữ nốt cuối; co vùng lại thì thấp xuống.
 - Tắt bằng ô `dragSounds`.
 
-### 1.3 Ô số trong vùng kéo (`Gameplay/Feedback/DragFeedback.cs` + `CellView`)
+### 1.3 Ô số trong vùng kéo (`Feedback/DragFeedback.cs` + `CellView`)
 
 | Hiệu ứng | Mặc định |
 | --- | --- |
@@ -138,7 +140,7 @@ Nguyên tắc chung:
 | 3 | Beauty / Amazing | Lần nào cũng hiện |
 | 4+ | Perfect | Lần nào cũng hiện |
 
-### 3.2 Thanh thời gian 3 mốc sao (`UI/HUD/TimeStarBar.cs`, con `TimeBar` của `LevelFrame`)
+### 3.2 Thanh thời gian 3 mốc sao (`UI/TimeStarBar.cs`, con `TimeBar` của `LevelFrame`)
 
 Thay thanh % ô đã lấp (`LevelProgressBar`, đã xóa) vì bản gốc đặt thanh thời gian có sao ở đúng chỗ này. Chi tiết: [15_Sao.md](15_Sao.md).
 
@@ -155,7 +157,7 @@ Thay thanh % ô đã lấp (`LevelProgressBar`, đã xóa) vì bản gốc đặ
 
 ### 4.1 Sắp hết giờ
 
-- **Viền đỏ** (`UI/HUD/LowTimeVignette.cs`, gắn trên `Canvas_HUD`):
+- **Viền đỏ** (`UI/LowTimeVignette.cs`, gắn trên gốc prefab `GameplayHUD`):
   - Viền đỏ sát mép màn hình, nằm dưới các nút HUD và không chắn bấm.
   - Độ đậm nền 0.14; mỗi giây đập lên 0.4 rồi lắng về (0.45 s), cùng nhịp với icon đồng hồ và rung Tick.
 - **Nhạc** (`GameAudioEvents` → `AudioManager.SetMusicPitch`): nhạc nền nhanh lên × 1.08 (`lowTimeMusicPitch`), về × 1 khi hết điều kiện.
@@ -174,14 +176,14 @@ Thay thanh % ô đã lấp (`LevelProgressBar`, đã xóa) vì bản gốc đặ
 - Sau đó bay vòng cung vào chữ giờ, nhanh dần và nhỏ lại (0.45 s); chạm tới thì icon đồng hồ nảy.
 - Chạy theo thời gian thực.
 
-### 4.3 Đóng băng (như bản gốc – `UI/HUD/FreezeOverlayFX.cs`)
+### 4.3 Đóng băng (như bản gốc – `UI/FreezeOverlayFX.cs`)
 
 Dựng theo cấu trúc `FreezeOverlayFX` của game gốc (đọc từ `E:\PawBlock\ExportedProject`), dùng đúng asset gốc:
 
-| Object (`Canvas_HUD/FreezeOverlayFX`) | Nội dung |
+| Object (`GameplayHUD/FreezeOverlayFX`) | Nội dung |
 | --- | --- |
 | `HandStartFreeze` | Spine `SkeletonGraphic` – `Spine_Freeze/Freeze_SkeletonData` (Spine 4.1.24), animation `Start` 2.37 s: đồng hồ mèo hiện ra, bàn tay bấm nút; giữa màn hình, lệch xuống 26; chạy thời gian thực |
-| `Booster_FreezeFX` | Prefab `Prefabs/Gameplay/Freeze/Booster_FreezeFX` (`UIParticle` + 4 hệ hạt gốc: `Twinkle`, `Spark_Blue`, `snowflake`, `Circle_Blue`) – nổ lúc bàn tay bấm |
+| `Booster_FreezeFX` | Prefab `Features/Gameplay/Prefabs/Freeze/Booster_FreezeFX` (`UIParticle` + 4 hệ hạt gốc: `Twinkle`, `Spark_Blue`, `snowflake`, `Circle_Blue`) – nổ lúc bàn tay bấm |
 | `FreezeBorders` | CanvasGroup mờ vào / ra 0.4 s: `Snow` (prefab `FreezeSnow`: 2 `Spark_White` + `snowflake` rơi lặp) + `Border` (ảnh `ice_effect` phủ toàn màn) |
 
 - Bấm Freeze → animation `Start`, khóa thao tác. Sự kiện Spine **`Press` (1.67 s)** → nổ `Booster_FreezeFX`, mở thao tác; cùng lúc đồng hồ đóng băng (`BoosterManager.freezeEffectDelay` = 1.67) → `FreezeBorders` hiện. Hết animation → ẩn đồng hồ.
@@ -202,7 +204,7 @@ Dựng theo cấu trúc `FreezeOverlayFX` của game gốc (đọc từ `E:\PawB
 
 ## 6. Booster
 
-### 6.1 Dùng booster (`UI/HUD/BoosterUseFx.cs`, trên `Canvas_HUD`)
+### 6.1 Dùng booster (`UI/BoosterUseFx.cs`, trên gốc prefab `GameplayHUD`)
 
 | Bước | Thời gian | Hiệu ứng |
 | --- | --- | --- |
@@ -215,38 +217,39 @@ Dựng theo cấu trúc `FreezeOverlayFX` của game gốc (đọc từ `E:\PawB
 - Trong lúc icon bay: khóa thao tác (`InputGate`) nên đồng hồ cũng dừng – không mất giờ vì hiệu ứng.
 - Chạy theo thời gian thực. Nút booster vẫn nảy (`BoosterButton`), âm Booster + rung Medium như cũ.
 
-### 6.2 Hint chỉ gợi ý (`Booster/HintMarker.cs` + `Effects/HintBooster.cs`)
+### 6.2 Hint chỉ gợi ý (`Booster/HintMarker.cs` + `Booster/HintBooster.cs`)
 
 - Mèo mờ (lấy từ pool khối, như mèo xem trước, màu ngẫu nhiên) nhấp nháy alpha 0.6 ↔ 0.25, chu kỳ 1 s, đúng vùng cần đặt.
 - Bàn tay (bản sao `TutorialHand`) diễn kéo chéo từ góc trên trái → góc dưới phải của vùng, lặp lại; ẩn khi người chơi đang kéo.
 - Chọn vùng (`HintBooster.PickRegion`): bỏ vùng có ô số còn khóa → ưu tiên vùng chưa bị khối nào đè → vùng nhỏ nhất.
 - Tắt khi đặt đúng vùng, đặt khối khác đè lên vùng, đổi level / lưới mới, ván dừng. Đang hiện thì nút Hint sáng và bấm lại không tốn lượt.
 
-## Gắn trong scene
+## Gắn trong scene / prefab
 
 | Component | GameObject |
 | --- | --- |
 | `DragFeedback`, `BlockFeedback` | `Manager` (cùng `GameplayFeedback`) |
-| `LowTimeVignette` | `Canvas_HUD` |
-| `TimeStarBar` (dựng bằng **Build Stars**) | `Canvas_HUD/UIZone/TopPanel/LevelFrame/TimeBar` |
-| `BoosterUseFx` | `Canvas_HUD` |
-| `FreezeOverlayFX` (+ con `HandStartFreeze`, `Booster_FreezeFX`, `FreezeBorders`) | `Canvas_HUD/FreezeOverlayFX` |
-| `FreezeButtonCountdown` | nút Freeze (`Booster2`) |
-| `HintMarker` | `Manager` (cùng `BoosterManager`; thiếu thì `BoosterManager` tự thêm) |
+| `LowTimeVignette` | gốc prefab `GameplayHUD` (`Canvas_HUD`) |
+| `TimeStarBar` | `GameplayHUD/UIZone/TopPanel/LevelFrame/TimeBar` |
+| `BoosterUseFx` | gốc prefab `GameplayHUD` |
+| `FreezeOverlayFX` (+ con `HandStartFreeze`, `Booster_FreezeFX`, `FreezeBorders`) | `GameplayHUD/FreezeOverlayFX` |
+| `FreezeButtonCountdown` | nút Freeze (instance `BoosterButton` thứ 2 trong `DownPanel/Booster`) |
+| `HintMarker` | `Manager` (cùng `BoosterManager`, nhận qua `Init`) |
 
 **Âm mới** (`DragTick`, `DragReady`, `DragCancel`) được thêm bằng **Tools → PawBlock → Builders → Setup Audio**. Lệnh này chỉ thêm âm còn thiếu, âm cũ giữ nguyên.
 
-Viền đỏ, chữ "+Ns" và tấm băng đều tự tạo lúc chạy. Nếu dựng lại HUD bằng builder mà mất `LowTimeVignette`, chỉ cần gắn lại component; không phải gán reference nào.
+Viền đỏ, chữ "+Ns", tấm băng, lớp hiệu ứng booster được **dựng sẵn trong prefab** (chuột phải component → `EditorBuild`, dùng `EditorChildren`), lúc chạy không tạo object.
 
 ## Test
 
-Mở **Window → General → Test Runner → tab EditMode** (script game chưa tách asmdef nên test nằm ở `Script/Editor/Tests`). Tổng **46 test**:
+Mở **Window → General → Test Runner → tab EditMode**, chạy 4 assembly `PawBlock.*.Tests` (160 test toàn dự án). Test game feel:
 
 | File | Kiểm tra |
 | --- | --- |
-| `FeelCurvesTests` (31) | Squash: dẹt trước, không vượt biên độ, tắt dần, đáy đứng yên. Ô nảy, vòng ô, độ nảy / độ trễ sóng. Cao độ tick. Ô "dính". Combo (cửa sổ, reset), cao độ combo, bậc lời khen. |
-| `SelectionHintTests` (8) | Neutral / Ready / Invalid qua `BoardModel.Check`: thiếu / đủ / thừa ô, ô số 1, chưa có ô số, 2 ô số, ô khóa, ô Void, sai hướng, ô "?". |
-| `FeelPlayModeTests` (7) | Chạy Play mode thật, mỗi frame cố định 1/60 s: sóng ô (trễ, nhẹ dần, về 1); ô tắt giữa lúc nảy; squash khối từ prefab thật; khung co xám rồi tắt và lượt kéo mới hết xám; ô số phóng to / về / lắc xong về chỗ; bong bóng trượt mượt tới ngón tay; gỡ khối nhảy lên rồi rơi, mờ dần, gọi `onDone`. |
+| `Core/Foundation/Tests/Editor/FeelCurvesTests` | Squash: dẹt trước, không vượt biên độ, tắt dần, đáy đứng yên. Ô nảy, vòng ô, độ nảy / độ trễ sóng. Cao độ tick. Combo (cửa sổ, reset), cao độ combo, bậc lời khen. |
+| `Features/Gameplay/Tests/Editor/GridGeometryTests` | Ô "dính" ở ranh giới 2 ô (`GridGeometry.StickyCell`). |
+| `Features/Gameplay/Tests/Editor/SelectionHintTests` | Neutral / Ready / Invalid qua `BoardModel.Check`: thiếu / đủ / thừa ô, ô số 1, chưa có ô số, 2 ô số, ô khóa, ô Void, sai hướng, ô "?". |
+| `Features/Gameplay/Tests/Editor/FeelPlayModeTests` (7 `[UnityTest]`) | Chạy Play mode thật, mỗi frame cố định 1/60 s: sóng ô (trễ, nhẹ dần, về 1); ô tắt giữa lúc nảy; squash khối từ prefab thật; khung co xám rồi tắt và lượt kéo mới hết xám; ô số phóng to / về / lắc xong về chỗ; bong bóng trượt mượt tới ngón tay; gỡ khối nhảy lên rồi rơi, mờ dần, gọi `onDone`. |
 
 - Test Play mode mở scene trống riêng rồi trả lại scene cũ. Nếu scene đang có thay đổi chưa lưu, 3 test này tự bỏ qua để không làm mất thay đổi.
 - Đã thử cố tình làm sai công thức squash (đảo dẹt ↔ dài): test công thức và test Play mode đều báo đỏ.

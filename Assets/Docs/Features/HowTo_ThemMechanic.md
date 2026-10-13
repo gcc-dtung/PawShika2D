@@ -1,6 +1,6 @@
 # Hướng dẫn: thêm một cơ chế (mechanic) mới
 
-Đọc trước: [03 – Cơ chế](03_CoChe-Mechanic.md). Mọi chỗ cần sửa trong code đều có chú thích **`// [MECHANIC]`** – tìm chữ này (Ctrl + Shift + F) để không sót.
+Đọc trước: [03 – Cơ chế](03_CoChe-Mechanic.md). Code runtime ở `Assets/_Project/Features/Gameplay/Scripts/`, tool ở `Features/Gameplay/Editor/Level/`. Mọi chỗ cần sửa trong code đều có chú thích **`// [MECHANIC]`** – tìm chữ này (Ctrl + Shift + F) để không sót.
 
 ---
 
@@ -27,17 +27,17 @@ Loại: ô số (A), có luật vị trí (B), không đổi trạng thái (C = 
 
 | # | Bước | File | Bắt buộc |
 | --- | --- | --- | --- |
-| 1 | Dữ liệu | `Gameplay/Level/LevelDefinition.cs` | ✔ |
-| 2 | Trạng thái lúc chơi | `Gameplay/Core/ClueCell.cs` (+ `CellModel` nếu đổi trạng thái) | ✔ |
-| 3 | Luật đặt khối | `Gameplay/Core/BoardModel.cs` | nếu B / C |
-| 4 | Solver | `Gameplay/Solver/ShikakuSolver.cs` | nếu B |
-| 5 | Hiển thị trên ô | `Gameplay/Core/CellView.cs` + `Prefabs/Cell.prefab` | ✔ |
-| 6 | Khối mèo, booster | `PlacedBlockView`, `BoosterManager`, `BoosterTutorial` | nếu che số / chặn chọn |
-| 7 | Popup giới thiệu | `Gameplay/Tutorial/MechanicIntro.cs`, `Editor/UI/TutorialBuilder.cs` | nên có |
+| 1 | Dữ liệu | `Scripts/Level/LevelDefinition.cs` | ✔ |
+| 2 | Trạng thái lúc chơi | `Scripts/Board/ClueCell.cs` (+ `CellModel` nếu đổi trạng thái) | ✔ |
+| 3 | Luật đặt khối | `Scripts/Board/BoardModel.cs` | nếu B / C |
+| 4 | Solver | `Scripts/Solver/ShikakuSolver.cs` | nếu B |
+| 5 | Hiển thị trên ô | `Scripts/Board/CellView.cs` + `Prefabs/Cell.prefab` | ✔ |
+| 6 | Khối mèo, booster | `PlacedBlockView`, `BoosterManager`, `HintBooster` | nếu che số / chặn chọn |
+| 7 | Popup giới thiệu | `Scripts/Tutorial/MechanicIntro.cs` (+ sprite gán trên component trong scene) | nên có |
 | 8 | Level Editor + Validator | `LevelEditorWindow`, `LevelValidator` | ✔ |
 | 9 | Gắn tự động | `MechanicInjectorSettings`, `MechanicInjector` (+ asset) | nếu muốn tự xuất hiện |
 | 9b | Độ khó | `LevelDifficultyAnalyzer`, `LevelDifficultySettings` | nên có |
-| 11 | Docs + test | README, 03, ProjectStructure, RoadMap | ✔ |
+| 11 | Docs + test | README, 03, Gameplay README, RoadMap; test trong `Features/Gameplay/Tests/Editor` | ✔ |
 
 ---
 
@@ -68,7 +68,7 @@ Cơ chế **đổi trạng thái** (như Khóa): giữ biến trong `ClueCell` (
 
 ## Bước 3 – Luật đặt khối (`BoardModel.Check`)
 
-Thêm kết quả vào `PlacementResult` (thao tác bị hủy, **không** trừ mạng):
+Thêm kết quả vào `PlacementResult` (thao tác bị hủy, khung co xám, không phạt):
 
 ```csharp
 NotOnEdge   // ô Mép nhưng khối không chạm mép lưới
@@ -82,7 +82,7 @@ if (clue.MustTouchEdge && !ShikakuSolver.TouchesBorder(rect, Geometry.Width, Geo
     return new PlacementCheck(PlacementResult.NotOnEdge, rect, cells, clueCell);
 ```
 
-> **Quy tắc vàng:** viết luật thành **1 hàm static dùng chung** (ở đây `ShikakuSolver.TouchesBorder`, giống `MatchesConstraint`) rồi gọi ở cả `BoardModel` và solver. Hai nơi lệch luật = game hiện mèo nhưng thả ra bị trừ mạng oan.
+> **Quy tắc vàng:** viết luật thành **1 hàm static dùng chung** (ở đây `ShikakuSolver.TouchesBorder`, giống `MatchesConstraint`) rồi gọi ở cả `BoardModel` và solver. Hai nơi lệch luật = Hint / Reveal chỉ ra vùng người chơi không kéo được (hoặc solver kiểm tra level sai).
 
 **3b. Cơ chế phản ứng khi đặt khối** (như Khóa −1): sửa `BoardModel.Place` (chỗ có `// [MECHANIC]`). Ô vừa đổi trạng thái thì thêm vào list / event để view và âm thanh biết (xem `onClueUnlocked`).
 
@@ -110,20 +110,20 @@ Cơ chế **giấu số** thì không lọc ở đây mà thêm clue vào `unkno
 
 ## Bước 5 – Hiển thị trên ô (`CellView` + `Cell.prefab`)
 
-1. Mở `Prefabs/Cell.prefab`, thêm object con (vd. `EdgeMark`, SpriteRenderer, sortingOrder 5–6, **tắt sẵn**). Sprite đặt trong `GameplayVisuals` nếu dùng chung.
+1. Mở `Features/Gameplay/Prefabs/Cell.prefab` (Prefab Mode), thêm object con (vd. `EdgeMark`, SpriteRenderer, sortingOrder 5–6, **tắt sẵn**). Sprite đặt trong `GameplayVisuals` nếu dùng chung.
 2. `CellView`:
 
 ```csharp
-[SerializeField] private GameObject edgeMark;
+[SerializeField] private SpriteRenderer edgeMark;
 
-// Awake: để hiệu ứng xuất hiện làm mờ / hiện dần cả dấu mới
-if (edgeMark != null) _contentSprites.AddRange(edgeMark.GetComponentsInChildren<SpriteRenderer>(true));
+// Awake: để hiệu ứng xuất hiện làm mờ / hiện dần cả dấu mới (giống orientationBadge)
+if (edgeMark != null) _contentSprites.Add(edgeMark);
 
 // Refresh:
-if (edgeMark != null) edgeMark.SetActive(hasClue && !locked && clue.MustTouchEdge);
+if (edgeMark != null) edgeMark.gameObject.SetActive(hasClue && !locked && clue.MustTouchEdge);
 ```
 
-3. Gán field `edgeMark` trong prefab.
+3. Gán field `edgeMark` trong prefab (hoặc tự điền trong `OnValidate`). Lúc chạy không `GetComponent` / `Find` ([ProjectConventions](../Refactor/ProjectConventions.md) mục 10).
 
 > View chỉ đọc `ClueCell`, không tự tính luật.
 
@@ -135,7 +135,7 @@ Chỉ cần nếu cơ chế **che số** hoặc **chặn chọn ô**:
 | --- | --- |
 | `PlacedBlockView.SetNumber` | Số trên mèo xem trước (ô "?" hiện "?") |
 | `BoosterManager.HandleCellTap` | Reveal không được chọn ô này |
-| `BoosterTutorial.FindWrongMove` | Tutorial Khiên chỉ mẫu trên ô người chơi đọc được |
+| `HintBooster.PickRegion` | Hint bỏ qua vùng người chơi chưa đọc được (đang bỏ ô số còn khóa) |
 
 Hint / Reveal dùng `Board.TrySolveRemaining` + `Board.Check(rect).IsReady` nên **tự tôn trọng luật mới** nếu Bước 3–4 đúng.
 
@@ -161,7 +161,7 @@ case Kind.Edge:
 
 > `ShowNext` hiện dùng `default:` cho Hidden – đổi thành `case Kind.Hidden:` để cơ chế mới không rơi vào nhánh sai.
 
-`TutorialBuilder`: thêm hằng đường dẫn ảnh, `EnsureSprite`, `PopupBuilder.Assign(mechanicIntro, "edgeSprite", …)`. Chạy **Build Tutorial**.
+Ảnh minh họa: copy từ `ThirdParty/` vào `Features/Gameplay/Art/UI/...` (nằm trong atlas Gameplay), rồi gán vào field `edgeSprite` của component `MechanicIntro` trên object `Manager` trong scene. Builder cũ đã xóa ở P7.
 
 ## Bước 8 – Level Editor và Validator
 
@@ -186,7 +186,7 @@ if (m.edge && m.hidden) report.warnings.Add($"{name}: Mép + \"?\" khó đọc")
 ## Bước 9 – Gắn tự động (Mechanic Injector)
 
 1. `MechanicInjectorSettings.cs`: thêm `Edge = 4` vào **cuối** `MechanicKind` (thứ tự enum = thứ tự gắn; cơ chế đổi hình lưới như Void phải đứng đầu). Thêm `MechanicRule` mặc định vào list.
-2. **Mở `Levels/MechanicInjectorSettings.asset` và thêm rule Edge bằng tay** – asset đã tạo không tự nhận giá trị mặc định mới.
+2. **Mở `Features/Gameplay/Configs/Levels/MechanicInjectorSettings.asset` và thêm rule Edge bằng tay** – asset đã tạo không tự nhận giá trị mặc định mới.
 3. `MechanicInjector`:
    - `TryKind`: thêm `case MechanicKind.Edge: part = TryEdge(ctx); break;` – lưu ý `default:` đang là Hidden, đổi thành `case MechanicKind.Hidden:` rồi để `default: part = null;`.
    - Viết `TryEdge(ctx)` theo mẫu `TryConstraint`: lấy `SolutionRects`, chọn clue mà khối lời giải chạm mép **và** có cách đặt khác không chạm mép (dấu Mép thực sự loại bớt lựa chọn), gắn, `LevelValidator.Validate`, sai thì `Snapshot.Restore`.
@@ -214,9 +214,9 @@ Ví dụ "ô Đá": ô không chơi được nhưng vẫn hiện trên lưới.
 
 1. Unity biên dịch không lỗi (Console).
 2. Level Editor → tạo level nhỏ có cơ chế → **Kiểm tra** (Validator hợp lệ) → **Giải** → **▶ Chơi thử**.
-3. Trong ván: luật chặn đúng (thả sai luật không trừ mạng), đặt đúng được, hiển thị trên ô, popup giới thiệu lần đầu, Hint / Reveal vẫn đúng, tutorial Khiên không chỉ vào ô sai.
+3. Trong ván: luật chặn đúng (thả sai luật thì khung co xám), đặt đúng được, hiển thị trên ô, popup giới thiệu lần đầu, Hint / Reveal vẫn đúng.
 4. **Validate Levels** cho cả database.
-5. Cập nhật docs: bảng "Ô đặc biệt" trong `../README.md`, bảng trong [03](03_CoChe-Mechanic.md), `ProjectStructure.md` (nếu thêm file), RoadMap.
+5. Cập nhật docs: bảng "Ô đặc biệt" trong `../README.md`, bảng trong [03](03_CoChe-Mechanic.md), [Gameplay README](../../_Project/Features/Gameplay/Docs/README.md) (nếu thêm class), RoadMap.
 
 ---
 

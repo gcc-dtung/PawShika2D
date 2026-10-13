@@ -1,18 +1,20 @@
 # 09 – Tutorial và hướng dẫn trong game
 
+> Code ở `Assets/_Project/Features/Gameplay/Scripts/` (`Tutorial/`, `Intro/`, `Booster/BoosterTutorial`, `UI/`); đã xem lưu ở section save `"gameplay"`.
+
 Dự án có 3 loại hướng dẫn, chạy độc lập và **nhường nhau** (không bao giờ chồng lên nhau):
 
 | Loại | Khi nào | File chính | Lưu đã xem |
 | --- | --- | --- | --- |
-| **Tutorial lần đầu** (4 bước) | Save mới, đang ở level 1 | `TutorialController`, `TutorialLevels`, `TutorialView`, `TutorialHand` | `SaveData.tutorialDone` |
-| **Popup cơ chế** | Lần đầu gặp Hướng / Khóa / "?" | `MechanicIntro`, `MechanicIntroPopup` | `SaveData.seenMechanics` |
-| **Tutorial mở khóa booster** | Lần đầu tới level ≥ `levelUnlock` | `BoosterTutorial`, `BoosterTutorialView` | `SaveData.unlockedBoosters` |
+| **Tutorial lần đầu** (4 bước) | Save mới, đang ở level 1 | `TutorialController`, `TutorialLevels`, `TutorialView`, `TutorialHand` | `GameplaySave.tutorialDone` |
+| **Popup cơ chế** | Lần đầu gặp Hướng / Khóa / "?" | `MechanicIntro`, `MechanicIntroPopup` | `GameplaySave.seenMechanics` |
+| **Tutorial mở khóa booster** | Lần đầu tới level ≥ `levelUnlock` | `BoosterTutorial`, `BoosterTutorialView` | `GameplaySave.unlockedBoosters` |
 
 Hướng dẫn chi tiết sửa bước / tạo tutorial mới: **[../TutorialGuide.md](../TutorialGuide.md)**.
 
 ## Thứ tự ưu tiên sau khi nạp level
 
-`LevelIntroSequencer` (trên `Manager`) chạy lần lượt mọi component có interface `ILevelIntro` trong scene theo `Order`:
+`LevelIntroSequencer` (trên `Manager`) chạy lần lượt các `ILevelIntro` mà `GameBootstrap` truyền vào (`BoosterTutorial`, `MechanicIntro`, `DifficultyIntro`) theo `Order`:
 
 ```text
 EventBus<LevelLoadedEvent>
@@ -24,12 +26,12 @@ Order 10 MechanicIntro  (0.15 s) ── có cơ chế mới? → popup, Pause v�
 Order 20 BoosterTutorial (0.3 s) ── có booster tới level mở? → màn tối + bàn tay → bấm → mở khóa → xong
    │  mỗi intro xong (onDone) → InputGate.Unlock ngay trong frame đó
    ▼
-ShieldTutorialDemo (nghe BoosterTutorialCompletedEvent) ── Khiên: "kéo sai thử"
+FreezeTutorialDemo (nghe BoosterTutorialCompletedEvent) ── Đóng băng: "đồng hồ đã đứng yên"
 ```
 
 Các intro không biết nhau, không có cờ tĩnh kiểm tra lẫn nhau; thứ tự chỉ do `Order`.
 
-> Thêm một loại hướng dẫn / màn che mới sau khi nạp level: viết component implement `ILevelIntro` (`Order`, `StartDelay`, `ShouldPlay`, `Play(level, onDone)`, `Cancel`) và đặt vào scene. Không sửa sequencer, `GridManager` hay các intro khác. Màn che không gắn với nạp level thì dùng `InputGate.Lock(this)` / `Unlock(this)`.
+> Thêm một loại hướng dẫn / màn che mới sau khi nạp level: viết component implement `ILevelIntro` (`Order`, `StartDelay`, `ShouldPlay`, `Play(level, onDone)`, `Cancel`) và thêm vào mảng `introList` mà `GameBootstrap` truyền cho `LevelIntroSequencer.Init`. Không sửa sequencer, `GridManager` hay các intro khác. Màn che không gắn với nạp level thì dùng `InputGate.Lock(this)` / `Unlock(this)`.
 
 ## Xem lại khi test
 

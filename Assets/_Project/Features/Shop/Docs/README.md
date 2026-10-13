@@ -12,7 +12,7 @@ Chi tiết hành vi: [07 Economy – Shop](../../../../Docs/Features/07_Economy-
 | Phát / nghe event | Không (tab Shop mở bằng `ShopOpenRequestedEvent` do Game xử lý) |
 | Dùng interface | `ICurrencyWallet` (coin), `IBoosterInventory`, `IEnergyService` (vô hạn), `IIAPService`, `ISaveService` |
 | Save | Section `"shop"` (`ShopSave`: đã mua tắt quảng cáo `noAds`) |
-| Config | `Configs/ShopDatabase` (`ShopProduct`: section, giá, coin, booster, vô hạn, `noAds`) |
+| Config | `Configs/ShopDatabase` (`ShopProduct`: section, giá, coin, booster `hint` / `shield` (= Freeze) / `reveal`, vô hạn, `removeAds`) |
 
 ## Class chính
 

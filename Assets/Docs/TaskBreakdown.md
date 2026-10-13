@@ -1,5 +1,7 @@
 # Task Breakdown – Thay thời gian bằng mạng
 
+> **Tài liệu lịch sử** (kế hoạch ban đầu, RoadMap 01–16). Từ nhánh `Old-Core` (RoadMap 17) game quay lại **đồng hồ đếm ngược** như bản gốc: bỏ mạng / Khiên / popup Hồi mạng, Khiên → Đóng băng, có lại sao; tab Progress → Daily Challenge. Tên class, đường dẫn (`Script/…`, `LivesManager`, builder…) trong file này là của thời điểm đó, giữ nguyên để tra lịch sử. Hiện trạng: [README.md](README.md), [ProjectStructure.md](ProjectStructure.md), [Features/](Features/00_README.md).
+
 Chia 6 giai đoạn. Giai đoạn 1–3 cho ra một vòng chơi hoàn chỉnh chơi thử được; 4–6 hoàn thiện sản phẩm.
 
 Ký hiệu: `[x]` xong · `[ ]` chưa làm · `[~]` tạm thời / cần làm lại
