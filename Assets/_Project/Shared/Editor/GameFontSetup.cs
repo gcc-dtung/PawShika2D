@@ -15,9 +15,9 @@ namespace PawBlock.Shared
     /// </summary>
     public static class GameFontSetup
     {
-        public const string FontPath = "Assets/_Project/GameAssets/06_Fonts/Fredoka-Bold SDF.asset";
+        public const string FontPath = "Assets/_Project/Shared/Fonts/Fredoka-Bold SDF.asset";
         private const string FallbackPath = "Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset";
-        private const string PresetFolder = "Assets/_Project/GameAssets/06_Fonts/";
+        private const string PresetFolder = "Assets/_Project/Shared/Fonts/";
         // Gán shader theo đường dẫn, không dùng Shader.Find: 09_Shaders_Materials có bản rip "TextMeshPro/Distance Field"
         // trùng tên từ game gốc, không vẽ được (chữ thành ô đen) — đó là lý do Fredoka từng "hỏng".
         private const string SdfShaderPath = "Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader";

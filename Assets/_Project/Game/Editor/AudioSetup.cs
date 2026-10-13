@@ -10,16 +10,16 @@ namespace PawBlock.Game
 {
     /// <summary>
     /// Tools → PawBlock → Builders → Setup Audio:
-    /// - Tạo / bổ sung AudioDatabase (Assets/_Project/Configs) với clip có sẵn trong 01_Audio (game gốc) và ShikaCat.
+    /// - Tạo / bổ sung AudioDatabase (Shared/Configs) với clip trong Shared/Audio (game gốc) và Shared/Audio/ShikaCat.
     ///   Chạy lại chỉ thêm âm / clip còn thiếu, không ghi đè volume / pitch / cooldown đã chỉnh trong Inspector.
     /// - Nhạc nền nhập kiểu Streaming (không nạp cả bài vào RAM).
     /// - Scene: object AudioManager (AudioManager + GameAudioEvents), UIButtonSounds trên Canvas_Menu / Canvas_HUD / Canvas_Popup.
     /// </summary>
     public static class AudioSetup
     {
-        private const string DatabasePath = GameConfigSetup.Folder + "AudioDatabase.asset";
-        private const string A = "Assets/_Project/GameAssets/01_Audio/";
-        private const string S = "Assets/_Project/ShikaCat_GameAssets/01_Audio/";
+        private const string DatabasePath = "Assets/_Project/Shared/Configs/AudioDatabase.asset";
+        private const string A = "Assets/_Project/Shared/Audio/";
+        private const string S = "Assets/_Project/Shared/Audio/ShikaCat/";
         private const string MusicPath = A + "BGM/BGM.ogg";
 
         private static readonly string[] Canvases = { "Canvas_Menu", "Canvas_HUD", "Canvas_Popup" };

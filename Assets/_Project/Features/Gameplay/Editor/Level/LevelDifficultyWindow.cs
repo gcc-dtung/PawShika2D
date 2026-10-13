@@ -19,10 +19,10 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelDifficultyWindow : EditorWindow
     {
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
-        private const string SettingsPath = "Assets/_Project/Levels/LevelDifficultySettings.asset";
-        private const string ShikaCatFolder = "Assets/_Project/Levels/ShikaCat";
-        private const string TestFolder = "Assets/_Project/Levels/Test";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
+        private const string SettingsPath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDifficultySettings.asset";
+        private const string ShikaCatFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/ShikaCat";
+        private const string TestFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/Test";
 
         private static readonly Color NormalColor = new Color(0.45f, 0.55f, 0.75f);
         private static readonly Color HardColor = new Color(0.95f, 0.6f, 0.2f);

@@ -19,9 +19,9 @@ namespace PawBlock.Features.Gameplay.Tests
     /// </summary>
     public class FeelPlayModeTests
     {
-        private const string BlockPrefabPath = "Assets/_Project/Prefabs/Gameplay/PlacedBlock.prefab";
-        private const string CellPrefabPath = "Assets/_Project/Prefabs/Cell.prefab";
-        private const string BubblePrefabPath = "Assets/_Project/Prefabs/Gameplay/DragCountBubble.prefab";
+        private const string BlockPrefabPath = "Assets/_Project/Features/Gameplay/Prefabs/PlacedBlock.prefab";
+        private const string CellPrefabPath = "Assets/_Project/Features/Gameplay/Prefabs/Cell.prefab";
+        private const string BubblePrefabPath = "Assets/_Project/Features/Gameplay/Prefabs/DragCountBubble.prefab";
         private const float Dt = 1f / 60f;
         private const float Eps = 1e-4f;
 

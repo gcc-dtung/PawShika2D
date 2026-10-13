@@ -15,10 +15,10 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class MechanicInjectorWindow : EditorWindow
     {
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
-        private const string SettingsPath = "Assets/_Project/Levels/MechanicInjectorSettings.asset";
-        private const string ShikaCatFolder = "Assets/_Project/Levels/ShikaCat";
-        public const string OutputFolder = "Assets/_Project/Levels/Mechanic";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
+        private const string SettingsPath = "Assets/_Project/Features/Gameplay/Configs/Levels/MechanicInjectorSettings.asset";
+        private const string ShikaCatFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/ShikaCat";
+        public const string OutputFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/Mechanic";
 
         private class Row
         {

@@ -16,7 +16,7 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public static class LevelValidator
     {
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
 
         public class Report
         {

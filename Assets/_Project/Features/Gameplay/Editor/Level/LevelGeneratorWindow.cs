@@ -14,9 +14,9 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public class LevelGeneratorWindow : EditorWindow
     {
-        public const string OutputFolder = "Assets/_Project/Levels/Generated";
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
-        private const string DifficultySettingsPath = "Assets/_Project/Levels/LevelDifficultySettings.asset";
+        public const string OutputFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/Generated";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
+        private const string DifficultySettingsPath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDifficultySettings.asset";
 
         private class Entry
         {

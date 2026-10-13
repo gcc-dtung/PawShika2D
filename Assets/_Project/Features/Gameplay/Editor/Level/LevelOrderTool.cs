@@ -18,10 +18,10 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public static class LevelOrderTool
     {
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
-        private const string ShikaCatFolder = "Assets/_Project/Levels/ShikaCat";
-        private const string FirstLevelPath = "Assets/_Project/Levels/Custom/Level_Custom_Level01_4x4.asset";
-        private const string DifficultySettingsPath = "Assets/_Project/Levels/LevelDifficultySettings.asset";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
+        private const string ShikaCatFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/ShikaCat";
+        private const string FirstLevelPath = "Assets/_Project/Features/Gameplay/Configs/Levels/Custom/Level_Custom_Level01_4x4.asset";
+        private const string DifficultySettingsPath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDifficultySettings.asset";
 
         /// <summary>Level ShikaCat không đưa vào game: 001 (trùng bước 1 tutorial, thay bằng Level 1 4x4), 004 (1 cột 3 ô, 1 số).</summary>
         private static readonly HashSet<string> Excluded = new HashSet<string> { "Level_001", "Level_004" };

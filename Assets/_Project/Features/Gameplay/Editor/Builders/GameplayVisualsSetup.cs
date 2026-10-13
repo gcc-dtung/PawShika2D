@@ -15,16 +15,16 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public static class GameplayVisualsSetup
     {
-        private const string Root = "Assets/_Project/GameAssets";
-        private const string BlocksFolder = Root + "/03_Gameplay_Blocks_Grid/Blocks";
-        private const string EarsFolder = Root + "/03_Gameplay_Blocks_Grid/Cat_Ears";
-        private const string FaceFolder = Root + "/02_Cat_Characters_Spine/Spine_Cat_Face";
+        private const string Art = "Assets/_Project/Features/Gameplay/Art";
+        private const string BlocksFolder = Art + "/Grid/Blocks";
+        private const string EarsFolder = Art + "/Grid/Cat_Ears";
+        private const string FaceFolder = Art + "/Spine/Spine_Cat_Face";
         private const string FaceAtlas = FaceFolder + "/ingame_cat_face_03.atlas.txt";
-        private const string PraiseFolder = Root + "/02_Cat_Characters_Spine/Praise_Badges";
-        private const string Bubble = Root + "/03_Gameplay_Blocks_Grid/Grid_Cells/Circle.png";
-        private const string HintFrame = Root + "/03_Gameplay_Blocks_Grid/Boosters_Obstacles/khung_reveal.png";
+        private const string PraiseFolder = Art + "/Praise_Badges";
+        private const string Bubble = "Assets/_Project/Shared/Art/Grid/Grid_Cells/Circle.png";
+        private const string HintFrame = Art + "/Grid/Boosters_Obstacles/khung_reveal.png";
         private const int HintFrameBorder = 44;  // px, khung_reveal 169x169 bo góc
-        private const string OutputPath = "Assets/_Project/Configs/GameplayVisuals.asset";
+        private const string OutputPath = "Assets/_Project/Features/Gameplay/Configs/GameplayVisuals.asset";
 
         private const int BlockBorder = 48;      // px, sprite khối 160x160
         private const float FacePixelsPerUnit = 100f;

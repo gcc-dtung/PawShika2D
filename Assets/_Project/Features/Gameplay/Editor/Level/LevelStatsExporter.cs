@@ -17,7 +17,7 @@ namespace PawBlock.Features.Gameplay
     public static class LevelStatsExporter
     {
         private const string Menu = "Tools/PawBlock/Level Stats/";
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
 
         [MenuItem(Menu + "Xuất CSV (save máy này)", priority = 4)]
         private static void ExportLocal()

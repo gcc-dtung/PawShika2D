@@ -12,10 +12,10 @@ namespace PawBlock.Features.Gameplay
     /// </summary>
     public static class ShikaCatLevelImporter
     {
-        private const string JsonPath = "Assets/_Project/ShikaCat_GameAssets/03_Gameplay_Boxes_Grid/Level_Data/shikacat-levels.json";
-        private const string OutputFolder = "Assets/_Project/Levels/ShikaCat";
-        private const string DatabasePath = "Assets/_Project/Levels/LevelDatabase.asset";
-        private const string TestFolder = "Assets/_Project/Levels/Test";
+        private const string JsonPath = "Assets/ThirdParty/ShikaCat/03_Gameplay_Boxes_Grid/Level_Data/shikacat-levels.json";
+        private const string OutputFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/ShikaCat";
+        private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
+        private const string TestFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/Test";
 
         [Serializable] private class Wrapper { public SkLevel[] items; }
 
