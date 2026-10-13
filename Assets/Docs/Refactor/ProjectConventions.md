@@ -6,7 +6,7 @@
 | | |
 | --- | --- |
 | Áp dụng từ | P0 – [RefactorPlan.md](RefactorPlan.md) |
-| Cập nhật lần cuối | 2026-10-13 (P7) |
+| Cập nhật lần cuối | 2026-10-13 (P8) |
 
 ---
 
@@ -139,3 +139,15 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Canvas con | Mỗi popup / tab có Canvas riêng; phần đổi liên tục (đồng hồ, thanh sao, viền đỏ, nút booster) Canvas riêng. Ẩn bằng `SetActive(false)`; **tắt Canvas component là ẩn luôn con** |
 | Danh sách nút / ButtonPress | `UIAutoSetup` chạy khi lưu scene, khi lưu prefab và trước Play; `Tools/PawBlock/UI/Setup Buttons` xử lý cả mọi prefab |
 | Gộp object có sẵn vào prefab | `PrefabUtility.ConvertToPrefabInstance` (khớp theo hierarchy) giữ tham chiếu trong prefab; mảng cấp scene (Bootstrap, UIButtonSounds) thu lại bằng Collector / UIAutoSetup |
+
+## 13. Asset, atlas, nén texture (từ P8)
+
+| Quy tắc | Cách làm |
+| --- | --- |
+| Bản gốc | `Assets/ThirdParty/PawBlock` (từ `GameAssets`), `Assets/ThirdParty/ShikaCat`: giữ nguyên cấu trúc, **không sửa, không tham chiếu trực tiếp**. Cần dùng ảnh nào thì `AssetDatabase.CopyAsset` sang `Art/` của module rồi tham chiếu bản copy |
+| Asset đang dùng | `<module>/Art/{UI,Grid,VFX,Cats,Praise_Badges,Materials,Shaders,Spine}` của module duy nhất dùng nó; ≥ 2 module dùng → `Shared/Art`. Âm thanh `Shared/Audio`, font `Shared/Fonts` |
+| Config | `Configs/` của feature sở hữu (`Features/Gameplay/Configs/Levels` cho level); `GameConfig` ở `Game/Configs`, `AudioDatabase` ở `Shared/Configs`. Tool Editor tìm config **theo kiểu** (`GameConfigSetup.Find<T>()`), không viết cứng đường dẫn |
+| Di chuyển / đổi tên | Chỉ qua Unity (`AssetDatabase.MoveAsset` / Project window) để giữ GUID. Sửa các hằng đường dẫn trong tool Editor (`AudioSetup`, `GameFontSetup`, `GameplayVisualsSetup`, tool Level) cùng lúc |
+| Sprite Atlas | Mỗi module có UI riêng 1 atlas V2 ở `<module>/Art/<Module>Atlas.spriteatlasv2`, trỏ tới thư mục `Art/UI` (+ `Grid`, `Cats`... nếu cần). Không Rotation, không Tight Packing, Padding 4, không mipmap, max 2048. Ảnh nền to, texture Spine, texture particle **không** vào atlas |
+| Nén texture | Preset `_Project/Settings/Presets` tự áp khi import ảnh mới trong `_Project`: `Backgrounds/` ASTC 8x8, `Art/UI/` ASTC 4x4, còn lại ASTC 6x6; tắt Read/Write, mipmap. Atlas: override Android ASTC 4x4. Ảnh có sẵn đổi thư mục thì preset **không** tự chạy lại: đặt override Android bằng tay theo bảng này |
+| Kiểm tra sau khi đổi asset | Batches / SetPass 3 màn và Build Report so với [Baseline.md](Baseline.md); nhìn ảnh chụp có vỡ khối / lỗi viền không |

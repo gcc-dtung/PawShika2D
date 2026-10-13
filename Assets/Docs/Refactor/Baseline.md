@@ -17,10 +17,10 @@ Chạy EditMode, lọc assembly **`Assembly-CSharp-Editor`** (test của dự á
 
 | | Trước | Sau |
 | --- | --- | --- |
-| Tổng | 104 | |
-| Đạt | **104** | |
-| Hỏng / bỏ qua | 0 / 0 | |
-| Thời gian | 9.5 s | |
+| Tổng | 104 | 160 (4 assembly test từ P6) |
+| Đạt | **104** | **160** |
+| Hỏng / bỏ qua | 0 / 0 | 0 / 0 |
+| Thời gian | 9.5 s | 11.5 s |
 
 > Plan ghi "46 test" (số cũ ở RoadMap 18 lúc 21:50); hiện có 104 ca (53 `[Test]` + 7 `[UnityTest]`, phần còn lại là `[TestCase]`).
 > Test Runner không lọc sẽ chạy 994 test: ~890 của package `com.besty.unity-skills`, trong đó 3 test của package fail sẵn (`NewCapabilitiesTests`, `PerceptionSkillsTests`, `SelectionDrivenSkillTests`), không liên quan game.
@@ -31,9 +31,9 @@ Chạy EditMode, lọc assembly **`Assembly-CSharp-Editor`** (test của dự á
 
 | Màn | Batches | SetPass | Triangles | Sau (Batches / SetPass) |
 | --- | --- | --- | --- | --- |
-| Menu (Home, level 23) | **63** | **38** | 943 | |
-| Màn chơi level 39, lưới 10 x 10 (Hard, có khóa + "?"), lúc mới vào | **58** | **46** | 1 153 | |
-| Popup Win (Perfect, 3 sao, đang có confetti) | **133–136** | **94–97** | ~2 475 | |
+| Menu (Home, level 23) | **63** | **38** | 943 | **46 / 39** |
+| Màn chơi level 39, lưới 10 x 10 (Hard, có khóa + "?"), lúc mới vào | **58** | **46** | 1 153 | **53 / 49** |
+| Popup Win (Perfect, 3 sao, đang có confetti) | **133–136** | **94–97** | ~2 475 | **92–96 / 71–73** |
 
 Cách đo lại:
 1. Play mode, đợi Menu hiện xong → đọc counter.
@@ -46,14 +46,14 @@ Build release, IL2CPP, ARMv7 + ARM64, `Builds/P0-Baseline/PawShika.apk` (thư m�
 
 | | Trước | Sau |
 | --- | --- | --- |
-| **Dung lượng APK** | **58.9 MB** (61 711 169 byte) | |
-| Asset người dùng (không nén) | 145.5 MB | |
-| Textures | 140.0 MB (96.2 %) | |
-| Sounds | 1.6 MB | |
-| Shaders | 1.4 MB | |
-| Other Assets | 2.1 MB | |
-| Scripts | 266 KB | |
-| "Complete build size" (Unity báo, gồm lib IL2CPP 2 kiến trúc) | 748.1 MB | |
+| **Dung lượng APK** | **58.9 MB** (61 711 169 byte) | **56.5 MB** (59 247 357 byte) |
+| Asset người dùng (không nén) | 145.5 MB | 49.6 MB |
+| Textures | 140.0 MB (96.2 %) | 44.1 MB (88.9 %) |
+| Sounds | 1.6 MB | 1.6 MB |
+| Shaders | 1.4 MB | 1.4 MB |
+| Other Assets | 2.1 MB | 2.1 MB |
+| Scripts | 266 KB | 277 KB |
+| "Complete build size" (Unity báo, gồm lib IL2CPP 2 kiến trúc) | 748.1 MB | 651.2 MB |
 
 ### Asset nặng nhất (≥ 1.5 MB, không nén)
 
@@ -105,3 +105,10 @@ Lần P0 chạy tự động qua Unity MCP các mục bên dưới; mục còn l
 | `save_v1_infinite_energy.json` | Như `played`, nhưng năng lượng 0 và **vô hạn tới 2100-01-01** (`infiniteUntil = 4102444800`), luôn "đang chạy" khi test |
 
 Migrate v1 → v2 ở P3 phải giữ đúng mọi giá trị trên.
+
+### Sau P8 (2026-10-13 22:55, `Builds/P8/PawBlock.apk`)
+
+- Đo bằng đúng cách trên, Batches / SetPass bằng `UnityEditor.UnityStats` (cùng số với Stats).
+- 4 atlas mặt mèo Spine: 15.8 MB → 1.8–2.0 MB mỗi ảnh (ASTC 6x6); asset nặng nhất giờ là `GameplayAtlas` và `ProfileAtlas` (8 MB, 2 trang 2048 ASTC 4x4).
+- 12 ảnh mèo in-game vào atlas (11 ở `ProfileAtlas`, `Image_Cat_Orange` ở `SharedAtlas`); `bg.png` 5.9 MB → 0.5 MB (ASTC 8x8).
+- SetPass màn chơi 49 (P0 46): Canvas con của nút booster / đồng hồ / thanh sao (P7), đổi lại HUD không dựng lại cả khối mỗi frame.

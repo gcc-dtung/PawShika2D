@@ -5,7 +5,7 @@
 
 | | |
 | --- | --- |
-| Trạng thái | P0–P7 xong (2026-10-13), tiếp P8 |
+| Trạng thái | P0–P8 xong (2026-10-13), tiếp P9 (P8 chưa thử trên máy Android thật) |
 | Unity | 2022.3.62f3 |
 | Phạm vi | Toàn bộ `Assets/_Project/Script` (199 file), `SampleScene`, prefab, asset |
 | Cập nhật lần cuối | 2026-10-13 |
@@ -471,22 +471,36 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 **Mục tiêu:** đúng guide 5, 9.
 
 **Di chuyển**
-- [ ] Bản gốc chưa sửa: `GameAssets/`, `ShikaCat_GameAssets/`, `Texture2D/` → `ThirdParty/PawBlock/`, `ThirdParty/ShikaCat/` (giữ cấu trúc gốc).
-- [ ] Asset **đang được tham chiếu** → `Art/`, `Audio/` của feature dùng nó; dùng ≥ 2 feature → `Shared/Art`, `Shared/Audio`. (Dùng *Select Dependencies* trên scene / prefab để lấy danh sách.)
-- [ ] `Levels/`, `Configs/` → `Features/Gameplay/Configs/Levels/`, `Configs/` của feature tương ứng.
+- [x] Bản gốc chưa sửa: `GameAssets/`, `ShikaCat_GameAssets/`, `Texture2D/` → `ThirdParty/PawBlock/`, `ThirdParty/ShikaCat/` (giữ cấu trúc gốc).
+- [x] Asset **đang được tham chiếu** → `Art/`, `Audio/` của feature dùng nó; dùng ≥ 2 feature → `Shared/Art`, `Shared/Audio`. (Dùng *Select Dependencies* trên scene / prefab để lấy danh sách.)
+- [x] `Levels/`, `Configs/` → `Features/Gameplay/Configs/Levels/`, `Configs/` của feature tương ứng.
 
 **Thêm**
-- [ ] Sprite Atlas: `Shared` (nút, khung, icon coin / sao / tim), `Gameplay` (ô, khối, khóa, mũi tên, chữ khen), mỗi feature meta một atlas. UI: tắt Allow Rotation, Tight Packing; Padding 4; tắt mipmap; max 2048.
-- [ ] Preset import texture theo thư mục (ASTC 6x6, UI 4x4, background 8x8; tắt Read/Write, mipmap).
+- [x] Sprite Atlas: `Shared` (nút, khung, icon coin / sao / tim), `Gameplay` (ô, khối, khóa, mũi tên, chữ khen), mỗi feature meta một atlas. UI: tắt Allow Rotation, Tight Packing; Padding 4; tắt mipmap; max 2048.
+- [x] Preset import texture theo thư mục (ASTC 6x6, UI 4x4, background 8x8; tắt Read/Write, mipmap).
 
 **Xóa**
-- [ ] `GameAssets/10_Data_Configs` (trùng `Configs/`) sau khi xác nhận không còn tham chiếu.
-- [ ] Asset trong `ThirdParty` không dùng: **không xóa** (giữ bản gốc), build cũng không đưa vào.
+- [x] ~~`GameAssets/10_Data_Configs` (trùng `Configs/`)~~ → không xóa: nằm trong bản gốc, chuyển cùng sang `ThirdParty/PawBlock` (không còn tham chiếu, build không đưa vào).
+- [x] Asset trong `ThirdParty` không dùng: **không xóa** (giữ bản gốc), build cũng không đưa vào.
 
 **Sửa:** `Resources/` chỉ còn thứ bắt buộc (DOTweenSettings, TMP). `GameConfig` / `GameplayVisuals` đã ra khỏi `Resources` ở P4.
 
 **Kiểm tra:** Frame Debugger: Batches giảm so với P0 ở 3 màn; Build Report: dung lượng ≤ P0; nhìn bằng mắt không lỗi viền / mờ; chạy trên máy Android thật.
 **Xong khi:** 0 asset dự án nằm ngoài `_Project` / `ThirdParty`; có atlas; số liệu tốt hơn P0.
+
+**Kết quả P8** (4 commit trên nhánh `Refactor-P8-Asset`):
+
+| Bước | Nội dung |
+| --- | --- |
+| 8.1 | 261 asset đang dùng (lấy bằng dependency của scene / prefab / config) → `<module>/Art/{UI,Grid,VFX,Cats,Praise_Badges,Materials,Shaders,Spine}`; dùng ≥ 2 module → `Shared/Art`; âm thanh → `Shared/Audio` (`ShikaCat/` riêng), font → `Shared/Fonts`. Bản gốc `GameAssets` → `ThirdParty/PawBlock` (giữ cấu trúc, gồm `Texture2D`, `10_Data_Configs`), `ShikaCat_GameAssets` → `ThirdParty/ShikaCat`. Config → `Configs/` của feature sở hữu (`GameConfig` ở `Game/Configs`, `AudioDatabase` ở `Shared/Configs`), level → `Features/Gameplay/Configs/Levels`, scene → `_Project/Scenes`. Mọi việc qua `AssetDatabase.MoveAsset` (GUID giữ); sửa đường dẫn cứng trong 8 tool Level, `FeelPlayModeTests`, `GameplayVisualsSetup`, `AudioSetup`, `GameFontSetup`, `LevelEditorWindow`; `GameConfigSetup` tìm config theo kiểu |
+| 8.2 | 7 Sprite Atlas V2: `SharedAtlas` (53 sprite), `GameplayAtlas` (81, 2 trang), `GameAtlas` (18), `DailyChallengeAtlas` (15), `ProfileAtlas` (11, 2 trang), `SettingsAtlas` (7), `EconomyAtlas` (2). Tắt Rotation / Tight Packing, Padding 4, không mipmap, max 2048. Ảnh nền to, texture Spine, VFX particle không vào atlas |
+| 8.3 | 3 preset `TextureImporter` ở `_Project/Settings/Presets`, đặt mặc định theo thư mục: `TextureBackground` (ASTC 8x8, `**/Backgrounds/**`), `TextureUI` (ASTC 4x4, `**/Art/UI/**`), `TextureDefault` (ASTC 6x6, còn lại trong `_Project`); tắt Read/Write, mipmap. Override Android cho 207 texture đang dùng (4x4: 121, 6x6: 78, 8x8: 8) và 7 atlas (ASTC 4x4) — meta chỉ đổi `textureFormat` / `overridden` |
+
+- Khác plan: `10_Data_Configs` không xóa mà đi cùng bản gốc sang `ThirdParty`; preset chỉ áp tự động cho texture **mới import**, texture có sẵn đặt override bằng script (cùng giá trị).
+- Ngoài `_Project` / `ThirdParty` chỉ còn thư mục của package / plugin: `Plugins` (DOTween), `TextMesh Pro`, `Resources` (`DOTweenSettings`), `Editor/SpineSettings`, `ProjectSettings/UIParticleProjectSettings`.
+- Batches / SetPass (`UnityStats`): Menu **46 / 39** (P0 63 / 38); màn chơi level 39 **53 / 49** (P0 58 / 46, P7 64 / 53); Win **92–96 / 71–73** (P0 133–136 / 94–97). SetPass màn chơi còn +3 so với P0 (Canvas con từ P7).
+- Build Android (release, IL2CPP, ARMv7 + ARM64): APK **56.5 MB** (P0 58.9, P6 59.0); asset người dùng không nén **145.5 → 49.6 MB** (Textures 140.0 → 44.1 MB). APK giảm ít hơn vì phần lớn là thư viện IL2CPP và PNG cũ vốn đã nén zip tốt; lợi chính là RAM texture lúc chạy.
+- Kiểm tra: 160 / 160 test; Play với `save_v1_played.json`: Daily Reward tự mở, Menu, vào level 23; ảnh chụp (target Android) không thấy vỡ khối / lỗi viền. Console 0 lỗi. **Chưa chạy trên máy Android thật** (không có máy) — cần thử trước khi phát hành.
 
 ---
 
@@ -547,11 +561,11 @@ Namespace gốc: `PawBlock` (`PawBlock.Core.Foundation`, `PawBlock.Core.Contract
 | | | ~17 popup / màn hình / HUD thành prefab, đặt instance | 8 | 0.6 | 100% | |
 | | | Tách Canvas, Raycast Target | 1.5 | 0.2 | 100% | |
 | | | Sửa / xóa 15 builder | 5 | 0.1 | 100% | Xóa (người dùng chọn) |
-| P8 Asset | Di chuyển, atlas, preset | Di chuyển ThirdParty + Art theo feature | 4 | | 0% | |
-| | | Sprite Atlas + Preset texture | 3 | | 0% | |
-| | | Đo lại, so với P0, test máy thật | 2 | | 0% | |
+| P8 Asset | Di chuyển, atlas, preset | Di chuyển ThirdParty + Art theo feature | 4 | 0.8 | 100% | Danh sách theo dependency + `MoveAsset` qua MCP |
+| | | Sprite Atlas + Preset texture | 3 | 0.5 | 100% | 7 atlas, 3 preset + override 207 texture |
+| | | Đo lại, so với P0, test máy thật | 2 | 0.4 | 80% | Chưa test máy thật |
 | P9 Tài liệu | Docs | README feature, ProjectStructure, Features/*, HowTo | 4 | | 0% | |
-| **Tổng** | | | **~112.5** | **15.0** | **84%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
+| **Tổng** | | | **~112.5** | **16.7** | **96%** | Chưa tính smoke test lặp lại mỗi giai đoạn (~0.5 h × 10) |
 
 ---
 
