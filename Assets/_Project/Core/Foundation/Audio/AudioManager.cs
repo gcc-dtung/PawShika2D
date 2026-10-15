@@ -84,6 +84,7 @@ namespace PawBlock.Core.Foundation
             }
         }
 
+        #region LifeCycles
         protected override void Awake()
         {
             base.Awake();
@@ -105,8 +106,9 @@ namespace PawBlock.Core.Foundation
             _musicFade?.Kill();
             _musicPitch?.Kill();
         }
+        #endregion
 
-        // ---------- API tĩnh ----------
+        #region API Tĩnh
 
         /// <summary>Phát âm (bỏ qua khi tắt Âm thanh, chưa gán clip, hoặc đang trong cooldown).</summary>
         public static void Play(SoundId id)
@@ -132,13 +134,19 @@ namespace PawBlock.Core.Foundation
             if (!VibrateOn) return;
             Haptics.Play(type);
         }
+        #endregion
 
-        // ---------- Nhạc nền ----------
+        #region Nhạc Nền
+
 
         /// <summary>Đổi nhạc nền (fade ra bài cũ, fade vào bài mới).</summary>
         public void PlayMusic(AudioClip clip)
         {
-            if (clip == null) return;
+            if (clip == null)
+            {
+                return;
+            }
+
             if (music.clip == clip && music.isPlaying)
             {
                 ApplyMusicSetting();
@@ -148,7 +156,11 @@ namespace PawBlock.Core.Foundation
             float target = MusicTargetVolume();
             _musicFade?.Kill();
             Sequence seq = DOTween.Sequence().SetUpdate(true).SetLink(gameObject);
-            if (music.isPlaying) seq.Append(FadeMusic(0f, musicFadeDuration * 0.5f));
+            if (music.isPlaying)
+            {
+                seq.Append(FadeMusic(0f, musicFadeDuration * 0.5f));
+            }
+
             seq.AppendCallback(() =>
             {
                 music.clip = clip;
@@ -188,7 +200,10 @@ namespace PawBlock.Core.Foundation
         private Tween FadeMusic(float to, float duration) =>
             DOVirtual.Float(music.volume, to, duration, v => music.volume = v);
 
-        // ---------- Hiệu ứng ----------
+
+        #endregion
+
+        #region Effect
 
         private void PlaySound(SoundId id, float volumeScale, float pitchScale = 1f)
         {
@@ -225,6 +240,7 @@ namespace PawBlock.Core.Foundation
             foreach (AudioSource s in voices) s.Stop();
         }
 
+        #endregion
         // ---------- Khởi tạo ----------
 
 #if UNITY_EDITOR

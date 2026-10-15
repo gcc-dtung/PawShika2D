@@ -19,21 +19,35 @@ namespace PawBlock.Features.Gameplay
 
         private void Update()
         {
-            if (dragAndDropController == null) return;
+            if (dragAndDropController == null)
+            {
+                return;
+            }
+
             Pointer pointer = Pointer.current;
-            if (pointer == null) return;
+            if (pointer == null)
+            {
+                return;
+            }
 
             var press = pointer.press;
             Vector2 pos = pointer.position.ReadValue();
             if (press.wasPressedThisFrame)
             {
                 // Bấm trúng nút / popup trên Canvas thì không bắt đầu kéo trên lưới
-                if (!IsPointerOverUI(pos)) dragAndDropController.StartDrag(pos);
+                if (!IsPointerOverUI(pos))
+                {
+                    dragAndDropController.StartDrag(pos);
+                }
             }
             else if (press.isPressed)
+            {
                 dragAndDropController.Drag(pos);
+            }
             else if (press.wasReleasedThisFrame)
+            {
                 dragAndDropController.EndDrag();
+            }
         }
 
         // Tự raycast UI thay vì EventSystem.IsPointerOverGameObject: với InputSystemUIInputModule, ở frame vừa chạm
@@ -41,7 +55,11 @@ namespace PawBlock.Features.Gameplay
         private bool IsPointerOverUI(Vector2 screenPos)
         {
             EventSystem es = EventSystem.current;
-            if (!es) return false;
+            if (!es)
+            {
+                return false;
+            }
+
             if (_uiPointer == null || _uiPointerOwner != es)
             {
                 _uiPointer = new PointerEventData(es);

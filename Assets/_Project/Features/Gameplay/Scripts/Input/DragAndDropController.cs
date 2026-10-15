@@ -43,18 +43,7 @@ namespace PawBlock.Features.Gameplay
             }
         }
 
-        private CellView GetCellAtPosition(Vector2 screenPos)
-        {
-            Vector3 worldPos = cam.ScreenToWorldPoint(screenPos);
-
-            Collider2D hit2D = Physics2D.OverlapPoint(worldPos, cellLayer);
-            if (_spawner != null && _spawner.TryGetCell(hit2D, out CellView cell2D))
-            {
-                return cell2D;
-            }
-            return null;
-        }
-
+        #region public API
         public void StartDrag(Vector2 pos)
         {
             if (_isDragging || _isTapping) return;
@@ -126,6 +115,20 @@ namespace PawBlock.Features.Gameplay
             ResetDrag();
         }
 
+        #endregion
+        #region Private Methods
+        private CellView GetCellAtPosition(Vector2 screenPos)
+        {
+            Vector3 worldPos = cam.ScreenToWorldPoint(screenPos);
+
+            Collider2D hit2D = Physics2D.OverlapPoint(worldPos, cellLayer);
+            if (_spawner != null && _spawner.TryGetCell(hit2D, out CellView cell2D))
+            {
+                return cell2D;
+            }
+            return null;
+        }
+
         private void CancelDrag()
         {
             if (_grid != null) _grid.CancelSelection();
@@ -150,5 +153,7 @@ namespace PawBlock.Features.Gameplay
             GridManager gm = _grid;
             countBubble.Show(ScreenToWorld(screenPos), gm.SelectionCellCount, gm.SelectionHint);
         }
+
+        #endregion
     }
 }

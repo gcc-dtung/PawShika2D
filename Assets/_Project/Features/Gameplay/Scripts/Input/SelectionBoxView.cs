@@ -130,7 +130,10 @@ namespace PawBlock.Features.Gameplay
         public void WhenSettled(Action onSettled)
         {
             _onSettled = onSettled;
-            if (onSettled != null && IsSettled) NotifySettled();
+            if (onSettled != null && IsSettled)
+            {
+                NotifySettled();
+            }
         }
 
         /// <summary>Đích đổi -> giãn / co từ vị trí đang hiển thị tới đích mới.</summary>

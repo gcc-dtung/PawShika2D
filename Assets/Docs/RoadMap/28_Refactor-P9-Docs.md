@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | — (nhánh `Refactor-P9-Docs`) |
-| Thời gian push | — |
-| Cập nhật lần cuối | 2026-10-13 23:30 |
+| Trạng thái | Đã push |
+| Commit | 7 commit `d93fdb3` … `6be6445` (P9.1 – P9.6 + tài liệu), cuối "Refactor P9: tài liệu P9, chốt RoadMap 27" (nhánh `Refactor-P9-Docs`) |
+| Thời gian push | 2026-10-14 00:31 |
+| Cập nhật lần cuối | 2026-10-14 00:31 |
 
 ## Tóm tắt
 
