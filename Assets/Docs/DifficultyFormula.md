@@ -33,6 +33,7 @@ Mỗi level cho ra một chuỗi bước, ví dụ `1121131` nghĩa là bước 
 | t₁…t₄ | `t1`…`t4` | Số bước cần T1…T4 (t₁ + t₂ + t₃ + t₄ = N) |
 | W | `narrow` | Tỉ lệ bước chỉ có **đúng 1** nước chắc chắn ở kỹ thuật đó (đường hẹp: bỏ sót nước đó là kẹt) |
 | H, L | `hidden`, `locks` | Số ô "?", số ô khóa |
+| Wa, Co | `walls`, `corners` | Số đoạn tường, số ô số ở góc / cạnh |
 | | `voids`, `constraints`, `lock_steps`, `max_technique` | Số ô Void, số mũi tên hướng, tổng bước khóa, kỹ thuật khó nhất đã dùng |
 
 ## 3. Công thức
@@ -45,6 +46,7 @@ D = wSize · log₂(N)
   + (wT2 · t₂ + wT3 · t₃ + wT4 · t₄) / N
   + wNarrow · W
   + wHidden · H + wLock · L
+  + wWall · Wa + wCorner · Co
 ```
 
 | Trọng số | Mặc định | Lý do |
@@ -57,6 +59,8 @@ D = wSize · log₂(N)
 | wNarrow | 10 | Đường hẹp dễ kẹt |
 | wHidden | 3 | Phải nhớ khối nào chưa biết số |
 | wLock | 2 | Phải giải chỗ khác trước |
+| wWall | 1.5 | Mỗi đoạn tường là thêm một luật khi kéo qua ranh giới |
+| wCorner | 2 | Mỗi ô số ở góc / cạnh: phải đọc dấu góc, vạch cạnh |
 
 Các hạng t / N là **tỉ lệ**, nên D không tự tăng chỉ vì level to; độ to đã được tính riêng qua log₂(N).
 
@@ -126,3 +130,14 @@ T và R so trực tiếp được với "thời gian giải trung bình" và "s�
 - 206 level phân tích trong ~0.14 s. D: thấp nhất 10.0 (level 1), trung vị 37.4, cao nhất 59.1.
 - Kỹ thuật khó nhất cần dùng: 43 level chỉ cần T1, 138 level cần tới T2, 13 level cần T3, 12 level có T4.
 - Level 20 (Hard) và 30 (Very Hard) đánh dấu mẫu trước đây có D thấp (26.6 và 18.6, toàn bước T1), nên đã bỏ đánh dấu. Đã áp dụng gợi ý: 19 level Hard và 8 level Very Hard, rải từ level 42 tới 205.
+
+## 8. Cập nhật sau khi thêm cơ chế tường / góc (2026-10-16, trọng số mặc định)
+
+- Công thức thêm `wWall · Wa + wCorner · Co` (mục 3). Trước đó tường và góc chỉ được đếm, chưa vào điểm.
+
+- 203 level phân tích (bỏ Level_081, 082, 106; sinh lại cơ chế). D: thấp nhất 12.5, trung vị 37.5, cao nhất 76.4.
+- Kỹ thuật khó nhất cần dùng: 39 level chỉ cần T1, 130 level cần tới T2, 25 level cần T3, 9 level có T4.
+- Đã áp dụng gợi ý: 19 level Hard và 8 level Very Hard.
+  - Hard: 39, 67, 69, 109, 123, 129, 159, 161, 168, 173, 175, 179, 185, 186, 191, 196, 198, 199, 201.
+  - Very Hard: 49, 119, 141, 169, 176, 189, 194, 202.
+- Thêm hai trọng số làm trung vị D tăng nhẹ nhưng không đổi danh sách Hard / Very Hard (xếp hạng giữ nguyên).

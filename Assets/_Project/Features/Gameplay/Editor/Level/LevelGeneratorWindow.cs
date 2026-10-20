@@ -10,13 +10,16 @@ namespace PawBlock.Features.Gameplay
     /// - Chọn bộ thông số (Easy / Normal / Hard / Daily) hoặc chỉnh tay, seed đầu + số level -> Sinh.
     /// - Mỗi level: kích thước, số ô số, đúng 1 lời giải, độ khó theo LevelDifficultyAnalyzer (điểm, giây dự kiến), thời gian sinh.
     /// - Xem trước lưới (bật / tắt lời giải); sắp theo độ khó; lưu level chọn / tất cả vào Levels/Generated,
-    ///   tùy chọn thêm vào cuối LevelDatabase; mở trong Level Editor. Gắn cơ chế sau bằng Mechanic Injector.
+    ///   tùy chọn thêm vào cuối LevelDatabase; mở trong Level Editor.
+    /// - Gắn cơ chế ngay khi sinh (tùy chọn): chọn loại, dùng chung MechanicInjector.Apply (số lượng theo MechanicInjectorSettings).
+    ///   Level cho database chính thì nên gắn bằng Mechanic Injector (theo lịch giới thiệu).
     /// </summary>
     public class LevelGeneratorWindow : EditorWindow
     {
         public const string OutputFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/Generated";
         private const string DatabasePath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDatabase.asset";
         private const string DifficultySettingsPath = "Assets/_Project/Features/Gameplay/Configs/Levels/LevelDifficultySettings.asset";
+        private const string InjectorSettingsPath = "Assets/_Project/Features/Gameplay/Configs/Levels/MechanicInjectorSettings.asset";
 
         private class Entry
         {
@@ -27,6 +30,7 @@ namespace PawBlock.Features.Gameplay
             public int tries;
             public long ms;
             public float score, seconds;
+            public List<string> mechanics = new List<string>();
         }
 
         private LevelGeneratorPreset _preset = LevelGeneratorPreset.Normal;
@@ -40,6 +44,8 @@ namespace PawBlock.Features.Gameplay
         private int _selected = -1;
         private Vector2 _listScroll;
         private LevelDifficultySettings _difficulty;
+        private MechanicInjectorSettings _injector;
+        private readonly HashSet<MechanicKind> _mechanics = new HashSet<MechanicKind>();
 
         [MenuItem("Tools/PawBlock/Level Generator", priority = 5)]
         public static void Open()
@@ -51,6 +57,7 @@ namespace PawBlock.Features.Gameplay
         private void OnEnable()
         {
             _difficulty = AssetDatabase.LoadAssetAtPath<LevelDifficultySettings>(DifficultySettingsPath);
+            _injector = AssetDatabase.LoadAssetAtPath<MechanicInjectorSettings>(InjectorSettingsPath);
         }
 
         private void OnDisable() => ClearUnsaved();
@@ -98,6 +105,18 @@ namespace PawBlock.Features.Gameplay
 
             using (new EditorGUILayout.HorizontalScope())
             {
+                EditorGUILayout.LabelField(new GUIContent("Gắn cơ chế", "Gắn ngay khi sinh (MechanicInjector.Apply), số lượng theo MechanicInjectorSettings"), GUILayout.Width(EditorGUIUtility.labelWidth - 4));
+                GUI.enabled = _injector != null;
+                foreach (MechanicKind kind in (MechanicKind[])System.Enum.GetValues(typeof(MechanicKind)))
+                {
+                    bool on = EditorGUILayout.ToggleLeft(kind.ToString(), _mechanics.Contains(kind), GUILayout.Width(84));
+                    if (on) _mechanics.Add(kind); else _mechanics.Remove(kind);
+                }
+                GUI.enabled = true;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
                 if (GUILayout.Button("Sinh", GUILayout.Height(26))) Generate();
                 GUI.enabled = _entries.Count > 1;
                 if (GUILayout.Button("Sắp theo độ khó", GUILayout.Height(26))) SortByDifficulty();
@@ -126,6 +145,8 @@ namespace PawBlock.Features.Gameplay
                         continue;
                     }
                     Entry e = new Entry { seed = seed, level = r.level, unique = r.unique, tries = r.clueTries, ms = sw.ElapsedMilliseconds };
+                    if (_mechanics.Count > 0 && _injector != null)
+                        e.mechanics = MechanicInjector.Apply(r.level, new List<MechanicKind>(_mechanics), _injector, seed);
                     if (_difficulty != null)
                     {
                         LevelDifficultyAnalyzer.Report rep = LevelDifficultyAnalyzer.Analyze(r.level, _difficulty);
@@ -162,7 +183,8 @@ namespace PawBlock.Features.Gameplay
                 string text = $"{e.seed,-6} {e.level.size}x{e.level.Height,-3} {e.level.clues.Length,3}   {(e.unique ? "✓" : "?")}   " +
                               $"{e.score,5:0.0}  {e.seconds,4:0}  {e.ms,3}{(e.saved ? "  (đã lưu)" : "")}";
                 GUIStyle style = i == _selected ? EditorStyles.helpBox : EditorStyles.label;
-                if (GUILayout.Button(text, style)) _selected = i;
+                if (e.mechanics.Count > 0) text += "  +" + e.mechanics.Count;
+                if (GUILayout.Button(new GUIContent(text, string.Join("\n", e.mechanics)), style)) _selected = i;
             }
             EditorGUILayout.EndScrollView();
 
@@ -232,7 +254,41 @@ namespace PawBlock.Features.Gameplay
                 fontSize = Mathf.Clamp((int)(cell * 0.45f), 8, 28),
                 normal = { textColor = Color.white }
             };
-            foreach (ClueData c in level.clues) GUI.Label(CellRect(origin, cell, level, c.x, c.y), c.value.ToString(), number);
+            foreach (ClueData c in level.clues)
+            {
+                Rect r = CellRect(origin, cell, level, c.x, c.y);
+                string text = c.value.ToString();
+                if (c.mechanic.hidden) text = "?";
+                if (c.mechanic.corner != ClueCorner.None) text += "\n" + CornerGlyph(c.mechanic.corner);
+                GUI.Label(r, text, number);
+            }
+
+            // Tường: vạch gỗ trên đường kẻ giữa 2 ô
+            if (level.walls != null)
+            {
+                float t = Mathf.Max(3f, cell * 0.12f);
+                foreach (WallData w in level.walls)
+                {
+                    Rect a = CellRect(origin, cell, level, w.x, w.y);
+                    Rect line = w.side == WallSide.Right ? new Rect(a.xMax - t / 2f, a.y, t, a.height) : new Rect(a.x, a.y - t / 2f, a.width, t);
+                    EditorGUI.DrawRect(line, new Color(0.91f, 0.67f, 0.41f));
+                }
+            }
+        }
+
+        private static string CornerGlyph(ClueCorner c)
+        {
+            switch (c)
+            {
+                case ClueCorner.TopLeft: return "┌";
+                case ClueCorner.TopRight: return "┐";
+                case ClueCorner.BottomLeft: return "└";
+                case ClueCorner.BottomRight: return "┘";
+                case ClueCorner.Top: return "▔";
+                case ClueCorner.Bottom: return "▁";
+                case ClueCorner.Left: return "▏";
+                default: return "▕";
+            }
         }
 
         private static Rect CellRect(Vector2 origin, float cell, LevelDefinition level, int x, int y) =>

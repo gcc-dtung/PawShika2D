@@ -62,6 +62,7 @@ namespace PawBlock.Features.Gameplay
         private bool _finishing; // đã thả tay, đang chờ khung giãn xong rồi mới đặt / báo sai
         private Vector2Int _fingerCell; // ô dưới ngón tay ở lần kéo trước
         private SelectionHint _selectionHint;
+        private PlacementCheck _selectionCheck;
         private ComboCounter _combo;
 
         public BoardModel Board => _board;
@@ -145,12 +146,12 @@ namespace PawBlock.Features.Gameplay
 
             GridGeometry geometry = _board.Geometry;
             Vector2Int cell = geometry.StickyCell(fingerWorld, _fingerCell, cellStick);
+            if (_drag.MoveTo(cell, _board)) RefreshSelection();
             if (cell != _fingerCell)
             {
                 _fingerCell = cell;
-                onDragCellChanged?.Invoke(cell);
+                onDragCellChanged?.Invoke(cell); // sau khi vùng đã giãn theo: biết ngón tay có đang bị chặn không
             }
-            if (_drag.MoveTo(cell, _board)) RefreshSelection();
 
             // Hướng bị chặn: đẩy vào khối đã đặt / ô Void, hoặc ngón tay ra ngoài lưới ở mép vùng chọn
             Vector2Int dir = _drag.BlockDir;
@@ -173,6 +174,12 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Trạng thái vùng đang kéo (đủ / sai / đang kéo), dùng cho bong bóng đếm ô.</summary>
         public SelectionHint SelectionHint => _drag.IsActive ? _selectionHint : SelectionHint.Neutral;
 
+        /// <summary>Kết quả kiểm tra vùng đang kéo (chỉ có nghĩa khi IsSelecting), cho phản hồi sai theo từng luật.</summary>
+        public PlacementCheck SelectionCheck => _selectionCheck;
+
+        /// <summary>Lượt thả tay bị từ chối gần nhất; đọc trong onInvalidMove để biết ô số nào sai, sai luật gì.</summary>
+        public PlacementCheck LastRejected { get; private set; }
+
         /// <summary>
         /// Khung chọn bám vùng. Vùng đủ điều kiện: khung giãn hết vào vùng rồi mới biến thành mèo xem trước
         /// (SelectionBoxView.WhenSettled); kéo sang vùng khác trước khi giãn xong thì không hiện mèo.
@@ -188,6 +195,7 @@ namespace PawBlock.Features.Gameplay
             }
 
             PlacementCheck check = _board.Check(rect);
+            _selectionCheck = check;
             _selectionHint = check.Hint;
             onSelectionChanged?.Invoke(_drag.CellCount, _selectionHint);
             if (_preview != null && !(check.IsReady && _preview.Rect.Equals(rect))) ReleasePreview();
@@ -237,7 +245,7 @@ namespace PawBlock.Features.Gameplay
 
             PlacementCheck check = _board.Check(rect);
 
-            if (check.Result == PlacementResult.Ignored)
+            if (check.Result == PlacementResult.Ignored || IsClueTap(check))
             {
                 HideSelectionBox();
                 ReleasePreview();
@@ -384,9 +392,15 @@ namespace PawBlock.Features.Gameplay
             return true;
         }
 
+        // Chạm 1 ô số (chưa đủ value / chưa đúng hướng) thường chỉ để xem ô: bỏ qua như chạm ô trống. Ô còn khóa vẫn báo.
+        private static bool IsClueTap(PlacementCheck check)
+            => check.Rect.width * check.Rect.height == 1
+               && (check.Result == PlacementResult.WrongSize || check.Result == PlacementResult.WrongShape);
+
         private void Reject(PlacementCheck check)
         {
             Debug.Log($"[GridManager] Hủy thao tác: {check.Result}");
+            LastRejected = check;
             GridGeometry geometry = _board.Geometry;
             onInvalidMove?.Invoke(check.Result, geometry.RectCenter(check.Rect), geometry.RectSize(check.Rect));
         }

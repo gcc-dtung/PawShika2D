@@ -11,8 +11,8 @@ namespace PawBlock.Features.Gameplay
     /// Tools → PawBlock → Level Editor: chỉnh sửa / xếp một level (LevelDefinition) trực quan.
     /// - Chọn level theo LevelDatabase (◀ ▶, danh sách) hoặc kéo thả asset bất kỳ; tạo mới, nhân bản, đổi thứ tự trong database.
     /// - Công cụ trên lưới: Khối (kéo hình chữ nhật -> 1 khối + số = diện tích, đặt ở ô bắt đầu kéo), Số (thêm / chọn số),
-    ///   Void (bật / tắt ô bỏ trống, kéo để tô), Xóa. Chuột phải = Xóa.
-    /// - Số đang chọn: giá trị, hướng, khóa, "?", màu.
+    ///   Void (bật / tắt ô bỏ trống, kéo để tô), Tường (bấm gần cạnh ô: bật / tắt tường cạnh đó), Xóa. Chuột phải = Xóa.
+    /// - Số đang chọn: giá trị, hướng, khóa, "?", góc / cạnh, màu.
     /// - Kiểm tra: LevelValidator (dữ liệu, có lời giải, không cần đoán) + lời giải duy nhất; Giải: lưu lời giải của solver.
     /// - Chơi thử: ghi level vào save (section "gameplay"), vào Play mode thẳng level đang sửa.
     /// Lưới vẽ y = 0 ở dưới cùng như trong game. Mọi thay đổi có Undo.
@@ -23,16 +23,21 @@ namespace PawBlock.Features.Gameplay
         public const string CustomFolder = "Assets/_Project/Features/Gameplay/Configs/Levels/Custom";
         private const int MaxSize = 12;
 
-        private enum Tool { Block, Clue, Void, Erase }
+        private enum Tool { Block, Clue, Void, Erase, Wall, Corner }
 
-        private static readonly string[] ToolNames = { "Khối", "Số", "Void", "Xóa" };
+        private static readonly string[] ToolNames = { "Khối", "Số", "Void", "Xóa", "Tường", "Góc / cạnh" };
         private static readonly string[] ToolTips =
         {
             "Kéo hình chữ nhật: tạo 1 khối, số = diện tích, đặt ở ô bắt đầu kéo (xóa khối / số / Void cũ trong vùng)",
             "Bấm ô: chọn số có sẵn hoặc thêm số mới",
             "Bấm / kéo: bật tắt ô Void (bỏ trống)",
-            "Bấm ô: xóa số và khối chứa ô đó"
+            "Bấm ô: xóa số và khối chứa ô đó",
+            "Bấm gần cạnh ô: bật / tắt tường ở cạnh đó (khối không được vắt qua)",
+            "Bấm vào ô số: góc ô = đòi số nằm ở góc khối, giữa cạnh ô = đòi số nằm ở cạnh khối, giữa ô = bỏ dấu (bấm lại đúng chỗ cũ cũng bỏ)"
         };
+
+        private static readonly Color WallColor = new Color(0.91f, 0.67f, 0.41f);
+        private static readonly Color CornerColor = new Color(0.86f, 0.82f, 1f);
 
         private static readonly Color[] Palette =
         {
@@ -318,8 +323,46 @@ namespace PawBlock.Features.Gameplay
                     if (mark != null) GUI.Label(new Rect(r.x + 2, r.y, r.width, r.height * 0.45f), mark, CornerStyle(cell * 0.26f));
                     if (c.mechanic.lockSteps > 0)
                         GUI.Label(new Rect(r.x, r.yMax - r.height * 0.42f, r.width - 3, r.height * 0.42f), "L" + c.mechanic.lockSteps, RightStyle(cell * 0.22f));
+                    DrawCornerMark(Inset(r, 3f), c.mechanic.corner, Mathf.Max(2f, cell * 0.07f));
                 }
             }
+
+            // Tường: vạch gỗ trên đường kẻ giữa 2 ô, cọc vuông ở 2 đầu
+            if (_level.walls != null)
+            {
+                float t = Mathf.Max(3f, cell * 0.12f);
+                foreach (WallData wall in _level.walls)
+                {
+                    Rect a = CellRect(area, cell, wall.x, wall.y);
+                    Rect line = wall.side == WallSide.Right
+                        ? new Rect(a.xMax - t / 2f, a.y, t, a.height)
+                        : new Rect(a.x, a.y - t / 2f, a.width, t);
+                    EditorGUI.DrawRect(line, WallColor);
+                    Vector2 p0 = wall.side == WallSide.Right ? new Vector2(a.xMax, a.y) : new Vector2(a.x, a.y);
+                    Vector2 p1 = wall.side == WallSide.Right ? new Vector2(a.xMax, a.yMax) : new Vector2(a.xMax, a.y);
+                    foreach (Vector2 p in new[] { p0, p1 }) EditorGUI.DrawRect(new Rect(p.x - t, p.y - t, t * 2f, t * 2f), WallColor);
+                }
+            }
+        }
+
+        // Dấu góc (chữ L ở góc) / cạnh (vạch ở giữa cạnh) như trên ô trong game
+        private static void DrawCornerMark(Rect r, ClueCorner corner, float t)
+        {
+            if (corner == ClueCorner.None) return;
+            float arm = r.width * 0.32f;
+            bool left = corner == ClueCorner.TopLeft || corner == ClueCorner.BottomLeft;
+            bool top = corner == ClueCorner.TopLeft || corner == ClueCorner.TopRight;
+            switch (corner)
+            {
+                case ClueCorner.Top: EditorGUI.DrawRect(new Rect(r.center.x - arm / 2f, r.y, arm, t), CornerColor); return;
+                case ClueCorner.Bottom: EditorGUI.DrawRect(new Rect(r.center.x - arm / 2f, r.yMax - t, arm, t), CornerColor); return;
+                case ClueCorner.Left: EditorGUI.DrawRect(new Rect(r.x, r.center.y - arm / 2f, t, arm), CornerColor); return;
+                case ClueCorner.Right: EditorGUI.DrawRect(new Rect(r.xMax - t, r.center.y - arm / 2f, t, arm), CornerColor); return;
+            }
+            float x = left ? r.x : r.xMax - arm, y = top ? r.y : r.yMax - t;
+            EditorGUI.DrawRect(new Rect(x, y, arm, t), CornerColor);
+            float vx = left ? r.x : r.xMax - t, vy = top ? r.y : r.yMax - arm;
+            EditorGUI.DrawRect(new Rect(vx, vy, t, arm), CornerColor);
         }
 
         private void HandleGridInput(Rect area, float cell)
@@ -356,6 +399,12 @@ namespace PawBlock.Features.Gameplay
                             case Tool.Erase:
                                 EraseAt(pos);
                                 break;
+                            case Tool.Wall:
+                                ToggleWallAt(area, cell, e.mousePosition, pos);
+                                break;
+                            case Tool.Corner:
+                                SetCornerAt(area, cell, e.mousePosition, pos);
+                                break;
                         }
                     }
                     e.Use();
@@ -382,6 +431,60 @@ namespace PawBlock.Features.Gameplay
                     e.Use();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Công cụ Góc / cạnh: chia ô số thành lưới 3x3 theo vị trí chuột. Ô góc = góc, ô giữa cạnh = cạnh, ô giữa = bỏ dấu.
+        /// Bấm lại đúng dấu đang có thì bỏ dấu.
+        /// </summary>
+        private void SetCornerAt(Rect area, float cell, Vector2 mouse, Vector2Int pos)
+        {
+            if (_level.clues == null) return;
+            int index = System.Array.FindIndex(_level.clues, c => c.x == pos.x && c.y == pos.y);
+            if (index < 0) return;
+
+            Rect r = CellRect(area, cell, pos.x, pos.y);
+            float fx = (mouse.x - r.x) / r.width, fy = (mouse.y - r.y) / r.height; // fy = 0 ở mép trên màn hình
+            bool left = fx < 1f / 3f, right = fx > 2f / 3f, top = fy < 1f / 3f, bottom = fy > 2f / 3f;
+
+            ClueCorner picked;
+            if (top && left) picked = ClueCorner.TopLeft;
+            else if (top && right) picked = ClueCorner.TopRight;
+            else if (bottom && left) picked = ClueCorner.BottomLeft;
+            else if (bottom && right) picked = ClueCorner.BottomRight;
+            else if (top) picked = ClueCorner.Top;
+            else if (bottom) picked = ClueCorner.Bottom;
+            else if (left) picked = ClueCorner.Left;
+            else if (right) picked = ClueCorner.Right;
+            else picked = ClueCorner.None;
+
+            Record("Set Corner");
+            ClueData c = _level.clues[index];
+            c.mechanic.corner = c.mechanic.corner == picked ? ClueCorner.None : picked;
+            _level.clues[index] = c;
+            _selectedClue = index;
+            ClearReport();
+        }
+
+        /// <summary>Cạnh gần chuột nhất của ô <paramref name="pos"/>: bật / tắt tường ở đó (cạnh viền lưới bỏ qua).</summary>
+        private void ToggleWallAt(Rect area, float cell, Vector2 mouse, Vector2Int pos)
+        {
+            Rect r = CellRect(area, cell, pos.x, pos.y);
+            float dl = mouse.x - r.x, dr = r.xMax - mouse.x, dt = mouse.y - r.y, db = r.yMax - mouse.y;
+            float min = Mathf.Min(Mathf.Min(dl, dr), Mathf.Min(dt, db));
+            WallData w;
+            if (min == dr) w = new WallData { x = pos.x, y = pos.y, side = WallSide.Right };
+            else if (min == dl) w = new WallData { x = pos.x - 1, y = pos.y, side = WallSide.Right };
+            else if (min == dt) w = new WallData { x = pos.x, y = pos.y, side = WallSide.Top };   // phía trên màn hình = y + 1
+            else w = new WallData { x = pos.x, y = pos.y - 1, side = WallSide.Top };
+            Vector2Int a = WallRules.CellA(w), b = WallRules.CellB(w);
+            if (a.x < 0 || a.y < 0 || b.x >= _level.size || b.y >= _level.Height) return;
+
+            Record("Toggle Wall");
+            List<WallData> walls = (_level.walls ?? new WallData[0]).ToList();
+            if (!walls.Remove(w)) walls.Add(w);
+            _level.walls = walls.ToArray();
+            ClearReport();
         }
 
         private RectInt DragRect()
@@ -423,6 +526,7 @@ namespace PawBlock.Features.Gameplay
             // [MECHANIC] Trường sửa cơ chế của ô số đang chọn (nhớ gán lại vào c.mechanic bên dưới)
             int value = Mathf.Max(1, EditorGUILayout.IntField("Giá trị", c.value));
             ClueConstraint constraint = (ClueConstraint)EditorGUILayout.EnumPopup(new GUIContent("Hướng", "Ngang / dọc / vuông (ô nền sau số)"), c.mechanic.constraint);
+            ClueCorner corner = (ClueCorner)EditorGUILayout.EnumPopup(new GUIContent("Góc / cạnh", "Ô số phải nằm ở góc / cạnh này của khối (dấu trên ô)"), c.mechanic.corner);
             int lockSteps = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Khóa (bước)", "Mở sau khi đặt đủ số khối khác"), c.mechanic.lockSteps));
             bool hidden = EditorGUILayout.Toggle(new GUIContent("Ẩn số \"?\"", "Người chơi không thấy số tới khi đặt đúng"), c.mechanic.hidden);
             int color = EditorGUILayout.IntField(new GUIContent("Màu", "Chỉ số màu (dữ liệu ShikaCat, game hiện chưa dùng)"), c.color);
@@ -431,6 +535,7 @@ namespace PawBlock.Features.Gameplay
                 Record("Edit Clue");
                 c.value = value;
                 c.mechanic.constraint = constraint;
+                c.mechanic.corner = corner;
                 c.mechanic.lockSteps = lockSteps;
                 c.mechanic.hidden = hidden;
                 c.color = color;
@@ -659,6 +764,7 @@ namespace PawBlock.Features.Gameplay
             {
                 overrides.Add(new CellOverrideData { x = pos.x, y = pos.y, type = CellType.Void });
                 RemoveClueAndBlockAt(pos);
+                if (_level.walls != null) _level.walls = _level.walls.Where(w => WallRules.CellA(w) != pos && WallRules.CellB(w) != pos).ToArray();
             }
             _level.cellOverrides = overrides.ToArray();
             ClearReport();
@@ -703,6 +809,7 @@ namespace PawBlock.Features.Gameplay
             _level.clues = (_level.clues ?? new ClueData[0]).Where(c => In(c.x, c.y)).ToArray();
             _level.cellOverrides = (_level.cellOverrides ?? new CellOverrideData[0]).Where(o => In(o.x, o.y)).ToArray();
             _level.solution = SolutionList().Where(b => b.x + b.width <= width && b.y + b.height <= height).ToArray();
+            _level.walls = (_level.walls ?? new WallData[0]).Where(w => In(WallRules.CellB(w).x, WallRules.CellB(w).y)).ToArray();
             _selectedClue = -1;
             ClearReport();
         }

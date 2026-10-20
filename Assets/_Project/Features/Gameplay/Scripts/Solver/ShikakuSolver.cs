@@ -22,6 +22,7 @@ namespace PawBlock.Features.Gameplay
             public int y;
             public int value;
             public ClueConstraint constraint;
+            public ClueCorner corner;
             // [MECHANIC] Thông tin solver cần về clue (luật hình dạng / người chơi chưa biết gì)
             public bool unknownValue; // chưa biết số: khối có thể rộng bất kỳ
         }
@@ -31,6 +32,7 @@ namespace PawBlock.Features.Gameplay
             public int width;
             public int height;
             public bool[,] blocked;   // Void hoặc đã bị khối khác chiếm
+            public WallData[] walls;  // khối không được vắt qua
             public int[,] clueAt;
             public List<Clue> open = new List<Clue>();
         }
@@ -53,7 +55,7 @@ namespace PawBlock.Features.Gameplay
 
         /// <summary>
         /// Giải với các clue người chơi chưa biết: unknownValue = chưa biết số (ô "?", ô khóa),
-        /// unknownConstraint = chưa biết hướng (ô khóa che mất ô nền điều hướng).
+        /// unknownConstraint = chưa biết hướng / góc (ô khóa che mất ô nền điều hướng và dấu góc / cạnh).
         /// Khi có clue chưa biết số, lời giải phải phủ kín mọi ô còn trống.
         /// </summary>
         public static bool TrySolve(LevelDefinition level, IList<RectInt> placed,
@@ -124,7 +126,7 @@ namespace PawBlock.Features.Gameplay
             state = null;
             if (level == null || level.clues == null) return false;
 
-            State s = new State { width = level.size, height = level.Height };
+            State s = new State { width = level.size, height = level.Height, walls = level.walls };
             s.blocked = new bool[s.width, s.height];
             s.clueAt = new int[s.width, s.height];
             for (int x = 0; x < s.width; x++)
@@ -153,6 +155,7 @@ namespace PawBlock.Features.Gameplay
                     y = c.y,
                     value = c.value,
                     constraint = hideConstraint ? ClueConstraint.None : c.mechanic.constraint,
+                    corner = hideConstraint ? ClueCorner.None : c.mechanic.corner, // ô khóa che cả dấu góc / cạnh
                     unknownValue = unknownValue != null && unknownValue.Contains(i)
                 });
                 s.clueAt[c.x, c.y] = i;
@@ -283,7 +286,8 @@ namespace PawBlock.Features.Gameplay
                                 }
                             }
 
-                            if (ok) list.Add(new RectInt(x0, y0, w, h));
+                            RectInt rect = new RectInt(x0, y0, w, h);
+                            if (ok && !WallRules.Crosses(s.walls, rect) && MatchesCorner(c.corner, rect, new Vector2Int(c.x, c.y))) list.Add(rect);
                         }
                     }
                 }
@@ -298,6 +302,25 @@ namespace PawBlock.Features.Gameplay
                 case ClueConstraint.Horizontal: return w > h;
                 case ClueConstraint.Vertical: return h > w;
                 case ClueConstraint.Square: return w == h;
+                default: return true;
+            }
+        }
+
+        /// <summary>Ô số <paramref name="clue"/> nằm đúng góc / cạnh <paramref name="corner"/> của vùng (None = đâu cũng được).</summary>
+        public static bool MatchesCorner(ClueCorner corner, RectInt rect, Vector2Int clue)
+        {
+            bool left = clue.x == rect.xMin, right = clue.x == rect.xMax - 1;
+            bool bottom = clue.y == rect.yMin, top = clue.y == rect.yMax - 1;
+            switch (corner)
+            {
+                case ClueCorner.TopLeft: return top && left;
+                case ClueCorner.TopRight: return top && right;
+                case ClueCorner.BottomLeft: return bottom && left;
+                case ClueCorner.BottomRight: return bottom && right;
+                case ClueCorner.Top: return top;
+                case ClueCorner.Bottom: return bottom;
+                case ClueCorner.Left: return left;
+                case ClueCorner.Right: return right;
                 default: return true;
             }
         }

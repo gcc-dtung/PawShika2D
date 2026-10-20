@@ -36,6 +36,7 @@ namespace PawBlock.Game
         private int _taps;
         private float _lastTap;
         private int _levelInput = 1;
+        private bool _confirmWipe;
         private Vector2 _scroll;
 
         private bool _showFps;
@@ -426,6 +427,21 @@ namespace PawBlock.Game
             {
                 if (Btn("Lưu save ngay")) DebugCheats.SaveNow();
                 if (Btn("Thử mua IAP")) DebugCheats.TryIAP();
+            }
+
+            // Bấm 2 lần mới xóa (lần 1 hiện nút xác nhận) để không lỡ tay
+            if (!_confirmWipe)
+            {
+                if (Btn("Xóa hết dữ liệu, chơi lại từ đầu")) _confirmWipe = true;
+            }
+            else
+            {
+                GUILayout.Label("Xóa level, tutorial, coin, booster, năng lượng, cài đặt... rồi chạy lại game?", _small);
+                using (new GUILayout.HorizontalScope())
+                {
+                    if (Btn("XÓA HẾT")) { _confirmWipe = false; SetOpen(false); DebugCheats.WipeAllData(); }
+                    if (Btn("Hủy")) _confirmWipe = false;
+                }
             }
         }
 

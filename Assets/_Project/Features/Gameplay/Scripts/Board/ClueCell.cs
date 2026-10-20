@@ -13,6 +13,7 @@ namespace PawBlock.Features.Gameplay
         public int Value => Data.value;
         public int ColorIndex => Data.color;
         public ClueConstraint Constraint => Data.mechanic.constraint;
+        public ClueCorner Corner => Data.mechanic.corner;
         public bool IsLocked => LockSteps > 0;
 
         // [MECHANIC] Trạng thái lúc chơi của cơ chế (đọc từ data.mechanic) + hàm đổi trạng thái (như SyncLock). Ô "?" giữ ẩn suốt ván.

@@ -31,6 +31,7 @@ namespace PawBlock.Features.Shop
         public int infiniteMinutes;    // năng lượng vô hạn
         public bool removeAds;
         [Header("Hiển thị")]
+        public Sprite background;      // nền thẻ (trống: giữ nền của prefab)
         public string saleTag;         // vd "90%\nOff" (thẻ Starter)
 
         public string PriceText => priceVnd + " VND";
@@ -48,7 +49,10 @@ namespace PawBlock.Features.Shop
         }
     }
 
-    /// <summary>Danh sách gói trong Shop (thứ tự trong list = thứ tự hiện trong từng mục).</summary>
+    /// <summary>
+    /// Danh sách gói trong Shop (thứ tự trong list = thứ tự hiện trong từng mục). ShopPanel spawn 1 thẻ cho mỗi gói
+    /// theo prefab của section: thêm gói = bấm + rồi điền, bỏ gói = bấm -.
+    /// </summary>
     [CreateAssetMenu(menuName = "PawBlock/Shop Database", fileName = "ShopDatabase")]
     public class ShopDatabase : ScriptableObject
     {

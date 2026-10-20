@@ -71,6 +71,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 1
     x: 1
     y: 6
@@ -80,6 +81,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 2
     x: 2
     y: 5
@@ -89,6 +91,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 3
     x: 5
     y: 5
@@ -98,6 +101,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 5
     x: 0
     y: 4
@@ -107,6 +111,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 7
     x: 5
     y: 2
@@ -116,6 +121,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 8
     x: 6
     y: 1
@@ -125,6 +131,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 9
     x: 7
     y: 0
@@ -134,6 +141,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 10
     x: 0
     y: 0
@@ -143,6 +151,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   solution:
   - clueId: 0
     x: 0
@@ -189,6 +198,7 @@ MonoBehaviour:
     y: 0
     width: 5
     height: 1
+  walls: []
   rules:
-    mistakeLimit: 3
+    timeLimit: 0
   difficulty: 0

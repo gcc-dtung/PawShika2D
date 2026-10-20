@@ -34,6 +34,16 @@ MonoBehaviour:
     introLength: 2
     amount: {x: 1, y: 2}
     weight: 1
+  - kind: 4
+    introLevel: 24
+    introLength: 2
+    amount: {x: 3, y: 5}
+    weight: 1
+  - kind: 5
+    introLevel: 27
+    introLength: 2
+    amount: {x: 2, y: 3}
+    weight: 1
   mechanicChance: 0.7
   reliefEvery: 10
   newestBoostLevels: 10

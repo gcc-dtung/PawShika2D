@@ -8,6 +8,7 @@ namespace PawBlock.Features.Gameplay
     /// Nối rung điện thoại vào các sự kiện có sẵn của game (giống GameAudioEvents cho âm thanh). Kiểu rung xem HapticType:
     /// - Thao tác liên tục rung rất nhẹ: ngón tay kéo sang ô khác (Selection), đặt khối (Light), gỡ khối (Soft), mở khóa ô (Rigid).
     /// - Coin bay vào ô coin ở màn thắng: mỗi đồng 1 tick (Coin, gọi trong WinPopup).
+    /// - Kéo sai: vùng kéo vừa chuyển sang "chắc chắn sai" (Tick). Thả tay bị từ chối (Warning); thiếu ô chỉ Selection, không có ô số thì Soft.
     /// - Booster (Medium); đóng băng bật (Rise, mạnh dần) / băng vỡ (Thud); lưới kín mà sai (Heavy).
     /// - Sắp hết giờ: vừa xuống dưới ngưỡng (Warning) rồi mỗi giây (Tick). Thắng (Success), hết giờ / thua (Failure).
     /// Đi qua AudioManager.Vibrate nên tắt "Rung" trong Cài đặt là tắt hết. Từng nhóm tắt riêng được ở Inspector.
@@ -30,11 +31,14 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private bool onClueUnlocked = true;
         [Tooltip("Tick rất nhẹ mỗi khi ngón tay đang kéo chạm sang ô khác")]
         [SerializeField] private bool onSelection = true;
+        [Tooltip("Tick khi vùng đang kéo vừa chuyển sang sai")]
+        [SerializeField] private bool onInvalidDrag = true;
         [Tooltip("Tick mỗi giây khi sắp hết giờ")]
         [SerializeField] private bool onLowTimeTick = true;
 
         private LevelTimer _timer;
         private BoosterManager _booster;
+        private SelectionHint _dragHint;
 
         private void Start()
         {
@@ -48,6 +52,7 @@ namespace PawBlock.Features.Gameplay
                 _grid.onClueUnlocked.AddListener(OnClueUnlocked);
                 _grid.onDragCellChanged.AddListener(OnDragCellChanged);
                 _grid.onInvalidMove.AddListener(OnInvalidMove);
+                _grid.onSelectionChanged.AddListener(OnSelectionChanged);
             }
             EventBus<GameStateChangedEvent>.Subscribe(OnStateChanged);
             if (_timer != null)
@@ -70,6 +75,7 @@ namespace PawBlock.Features.Gameplay
                 _grid.onClueUnlocked.RemoveListener(OnClueUnlocked);
                 _grid.onDragCellChanged.RemoveListener(OnDragCellChanged);
                 _grid.onInvalidMove.RemoveListener(OnInvalidMove);
+                _grid.onSelectionChanged.RemoveListener(OnSelectionChanged);
             }
             EventBus<GameStateChangedEvent>.Unsubscribe(OnStateChanged);
             if (_timer != null)
@@ -101,8 +107,33 @@ namespace PawBlock.Features.Gameplay
             if (onSelection) AudioManager.Vibrate(HapticType.Selection);
         }
 
-        // Thả tay ở vùng sai: rung mềm (nhẹ hơn lưới kín mà sai)
-        private void OnInvalidMove(PlacementResult result, Vector3 center, Vector2 size) => AudioManager.Vibrate(HapticType.Soft);
+        private void OnSelectionChanged(int count, SelectionHint hint)
+        {
+            SelectionHint prev = _dragHint;
+            _dragHint = count == 0 ? SelectionHint.Neutral : hint;
+            if (onInvalidDrag && _dragHint == SelectionHint.Invalid && prev != SelectionHint.Invalid) AudioManager.Vibrate(HapticType.Tick);
+        }
+
+        // Thả tay ở vùng sai: Warning (2 nhịp, vẫn nhẹ hơn lưới kín mà sai). Thiếu ô (hay do nhấc tay sớm) rung rất nhẹ;
+        // không có ô số nào thì không có gì để chỉ -> rung mềm
+        private void OnInvalidMove(PlacementResult result, Vector3 center, Vector2 size)
+        {
+            PlacementCheck check = _grid != null ? _grid.LastRejected : default;
+            if (result == PlacementResult.WrongSize && check.ClueCell != null && check.Cells != null
+                && check.Cells.Count < check.ClueCell.Clue.Value)
+                AudioManager.Vibrate(HapticType.Selection);
+            else if (result == PlacementResult.ClueCount && CountClues(check) == 0)
+                AudioManager.Vibrate(HapticType.Soft);
+            else
+                AudioManager.Vibrate(HapticType.Warning);
+        }
+
+        private static int CountClues(PlacementCheck check)
+        {
+            int n = 0;
+            if (check.Cells != null) foreach (CellModel cell in check.Cells) if (cell.HasClue) n++;
+            return n;
+        }
 
         private void OnStateChanged(GameStateChangedEvent e)
         {

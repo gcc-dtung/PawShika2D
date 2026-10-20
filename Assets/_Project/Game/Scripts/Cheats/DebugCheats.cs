@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using PawBlock.Core.Contracts;
 using PawBlock.Core.Foundation;
 using PawBlock.Features.Economy;
@@ -275,12 +276,25 @@ namespace PawBlock.Game
             if (Screens != null) Screens.EnterTutorial();
         }
 
-        /// <summary>Bỏ cờ đã xem popup cơ chế (Hướng / Khóa / "?"): nạp level có cơ chế là hiện lại.</summary>
+        /// <summary>Bỏ cờ đã xem popup cơ chế (Hướng / Khóa / "?" / Tường / Góc): nạp level có cơ chế là hiện lại.</summary>
         public static void ResetMechanicIntros()
         {
             if (Gameplay == null) return;
             Gameplay.seenMechanics.Clear();
             _services.Save.MarkDirty();
+        }
+
+        /// <summary>
+        /// Xóa toàn bộ dữ liệu người chơi (save.json + bản tạm / backup: level, tutorial, coin, sao, booster, năng lượng,
+        /// cài đặt, điểm danh...) rồi nạp lại scene: game chạy lại như lần đầu cài, có tutorial. Dùng khi đưa máy cho người khác test.
+        /// Object của scene cũ giữ section cũ nhưng service đã quên chúng nên không ghi đè lại được.
+        /// </summary>
+        public static void WipeAllData()
+        {
+            if (_services == null) return;
+            _services.Save.Delete();
+            Debug.Log("[DebugCheats] Đã xóa toàn bộ dữ liệu, chơi lại từ đầu");
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         /// <summary>Bỏ cờ đã xem tutorial: lần mở game sau (đang ở level 1) sẽ chạy lại tutorial.</summary>

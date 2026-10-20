@@ -80,6 +80,10 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private float nudgeHeight = 0.12f;
         [SerializeField] private float nudgeDuration = 0.26f;
 
+        [Header("Ngón tay đang kéo đẩy vào khối: khối lùi theo hướng đẩy rồi bật về")]
+        [SerializeField] private float pushDistance = 0.08f;
+        [SerializeField] private float pushDuration = 0.22f;
+
         [Header("Run khi đóng băng")]
         [SerializeField] private float shiverDuration = 0.45f;
         [SerializeField] private float shiverStrength = 0.035f;
@@ -186,6 +190,18 @@ namespace PawBlock.Features.Gameplay
                     transform.localScale = new Vector3(1f - s, 1f + s, 1f);
                 })
                 .SetDelay(delay)
+                .SetEase(Ease.OutQuad)
+                .OnStart(ReactFace)
+                .OnComplete(ResetPose);
+            PlayAnim(tween);
+        }
+
+        /// <summary>Ngón tay đang kéo đẩy vào khối theo <paramref name="dir"/>: khối lùi 1 chút rồi bật về, đổi biểu cảm.</summary>
+        public void PlayPushed(Vector2Int dir)
+        {
+            if (IsPreview || !gameObject.activeInHierarchy || dir == Vector2Int.zero) return;
+            Vector3 offset = new Vector3(dir.x, dir.y, 0f).normalized * pushDistance;
+            Tween tween = DOVirtual.Float(0f, 1f, pushDuration, p => transform.position = _basePosition + offset * Mathf.Sin(p * Mathf.PI))
                 .SetEase(Ease.OutQuad)
                 .OnStart(ReactFace)
                 .OnComplete(ResetPose);

@@ -24,6 +24,7 @@ MonoBehaviour:
     reveal: 1
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: '90%
 
       Off'
@@ -40,6 +41,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 1
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.noadbundle
     title: No Ads Bundle
@@ -52,6 +54,7 @@ MonoBehaviour:
     reveal: 1
     infiniteMinutes: 60
     removeAds: 1
+    background: {fileID: 21300000, guid: baf0c52e6b1e7004d9b307dd2124a0bd, type: 3}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.failoffer
     title: Fail Offer
@@ -64,6 +67,7 @@ MonoBehaviour:
     reveal: 1
     infiniteMinutes: 30
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.minibundle
     title: Mini Offer
@@ -76,6 +80,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 60
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.superbundle
     title: Super Offer
@@ -88,6 +93,7 @@ MonoBehaviour:
     reveal: 1
     infiniteMinutes: 60
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.megabundle
     title: Mega Offer
@@ -100,6 +106,7 @@ MonoBehaviour:
     reveal: 2
     infiniteMinutes: 180
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.deluxebundle
     title: Deluxe Offer
@@ -112,6 +119,7 @@ MonoBehaviour:
     reveal: 3
     infiniteMinutes: 360
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.coin1
     title: 1000 Coin
@@ -124,6 +132,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.coin2
     title: 5000 Coin
@@ -136,6 +145,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.coin3
     title: 10000 Coin
@@ -148,6 +158,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.coin4
     title: 25000 Coin
@@ -160,6 +171,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.coin5
     title: 50000 Coin
@@ -172,6 +184,7 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 
   - productId: com.phoenix.pawblock.puzzle.coin6
     title: 100000 Coin
@@ -184,4 +197,5 @@ MonoBehaviour:
     reveal: 0
     infiniteMinutes: 0
     removeAds: 0
+    background: {fileID: 0}
     saleTag: 

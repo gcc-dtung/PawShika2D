@@ -27,17 +27,19 @@ MonoBehaviour:
     color: 5
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 2
       hidden: 0
+      corner: 0
   - id: 1
     x: 4
     y: 9
     value: 8
     color: 4
     mechanic:
-      constraint: 2
+      constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 2
     x: 5
     y: 9
@@ -47,6 +49,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 3
     x: 9
     y: 8
@@ -56,15 +59,17 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 4
     x: 1
     y: 5
     value: 12
     color: 0
     mechanic:
-      constraint: 2
+      constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 5
     x: 5
     y: 7
@@ -74,6 +79,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 6
     x: 8
     y: 0
@@ -83,6 +89,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 7
     x: 9
     y: 3
@@ -92,6 +99,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 8
     x: 4
     y: 3
@@ -101,6 +109,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 9
     x: 2
     y: 2
@@ -110,6 +119,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 10
     x: 5
     y: 2
@@ -119,6 +129,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 11
     x: 1
     y: 0
@@ -128,6 +139,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 12
     x: 4
     y: 0
@@ -137,6 +149,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 13
     x: 9
     y: 0
@@ -146,6 +159,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   solution:
   - clueId: 0
     x: 0
@@ -217,6 +231,7 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 2
+  walls: []
   rules:
-    mistakeLimit: 3
+    timeLimit: 0
   difficulty: 0

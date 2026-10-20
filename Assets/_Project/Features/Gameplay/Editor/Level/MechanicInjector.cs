@@ -6,12 +6,15 @@ using UnityEngine;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Gắn cơ chế (Void, hướng, khóa, "?") vào level có sẵn, dựa trên lời giải của level.
+    /// Gắn cơ chế (Void, hướng, khóa, "?", tường, ô số góc / cạnh) vào level có sẵn, dựa trên lời giải của level.
     /// - MakePlans: level số N nhận cơ chế nào (giới thiệu / level nghỉ / thường / kết hợp), random theo seed + N.
     /// - Inject: nhân bản level, gắn từng cơ chế; mỗi lần gắn chạy LevelValidator, sai thì hoàn tác và thử chỗ khác.
     ///   Void: bỏ hẳn 1 khối của lời giải (ô thành Void, xóa số) -> không thể sinh thêm lời giải; cắt viền lưới thừa.
     ///   Hướng: gắn đúng hình của khối trong lời giải, chỉ chọn số mà mũi tên thực sự loại bớt cách đặt.
     ///   Khóa / "?": chỉ giữ khi vẫn giải được không cần đoán; level gốc phải đoán (nhiều lời giải) thì không gắn.
+    ///   Tường: đặt trên ranh giới 2 khối của lời giải, chỉ chọn cạnh mà tường loại bớt cách đặt (ưu tiên nối tiếp tường cũ thành hàng rào).
+    ///   Góc / cạnh: gắn đúng vị trí ô số trong khối của lời giải, chỉ chọn số mà dấu loại bớt cách đặt; level giới thiệu chỉ dùng góc.
+    /// Apply: gắn thẳng vào 1 level (Level Generator dùng khi sinh).
     /// Class C# thuần, không lưu asset: MechanicInjectorWindow lo lưu và cập nhật LevelDatabase.
     /// </summary>
     public static class MechanicInjector
@@ -182,6 +185,25 @@ namespace PawBlock.Features.Gameplay
         // =====================================================================
         // Gắn cơ chế
 
+        /// <summary>
+        /// Gắn thẳng các cơ chế vào <paramref name="level"/> (sửa trực tiếp, level phải giải được; Level Generator dùng khi sinh).
+        /// Trả về mô tả từng phần đã gắn và ghi chú phần không gắn được.
+        /// </summary>
+        public static List<string> Apply(LevelDefinition level, IList<MechanicKind> kinds, MechanicInjectorSettings s, int seed, List<string> notes = null)
+        {
+            List<string> applied = new List<string>();
+            if (level == null || kinds == null || kinds.Count == 0 || !EnsureSolution(level)) return applied;
+            bool needsGuessing = !LevelValidator.Validate(level, alwaysCheckGuessing: true).IsValid;
+            Context ctx = new Context { level = level, settings = s, rng = new System.Random(Hash(s.seed, seed, 3)), originalPlayable = Playable(level) };
+            Result result = new Result();
+            HashSet<MechanicKind> tried = new HashSet<MechanicKind>();
+            List<MechanicKind> sorted = new List<MechanicKind>(kinds);
+            sorted.Sort();
+            foreach (MechanicKind kind in sorted) TryKind(ctx, kind, needsGuessing, tried, result);
+            notes?.AddRange(result.notes);
+            return result.applied;
+        }
+
         public static Result Inject(LevelDefinition source, Plan plan, MechanicInjectorSettings s)
         {
             Result result = new Result { plan = plan };
@@ -222,7 +244,7 @@ namespace PawBlock.Features.Gameplay
                 // Thay bằng cơ chế đã mở khác (ưu tiên hướng: luôn giữ nguyên lời giải)
                 MechanicKind[] fallbacks = plan.hard
                     ? new[] { MechanicKind.Lock, MechanicKind.Hidden, MechanicKind.Void }
-                    : new[] { MechanicKind.Constraint, MechanicKind.Void, MechanicKind.Hidden, MechanicKind.Lock };
+                    : new[] { MechanicKind.Constraint, MechanicKind.Corner, MechanicKind.Wall, MechanicKind.Void, MechanicKind.Hidden, MechanicKind.Lock };
                 foreach (MechanicKind f in fallbacks)
                 {
                     if (tried.Contains(f) || plan.kinds.Contains(f) || !plan.unlocked.Contains(f)) continue;
@@ -267,6 +289,8 @@ namespace PawBlock.Features.Gameplay
                     case MechanicKind.Void: part = TryVoid(ctx); break;
                     case MechanicKind.Constraint: part = TryConstraint(ctx); break;
                     case MechanicKind.Lock: part = TryLock(ctx); break;
+                    case MechanicKind.Wall: part = TryWall(ctx); break;
+                    case MechanicKind.Corner: part = TryCorner(ctx); break;
                     default: part = TryHidden(ctx); break;
                 }
                 if (part == null) break;
@@ -419,6 +443,108 @@ namespace PawBlock.Features.Gameplay
             return null;
         }
 
+        /// <summary>
+        /// 1 đoạn tường trên ranh giới 2 khối của lời giải (lời giải luôn còn đúng). Chỉ chọn cạnh mà tường loại bớt cách đặt
+        /// (có ứng viên vắt qua); trọng số = số cách đặt bị loại, x3 nếu nối tiếp tường đã có (thành hàng rào / góc vuông).
+        /// </summary>
+        private static string TryWall(Context ctx)
+        {
+            LevelDefinition level = ctx.level;
+            RectInt[] rects = SolutionRects(level);
+            if (rects == null || rects.Length < 2) return null;
+
+            List<RectInt> options = new List<RectInt>();
+            for (int i = 0; i < level.clues.Length; i++) options.AddRange(ShikakuSolver.GetCandidates(level, null, i, null, null));
+
+            List<WallData> existing = new List<WallData>(level.walls ?? new WallData[0]);
+            List<WallData> candidates = new List<WallData>();
+            Dictionary<WallData, float> weights = new Dictionary<WallData, float>();
+            foreach (WallData w in WallRules.RandomOnSolution(rects, int.MaxValue, ctx.rng))
+            {
+                if (existing.Contains(w)) continue;
+                WallData[] one = { w };
+                int eliminated = options.Count(o => WallRules.Crosses(one, o));
+                if (eliminated == 0) continue;
+                candidates.Add(w);
+                weights[w] = eliminated * (existing.Exists(e => SharesPost(e, w)) ? 3f : 1f);
+            }
+
+            for (int attempt = 0; attempt < ctx.settings.maxAttempts && candidates.Count > 0; attempt++)
+            {
+                WallData w = PickWeighted(candidates, c => weights[c], ctx.rng);
+                candidates.Remove(w);
+
+                Snapshot snap = Snapshot.Of(level);
+                level.walls = existing.Concat(new[] { w }).ToArray();
+                if (LevelValidator.Validate(level).IsValid) return $"tường ({w.x},{w.y}) {w.side}";
+                snap.Restore(level);
+            }
+            return null;
+        }
+
+        // 2 đoạn tường chung 1 cọc (đầu mút ở cùng giao điểm đường kẻ)
+        private static bool SharesPost(WallData a, WallData b)
+        {
+            Vector2Int[] pa = Posts(a), pb = Posts(b);
+            return pa[0] == pb[0] || pa[0] == pb[1] || pa[1] == pb[0] || pa[1] == pb[1];
+        }
+
+        // Giao điểm đường kẻ (góc dưới trái của ô (x, y) là điểm (x, y)) ở 2 đầu đoạn tường
+        private static Vector2Int[] Posts(WallData w) => w.side == WallSide.Right
+            ? new[] { new Vector2Int(w.x + 1, w.y), new Vector2Int(w.x + 1, w.y + 1) }
+            : new[] { new Vector2Int(w.x, w.y + 1), new Vector2Int(w.x + 1, w.y + 1) };
+
+        /// <summary>
+        /// Gắn dấu góc / cạnh đúng vị trí ô số trong khối của lời giải. Chỉ chọn số mà dấu loại bớt cách đặt;
+        /// mỗi số chọn dấu loại được nhiều nhất (ngang nhau thì ưu tiên góc). Level giới thiệu chỉ dùng góc.
+        /// Bỏ qua ô khóa (khóa che mất dấu) và số 1.
+        /// </summary>
+        private static string TryCorner(Context ctx)
+        {
+            LevelDefinition level = ctx.level;
+            RectInt[] rects = SolutionRects(level);
+            if (rects == null) return null;
+            IEnumerable<ClueCorner> kinds = ctx.intro ? CornerRules.Corners : CornerRules.Corners.Concat(CornerRules.Edges);
+
+            List<int> candidates = new List<int>();
+            Dictionary<int, ClueCorner> best = new Dictionary<int, ClueCorner>();
+            Dictionary<int, float> weights = new Dictionary<int, float>();
+            for (int i = 0; i < level.clues.Length; i++)
+            {
+                ClueData c = level.clues[i];
+                if (c.value < 2 || c.mechanic.corner != ClueCorner.None || c.mechanic.lockSteps > 0) continue;
+
+                Vector2Int pos = new Vector2Int(c.x, c.y);
+                List<RectInt> options = ShikakuSolver.GetCandidates(level, null, i, null, null);
+                int bestElim = 0;
+                foreach (ClueCorner k in CornerRules.MatchesOf(rects[i], pos, kinds))
+                {
+                    int eliminated = options.Count(o => !ShikakuSolver.MatchesCorner(k, o, pos));
+                    if (eliminated > bestElim || (eliminated == bestElim && eliminated > 0 && !CornerRules.IsEdge(k) && CornerRules.IsEdge(best[i])))
+                    {
+                        bestElim = eliminated;
+                        best[i] = k;
+                    }
+                }
+                if (bestElim == 0) continue;
+                candidates.Add(i);
+                weights[i] = bestElim;
+            }
+
+            for (int attempt = 0; attempt < ctx.settings.maxAttempts && candidates.Count > 0; attempt++)
+            {
+                int i = PickWeighted(candidates, c => weights[c], ctx.rng);
+                candidates.Remove(i);
+
+                Snapshot snap = Snapshot.Of(level);
+                level.clues[i].mechanic.corner = best[i];
+                if (LevelValidator.Validate(level).IsValid)
+                    return $"{best[i]} số {level.clues[i].value} ({level.clues[i].x},{level.clues[i].y})";
+                snap.Restore(level);
+            }
+            return null;
+        }
+
         // =====================================================================
         // Lời giải / lưới
 
@@ -484,6 +610,9 @@ namespace PawBlock.Features.Gameplay
             clues.RemoveAt(clueIndex);
             level.clues = clues.ToArray();
             level.solution = level.solution.Where(sr => sr.clueId != id).ToArray();
+            // Tường sát ô vừa thành Void không còn nghĩa
+            if (level.walls != null)
+                level.walls = level.walls.Where(w => !r.Contains(WallRules.CellA(w)) && !r.Contains(WallRules.CellB(w))).ToArray();
         }
 
         /// <summary>Cắt hàng / cột ngoài cùng chỉ toàn Void, dời mọi tọa độ về góc (0,0).</summary>
@@ -515,6 +644,14 @@ namespace PawBlock.Features.Gameplay
             {
                 level.solution[i].x -= minX;
                 level.solution[i].y -= minY;
+            }
+            if (level.walls != null)
+            {
+                for (int i = 0; i < level.walls.Length; i++)
+                {
+                    level.walls[i].x -= minX;
+                    level.walls[i].y -= minY;
+                }
             }
             level.cellOverrides = level.cellOverrides
                 .Select(o => new CellOverrideData { x = o.x - minX, y = o.y - minY, type = o.type })
@@ -611,6 +748,7 @@ namespace PawBlock.Features.Gameplay
             private CellOverrideData[] _overrides;
             private ClueData[] _clues;
             private SolutionRectData[] _solution;
+            private WallData[] _walls;
 
             public static Snapshot Of(LevelDefinition level) => new Snapshot
             {
@@ -618,7 +756,8 @@ namespace PawBlock.Features.Gameplay
                 _height = level.height,
                 _overrides = Copy(level.cellOverrides),
                 _clues = Copy(level.clues),
-                _solution = Copy(level.solution)
+                _solution = Copy(level.solution),
+                _walls = Copy(level.walls)
             };
 
             public void Restore(LevelDefinition level)
@@ -628,6 +767,7 @@ namespace PawBlock.Features.Gameplay
                 level.cellOverrides = Copy(_overrides);
                 level.clues = Copy(_clues);
                 level.solution = Copy(_solution);
+                level.walls = Copy(_walls);
             }
 
             private static T[] Copy<T>(T[] array) => array == null ? new T[0] : (T[])array.Clone();

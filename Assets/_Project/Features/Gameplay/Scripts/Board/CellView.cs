@@ -19,6 +19,10 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private GameObject lockRoot;
         [SerializeField] private TextMeshPro lockText;
         [SerializeField] private SpriteRenderer orientationBadge; // ô nền sau con số: cao = dọc, vuông = vuông, dẹt = ngang
+        [Tooltip("Dấu góc / cạnh: ô số phải nằm ở góc / cạnh này của khối. Sprite phủ cả ô, vẽ ở góc trên trái / cạnh trên; xoay cho các phía khác")]
+        [SerializeField] private SpriteRenderer cornerMark;
+        [SerializeField] private Sprite cornerSprite;
+        [SerializeField] private Sprite edgeSprite;
 
         [Header("Art ô hướng (bản gốc khung_direc_1/2/3). Để trống thì dùng sprite 9-slice có sẵn của badge")]
         [SerializeField] private Sprite badgeSquareSprite;
@@ -33,10 +37,11 @@ namespace PawBlock.Features.Gameplay
         private static readonly Vector2 BadgeWide = new Vector2(0.74f, 0.5f);
         private const float BadgeScale = 0.25f;
 
-        // Ô số nằm trong vùng đang kéo: số phóng to; vùng phủ ≥ 2 ô số: số lắc ngang
+        // Ô số nằm trong vùng đang kéo: số phóng to; kéo / thả sai: số lắc (DragFeedback chọn trục, độ mạnh)
         private const float HighlightScale = 1.22f;
         private const float ShakeDuration = 0.28f;
         private const float ShakeDistance = 0.07f;
+        private const float PunchDuration = 0.3f;
 
         public CellModel Model { get; private set; }
         /// <summary>Collider để raycast chạm (GridSpawner đăng ký vào registry).</summary>
@@ -47,10 +52,12 @@ namespace PawBlock.Features.Gameplay
         private Tween _bump;
         private Tween _highlight;
         private Tween _shake;
+        private Tween _punch;
         private bool _highlighted;
         private float _highlightK = 1f;
+        private float _punchK = 1f;
         private Transform _clueRoot;      // số đang hiện, hoặc ổ khóa khi ô còn khóa
-        private Vector3 _valueScale, _valuePos, _lockScale, _lockPos;
+        private Vector3 _valueScale, _valuePos, _lockScale, _lockPos, _badgePos, _cornerPos;
         private Color _bodyColor = Color.white;
         private readonly List<TMP_Text> _contentTexts = new List<TMP_Text>();
         private readonly List<SpriteRenderer> _contentSprites = new List<SpriteRenderer>();
@@ -65,10 +72,13 @@ namespace PawBlock.Features.Gameplay
             if (lockText != null) _contentTexts.Add(lockText);
             if (lockSprites != null) _contentSprites.AddRange(lockSprites);
             if (orientationBadge != null) _contentSprites.Add(orientationBadge);
+            if (cornerMark != null) _contentSprites.Add(cornerMark);
             foreach (TMP_Text t in _contentTexts) _contentAlpha.Add(t.alpha);
             foreach (SpriteRenderer sr in _contentSprites) _contentAlpha.Add(sr.color.a);
             if (valueText != null) { _valueScale = valueText.transform.localScale; _valuePos = valueText.transform.localPosition; }
             if (lockRoot != null) { _lockScale = lockRoot.transform.localScale; _lockPos = lockRoot.transform.localPosition; }
+            if (orientationBadge != null) _badgePos = orientationBadge.transform.localPosition;
+            if (cornerMark != null) _cornerPos = cornerMark.transform.localPosition;
         }
 
         private void OnDisable()
@@ -87,28 +97,66 @@ namespace PawBlock.Features.Gameplay
             if (target == null) return;
 
             _highlight?.Kill();
-            Vector3 baseScale = BaseScale(target);
             _highlight = DOVirtual.Float(_highlightK, on ? HighlightScale : 1f, on ? 0.16f : 0.12f, k =>
                 {
                     _highlightK = k;
-                    target.localScale = baseScale * k;
+                    ApplyScale(target);
                 })
                 .SetEase(on ? Ease.OutBack : Ease.OutQuad)
                 .SetLink(gameObject);
         }
 
         /// <summary>Vùng kéo phủ ≥ 2 ô số: số lắc ngang 1 nhịp (báo "không được").</summary>
-        public void PlayConflictShake()
+        public void PlayConflictShake() => PlayShake(Vector2.right);
+
+        /// <summary>
+        /// Số (hoặc ổ khóa) cùng ô hướng, dấu góc lắc 1 nhịp theo <paramref name="axis"/>, biên độ tắt dần (báo "không được").
+        /// <paramref name="strength"/> nhân với biên độ / thời gian gốc.
+        /// </summary>
+        public void PlayShake(Vector2 axis, float strength = 1f)
         {
             Transform target = ClueRoot();
-            if (target == null) return;
+            if (target == null || strength <= 0f) return;
             _shake?.Kill();
-            Vector3 basePos = lockRoot != null && target == lockRoot.transform ? _lockPos : _valuePos;
-            _shake = DOVirtual.Float(0f, 1f, ShakeDuration, p =>
-                    target.localPosition = basePos + Vector3.right * (Mathf.Sin(p * Mathf.PI * 6f) * ShakeDistance * (1f - p)))
+            Vector3 basePos = IsLock(target) ? _lockPos : _valuePos;
+            Transform badge = orientationBadge != null && orientationBadge.gameObject.activeSelf ? orientationBadge.transform : null;
+            Transform corner = cornerMark != null && cornerMark.gameObject.activeSelf ? cornerMark.transform : null;
+            Vector3 dir = new Vector3(axis.x, axis.y, 0f) * (ShakeDistance * strength);
+            _shake = DOVirtual.Float(0f, 1f, ShakeDuration * Mathf.Max(1f, strength), p =>
+                {
+                    Vector3 offset = dir * (Mathf.Sin(p * Mathf.PI * 6f) * (1f - p));
+                    target.localPosition = basePos + offset;
+                    if (badge != null) badge.localPosition = _badgePos + offset;
+                    if (corner != null) corner.localPosition = _cornerPos + offset;
+                })
                 .SetEase(Ease.Linear)
                 .SetLink(gameObject)
-                .OnKill(() => { if (target != null) target.localPosition = basePos; });
+                .OnKill(() =>
+                {
+                    if (target != null) target.localPosition = basePos;
+                    if (badge != null) badge.localPosition = _badgePos;
+                    if (corner != null) corner.localPosition = _cornerPos;
+                });
+        }
+
+        /// <summary>Số (hoặc ổ khóa) nảy to thêm <paramref name="amount"/> rồi về (cộng dồn với phóng to khi đang kéo).</summary>
+        public void PlayPunch(float amount)
+        {
+            Transform target = ClueRoot();
+            if (target == null || amount <= 0f) return;
+            _punch?.Kill();
+            _punch = DOVirtual.Float(0f, 1f, PunchDuration, p =>
+                {
+                    _punchK = FeelCurves.Bump(p, amount);
+                    ApplyScale(target);
+                })
+                .SetEase(Ease.OutQuad)
+                .SetLink(gameObject)
+                .OnKill(() =>
+                {
+                    _punchK = 1f;
+                    if (target != null) ApplyScale(target);
+                });
         }
 
         private Transform ClueRoot()
@@ -118,7 +166,11 @@ namespace PawBlock.Features.Gameplay
             return null;
         }
 
-        private Vector3 BaseScale(Transform t) => lockRoot != null && t == lockRoot.transform ? _lockScale : _valueScale;
+        private bool IsLock(Transform t) => lockRoot != null && t == lockRoot.transform;
+
+        private Vector3 BaseScale(Transform t) => IsLock(t) ? _lockScale : _valueScale;
+
+        private void ApplyScale(Transform t) => t.localScale = BaseScale(t) * (_highlightK * _punchK);
 
         private void StopClueFeedback()
         {
@@ -126,10 +178,15 @@ namespace PawBlock.Features.Gameplay
             _highlight = null;
             _shake?.Kill();
             _shake = null;
+            _punch?.Kill();
+            _punch = null;
             _highlighted = false;
             _highlightK = 1f;
+            _punchK = 1f;
             if (valueText != null) { valueText.transform.localScale = _valueScale; valueText.transform.localPosition = _valuePos; }
             if (lockRoot != null) { lockRoot.transform.localScale = _lockScale; lockRoot.transform.localPosition = _lockPos; }
+            if (orientationBadge != null) orientationBadge.transform.localPosition = _badgePos;
+            if (cornerMark != null) cornerMark.transform.localPosition = _cornerPos;
         }
 
         /// <summary>
@@ -288,6 +345,35 @@ namespace PawBlock.Features.Gameplay
                     };
                     SetBadge(art, size);
                 }
+            }
+
+            if (cornerMark != null)
+            {
+                bool showCorner = hasClue && !locked && clue.Corner != ClueCorner.None;
+                cornerMark.gameObject.SetActive(showCorner);
+                if (showCorner)
+                {
+                    bool edge = CornerRules.IsEdge(clue.Corner);
+                    Sprite art = edge ? edgeSprite : cornerSprite;
+                    if (art != null) cornerMark.sprite = art;
+                    cornerMark.transform.localRotation = Quaternion.Euler(0f, 0f, CornerAngle(clue.Corner));
+                }
+            }
+        }
+
+        // Sprite vẽ ở góc trên trái / cạnh trên; xoay ngược chiều kim đồng hồ: 90° -> trái (dưới trái), 180° -> dưới (dưới phải),
+        // 270° -> phải (trên phải)
+        private static float CornerAngle(ClueCorner corner)
+        {
+            switch (corner)
+            {
+                case ClueCorner.BottomLeft:
+                case ClueCorner.Left: return 90f;
+                case ClueCorner.BottomRight:
+                case ClueCorner.Bottom: return 180f;
+                case ClueCorner.TopRight:
+                case ClueCorner.Right: return 270f;
+                default: return 0f;
             }
         }
 

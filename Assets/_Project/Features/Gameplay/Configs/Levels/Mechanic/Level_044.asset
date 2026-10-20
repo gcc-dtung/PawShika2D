@@ -18,43 +18,7 @@ MonoBehaviour:
     sourceIndex: 43
   size: 9
   height: 9
-  cellOverrides:
-  - x: 8
-    y: 0
-    type: 1
-  - x: 8
-    y: 1
-    type: 1
-  - x: 8
-    y: 2
-    type: 1
-  - x: 8
-    y: 3
-    type: 1
-  - x: 6
-    y: 0
-    type: 1
-  - x: 6
-    y: 1
-    type: 1
-  - x: 6
-    y: 2
-    type: 1
-  - x: 6
-    y: 3
-    type: 1
-  - x: 7
-    y: 0
-    type: 1
-  - x: 7
-    y: 1
-    type: 1
-  - x: 7
-    y: 2
-    type: 1
-  - x: 7
-    y: 3
-    type: 1
+  cellOverrides: []
   clues:
   - id: 0
     x: 2
@@ -65,33 +29,47 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 1
     x: 5
     y: 8
     value: 4
     color: 1
     mechanic:
-      constraint: 1
+      constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 2
     x: 7
     y: 6
     value: 12
     color: 2
     mechanic:
-      constraint: 0
+      constraint: 1
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 3
     x: 8
     y: 4
     value: 4
     color: 3
     mechanic:
-      constraint: 1
+      constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
+  - id: 4
+    x: 8
+    y: 0
+    value: 4
+    color: 4
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+      corner: 0
   - id: 5
     x: 0
     y: 0
@@ -101,15 +79,17 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 6
     x: 3
     y: 3
     value: 8
     color: 6
     mechanic:
-      constraint: 0
+      constraint: 1
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 7
     x: 1
     y: 0
@@ -119,6 +99,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 8
     x: 4
     y: 0
@@ -128,15 +109,27 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 9
     x: 5
     y: 2
     value: 2
     color: 1
     mechanic:
+      constraint: 2
+      lockSteps: 0
+      hidden: 0
+      corner: 0
+  - id: 10
+    x: 7
+    y: 2
+    value: 8
+    color: 2
+    mechanic:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   solution:
   - clueId: 0
     x: 0
@@ -158,6 +151,11 @@ MonoBehaviour:
     y: 4
     width: 4
     height: 1
+  - clueId: 4
+    x: 8
+    y: 0
+    width: 1
+    height: 4
   - clueId: 5
     x: 0
     y: 0
@@ -183,6 +181,21 @@ MonoBehaviour:
     y: 2
     width: 1
     height: 2
+  - clueId: 10
+    x: 6
+    y: 0
+    width: 2
+    height: 4
+  walls:
+  - x: 4
+    y: 4
+    side: 0
+  - x: 5
+    y: 3
+    side: 0
+  - x: 4
+    y: 7
+    side: 0
   rules:
-    mistakeLimit: 3
+    timeLimit: 0
   difficulty: 0

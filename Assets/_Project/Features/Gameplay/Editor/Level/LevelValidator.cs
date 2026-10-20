@@ -8,7 +8,8 @@ namespace PawBlock.Features.Gameplay
     /// <summary>
     /// Kiểm tra level trước khi đưa vào game:
     /// - Data: clue nằm trong lưới, không trùng / không nằm trên Void, tổng số = số ô chơi được,
-    ///   hướng hợp lệ với số (vuông cần số chính phương, số 1 không gắn hướng), không có khóa + "?".
+    ///   hướng hợp lệ với số (vuông cần số chính phương, số 1 không gắn hướng), không có khóa + "?",
+    ///   tường nằm giữa 2 ô chơi được (không trùng), dấu góc / cạnh trên số 1 thì cảnh báo.
     /// - Có lời giải.
     /// - Level có ô "?" / ô khóa: giải được KHÔNG CẦN ĐOÁN. Mô phỏng người chơi chỉ đặt khối chắc chắn đúng
     ///   (mọi cách đặt khác của clue đó đều làm lưới hết lời giải), trong khi chưa biết số của ô "?"
@@ -139,6 +140,8 @@ namespace PawBlock.Features.Gameplay
                 if (m.hidden && m.lockSteps > 0) report.errors.Add($"{name}: vừa khóa vừa \"?\" (mở khóa xong vẫn không biết số)");
                 if (m.lockSteps >= level.clues.Length) report.errors.Add($"{name}: khóa {m.lockSteps} bước nhưng chỉ có {level.clues.Length - 1} khối khác");
 
+                if (m.corner != ClueCorner.None && c.value == 1) report.warnings.Add($"{name}: dấu {m.corner} trên số 1 không cho thêm thông tin");
+
                 switch (m.constraint)
                 {
                     case ClueConstraint.Horizontal:
@@ -150,6 +153,38 @@ namespace PawBlock.Features.Gameplay
                         if (root * root != c.value) report.errors.Add($"{name}: Square nhưng {c.value} không phải số chính phương");
                         else if (c.value == 1) report.warnings.Add($"{name}: Square trên số 1 không cho thêm thông tin");
                         break;
+                }
+            }
+
+            if (level.walls != null)
+            {
+                HashSet<WallData> seen = new HashSet<WallData>();
+                foreach (WallData w in level.walls)
+                {
+                    Vector2Int a = WallRules.CellA(w), b = WallRules.CellB(w);
+                    string name = $"Tường ({w.x},{w.y}) {w.side}";
+                    bool inside = a.x >= 0 && a.y >= 0 && b.x < width && b.y < height;
+                    if (!inside) report.errors.Add($"{name}: nằm ngoài lưới / trên viền lưới");
+                    else if (voids.Contains(a) || voids.Contains(b)) report.errors.Add($"{name}: sát ô Void (không chặn gì)");
+                    if (!seen.Add(w)) report.errors.Add($"{name}: trùng");
+                }
+            }
+
+            // Dấu góc / cạnh phải khớp vị trí ô số trong khối của lời giải đã lưu (nếu có)
+            if (level.solution != null)
+            {
+                foreach (ClueData c in level.clues)
+                {
+                    if (c.mechanic.corner == ClueCorner.None) continue;
+                    foreach (SolutionRectData s in level.solution)
+                    {
+                        RectInt rect = new RectInt(s.x, s.y, s.width, s.height);
+                        Vector2Int p = new Vector2Int(c.x, c.y);
+                        if (!rect.Contains(p)) continue;
+                        if (!ShikakuSolver.MatchesCorner(c.mechanic.corner, rect, p))
+                            report.errors.Add($"Clue ({c.x},{c.y}): dấu {c.mechanic.corner} không khớp vị trí số trong khối lời giải");
+                        break;
+                    }
                 }
             }
 

@@ -6,7 +6,7 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Popup giới thiệu cơ chế lần đầu người chơi gặp (Hướng, Khóa, "?"), ảnh minh họa có sẵn của bản gốc.
+    /// Popup giới thiệu cơ chế lần đầu người chơi gặp (Ô trống, Hướng, Khóa, "?", Tường, Góc), ảnh minh họa có sẵn của bản gốc (Ô trống, Tường, Góc: ảnh vẽ thêm cùng kiểu).
     /// Là 1 ILevelIntro (Order 10: sau băng HARD, trước tutorial booster). LevelIntroSequencer chờ lưới hiện xong rồi gọi Play:
     /// level có cơ chế chưa xem thì mở popup (ván tạm dừng), Ok thì lưu GameplaySave.seenMechanics; nhiều cơ chế mới thì lần lượt từng popup.
     /// Level giới thiệu cơ chế do Mechanic Injector xếp lịch, nên popup rơi đúng vào các level đó.
@@ -28,13 +28,19 @@ namespace PawBlock.Features.Gameplay
         {
             Constraint,
             Lock,
-            Hidden
+            Hidden,
+            Wall, // thêm cuối: seenMechanics lưu theo tên
+            Corner,
+            Void
         }
 
         [SerializeField] private MechanicIntroPopup popup;
         [SerializeField] private Sprite constraintSprite;
         [SerializeField] private Sprite lockSprite;
         [SerializeField] private Sprite hiddenSprite;
+        [SerializeField] private Sprite wallSprite;
+        [SerializeField] private Sprite cornerSprite;
+        [SerializeField] private Sprite voidSprite;
         [Tooltip("Chờ thêm sau khi lưới hiện xong rồi mới mở popup")]
         [SerializeField] private float startDelay = 0.15f;
 
@@ -67,18 +73,33 @@ namespace PawBlock.Features.Gameplay
         private List<Kind> NewMechanics(LevelDefinition level)
         {
             List<Kind> result = new List<Kind>();
-            if (level == null || level.clues == null) return result;
-            bool constraint = false, locked = false, hidden = false;
-            foreach (ClueData c in level.clues)
+            if (level == null) return result;
+            bool constraint = false, locked = false, hidden = false, corner = false;
+            foreach (ClueData c in level.clues ?? new ClueData[0])
             {
                 constraint |= c.mechanic.constraint != ClueConstraint.None;
                 locked |= c.mechanic.lockSteps > 0;
                 hidden |= c.mechanic.hidden;
+                corner |= c.mechanic.corner != ClueCorner.None;
             }
+            // Ô trống được giới thiệu sớm nhất (Mechanic Injector: level 5) nên hiện trước
+            if (HasVoid(level) && !Seen(Kind.Void)) result.Add(Kind.Void);
             if (constraint && !Seen(Kind.Constraint)) result.Add(Kind.Constraint);
             if (locked && !Seen(Kind.Lock)) result.Add(Kind.Lock);
             if (hidden && !Seen(Kind.Hidden)) result.Add(Kind.Hidden);
+            if (level.walls != null && level.walls.Length > 0 && !Seen(Kind.Wall)) result.Add(Kind.Wall);
+            if (corner && !Seen(Kind.Corner)) result.Add(Kind.Corner);
             return result;
+        }
+
+        private static bool HasVoid(LevelDefinition level)
+        {
+            if (level.cellOverrides == null) return false;
+            foreach (CellOverrideData o in level.cellOverrides)
+            {
+                if (o.type == CellType.Void) return true;
+            }
+            return false;
         }
 
         private bool Seen(Kind kind) => _data != null && _data.seenMechanics.Contains(kind.ToString());
@@ -100,6 +121,15 @@ namespace PawBlock.Features.Gameplay
                     break;
                 case Kind.Lock:
                     popup.Show("Locked Number", "Place other blocks first. The lock opens after the shown number of blocks.", lockSprite, () => Done(kind));
+                    break;
+                case Kind.Void:
+                    popup.Show("Empty Cells", "Gaps in the board are not cells. Blocks can't cover them, so fill only the cells you see.", voidSprite, () => Done(kind));
+                    break;
+                case Kind.Corner:
+                    popup.Show("Corner Number", "The number must sit in the marked corner or side of its block.", cornerSprite, () => Done(kind));
+                    break;
+                case Kind.Wall:
+                    popup.Show("Fence", "Blocks can't cross a fence. The cells on each side belong to different blocks.", wallSprite, () => Done(kind));
                     break;
                 default:
                     popup.Show("Hidden Number", "The \"?\" hides the number. Work out its rectangle from the cells around it.", hiddenSprite, () => Done(kind));

@@ -20,6 +20,8 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private CellView cellPrefab;
         [SerializeField] private LevelDefinition levelData;
         [SerializeField] private int cellPoolCapacity = 144; // lưới lớn nhất 12x12
+        [Tooltip("Tường giữa 2 ô (LevelDefinition.walls)")]
+        [SerializeField] private WallView wallPrefab;
 
         [Header("Hiệu ứng xuất hiện (ô nảy lần lượt, thứ tự ngẫu nhiên, rồi số hiện dần)")]
         [SerializeField] private bool playIntro = true;
@@ -34,6 +36,8 @@ namespace PawBlock.Features.Gameplay
         public UnityEvent<List<CellView>> gridCellEvent = new UnityEvent<List<CellView>>();
 
         private readonly List<CellView> _gridCells = new List<CellView>();
+        private readonly List<WallView> _walls = new List<WallView>();
+        private readonly Stack<WallView> _freeWalls = new Stack<WallView>();
         private readonly Dictionary<Vector2Int, ClueData> _clueLookup = new Dictionary<Vector2Int, ClueData>();
         private readonly HashSet<Vector2Int> _voidLookup = new HashSet<Vector2Int>();
         private ObjectPool<CellView> _cellPool;
@@ -42,6 +46,7 @@ namespace PawBlock.Features.Gameplay
 
         public LevelDefinition LevelData => levelData;
         public List<CellView> GetGrid => _gridCells;
+        public IReadOnlyList<WallView> Walls => _walls;
         /// <summary>Hiệu ứng xuất hiện đang chạy: GridManager khóa thao tác.</summary>
         public bool IsIntroPlaying => Time.time < _introEndTime;
         public GridGeometry Geometry => levelData != null
@@ -121,6 +126,7 @@ namespace PawBlock.Features.Gameplay
                     _gridCells.Add(cell);
                 }
             }
+            SpawnWalls(data, geometry);
             if (playIntro) PlayIntro();
             gridCellEvent?.Invoke(_gridCells);
         }
@@ -145,6 +151,7 @@ namespace PawBlock.Features.Gameplay
                 float contentDelay = contentStart + contentOrder[i] * contentInterval;
                 _gridCells[i].PlayIntro(cellDelay, cellDuration, contentDelay, contentDuration);
             }
+            foreach (WallView wall in _walls) wall.PlayIntro(contentStart, contentDuration);
             _introEndTime = Time.time + contentStart + contentSpread + contentDuration;
         }
 
@@ -179,6 +186,29 @@ namespace PawBlock.Features.Gameplay
             }
         }
 
+        private void SpawnWalls(LevelDefinition data, GridGeometry geometry)
+        {
+            if (data.walls == null || wallPrefab == null) return;
+            foreach (WallData w in data.walls)
+            {
+                WallView wall = _freeWalls.Count > 0 ? _freeWalls.Pop() : Instantiate(wallPrefab, transform);
+                wall.gameObject.SetActive(true);
+                wall.Show(w, geometry);
+                _walls.Add(wall);
+            }
+        }
+
+        /// <summary>Tường giữa 2 ô kề nhau (null nếu không có).</summary>
+        public WallView GetWallBetween(Vector2Int a, Vector2Int b)
+        {
+            if (levelData == null || !WallRules.TryFind(levelData.walls, a, b, out WallData data)) return null;
+            foreach (WallView wall in _walls)
+            {
+                if (wall.Data.Equals(data)) return wall;
+            }
+            return null;
+        }
+
         public void DeleteGrid()
         {
             foreach (CellView cell in _gridCells)
@@ -186,6 +216,13 @@ namespace PawBlock.Features.Gameplay
                 if (cell != null) _cellPool.Release(cell);
             }
             _gridCells.Clear();
+            foreach (WallView wall in _walls)
+            {
+                if (wall == null) continue;
+                wall.gameObject.SetActive(false);
+                _freeWalls.Push(wall);
+            }
+            _walls.Clear();
         }
     }
 }

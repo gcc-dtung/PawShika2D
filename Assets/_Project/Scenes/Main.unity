@@ -491,6 +491,9 @@ MonoBehaviour:
   constraintSprite: {fileID: 21300000, guid: 710b36ebf7e28a14e955aaa110dd24f2, type: 3}
   lockSprite: {fileID: 21300000, guid: 9897a0dcb5277bf4a810dcf0055522c9, type: 3}
   hiddenSprite: {fileID: 21300000, guid: 79f8e3661d429c047b0707f5e007c947, type: 3}
+  wallSprite: {fileID: 21300000, guid: bf1e69ab7c3ebda499cd328ceefc68cb, type: 3}
+  cornerSprite: {fileID: 21300000, guid: e7981d3344613e6429fc6be31698054d, type: 3}
+  voidSprite: {fileID: 21300000, guid: c4e775101f3341179be5f7e3d3459de4, type: 3}
   startDelay: 0.15
 --- !u!114 &82617392
 MonoBehaviour:
@@ -602,6 +605,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clueHighlight: 1
+  dragShake: 1
+  blockPush: 1
+  releaseFeedback: 1
+  releaseShake: 1.4
+  lockedShake: 1.7
+  releasePunch: 0.22
+  tooSmallPunch: 0.12
 --- !u!114 &82617399
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2958,6 +2968,7 @@ MonoBehaviour:
   cellPrefab: {fileID: 6907855047975131410, guid: 19185821f4735c047acc3e0b6f2ef16b, type: 3}
   levelData: {fileID: 11400000, guid: 442e2334b9fb77942bdb842e916a183e, type: 2}
   cellPoolCapacity: 144
+  wallPrefab: {fileID: 8885412621408846089, guid: 6d2d34ad11a33b141ae08c15737fdf7d, type: 3}
   playIntro: 1
   cellInterval: 0.035
   cellSpreadMax: 0.6
@@ -3820,6 +3831,7 @@ MonoBehaviour:
   onBlockPlaced: 1
   onClueUnlocked: 1
   onSelection: 1
+  onInvalidDrag: 1
   onLowTimeTick: 1
 --- !u!114 &1942025443 stripped
 MonoBehaviour:

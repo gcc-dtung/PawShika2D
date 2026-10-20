@@ -25,6 +25,10 @@ namespace PawBlock.Features.Gameplay
         public float wHidden = 3f;
         [Tooltip("+ mỗi ô khóa (phải giải chỗ khác trước)")]
         public float wLock = 2f;
+        [Tooltip("+ mỗi đoạn tường (thêm luật phải nhớ khi kéo qua ranh giới)")]
+        public float wWall = 1.5f;
+        [Tooltip("+ mỗi ô số ở góc / cạnh (phải đọc dấu góc, vạch cạnh để biết khối nằm ở đâu)")]
+        public float wCorner = 2f;
 
         [Header("Thời gian ước tính (giây)")]
         public float timeBase = 5f;

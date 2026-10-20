@@ -5,20 +5,16 @@ using UnityEngine.UI;
 namespace PawBlock.Features.Shop
 {
     /// <summary>
-    /// 1 thẻ / dòng / ô trong Shop: đọc ShopProduct (ShopDatabase) lúc chạy để hiện tên, giá, hình, coin, vật phẩm
-    /// (sửa ShopDatabase.asset không cần dựng lại UI). Ô vật phẩm cố định 2x2: Hint trên trái, Shield trên phải,
+    /// 1 thẻ / dòng / ô trong Shop (prefab theo section, ShopPanel spawn rồi Bind 1 ShopProduct): hiện tên, giá, hình, nền,
+    /// coin, vật phẩm (sửa ShopDatabase.asset không cần dựng lại UI). Ô vật phẩm cố định 2x2: Hint trên trái, Shield trên phải,
     /// Reveal dưới trái, năng lượng vô hạn dưới phải; món = 0 thì ẩn. Bấm giá -> ShopService.Buy.
     /// Gói Remove Ads / No Ads Bundle đã có noAds thì ẩn dòng Remove Ads (hideWhenNoAds).
+    /// Body: con chứa toàn bộ hình của thẻ để ShopIntro trượt mà không đụng vị trí do LayoutGroup đặt (trống = chính thẻ).
     /// </summary>
     public class ShopCardView : MonoBehaviour
     {
-        private ShopService _shop;
-
-        /// <summary>GameBootstrap gọi trước OnEnable.</summary>
-        public void Init(ShopService shop) => _shop = shop;
-
-        [SerializeField] private ShopDatabase database;
-        [SerializeField] private string productId;
+        [SerializeField] private RectTransform body;
+        [SerializeField] private Image background;
         [SerializeField] private TMP_Text titleText;
         [SerializeField] private TMP_Text priceText;
         [SerializeField] private Button buyButton;
@@ -35,7 +31,25 @@ namespace PawBlock.Features.Shop
         [SerializeField] private TMP_Text saleText;
         [SerializeField] private bool hideWhenNoAds;
 
+        private ShopService _shop;
         private ShopProduct _product;
+
+        public ShopProduct Product => _product;
+
+        /// <summary>Phần hình để tween (khác chính thẻ thì thẻ trượt được; bằng chính thẻ thì chỉ phóng to được).</summary>
+        public RectTransform Body => body != null ? body : (RectTransform)transform;
+
+        public bool HasBody => body != null && body != transform;
+
+        /// <summary>ShopPanel gọi ngay sau khi spawn.</summary>
+        public void Bind(ShopProduct product, ShopService shop)
+        {
+            if (isActiveAndEnabled && _shop != null) _shop.Purchased -= OnPurchased;
+            _product = product;
+            _shop = shop;
+            if (isActiveAndEnabled && _shop != null) _shop.Purchased += OnPurchased;
+            Refresh();
+        }
 
         private void Awake()
         {
@@ -55,12 +69,12 @@ namespace PawBlock.Features.Shop
 
         public void Refresh()
         {
-            _product = database != null ? database.Get(productId) : null;
             if (_product == null) return;
 
             if (titleText != null) titleText.SetText(_product.title);
             if (priceText != null) priceText.SetText(_product.PriceText);
             if (icon != null && _product.icon != null) icon.sprite = _product.icon;
+            if (background != null && _product.background != null) background.sprite = _product.background;
             if (coinText != null) coinText.SetText("{0}", _product.coin);
             SetItem(hintItem, hintText, _product.hint, "x" + _product.hint);
             SetItem(shieldItem, shieldText, _product.shield, "x" + _product.shield);

@@ -29,6 +29,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 1
     x: 2
     y: 2
@@ -38,6 +39,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 2
     x: 1
     y: 1
@@ -47,6 +49,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   - id: 3
     x: 2
     y: 1
@@ -56,6 +59,7 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
+      corner: 0
   solution:
   - clueId: 0
     x: 0
@@ -77,5 +81,7 @@ MonoBehaviour:
     y: 0
     width: 2
     height: 2
+  walls: []
   rules:
-    mistakeLimit: 3
+    timeLimit: 0
+  difficulty: 0

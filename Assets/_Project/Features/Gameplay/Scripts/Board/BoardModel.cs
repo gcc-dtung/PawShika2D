@@ -13,7 +13,8 @@ namespace PawBlock.Features.Gameplay
         ClueCount,    // không có hoặc có nhiều hơn 1 ô số
         Locked,       // ô số còn khóa
         WrongShape,   // sai hướng ngang / dọc / vuông
-        WrongSize     // sai số ô
+        WrongSize,    // sai số ô
+        WrongCorner   // ô số không nằm ở góc / cạnh được đánh dấu
     }
 
     /// <summary>Trạng thái vùng đang kéo, cho phản hồi trong lúc kéo (bong bóng đếm ô, âm thanh).</summary>
@@ -21,7 +22,7 @@ namespace PawBlock.Features.Gameplay
     {
         Neutral, // đang kéo, chưa đủ / chưa có ô số
         Ready,   // thả tay là đặt được
-        Invalid  // chắc chắn sai: thừa ô, 2 ô số, ô số khóa, sai hướng mà đã đủ ô
+        Invalid  // chắc chắn sai: thừa ô, 2 ô số, ô số khóa, sai hướng mà đã đủ ô, sai góc
     }
 
     public readonly struct PlacementCheck
@@ -55,6 +56,7 @@ namespace PawBlock.Features.Gameplay
                         return SelectionHint.Ready;
                     case PlacementResult.BlockedCell:
                     case PlacementResult.Locked:
+                    case PlacementResult.WrongCorner: // vùng đã lố sang phía bên kia ô số: kéo rộng thêm không sửa được
                         return SelectionHint.Invalid;
                     case PlacementResult.ClueCount:
                         int clues = 0;
@@ -119,9 +121,10 @@ namespace PawBlock.Features.Gameplay
             return _cells.TryGetValue(pos, out CellModel cell) ? cell : null;
         }
 
-        /// <summary>Vùng không chứa ô Void hay ô đã có khối (khung chọn được phép phủ lên).</summary>
+        /// <summary>Vùng không chứa ô Void hay ô đã có khối, không vắt qua tường (khung chọn được phép phủ lên).</summary>
         public bool IsAreaFree(RectInt rect)
         {
+            if (WallRules.Crosses(Level, rect)) return false;
             for (int x = rect.xMin; x < rect.xMax; x++)
             {
                 for (int y = rect.yMin; y < rect.yMax; y++)
@@ -141,8 +144,8 @@ namespace PawBlock.Features.Gameplay
             if (area == 1 && (cells.Count == 0 || !cells[0].HasClue))
                 return new PlacementCheck(PlacementResult.Ignored, rect, cells, null);
 
-            // 1. Vùng chứa ô Void hoặc ô đã có khối
-            if (cells.Count != area || cells.Exists(c => c.IsOccupied))
+            // 1. Vùng chứa ô Void hoặc ô đã có khối, hoặc vắt qua tường
+            if (cells.Count != area || cells.Exists(c => c.IsOccupied) || WallRules.Crosses(Level, rect))
                 return new PlacementCheck(PlacementResult.BlockedCell, rect, cells, null);
 
             // 2. Phải có ĐÚNG 1 ô số
@@ -165,7 +168,11 @@ namespace PawBlock.Features.Gameplay
             if (!ShikakuSolver.MatchesConstraint(clue.Constraint, rect.width, rect.height))
                 return new PlacementCheck(PlacementResult.WrongShape, rect, cells, clueCell);
 
-            // 5. Số ô (ô ẩn "?" thì người chơi không biết số -> để lời giải quyết định)
+            // 5. Ô số ở góc / cạnh được đánh dấu
+            if (!ShikakuSolver.MatchesCorner(clue.Corner, rect, clueCell.Position))
+                return new PlacementCheck(PlacementResult.WrongCorner, rect, cells, clueCell);
+
+            // 6. Số ô (ô ẩn "?" thì người chơi không biết số -> để lời giải quyết định)
             if (!clue.IsHidden && clue.Value != cells.Count)
                 return new PlacementCheck(PlacementResult.WrongSize, rect, cells, clueCell);
 

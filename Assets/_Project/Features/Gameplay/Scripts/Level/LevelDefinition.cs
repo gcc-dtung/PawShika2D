@@ -16,6 +16,8 @@ namespace PawBlock.Features.Gameplay
         public CellOverrideData[] cellOverrides;
         public ClueData[] clues;
         public SolutionRectData[] solution;
+        [Tooltip("Tường giữa 2 ô kề nhau: khối không được nằm vắt qua (WallRules)")]
+        public WallData[] walls;
         public LevelRules rules;
         [Tooltip("Hard / Very Hard: nút PLAY, khung HUD riêng và hiệu ứng vào màn (DifficultyTheme)")]
         public LevelDifficulty difficulty;
@@ -34,6 +36,23 @@ namespace PawBlock.Features.Gameplay
         Horizontal = 1,
         Vertical = 2,
         Square = 3
+    }
+
+    /// <summary>
+    /// Ô số phải nằm ở góc / cạnh này của khối (theo hướng màn hình: Top = phía trên, y lớn).
+    /// Góc: đúng ô góc. Cạnh: hàng / cột ngoài cùng phía đó, vị trí dọc theo cạnh tùy ý.
+    /// </summary>
+    public enum ClueCorner
+    {
+        None = 0,
+        TopLeft = 1,
+        TopRight = 2,
+        BottomLeft = 3,
+        BottomRight = 4,
+        Top = 5,
+        Bottom = 6,
+        Left = 7,
+        Right = 8
     }
 
     [Serializable]
@@ -69,6 +88,23 @@ namespace PawBlock.Features.Gameplay
         public ClueConstraint constraint;
         public int lockSteps;
         public bool hidden;
+        [Tooltip("Ô số phải nằm ở góc / cạnh này của khối (dấu ngoặc góc / vạch cạnh trên ô)")]
+        public ClueCorner corner;
+    }
+
+    /// <summary>Tường nằm ở cạnh nào của ô (x, y): Right = giữa (x, y) và (x + 1, y); Top = giữa (x, y) và (x, y + 1).</summary>
+    public enum WallSide
+    {
+        Right = 0,
+        Top = 1
+    }
+
+    [Serializable]
+    public struct WallData
+    {
+        public int x;
+        public int y;
+        public WallSide side;
     }
 
     [Serializable]
