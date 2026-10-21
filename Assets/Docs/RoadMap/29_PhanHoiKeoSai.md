@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | – |
-| Thời gian push | – |
-| Cập nhật lần cuối | 2026-10-20 09:07 |
+| Trạng thái | Đã push |
+| Commit | `bfa9463` "Phản hồi kéo sai, cơ chế tường / góc, Shop spawn thẻ + hiệu ứng" (nhánh `EventBenNgoai`) |
+| Thời gian push | 2026-10-20 09:12 |
+| Cập nhật lần cuối | 2026-10-20 09:12 |
 
 ## 09:13 – Phản hồi sai theo từng luật, đặt tại ô số
 

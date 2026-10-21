@@ -1027,7 +1027,7 @@ MonoBehaviour:
   m_text: '!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
-  m_sharedMaterial: {fileID: 4828358086127480198, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: a28ebb8173ee1a5468d85447df6a3a0c, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2590,7 +2590,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7900929456689923709
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4728,23 +4728,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1696822586044627215, guid: 4bf3166b4dce84f478da3dba9d1fa331, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 88
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 1696822586044627215, guid: 4bf3166b4dce84f478da3dba9d1fa331, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 88
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 1696822586044627215, guid: 4bf3166b4dce84f478da3dba9d1fa331, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6453044775499699451, guid: 4bf3166b4dce84f478da3dba9d1fa331, type: 3}
       propertyPath: m_PreferredWidth
-      value: 88
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 6453044775499699451, guid: 4bf3166b4dce84f478da3dba9d1fa331, type: 3}
       propertyPath: m_PreferredHeight
-      value: 88
+      value: 78
       objectReference: {fileID: 0}
     - target: {fileID: 7352527199233515106, guid: 4bf3166b4dce84f478da3dba9d1fa331, type: 3}
       propertyPath: m_Pivot.x

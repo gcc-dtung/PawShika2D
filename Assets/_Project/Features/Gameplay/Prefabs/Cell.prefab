@@ -225,7 +225,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 4828358086127480198, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
+  - {fileID: 2100000, guid: 1f503994c886d7c4da7d3d2513041cfb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -270,14 +270,14 @@ MonoBehaviour:
   m_text: 3
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
-  m_sharedMaterial: {fileID: 4828358086127480198, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 1f503994c886d7c4da7d3d2513041cfb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 0.62, g: 0.6, b: 0.9, a: 1}
+  m_fontColor: {r: 0.95686275, g: 0.94509804, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -300,7 +300,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 3
   m_fontSizeMax: 6.5
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535

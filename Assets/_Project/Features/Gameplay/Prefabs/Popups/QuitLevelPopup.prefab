@@ -74,8 +74,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 0.36, g: 0.24, b: 0.72, a: 1}
+    rgba: 4290264412
+  m_fontColor: {r: 0.29, g: 0.16, b: 0.6, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -87,18 +87,18 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 62
-  m_fontSizeBase: 62
+  m_fontSize: 66
+  m_fontSizeBase: 66
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -302,7 +302,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -358,7 +358,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 78, y: -58}
+  m_AnchoredPosition: {x: 88, y: -62}
   m_SizeDelta: {x: 220, y: 140}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7313898418155412737
@@ -392,7 +392,7 @@ MonoBehaviour:
   m_text: -1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: a28ebb8173ee1a5468d85447df6a3a0c, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 4255a5d030a82504c9ea19a7096263ba, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -411,13 +411,13 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 118
-  m_fontSizeBase: 118
+  m_fontSize: 130
+  m_fontSizeBase: 130
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -678,7 +678,7 @@ MonoBehaviour:
   m_text: QUIT LEVEL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 7d0e42db65ad0e949bfb41d0c04f1caf, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 5ba6f6fc03f08db43946c0778cfa9f2e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -697,7 +697,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -931,16 +931,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 219900461258437571, guid: 577dfbef3396e31478c04de5408db093, type: 3}
       propertyPath: m_fontSize
-      value: 68
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 219900461258437571, guid: 577dfbef3396e31478c04de5408db093, type: 3}
       propertyPath: m_fontSizeBase
-      value: 68
+      value: 74
       objectReference: {fileID: 0}
     - target: {fileID: 219900461258437571, guid: 577dfbef3396e31478c04de5408db093, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: a28ebb8173ee1a5468d85447df6a3a0c, type: 2}
+      objectReference: {fileID: 2100000, guid: 4255a5d030a82504c9ea19a7096263ba, type: 2}
+    - target: {fileID: 219900461258437571, guid: 577dfbef3396e31478c04de5408db093, type: 3}
+      propertyPath: m_TextStyleHashCode
+      value: -1183493901
+      objectReference: {fileID: 0}
     - target: {fileID: 3679368774568800307, guid: 577dfbef3396e31478c04de5408db093, type: 3}
       propertyPath: m_Sprite
       value: 
