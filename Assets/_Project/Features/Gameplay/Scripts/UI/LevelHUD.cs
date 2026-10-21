@@ -20,8 +20,6 @@ namespace PawBlock.Features.Gameplay
         }
 
         [SerializeField] private TMP_Text levelText;
-        [Tooltip("{0} = số level; được dùng rich text, vd \"<size=55%>Level</size>\\n{0}\"")]
-        [SerializeField] private string levelFormat = "LEVEL {0}";
         [SerializeField] private DifficultyTheme theme;
         [SerializeField] private UnityEngine.UI.Image hardFrame;
         [SerializeField] private TMP_Text tabText;
@@ -55,7 +53,7 @@ namespace PawBlock.Features.Gameplay
             if (levelText != null)
             {
                 if (lm != null && lm.IsDaily) levelText.SetText(DailyLabel(lm.DailyDay));
-                else levelText.SetText(string.Format(levelFormat, number));
+                else levelText.SetText($"LEVEL {number}");
             }
 
             LevelDefinition level = _levels != null ? _levels.CurrentLevel : null;

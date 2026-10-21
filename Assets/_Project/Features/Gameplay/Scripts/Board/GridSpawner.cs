@@ -16,12 +16,8 @@ namespace PawBlock.Features.Gameplay
         }
 
         public const float CellSpacing = 1.2f; // cellGap + cellSize
-        /// <summary>Khoảng từ mép lưới ra mép khung bảng (world). BoardCameraFitter cộng vào để khung nằm trọn vùng chơi.</summary>
-        public const float BoardPadding = 0.22f;
 
         [SerializeField] private CellView cellPrefab;
-        [Tooltip("Khung nền sau lưới (SpriteRenderer Sliced), co giãn theo kích thước lưới mỗi level")]
-        [SerializeField] private SpriteRenderer boardFrame;
         [SerializeField] private LevelDefinition levelData;
         [SerializeField] private int cellPoolCapacity = 144; // lưới lớn nhất 12x12
         [Tooltip("Tường giữa 2 ô (LevelDefinition.walls)")]
@@ -131,7 +127,6 @@ namespace PawBlock.Features.Gameplay
                 }
             }
             SpawnWalls(data, geometry);
-            FitBoardFrame(data);
             if (playIntro) PlayIntro();
             gridCellEvent?.Invoke(_gridCells);
         }
@@ -170,13 +165,6 @@ namespace PawBlock.Features.Gameplay
                 (a[i], a[j]) = (a[j], a[i]);
             }
             return a;
-        }
-
-        private void FitBoardFrame(LevelDefinition data)
-        {
-            if (boardFrame == null) return;
-            boardFrame.transform.localPosition = Vector3.zero;
-            boardFrame.size = new Vector2(data.size, data.Height) * CellSpacing + Vector2.one * (BoardPadding * 2f);
         }
 
         private void BuildLookups(LevelDefinition data)
