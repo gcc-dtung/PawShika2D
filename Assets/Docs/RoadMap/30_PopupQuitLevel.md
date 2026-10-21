@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | – |
-| Thời gian push | – |
-| Cập nhật lần cuối | 2026-10-20 12:20 |
+| Trạng thái | Đã push |
+| Commit | `7c10184` "Hoàn tác theme sáng MeowDoku, trở về bản backup" (nhánh `thay-art`) |
+| Thời gian push | 2026-10-21 11:50 |
+| Cập nhật lần cuối | 2026-10-21 11:50 |
 
 ## 09:38 – Chữ popup Quit Level theo bản gốc (phương án A)
 

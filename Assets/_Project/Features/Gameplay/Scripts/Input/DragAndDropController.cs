@@ -151,7 +151,21 @@ namespace PawBlock.Features.Gameplay
         {
             if (!countBubble || !_grid) return;
             GridManager gm = _grid;
-            countBubble.Show(ScreenToWorld(screenPos), gm.SelectionCellCount, gm.SelectionHint);
+            countBubble.Show(ScreenToWorld(screenPos), gm.SelectionCellCount, gm.SelectionHint, BoardArea());
+        }
+
+        /// <summary>
+        /// Vùng bong bóng đếm được đi (world): ngang đúng bằng bảng (không tràn màn hình), dọc thêm 1 ô phía trên
+        /// để kéo ở hàng trên cùng bong bóng vẫn lên được khỏi vùng chọn. Lưới đặt đối xứng quanh gốc, xem GridGeometry.
+        /// </summary>
+        private Rect BoardArea()
+        {
+            if (_spawner == null) return default;
+            GridGeometry g = _spawner.Geometry;
+            Vector2 size = new Vector2(g.Width, g.Height) * g.Spacing;
+            Rect area = new Rect(-size / 2f, size);
+            area.yMax += g.Spacing;
+            return area;
         }
 
         #endregion

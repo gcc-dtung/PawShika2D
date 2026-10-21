@@ -55,10 +55,14 @@ namespace PawBlock.Features.Gameplay
             if (background != null) _neutralColor = background.color;
         }
 
-        public void Show(Vector3 worldPos, int count, SelectionHint hint = SelectionHint.Neutral)
+        /// <summary>
+        /// <paramref name="clampArea"/> (world, khác rỗng): cả bong bóng bị giữ trong vùng này (vd. bảng chơi),
+        /// ngón tay kéo ra ngoài thì bong bóng chạm mép và dừng lại.
+        /// </summary>
+        public void Show(Vector3 worldPos, int count, SelectionHint hint = SelectionHint.Neutral, Rect clampArea = default)
         {
             EnsureInit();
-            _targetPos = new Vector3(worldPos.x, worldPos.y, -0.5f) + offset;
+            _targetPos = Clamp(new Vector3(worldPos.x, worldPos.y, -0.5f) + offset, clampArea);
 
             if (!_visible)
             {
@@ -88,6 +92,19 @@ namespace PawBlock.Features.Gameplay
                 PunchText();
             }
             SetHint(hint, false);
+        }
+
+        private Vector3 Clamp(Vector3 pos, Rect area)
+        {
+            if (area.width <= 0f || area.height <= 0f || background == null || background.sprite == null) return pos;
+            // Nửa kích thước bong bóng khi hiện đủ cỡ (không lấy bounds lúc đang phóng to / thu nhỏ)
+            Vector3 scale = background.transform == transform ? _baseScale : Vector3.Scale(_baseScale, background.transform.localScale);
+            Vector3 half = Vector3.Scale(background.sprite.bounds.extents, scale);
+            float minX = area.xMin + half.x, maxX = area.xMax - half.x;
+            float minY = area.yMin + half.y, maxY = area.yMax - half.y;
+            pos.x = minX <= maxX ? Mathf.Clamp(pos.x, minX, maxX) : area.center.x;
+            pos.y = minY <= maxY ? Mathf.Clamp(pos.y, minY, maxY) : area.center.y;
+            return pos;
         }
 
         private void Update()
