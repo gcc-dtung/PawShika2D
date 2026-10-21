@@ -33,8 +33,8 @@ namespace PawBlock.Features.Gameplay
         public void Fit(LevelDefinition level)
         {
             if (level == null) return;
-            float gridW = level.size * GridSpawner.CellSpacing;
-            float gridH = level.Height * GridSpawner.CellSpacing;
+            float gridW = level.size * GridSpawner.CellSpacing + GridSpawner.BoardPadding * 2f;
+            float gridH = level.Height * GridSpawner.CellSpacing + GridSpawner.BoardPadding * 2f;
 
             if (playZone != null)
             {

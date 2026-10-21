@@ -5,7 +5,7 @@
 | Trạng thái | Chưa push |
 | Commit | – |
 | Thời gian push | – |
-| Cập nhật lần cuối | 2026-10-20 12:20 |
+| Cập nhật lần cuối | 2026-10-21 11:25 |
 
 ## 09:38 – Chữ popup Quit Level theo bản gốc (phương án A)
 
@@ -112,3 +112,24 @@
 **Sửa** `Game/Prefabs/Menu/HomePanel.prefab` → `UIZone/Lucky`: tắt (inactive) – bỏ sự kiện Lucky Wheel khỏi Home. Code `Features/LuckyWheel` và popup trong `Canvas_Popup` giữ nguyên (bật lại nút là dùng được).
 
 **Kiểm tra**: đọc lại prefab: badge 52×52 có `Mark` "!"; instance Lucky trong `Main` inactive. Console không lỗi.
+
+## 2026-10-21 11:25 – Màn chơi theme sáng theo MeowDoku
+
+**Thêm**
+- `Features/Gameplay/Art/UI/LightTheme/`: sprite lấy từ `E:\MeowDoku\Extracted_Assets\Images\sprites`: `round_btn_base`, `icon_settings`, `icon_timer`, `red_dot`, `btn_tool_bg`, `icon_hint_lamp` (chưa dùng), `dialog_frame_9patch` (9-slice 60, ppu 200, FullRect: viên đồng hồ, panel sao, khung bảng), `cell_tile` (bản copy của `dialog_frame_9patch`, ppu 333: ô lưới).
+- `Shared/Fonts/Baloo2-ExtraBold.ttf`: tạo từ `Baloo2.ttf` (font biến thiên) bằng fontTools: `varLib.instancer wght=800 --remove-overlaps` (phải gộp nét chồng, không thì SDF tính sai). `Baloo2-ExtraBold SDF.asset`: SDF16, padding 16, atlas 2048, ASCII + `×•…’“”`, Static.
+  - **Lưu ý**: project có 2 shader cùng tên `TextMeshPro/Mobile/Distance Field` (bản copy trong `ThirdParty/ShikaCat/...` bị lỗi, chữ nhòe đen / ô đen). Material font tạo bằng code phải gán thẳng `Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader`, renderQueue 3000.
+- `GridSpawner.boardFrame` + `BoardPadding` (0.22): khung bảng (SpriteRenderer Sliced) co giãn theo kích thước lưới mỗi level; `BoardCameraFitter` cộng padding để khung nằm trọn vùng chơi.
+- `LevelHUD.levelFormat`: chuỗi định dạng chữ level (prefab: `<size=55%>Level</size>\n{0}`).
+
+**Sửa**
+- Nền: tắt sprite `bg` + `Pattern` trong `Main`, màu nền camera kem `#F8F1EA`.
+- `GameplayHUD.prefab`: Level ở giữa, 2 dòng ("Level" nhỏ, số lớn), chữ nâu `#8B534F`, bỏ nền khung1 (`LevelHUD.background` = null). Đồng hồ chuyển xuống viên trắng `TimerPill` (vị trí cá của bản gốc), icon đồng hồ MeowDoku; màu thường / sắp hết / đóng băng đổi cho hợp nền sáng. Thanh sao vào panel trắng `StarPanel` (vị trí hướng dẫn). Hiệu ứng băng (`Freeze`) đi theo đồng hồ. `PlayZone` chừa chỗ cho phần trên (lề trên 592).
+- Nút Setting: nền tròn trắng + bánh răng nâu. Bỏ override sprite cũ trong `Main`.
+- Booster: nền tròn trắng `btn_tool_bg`, số lượng trên chấm đỏ góc trên phải, khóa góc trên phải + chữ "LV n" nâu ở giữa. Icon booster giữ nguyên (lấy từ BoosterDatabase).
+- `Cell.prefab`: ô `cell_tile` trắng ngà, Sliced 1.17 (khe giữa ô ~7% như bản gốc, trước 17%), material Sprite-Unlit (Global Light 2D 1.77 làm màu sáng cháy thành trắng). Số ô: Baloo, nâu (lưu `.linear`), bỏ viền. Dấu góc màu nâu nhạt.
+- Khung bảng `SpawnGrid/BoardFrame` (Sprite-Unlit, order -1).
+
+**Chưa đổi**: khung mức khó (Hard / Very Hard) và ổ khóa trên ô vẫn art tím cũ; số trên khối mèo, popup, Menu giữ nguyên.
+
+**Kiểm tra**: Play, level 35: chữ rõ, ô và khung hiện đúng, console không lỗi. Chưa xem lúc kéo / đặt khối, level Hard và màn hình tỉ lệ khác.

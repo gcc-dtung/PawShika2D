@@ -225,7 +225,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1f503994c886d7c4da7d3d2513041cfb, type: 2}
+  - {fileID: 8999062201838272886, guid: 6083f3d9c6950d24ea6a27dc1d9cef77, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -269,15 +269,15 @@ MonoBehaviour:
       m_Calls: []
   m_text: 3
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 69db650f3b906704caf351a07a74cd87, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 1f503994c886d7c4da7d3d2513041cfb, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 6083f3d9c6950d24ea6a27dc1d9cef77, type: 2}
+  m_sharedMaterial: {fileID: 8999062201838272886, guid: 6083f3d9c6950d24ea6a27dc1d9cef77, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 0.95686275, g: 0.94509804, b: 1, a: 1}
+  m_fontColor: {r: 0.25808164, g: 0.08623324, b: 0.078288324, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -475,7 +475,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -496,12 +496,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b83b520959e014248ad9480a4201f530, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 30709f1deb56c684881aa7e6bfc5241c, type: 3}
+  m_Color: {r: 0.976, g: 0.957, b: 0.937, a: 1}
   m_FlipX: 0
   m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_DrawMode: 1
+  m_Size: {x: 1.17, y: 1.17}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -615,7 +615,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 4c51300d802e62b41b2036268dfc8545, type: 3}
-  m_Color: {r: 0.86, g: 0.82, b: 1, a: 1}
+  m_Color: {r: 0.78, g: 0.62, b: 0.55, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
