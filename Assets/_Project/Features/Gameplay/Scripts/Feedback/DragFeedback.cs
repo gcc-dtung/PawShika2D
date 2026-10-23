@@ -191,7 +191,7 @@ namespace PawBlock.Features.Gameplay
 
                 case PlacementResult.WrongSize:
                     if (clue == null) break;
-                    if (check.Cells != null && check.Cells.Count < check.ClueCell.Clue.Value)
+                    if (check.Cells != null && check.Cells.Count < check.ClueCell.Clue.MinArea)
                     {
                         clue.PlayPunch(punch > 0f ? tooSmallPunch : 0f); // thiếu ô: lúc kéo là bình thường, thả thì nảy nhẹ
                         break;

@@ -6,7 +6,7 @@ using PawBlock.Core.Foundation;
 namespace PawBlock.Features.Gameplay
 {
     /// <summary>
-    /// Popup giới thiệu cơ chế lần đầu người chơi gặp (Ô trống, Hướng, Khóa, "?", Tường, Góc), ảnh minh họa có sẵn của bản gốc (Ô trống, Tường, Góc: ảnh vẽ thêm cùng kiểu).
+    /// Popup giới thiệu cơ chế lần đầu người chơi gặp (Ô trống, Hướng, Khóa, "?", Tường, Góc, Số mơ hồ), ảnh minh họa có sẵn của bản gốc (Ô trống, Tường, Góc: ảnh vẽ thêm cùng kiểu).
     /// Là 1 ILevelIntro (Order 10: sau băng HARD, trước tutorial booster). LevelIntroSequencer chờ lưới hiện xong rồi gọi Play:
     /// level có cơ chế chưa xem thì mở popup (ván tạm dừng), Ok thì lưu GameplaySave.seenMechanics; nhiều cơ chế mới thì lần lượt từng popup.
     /// Level giới thiệu cơ chế do Mechanic Injector xếp lịch, nên popup rơi đúng vào các level đó.
@@ -31,7 +31,8 @@ namespace PawBlock.Features.Gameplay
             Hidden,
             Wall, // thêm cuối: seenMechanics lưu theo tên
             Corner,
-            Void
+            Void,
+            Ambiguous
         }
 
         [SerializeField] private MechanicIntroPopup popup;
@@ -41,6 +42,7 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Sprite wallSprite;
         [SerializeField] private Sprite cornerSprite;
         [SerializeField] private Sprite voidSprite;
+        [SerializeField] private Sprite ambiguousSprite;
         [Tooltip("Chờ thêm sau khi lưới hiện xong rồi mới mở popup")]
         [SerializeField] private float startDelay = 0.15f;
 
@@ -74,13 +76,14 @@ namespace PawBlock.Features.Gameplay
         {
             List<Kind> result = new List<Kind>();
             if (level == null) return result;
-            bool constraint = false, locked = false, hidden = false, corner = false;
+            bool constraint = false, locked = false, hidden = false, corner = false, ambiguous = false;
             foreach (ClueData c in level.clues ?? new ClueData[0])
             {
                 constraint |= c.mechanic.constraint != ClueConstraint.None;
                 locked |= c.mechanic.lockSteps > 0;
                 hidden |= c.mechanic.hidden;
                 corner |= c.mechanic.corner != ClueCorner.None;
+                ambiguous |= c.mechanic.ambiguity != ClueAmbiguity.None;
             }
             // Ô trống được giới thiệu sớm nhất (Mechanic Injector: level 5) nên hiện trước
             if (HasVoid(level) && !Seen(Kind.Void)) result.Add(Kind.Void);
@@ -89,6 +92,7 @@ namespace PawBlock.Features.Gameplay
             if (hidden && !Seen(Kind.Hidden)) result.Add(Kind.Hidden);
             if (level.walls != null && level.walls.Length > 0 && !Seen(Kind.Wall)) result.Add(Kind.Wall);
             if (corner && !Seen(Kind.Corner)) result.Add(Kind.Corner);
+            if (ambiguous && !Seen(Kind.Ambiguous)) result.Add(Kind.Ambiguous);
             return result;
         }
 
@@ -131,6 +135,10 @@ namespace PawBlock.Features.Gameplay
                 case Kind.Wall:
                     popup.Show("Fence", "Blocks can't cross a fence. The cells on each side belong to different blocks.", wallSprite, () => Done(kind));
                     break;
+                case Kind.Ambiguous:
+                    popup.Show("Fuzzy Number", "Some numbers only give a hint: >5 means more than 5 cells, <5 fewer than 5, E an even count, O an odd count, 3/5 one of the two.", ambiguousSprite, () => Done(kind));
+                    break;
+                case Kind.Hidden:
                 default:
                     popup.Show("Hidden Number", "The \"?\" hides the number. Work out its rectangle from the cells around it.", hiddenSprite, () => Done(kind));
                     break;

@@ -30,6 +30,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 1
     x: 0
     y: 1
@@ -38,8 +40,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 2
     x: 3
     y: 1
@@ -50,6 +54,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 5
+      ambiguityValue: 5
   - id: 3
     x: 6
     y: 0
@@ -58,8 +64,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 4
     x: 6
     y: 5
@@ -67,9 +75,11 @@ MonoBehaviour:
     color: 4
     mechanic:
       constraint: 0
-      lockSteps: 2
+      lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 5
     x: 4
     y: 5
@@ -80,6 +90,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 6
     x: 1
     y: 3
@@ -88,8 +100,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 7
     x: 0
     y: 4
@@ -100,6 +114,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 8
     x: 3
     y: 6
@@ -107,9 +123,11 @@ MonoBehaviour:
     color: 0
     mechanic:
       constraint: 0
-      lockSteps: 4
+      lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 9
     x: 1
     y: 6
@@ -120,6 +138,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   solution:
   - clueId: 0
     x: 2
@@ -172,6 +192,7 @@ MonoBehaviour:
     width: 3
     height: 1
   walls: []
+  lineClues: []
   rules:
     timeLimit: 0
   difficulty: 1

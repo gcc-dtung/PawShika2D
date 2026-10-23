@@ -259,6 +259,7 @@ namespace PawBlock.Features.Gameplay
                 Rect r = CellRect(origin, cell, level, c.x, c.y);
                 string text = c.value.ToString();
                 if (c.mechanic.hidden) text = "?";
+                else if (c.mechanic.ambiguity != ClueAmbiguity.None) text = AmbiguityRules.Describe(c.mechanic, c.value);
                 if (c.mechanic.corner != ClueCorner.None) text += "\n" + CornerGlyph(c.mechanic.corner);
                 GUI.Label(r, text, number);
             }

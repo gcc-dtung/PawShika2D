@@ -15,11 +15,20 @@ namespace PawBlock.Features.Gameplay
             _levels = levels;
         }
 
-        public const float CellSpacing = 1.2f; // cellGap + cellSize
+        public const float CellSpacing = 1.1f; // cellGap + cellSize
+        /// <summary>
+        /// Khe giữa 2 ô nền (world). Ô nền vẽ đúng CellSpacing - CellGap, nên đổi CellSpacing thì ô co giãn theo.
+        /// Phải lớn hơn khe giữa 2 khối (PlacedBlockView.BodyFill) để khối luôn phủ kín ô nền bên dưới.
+        /// </summary>
+        public const float CellGap = 0.08f;
+        /// <summary>Khoảng từ mép ô ngoài cùng tới mép khung nền khay (world). BoardCameraFitter cộng vào để khung nằm trọn vùng chơi.</summary>
+        public const float BoardPadding = 0.22f;
 
         [SerializeField] private CellView cellPrefab;
         [SerializeField] private LevelDefinition levelData;
         [SerializeField] private int cellPoolCapacity = 144; // lưới lớn nhất 12x12
+        [Tooltip("Khung nền khay dưới các ô (SpriteRenderer Sliced), co giãn theo kích thước lưới mỗi level")]
+        [SerializeField] private SpriteRenderer boardFrame;
         [Tooltip("Tường giữa 2 ô (LevelDefinition.walls)")]
         [SerializeField] private WallView wallPrefab;
 
@@ -79,6 +88,7 @@ namespace PawBlock.Features.Gameplay
         private CellView CreateCell()
         {
             CellView cell = Instantiate(cellPrefab, transform);
+            cell.SetVisualSize(CellSpacing - CellGap);
             if (cell.HitBox != null) _cellsByCollider[cell.HitBox] = cell; // đăng ký 1 lần khi tạo (guide 8.3)
             return cell;
         }
@@ -127,6 +137,7 @@ namespace PawBlock.Features.Gameplay
                 }
             }
             SpawnWalls(data, geometry);
+            FitBoardFrame(geometry);
             if (playIntro) PlayIntro();
             gridCellEvent?.Invoke(_gridCells);
         }
@@ -166,6 +177,18 @@ namespace PawBlock.Features.Gameplay
             }
             return a;
         }
+
+        /// <summary>Khung nền phủ cả lưới (kể cả ô Void): mép ô ngoài cùng + BoardPadding mỗi phía, tâm ở gốc như lưới.</summary>
+        private void FitBoardFrame(GridGeometry geometry)
+        {
+            if (boardFrame == null) return;
+            boardFrame.transform.position = new Vector3(0f, 0f, boardFrame.transform.position.z);
+            boardFrame.size = BoardSize(geometry.Width, geometry.Height);
+        }
+
+        /// <summary>Kích thước khung nền khay (world) cho lưới width x height.</summary>
+        public static Vector2 BoardSize(int width, int height) =>
+            new Vector2(width, height) * CellSpacing - Vector2.one * CellGap + Vector2.one * (BoardPadding * 2f);
 
         private void BuildLookups(LevelDefinition data)
         {

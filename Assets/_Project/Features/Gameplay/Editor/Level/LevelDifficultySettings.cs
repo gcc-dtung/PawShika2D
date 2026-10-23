@@ -29,6 +29,8 @@ namespace PawBlock.Features.Gameplay
         public float wWall = 1.5f;
         [Tooltip("+ mỗi ô số ở góc / cạnh (phải đọc dấu góc, vạch cạnh để biết khối nằm ở đâu)")]
         public float wCorner = 2f;
+        [Tooltip("+ mỗi số mơ hồ (>n, <n, E / O, a/b: phải xét nhiều kích thước khối cho cùng 1 số)")]
+        public float wFuzzy = 3f;
 
         [Header("Thời gian ước tính (giây)")]
         public float timeBase = 5f;

@@ -11,7 +11,7 @@ namespace PawBlock.Features.Gameplay
     ///   hướng hợp lệ với số (vuông cần số chính phương, số 1 không gắn hướng), không có khóa + "?",
     ///   tường nằm giữa 2 ô chơi được (không trùng), dấu góc / cạnh trên số 1 thì cảnh báo.
     /// - Có lời giải.
-    /// - Level có ô "?" / ô khóa: giải được KHÔNG CẦN ĐOÁN. Mô phỏng người chơi chỉ đặt khối chắc chắn đúng
+    /// - Level có ô "?" / ô khóa / số mơ hồ: giải được KHÔNG CẦN ĐOÁN. Mô phỏng người chơi chỉ đặt khối chắc chắn đúng
     ///   (mọi cách đặt khác của clue đó đều làm lưới hết lời giải), trong khi chưa biết số của ô "?"
     ///   và ô còn khóa. Kẹt giữa chừng = người chơi buộc phải đoán (dễ đặt nhầm, mất thời gian gỡ).
     /// </summary>
@@ -95,7 +95,7 @@ namespace PawBlock.Features.Gameplay
             foreach (ClueData c in level.clues)
             {
                 // [MECHANIC] Cơ chế giấu thông tin -> bật kiểm tra "không cần đoán"
-                if (c.mechanic.hidden || c.mechanic.lockSteps > 0) hasHiddenInfo = true;
+                if (c.mechanic.hidden || c.mechanic.lockSteps > 0 || c.mechanic.ambiguity != ClueAmbiguity.None) hasHiddenInfo = true;
             }
             if (hasHiddenInfo || alwaysCheckGuessing) CheckNoGuessing(level, report);
 
@@ -139,6 +139,17 @@ namespace PawBlock.Features.Gameplay
                 ClueMechanic m = c.mechanic;
                 if (m.hidden && m.lockSteps > 0) report.errors.Add($"{name}: vừa khóa vừa \"?\" (mở khóa xong vẫn không biết số)");
                 if (m.lockSteps >= level.clues.Length) report.errors.Add($"{name}: khóa {m.lockSteps} bước nhưng chỉ có {level.clues.Length - 1} khối khác");
+
+                if (m.ambiguity != ClueAmbiguity.None)
+                {
+                    if (m.hidden) report.errors.Add($"{name}: vừa \"?\" vừa số mơ hồ");
+                    if (!AmbiguityRules.Accepts(m, c.value, c.value))
+                        report.errors.Add($"{name}: số mơ hồ ({AmbiguityRules.Describe(m, c.value)}) không chứa số thật {c.value}");
+                    if (m.ambiguity == ClueAmbiguity.Either && (m.ambiguityValue < 1 || m.ambiguityValue == c.value))
+                        report.errors.Add($"{name}: Either cần giá trị thứ hai ≥ 1 và khác số thật");
+                    if (m.ambiguity == ClueAmbiguity.AtLeast && m.ambiguityValue <= 1)
+                        report.warnings.Add($"{name}: \"≥ {m.ambiguityValue}\" không cho thông tin gì");
+                }
 
                 if (m.corner != ClueCorner.None && c.value == 1) report.warnings.Add($"{name}: dấu {m.corner} trên số 1 không cho thêm thông tin");
 
@@ -194,7 +205,9 @@ namespace PawBlock.Features.Gameplay
             return report.errors.Count == 0;
         }
 
-        /// <summary>Mô phỏng người chơi chỉ đặt khối chắc chắn đúng, chưa biết số của ô "?" và ô còn khóa.</summary>
+        /// <summary>
+        /// Mô phỏng người chơi chỉ đặt khối chắc chắn đúng, chưa biết số của ô "?" và ô còn khóa.
+        /// </summary>
         private static void CheckNoGuessing(LevelDefinition level, Report report)
         {
             int count = level.clues.Length;

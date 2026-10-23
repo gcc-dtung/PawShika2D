@@ -29,6 +29,7 @@ public struct ClueMechanic
 | **Void** | Ô bị bỏ, lưới có hình lạ | Vùng chứa Void → `BlockedCell` | Ô Void = `blocked` | – | Không |
 | **Hướng** | Ô nền sau số: cao / vuông / dẹt | Sai hình → `WrongShape` | `MatchesConstraint` lọc ứng viên | – | "Orientation" |
 | **Khóa** | Ổ khóa + số bước, che số và hướng | Còn khóa → `Locked` | (game thật: biết hết; Validator: chưa biết số / hướng) | **Mọi** ổ khóa −1; gỡ khối thì khóa lại (`ClueCell.SyncLock`: bước gốc − số khối khác trên lưới) | "Locked Number" |
+| **Số mơ hồ** | ">5" (hơn 5 ô), "<5" (ít hơn 5), "E" (chẵn) / "O" (lẻ), "3/5" (3 hoặc 5) thay số | Số ô không thỏa → `WrongSize` (`AmbiguityRules.Accepts`) | Lọc ứng viên bằng cùng hàm `Accepts`, bật kiểm tra phủ kín | Không đổi | "Fuzzy Number" |
 | **"?"** | Dấu "?" thay số | Không kiểm tra số ô | Validator: chưa biết số, lời giải phải phủ kín lưới | Không đổi: luôn hiện "?" (cả trên khối mèo), số thật chỉ dùng để chấm khi lưới kín | "Hidden Number" |
 
 ### Ai làm gì cho mỗi cơ chế
@@ -57,6 +58,7 @@ Mechanic Injector chạy Validator sau mỗi lần gắn; sai thì hoàn tác v�
 ## Luật dữ liệu (Validator báo lỗi)
 
 - Vừa khóa vừa "?" → cấm (mở khóa xong vẫn không biết số).
+- Số mơ hồ: không kèm "?", điều kiện phải chứa số thật (`value`), Either cần giá trị thứ hai khác số thật. `value` luôn là số ô thật của lời giải (tổng các số = số ô chơi được). Level có số mơ hồ phải qua kiểm tra "không cần đoán".
 - `lockSteps` ≥ số clue → cấm (không đủ khối khác để mở).
 - Ngang / Dọc trên số 1 → cấm. Vuông trên số không chính phương → cấm.
 
@@ -66,10 +68,11 @@ Mechanic Injector chạy Validator sau mỗi lần gắn; sai thì hoàn tác v�
 
 | Cơ chế | Level giới thiệu | Số level giới thiệu | Số lượng / level |
 | --- | --- | --- | --- |
-| Void | 5 | 2 | 1–2 khối bỏ |
+| Void | tắt (2026-10-23) | – | Tạm bỏ: khoét ngẫu nhiên làm lưới xấu; chỉ dùng lại khi khoét theo hình có chủ đích |
 | Hướng | 8 | 2 | 2–3 số |
 | Khóa | 12 | 2 | 1–2 số (2–5 bước) |
 | "?" | 16 | 2 | 1–2 số |
+| Số mơ hồ | 32 | 2 | 1–2 số (giới thiệu chỉ dùng a/b và >n; không gắn chung ô có dấu góc / hướng) |
 
 Sau giai đoạn giới thiệu: 70 % level có cơ chế, level chia hết cho 10 là level nghỉ, từ level 30 có 25 % kết hợp 2 cơ chế, level Hard / Very Hard luôn 2 / 3 cơ chế (ưu tiên "?" → Khóa → Void, không dùng Hướng vì Hướng làm level dễ hơn). Chi tiết tool: [04 Level](04_Level-DuLieuVaCongCu.md).
 

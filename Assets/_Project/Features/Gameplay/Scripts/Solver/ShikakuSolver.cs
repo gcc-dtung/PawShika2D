@@ -23,6 +23,7 @@ namespace PawBlock.Features.Gameplay
             public int value;
             public ClueConstraint constraint;
             public ClueCorner corner;
+            public ClueMechanic mechanic; // số mơ hồ đọc từ đây (AmbiguityRules.Accepts)
             // [MECHANIC] Thông tin solver cần về clue (luật hình dạng / người chơi chưa biết gì)
             public bool unknownValue; // chưa biết số: khối có thể rộng bất kỳ
         }
@@ -75,7 +76,8 @@ namespace PawBlock.Features.Gameplay
             }
 
             // Có clue chưa biết số (kể cả đã đặt): tổng diện tích không còn tự khớp -> phải kiểm tra phủ kín
-            bool needCoverage = unknownValue != null && unknownValue.Count > 0;
+            // Số mơ hồ cũng vậy: số ô của khối không còn cố định
+            bool needCoverage = (unknownValue != null && unknownValue.Count > 0) || HasAmbiguity(level);
             List<RectInt> result = new List<RectInt>(state.open.Count);
             bool[] done = new bool[state.open.Count];
             int nodes = 0;
@@ -106,9 +108,19 @@ namespace PawBlock.Features.Gameplay
             }
 
             int count = 0, nodes = 0;
-            Backtrack(candidates, new bool[state.open.Count], state.blocked, false, limit, ref count,
+            Backtrack(candidates, new bool[state.open.Count], state.blocked, HasAmbiguity(level), limit, ref count,
                 new List<RectInt>(state.open.Count), ref nodes, ref aborted);
             return count;
+        }
+
+        private static bool HasAmbiguity(LevelDefinition level)
+        {
+            if (level == null || level.clues == null) return false;
+            foreach (ClueData c in level.clues)
+            {
+                if (c.mechanic.ambiguity != ClueAmbiguity.None) return true;
+            }
+            return false;
         }
 
         /// <summary>Các vùng có thể đặt cho clue (chưa xét clue khác có còn chỗ hay không).</summary>
@@ -154,6 +166,7 @@ namespace PawBlock.Features.Gameplay
                     x = c.x,
                     y = c.y,
                     value = c.value,
+                    mechanic = c.mechanic,
                     constraint = hideConstraint ? ClueConstraint.None : c.mechanic.constraint,
                     corner = hideConstraint ? ClueCorner.None : c.mechanic.corner, // ô khóa che cả dấu góc / cạnh
                     unknownValue = unknownValue != null && unknownValue.Contains(i)
@@ -178,7 +191,7 @@ namespace PawBlock.Features.Gameplay
                             // Khối phải đúng số ô của clue (ô "?" người chơi đặt không qua kiểm tra số ô ở BoardModel.Check)
                             int ci = s.clueAt[x, y];
                             bool known = unknownValue == null || !unknownValue.Contains(ci);
-                            if (known && r.width * r.height != level.clues[ci].value) return false;
+                            if (known && !AmbiguityRules.Accepts(level.clues[ci].mechanic, level.clues[ci].value, r.width * r.height)) return false;
                             solvedClues.Add(ci);
                         }
                     }
@@ -263,7 +276,7 @@ namespace PawBlock.Features.Gameplay
             {
                 for (int w = 1; w <= s.width; w++)
                 {
-                    if (!c.unknownValue && w * h != c.value) continue;
+                    if (!c.unknownValue && !AmbiguityRules.Accepts(c.mechanic, c.value, w * h)) continue;
                     // [MECHANIC] Luật hình dạng mới: lọc ứng viên ở đây (phải khớp đúng luật trong BoardModel.Check)
                     if (!MatchesConstraint(c.constraint, w, h)) continue;
 

@@ -15,7 +15,7 @@ MonoBehaviour:
   seed: 0
   mechanics:
   - kind: 0
-    introLevel: 5
+    introLevel: 0
     introLength: 2
     amount: {x: 1, y: 2}
     weight: 1
@@ -43,6 +43,11 @@ MonoBehaviour:
     introLevel: 27
     introLength: 2
     amount: {x: 2, y: 3}
+    weight: 1
+  - kind: 6
+    introLevel: 32
+    introLength: 2
+    amount: {x: 1, y: 2}
     weight: 1
   mechanicChance: 0.7
   reliefEvery: 10

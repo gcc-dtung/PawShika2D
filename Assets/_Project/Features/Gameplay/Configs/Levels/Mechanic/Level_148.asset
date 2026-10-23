@@ -30,6 +30,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 1
     x: 3
     y: 8
@@ -40,6 +42,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 2
     x: 4
     y: 6
@@ -50,6 +54,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 3
     x: 7
     y: 8
@@ -60,6 +66,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 4
     x: 8
     y: 6
@@ -70,6 +78,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 5
+      ambiguityValue: 8
   - id: 5
     x: 3
     y: 0
@@ -80,6 +90,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 6
     x: 5
     y: 3
@@ -88,8 +100,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 7
     x: 6
     y: 1
@@ -97,9 +111,11 @@ MonoBehaviour:
     color: 4
     mechanic:
       constraint: 0
-      lockSteps: 5
+      lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 8
     x: 5
     y: 2
@@ -110,6 +126,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 9
     x: 7
     y: 0
@@ -117,9 +135,11 @@ MonoBehaviour:
     color: 7
     mechanic:
       constraint: 0
-      lockSteps: 2
-      hidden: 0
+      lockSteps: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 10
     x: 8
     y: 1
@@ -130,6 +150,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   solution:
   - clueId: 0
     x: 0
@@ -187,6 +209,7 @@ MonoBehaviour:
     width: 1
     height: 2
   walls: []
+  lineClues: []
   rules:
     timeLimit: 0
   difficulty: 0

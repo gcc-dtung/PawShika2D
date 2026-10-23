@@ -120,7 +120,7 @@ namespace PawBlock.Features.Gameplay
         {
             PlacementCheck check = _grid != null ? _grid.LastRejected : default;
             if (result == PlacementResult.WrongSize && check.ClueCell != null && check.Cells != null
-                && check.Cells.Count < check.ClueCell.Clue.Value)
+                && check.Cells.Count < check.ClueCell.Clue.MinArea)
                 AudioManager.Vibrate(HapticType.Selection);
             else if (result == PlacementResult.ClueCount && CountClues(check) == 0)
                 AudioManager.Vibrate(HapticType.Soft);

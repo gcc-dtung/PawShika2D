@@ -88,6 +88,15 @@ namespace PawBlock.Features.Gameplay
             StopClueFeedback();
         }
 
+        /// <summary>Phóng ô nền (giữ tỉ lệ ảnh) cho cạnh dài bằng <paramref name="size"/> (world). GridSpawner gọi 1 lần khi tạo ô.</summary>
+        public void SetVisualSize(float size)
+        {
+            if (spriteRenderer == null || spriteRenderer.sprite == null) return;
+            Vector2 bounds = spriteRenderer.drawMode == SpriteDrawMode.Simple ? (Vector2)spriteRenderer.sprite.bounds.size : spriteRenderer.size;
+            float k = size / Mathf.Max(bounds.x, bounds.y);
+            spriteRenderer.transform.localScale = new Vector3(k, k, 1f);
+        }
+
         /// <summary>Ô số nằm trong / ra khỏi vùng đang kéo: số (hoặc ổ khóa) phóng to nảy nhẹ / thu về.</summary>
         public void SetHighlighted(bool on)
         {
@@ -313,8 +322,7 @@ namespace PawBlock.Features.Gameplay
                 valueText.gameObject.SetActive(showValue);
                 if (showValue)
                 {
-                    if (clue.IsHidden) valueText.SetText("?");
-                    else valueText.SetText("{0}", clue.Value);
+                    valueText.SetText(clue.Label); // "?", số, hoặc nhãn số mơ hồ
                 }
             }
 

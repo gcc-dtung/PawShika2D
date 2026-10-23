@@ -34,6 +34,7 @@ Mỗi level cho ra một chuỗi bước, ví dụ `1121131` nghĩa là bước 
 | W | `narrow` | Tỉ lệ bước chỉ có **đúng 1** nước chắc chắn ở kỹ thuật đó (đường hẹp: bỏ sót nước đó là kẹt) |
 | H, L | `hidden`, `locks` | Số ô "?", số ô khóa |
 | Wa, Co | `walls`, `corners` | Số đoạn tường, số ô số ở góc / cạnh |
+| F | `fuzzy` | Số ô số mơ hồ (>n, <n, E / O, a/b) |
 | | `voids`, `constraints`, `lock_steps`, `max_technique` | Số ô Void, số mũi tên hướng, tổng bước khóa, kỹ thuật khó nhất đã dùng |
 
 ## 3. Công thức
@@ -47,6 +48,7 @@ D = wSize · log₂(N)
   + wNarrow · W
   + wHidden · H + wLock · L
   + wWall · Wa + wCorner · Co
+  + wFuzzy · F
 ```
 
 | Trọng số | Mặc định | Lý do |
@@ -61,6 +63,7 @@ D = wSize · log₂(N)
 | wLock | 2 | Phải giải chỗ khác trước |
 | wWall | 1.5 | Mỗi đoạn tường là thêm một luật khi kéo qua ranh giới |
 | wCorner | 2 | Mỗi ô số ở góc / cạnh: phải đọc dấu góc, vạch cạnh |
+| wFuzzy | 3 | Mỗi số mơ hồ: phải xét nhiều kích thước khối cho cùng 1 số (bằng "?", vì vẫn biết một phần) |
 
 Các hạng t / N là **tỉ lệ**, nên D không tự tăng chỉ vì level to; độ to đã được tính riêng qua log₂(N).
 
@@ -141,3 +144,16 @@ T và R so trực tiếp được với "thời gian giải trung bình" và "s�
   - Hard: 39, 67, 69, 109, 123, 129, 159, 161, 168, 173, 175, 179, 185, 186, 191, 196, 198, 199, 201.
   - Very Hard: 49, 119, 141, 169, 176, 189, 194, 202.
 - Thêm hai trọng số làm trung vị D tăng nhẹ nhưng không đổi danh sách Hard / Very Hard (xếp hạng giữ nguyên).
+
+## 9. Thêm cơ chế số mơ hồ (2026-10-22)
+
+- Công thức thêm `wFuzzy · F` (mục 3), mặc định 3. Độ mơ hồ ban đầu M cũng tự tăng vì solver cho số mơ hồ nhiều kích thước khối hơn.
+- Chưa chạy lại gợi ý Hard / Very Hard sau khi gắn số mơ hồ vào 42 level.
+
+## 10. Thêm cơ chế sương mù (2026-10-22) – đã bỏ 2026-10-23, `wFog` không còn
+
+- Công thức thêm `wFog · Fg` (Fg = số mảng sương), mặc định 4. Phần mô phỏng T1–T4 vẫn coi như thấy hết lưới (chưa mô phỏng thứ tự tan sương), độ khó sương chỉ qua trọng số.
+
+## 11. Thêm cơ chế số hàng / cột ở rìa (2026-10-22) – đã bỏ 2026-10-23, `wLine` không còn
+
+- Công thức thêm `wLine · Ln`, mặc định 2. Solver tôn trọng luật số rìa nên kỹ thuật T3 (thử sâu) đã tính tới; T1 / T2 chưa lọc theo số rìa.

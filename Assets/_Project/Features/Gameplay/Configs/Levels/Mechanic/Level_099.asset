@@ -18,58 +18,7 @@ MonoBehaviour:
     sourceIndex: 98
   size: 11
   height: 11
-  cellOverrides:
-  - x: 5
-    y: 7
-    type: 1
-  - x: 5
-    y: 8
-    type: 1
-  - x: 5
-    y: 9
-    type: 1
-  - x: 5
-    y: 10
-    type: 1
-  - x: 6
-    y: 7
-    type: 1
-  - x: 6
-    y: 8
-    type: 1
-  - x: 6
-    y: 9
-    type: 1
-  - x: 6
-    y: 10
-    type: 1
-  - x: 7
-    y: 7
-    type: 1
-  - x: 7
-    y: 8
-    type: 1
-  - x: 7
-    y: 9
-    type: 1
-  - x: 7
-    y: 10
-    type: 1
-  - x: 4
-    y: 0
-    type: 1
-  - x: 5
-    y: 0
-    type: 1
-  - x: 6
-    y: 0
-    type: 1
-  - x: 7
-    y: 0
-    type: 1
-  - x: 8
-    y: 0
-    type: 1
+  cellOverrides: []
   clues:
   - id: 0
     x: 0
@@ -78,9 +27,23 @@ MonoBehaviour:
     color: 6
     mechanic:
       constraint: 0
-      lockSteps: 5
+      lockSteps: 4
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
+  - id: 1
+    x: 7
+    y: 10
+    value: 12
+    color: 1
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+      corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 2
     x: 8
     y: 10
@@ -89,8 +52,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 3
     x: 10
     y: 9
@@ -101,6 +66,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 4
     x: 1
     y: 6
@@ -111,6 +78,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 5
     x: 3
     y: 7
@@ -119,8 +88,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 6
     x: 4
     y: 7
@@ -131,6 +102,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 7
     x: 8
     y: 3
@@ -138,9 +111,11 @@ MonoBehaviour:
     color: 7
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 4
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 8
     x: 10
     y: 5
@@ -151,6 +126,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 9
     x: 4
     y: 3
@@ -159,8 +136,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 10
     x: 3
     y: 1
@@ -171,6 +150,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 5
+      ambiguityValue: 8
   - id: 11
     x: 6
     y: 1
@@ -181,6 +162,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 12
     x: 7
     y: 2
@@ -188,9 +171,11 @@ MonoBehaviour:
     color: 4
     mechanic:
       constraint: 0
-      lockSteps: 5
+      lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 13
     x: 10
     y: 2
@@ -201,6 +186,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 14
     x: 0
     y: 0
@@ -211,12 +198,31 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
+  - id: 15
+    x: 4
+    y: 0
+    value: 5
+    color: 2
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+      corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   solution:
   - clueId: 0
     x: 0
     y: 8
     width: 5
     height: 3
+  - clueId: 1
+    x: 5
+    y: 7
+    width: 3
+    height: 4
   - clueId: 2
     x: 8
     y: 7
@@ -282,7 +288,13 @@ MonoBehaviour:
     y: 0
     width: 2
     height: 2
+  - clueId: 15
+    x: 4
+    y: 0
+    width: 5
+    height: 1
   walls: []
+  lineClues: []
   rules:
     timeLimit: 0
   difficulty: 2

@@ -96,11 +96,15 @@ namespace PawBlock.Features.Gameplay
                 }
 
                 List<MechanicInjectorSettings.MechanicRule> pool = rules.FindAll(r =>
-                    introDone[r] > 0 && (!needsGuessing || (r.kind != MechanicKind.Lock && r.kind != MechanicKind.Hidden)));
+                    introDone[r] > 0 && (!needsGuessing || !HidesInfo(r.kind)));
                 plans.Add(MakeNormalPlan(s, number, source.difficulty, pool, introEnd));
             }
             return plans;
         }
+
+        /// <summary>Cơ chế giấu thông tin: level gốc phải đoán (nhiều lời giải) thì không gắn được (Validator "không cần đoán").</summary>
+        private static bool HidesInfo(MechanicKind kind) =>
+            kind == MechanicKind.Lock || kind == MechanicKind.Hidden || kind == MechanicKind.Fuzzy;
 
         // [MECHANIC] Level gốc nào hợp để giới thiệu cơ chế
         /// <summary>Level gốc có hợp để giới thiệu cơ chế không (để level giới thiệu chắc chắn gắn được).</summary>
@@ -109,7 +113,8 @@ namespace PawBlock.Features.Gameplay
             switch (kind)
             {
                 case MechanicKind.Lock:
-                case MechanicKind.Hidden: return !needsGuessing;
+                case MechanicKind.Hidden:
+                case MechanicKind.Fuzzy: return !needsGuessing;
                 case MechanicKind.Void: return source.clues != null && source.clues.Length - 1 >= s.minCluesAfterVoid;
                 default: return true;
             }
@@ -161,7 +166,7 @@ namespace PawBlock.Features.Gameplay
                 plan.hard = true;
                 // Level khó: chỉ cơ chế làm level khó hơn. "?" / khóa giấu thông tin; Void đổi hình lưới (dễ đi chút) nên xếp sau;
                 // mũi tên hướng cho thêm thông tin (dễ đi) nên không dùng.
-                MechanicKind[] hardOrder = { MechanicKind.Hidden, MechanicKind.Lock, MechanicKind.Void };
+                MechanicKind[] hardOrder = { MechanicKind.Hidden, MechanicKind.Fuzzy, MechanicKind.Lock, MechanicKind.Void };
                 foreach (MechanicKind kind in hardOrder)
                 {
                     if (plan.kinds.Count >= count) break;
@@ -243,8 +248,8 @@ namespace PawBlock.Features.Gameplay
 
                 // Thay bằng cơ chế đã mở khác (ưu tiên hướng: luôn giữ nguyên lời giải)
                 MechanicKind[] fallbacks = plan.hard
-                    ? new[] { MechanicKind.Lock, MechanicKind.Hidden, MechanicKind.Void }
-                    : new[] { MechanicKind.Constraint, MechanicKind.Corner, MechanicKind.Wall, MechanicKind.Void, MechanicKind.Hidden, MechanicKind.Lock };
+                    ? new[] { MechanicKind.Lock, MechanicKind.Hidden, MechanicKind.Fuzzy, MechanicKind.Void }
+                    : new[] { MechanicKind.Constraint, MechanicKind.Corner, MechanicKind.Wall, MechanicKind.Void, MechanicKind.Hidden, MechanicKind.Fuzzy, MechanicKind.Lock };
                 foreach (MechanicKind f in fallbacks)
                 {
                     if (tried.Contains(f) || plan.kinds.Contains(f) || !plan.unlocked.Contains(f)) continue;
@@ -268,7 +273,7 @@ namespace PawBlock.Features.Gameplay
         private static bool TryKind(Context ctx, MechanicKind kind, bool needsGuessing, HashSet<MechanicKind> tried, Result result)
         {
             tried.Add(kind);
-            if (needsGuessing && (kind == MechanicKind.Lock || kind == MechanicKind.Hidden))
+            if (needsGuessing && HidesInfo(kind))
             {
                 result.notes.Add($"{kind}: level gốc phải đoán (nhiều lời giải), không gắn được");
                 return false;
@@ -291,7 +296,9 @@ namespace PawBlock.Features.Gameplay
                     case MechanicKind.Lock: part = TryLock(ctx); break;
                     case MechanicKind.Wall: part = TryWall(ctx); break;
                     case MechanicKind.Corner: part = TryCorner(ctx); break;
-                    default: part = TryHidden(ctx); break;
+                    case MechanicKind.Fuzzy: part = TryFuzzy(ctx); break;
+                    case MechanicKind.Hidden: part = TryHidden(ctx); break;
+                    default: part = null; break;
                 }
                 if (part == null) break;
                 parts.Add(part);
@@ -363,7 +370,7 @@ namespace PawBlock.Features.Gameplay
             for (int i = 0; i < level.clues.Length; i++)
             {
                 ClueData c = level.clues[i];
-                if (c.value < 2 || c.mechanic.constraint != ClueConstraint.None) continue;
+                if (c.value < 2 || c.mechanic.constraint != ClueConstraint.None || c.mechanic.ambiguity != ClueAmbiguity.None) continue;
 
                 ClueConstraint shape = ShapeOf(rects[i]);
                 List<RectInt> options = ShikakuSolver.GetCandidates(level, null, i, null, null);
@@ -444,6 +451,43 @@ namespace PawBlock.Features.Gameplay
         }
 
         /// <summary>
+        /// 1 số mơ hồ: thay số đúng của 1 ô số bằng điều kiện (>n, <n, E / O, a/b) mà số thật vẫn thỏa, nên lời giải còn đúng.
+        /// Giữ lại nếu Validator vẫn qua (giải được không cần đoán). Level giới thiệu chỉ dùng loại dễ đọc (a/b, >n).
+        /// Bỏ qua số 1, ô khóa, ô "?", ô đã có dấu góc / cạnh hoặc hướng (dấu đè lên chữ "3/5", khó đọc).
+        /// </summary>
+        private static string TryFuzzy(Context ctx)
+        {
+            LevelDefinition level = ctx.level;
+            List<int> candidates = new List<int>();
+            for (int i = 0; i < level.clues.Length; i++)
+            {
+                ClueMechanic m = level.clues[i].mechanic;
+                if (level.clues[i].value >= 2 && m.ambiguity == ClueAmbiguity.None && m.lockSteps == 0 && !m.hidden
+                    && m.corner == ClueCorner.None && m.constraint == ClueConstraint.None) candidates.Add(i);
+            }
+            ClueAmbiguity[] kinds = ctx.intro ? new[] { ClueAmbiguity.Either, ClueAmbiguity.AtLeast } : AmbiguityRules.Kinds;
+
+            for (int attempt = 0; attempt < ctx.settings.maxAttempts && candidates.Count > 0; attempt++)
+            {
+                int i = candidates[ctx.rng.Next(candidates.Count)];
+                candidates.Remove(i);
+
+                // Thử các loại theo thứ tự ngẫu nhiên, loại nào qua Validator trước thì giữ
+                List<ClueAmbiguity> order = kinds.OrderBy(_ => ctx.rng.Next()).ToList();
+                foreach (ClueAmbiguity kind in order)
+                {
+                    if (!AmbiguityRules.TryMake(level.clues[i].mechanic, level.clues[i].value, kind, ctx.rng, out ClueMechanic made)) continue;
+                    Snapshot snap = Snapshot.Of(level);
+                    level.clues[i].mechanic = made;
+                    if (LevelValidator.Validate(level).IsValid)
+                        return $"{AmbiguityRules.Describe(made, level.clues[i].value)} thay số {level.clues[i].value} ({level.clues[i].x},{level.clues[i].y})";
+                    snap.Restore(level);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
         /// 1 đoạn tường trên ranh giới 2 khối của lời giải (lời giải luôn còn đúng). Chỉ chọn cạnh mà tường loại bớt cách đặt
         /// (có ứng viên vắt qua); trọng số = số cách đặt bị loại, x3 nếu nối tiếp tường đã có (thành hàng rào / góc vuông).
         /// </summary>
@@ -512,7 +556,7 @@ namespace PawBlock.Features.Gameplay
             for (int i = 0; i < level.clues.Length; i++)
             {
                 ClueData c = level.clues[i];
-                if (c.value < 2 || c.mechanic.corner != ClueCorner.None || c.mechanic.lockSteps > 0) continue;
+                if (c.value < 2 || c.mechanic.corner != ClueCorner.None || c.mechanic.lockSteps > 0 || c.mechanic.ambiguity != ClueAmbiguity.None) continue;
 
                 Vector2Int pos = new Vector2Int(c.x, c.y);
                 List<RectInt> options = ShikakuSolver.GetCandidates(level, null, i, null, null);

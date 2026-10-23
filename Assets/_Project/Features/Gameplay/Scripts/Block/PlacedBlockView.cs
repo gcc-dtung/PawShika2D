@@ -362,8 +362,7 @@ namespace PawBlock.Features.Gameplay
             numberText.gameObject.SetActive(show);
             if (!show) return;
 
-            if (clue.IsHidden) numberText.SetText("?");
-            else numberText.SetText("{0}", clue.Value);
+            numberText.SetText(clue.Label); // "?", số, hoặc nhãn số mơ hồ
         }
 
         /// <summary>Mặt ở ô trên-phải; nếu trùng ô số thì chuyển xuống ô dưới-trái.</summary>

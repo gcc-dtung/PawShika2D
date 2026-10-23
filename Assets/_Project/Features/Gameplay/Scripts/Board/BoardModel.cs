@@ -66,7 +66,7 @@ namespace PawBlock.Features.Gameplay
                     case PlacementResult.WrongSize:
                         ClueCell clue = ClueCell != null ? ClueCell.Clue : null;
                         if (clue == null || clue.IsHidden || Cells == null) return SelectionHint.Neutral;
-                        return Cells.Count >= clue.Value ? SelectionHint.Invalid : SelectionHint.Neutral;
+                        return Cells.Count >= clue.MaxArea ? SelectionHint.Invalid : SelectionHint.Neutral;
                     default:
                         return SelectionHint.Neutral;
                 }
@@ -172,8 +172,8 @@ namespace PawBlock.Features.Gameplay
             if (!ShikakuSolver.MatchesCorner(clue.Corner, rect, clueCell.Position))
                 return new PlacementCheck(PlacementResult.WrongCorner, rect, cells, clueCell);
 
-            // 6. Số ô (ô ẩn "?" thì người chơi không biết số -> để lời giải quyết định)
-            if (!clue.IsHidden && clue.Value != cells.Count)
+            // 6. Số ô (ô ẩn "?" thì người chơi không biết số -> để lời giải quyết định; số mơ hồ: điều kiện trên số ô)
+            if (!clue.IsHidden && !clue.AcceptsArea(cells.Count))
                 return new PlacementCheck(PlacementResult.WrongSize, rect, cells, clueCell);
 
             return new PlacementCheck(PlacementResult.Ready, rect, cells, clueCell);
@@ -285,7 +285,7 @@ namespace PawBlock.Features.Gameplay
         }
 
         /// <summary>
-        /// Lưới kín và mọi khối đúng số ô. Vùng hợp luật luôn đúng số ô, trừ ô "?" (Check bỏ qua số ô vì người chơi không biết số):
+        /// Lưới kín và mọi khối đúng số ô (số mơ hồ: thỏa điều kiện). Vùng hợp luật luôn đúng số ô, trừ ô "?" (Check bỏ qua số ô vì người chơi không biết số):
         /// khối "?" sai số ô được thêm vào <paramref name="wrong"/>.
         /// </summary>
         public bool IsSolved(List<BlockModel> wrong)
@@ -294,7 +294,7 @@ namespace PawBlock.Features.Gameplay
             bool ok = true;
             foreach (BlockModel b in _blocks)
             {
-                if (b.Area == b.ClueCell.Clue.Value) continue;
+                if (b.ClueCell.Clue.AcceptsArea(b.Area)) continue;
                 ok = false;
                 wrong?.Add(b);
             }

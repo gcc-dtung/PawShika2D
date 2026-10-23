@@ -326,8 +326,8 @@ namespace PawBlock.Features.Gameplay
                 }
 
                 string note = rep.trace;
-                if (rep.hidden + rep.locks + rep.constraints + rep.voids + rep.walls + rep.corners > 0)
-                    note += $"  ·  ?{rep.hidden} khóa{rep.locks} hướng{rep.constraints} void{rep.voids} tường{rep.walls} góc{rep.corners}";
+                if (rep.hidden + rep.locks + rep.constraints + rep.voids + rep.walls + rep.corners + rep.fuzzy > 0)
+                    note += $"  ·  ?{rep.hidden} khóa{rep.locks} hướng{rep.constraints} void{rep.voids} tường{rep.walls} góc{rep.corners} mơ hồ{rep.fuzzy}";
                 if (rep.t4 > 0) note += "  ·  nhiều lời giải";
                 if (rep.aborted) note += "  ·  quá giới hạn tìm kiếm";
                 if (rep.error != null) note += "  ·  LỖI: " + rep.error;
@@ -396,7 +396,7 @@ namespace PawBlock.Features.Gameplay
 
             CultureInfo inv = CultureInfo.InvariantCulture;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("level,name,id,marked,suggested,score,est_seconds,mistake_risk,clues,cells,voids,constraints,locks,lock_steps,hidden,walls,corners,ambiguity,t1,t2,t3,t4,narrow,max_technique,trace");
+            sb.AppendLine("level,name,id,marked,suggested,score,est_seconds,mistake_risk,clues,cells,voids,constraints,locks,lock_steps,hidden,walls,corners,fuzzy,ambiguity,t1,t2,t3,t4,narrow,max_technique,trace");
             foreach (Row r in _rows)
             {
                 LevelDifficultyAnalyzer.Report p = r.report;
@@ -405,7 +405,7 @@ namespace PawBlock.Features.Gameplay
                     r.number.ToString(inv), r.level.name, r.level.id, r.level.difficulty.ToString(), r.suggested.ToString(),
                     p.score.ToString("0.00", inv), p.seconds.ToString("0.0", inv), p.risk.ToString("0.000", inv),
                     p.clues.ToString(inv), p.cells.ToString(inv), p.voids.ToString(inv), p.constraints.ToString(inv),
-                    p.locks.ToString(inv), p.lockSteps.ToString(inv), p.hidden.ToString(inv), p.walls.ToString(inv), p.corners.ToString(inv),
+                    p.locks.ToString(inv), p.lockSteps.ToString(inv), p.hidden.ToString(inv), p.walls.ToString(inv), p.corners.ToString(inv), p.fuzzy.ToString(inv),
                     p.ambiguity.ToString("0.000", inv),
                     p.t1.ToString(inv), p.t2.ToString(inv), p.t3.ToString(inv), p.t4.ToString(inv),
                     p.narrow.ToString("0.000", inv), p.maxTechnique.ToString(inv), "'" + p.trace

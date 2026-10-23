@@ -30,6 +30,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 1
     x: 4
     y: 6
@@ -40,6 +42,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 2
     x: 6
     y: 6
@@ -50,6 +54,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 3
     x: 1
     y: 4
@@ -60,6 +66,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 4
     x: 2
     y: 4
@@ -70,6 +78,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 3
+      ambiguityValue: 0
   - id: 5
     x: 1
     y: 2
@@ -80,6 +90,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 6
     x: 4
     y: 1
@@ -90,6 +102,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 2
+      ambiguityValue: 4
   - id: 7
     x: 5
     y: 2
@@ -100,6 +114,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 8
     x: 0
     y: 0
@@ -110,6 +126,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 9
     x: 6
     y: 1
@@ -120,6 +138,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 10
     x: 4
     y: 0
@@ -130,6 +150,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   solution:
   - clueId: 0
     x: 0
@@ -186,19 +208,8 @@ MonoBehaviour:
     y: 0
     width: 3
     height: 1
-  walls:
-  - x: 5
-    y: 2
-    side: 1
-  - x: 5
-    y: 5
-    side: 0
-  - x: 1
-    y: 2
-    side: 0
-  - x: 0
-    y: 2
-    side: 1
+  walls: []
+  lineClues: []
   rules:
     timeLimit: 0
   difficulty: 0

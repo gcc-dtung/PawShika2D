@@ -12,7 +12,9 @@ namespace PawBlock.Features.Gameplay
         Lock = 2,
         Hidden = 3,
         Wall = 4,   // tường (hàng rào) giữa 2 ô
-        Corner = 5  // ô số ở góc / cạnh của khối
+        Corner = 5, // ô số ở góc / cạnh của khối
+        Fuzzy = 6   // số mơ hồ: >n, <n, E / O, a/b
+        // 7 = Sương mù, 8 = Số hàng / cột ở rìa: đã bỏ (2026-10-23), không dùng lại số này
     }
 
     /// <summary>
@@ -29,7 +31,7 @@ namespace PawBlock.Features.Gameplay
             public int introLevel;
             [Tooltip("Số level liền nhau chỉ có cơ chế này (dạy người chơi)")]
             public int introLength = 3;
-            [Tooltip("Số lượng mỗi level: Void = số khối bỏ, Constraint = số mũi tên, Lock = số ô khóa, Hidden = số ô \"?\", Wall = số đoạn tường, Corner = số ô góc / cạnh. Level giới thiệu dùng min")]
+            [Tooltip("Số lượng mỗi level: Void = số khối bỏ, Constraint = số mũi tên, Lock = số ô khóa, Hidden = số ô \"?\", Wall = số đoạn tường, Corner = số ô góc / cạnh, Fuzzy = số ô số mơ hồ. Level giới thiệu dùng min")]
             public Vector2Int amount = new Vector2Int(1, 2);
             [Tooltip("Trọng số khi random cơ chế cho level thường")]
             public float weight = 1f;
@@ -41,12 +43,13 @@ namespace PawBlock.Features.Gameplay
         public List<MechanicRule> mechanics = new List<MechanicRule>
         {
             // Mọi cơ chế giới thiệu trước level 20 (level xếp theo độ khó bằng Reorder Levels)
-            new MechanicRule { kind = MechanicKind.Void, introLevel = 5, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f },
+            new MechanicRule { kind = MechanicKind.Void, introLevel = 0, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f },
             new MechanicRule { kind = MechanicKind.Constraint, introLevel = 8, introLength = 2, amount = new Vector2Int(2, 3), weight = 1f },
             new MechanicRule { kind = MechanicKind.Lock, introLevel = 12, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f },
             new MechanicRule { kind = MechanicKind.Hidden, introLevel = 16, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f },
             new MechanicRule { kind = MechanicKind.Wall, introLevel = 24, introLength = 2, amount = new Vector2Int(3, 5), weight = 1f },
-            new MechanicRule { kind = MechanicKind.Corner, introLevel = 27, introLength = 2, amount = new Vector2Int(2, 3), weight = 1f }
+            new MechanicRule { kind = MechanicKind.Corner, introLevel = 27, introLength = 2, amount = new Vector2Int(2, 3), weight = 1f },
+            new MechanicRule { kind = MechanicKind.Fuzzy, introLevel = 32, introLength = 2, amount = new Vector2Int(1, 2), weight = 1f }
         };
 
         [Header("Level thường (sau giai đoạn giới thiệu)")]
@@ -63,7 +66,7 @@ namespace PawBlock.Features.Gameplay
         public int comboStartLevel = 30;
         [Range(0f, 1f)]
         public float comboChance = 0.25f;
-        [Tooltip("Level Hard / Very Hard luôn kết hợp 2 / 3 cơ chế (trong số đã mở), ưu tiên \"?\" → khóa → Void, không dùng hướng / tường / góc (cho thêm thông tin)")]
+        [Tooltip("Level Hard / Very Hard luôn kết hợp 2 / 3 cơ chế (trong số đã mở), ưu tiên \"?\" → số mơ hồ → khóa → Void, không dùng hướng / tường / góc (cho thêm thông tin)")]
         public bool comboOnHardLevels = true;
 
         [Header("Giới hạn")]

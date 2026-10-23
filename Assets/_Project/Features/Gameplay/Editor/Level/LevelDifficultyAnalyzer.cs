@@ -19,7 +19,7 @@ namespace PawBlock.Features.Gameplay
     {
         public class Report
         {
-            public int clues, cells, voids, constraints, locks, lockSteps, hidden, walls, corners;
+            public int clues, cells, voids, constraints, locks, lockSteps, hidden, walls, corners, fuzzy;
             /// <summary>Trung bình log2(số cách đặt) của mỗi số lúc chưa đặt gì.</summary>
             public float ambiguity;
             public int t1, t2, t3, t4;
@@ -71,6 +71,7 @@ namespace PawBlock.Features.Gameplay
                 if (m.hidden) { rep.hidden++; hidden.Add(i); }
                 if (m.constraint != ClueConstraint.None) rep.constraints++;
                 if (m.corner != ClueCorner.None) rep.corners++;
+                if (m.ambiguity != ClueAmbiguity.None) rep.fuzzy++;
             }
             rep.walls = level.walls != null ? level.walls.Length : 0;
 
@@ -212,7 +213,7 @@ namespace PawBlock.Features.Gameplay
                       + w.wT2 * r.t2 / n + w.wT3 * r.t3 / n + w.wT4 * r.t4 / n
                       + w.wNarrow * r.narrow
                       + w.wHidden * r.hidden + w.wLock * r.locks
-                      + w.wWall * r.walls + w.wCorner * r.corners;
+                      + w.wWall * r.walls + w.wCorner * r.corners + w.wFuzzy * r.fuzzy;
             r.seconds = w.timeBase + w.timePerCell * r.cells
                         + w.timeT1 * r.t1 + w.timeT2 * r.t2 + w.timeT3 * r.t3 + w.timeT4 * r.t4;
             r.risk = w.riskT2 * r.t2 + w.riskT3 * r.t3 + w.riskT4 * r.t4;

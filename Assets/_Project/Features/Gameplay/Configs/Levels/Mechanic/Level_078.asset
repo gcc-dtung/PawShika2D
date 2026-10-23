@@ -30,6 +30,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 1
     x: 4
     y: 8
@@ -40,6 +42,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 2
     x: 7
     y: 9
@@ -47,9 +51,11 @@ MonoBehaviour:
     color: 7
     mechanic:
       constraint: 0
-      lockSteps: 0
+      lockSteps: 5
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 3
     x: 9
     y: 7
@@ -60,6 +66,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 3
+      ambiguityValue: 0
   - id: 4
     x: 0
     y: 7
@@ -70,6 +78,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 5
     x: 7
     y: 5
@@ -77,9 +87,11 @@ MonoBehaviour:
     color: 2
     mechanic:
       constraint: 0
-      lockSteps: 2
+      lockSteps: 4
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 6
     x: 8
     y: 5
@@ -90,6 +102,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 7
     x: 3
     y: 3
@@ -100,6 +114,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 8
     x: 5
     y: 3
@@ -108,8 +124,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 9
     x: 1
     y: 1
@@ -118,8 +136,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 10
     x: 3
     y: 1
@@ -130,6 +150,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 11
     x: 7
     y: 1
@@ -140,6 +162,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 12
     x: 9
     y: 1
@@ -148,8 +172,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 1
+      hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 13
     x: 4
     y: 0
@@ -158,8 +184,10 @@ MonoBehaviour:
     mechanic:
       constraint: 0
       lockSteps: 0
-      hidden: 0
+      hidden: 1
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 14
     x: 6
     y: 0
@@ -170,6 +198,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 3
+      ambiguityValue: 0
   - id: 15
     x: 8
     y: 0
@@ -180,6 +210,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   solution:
   - clueId: 0
     x: 0
@@ -262,6 +294,7 @@ MonoBehaviour:
     width: 2
     height: 1
   walls: []
+  lineClues: []
   rules:
     timeLimit: 0
   difficulty: 2

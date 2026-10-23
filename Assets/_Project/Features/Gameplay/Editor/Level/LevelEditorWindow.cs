@@ -324,6 +324,9 @@ namespace PawBlock.Features.Gameplay
                     if (c.mechanic.lockSteps > 0)
                         GUI.Label(new Rect(r.x, r.yMax - r.height * 0.42f, r.width - 3, r.height * 0.42f), "L" + c.mechanic.lockSteps, RightStyle(cell * 0.22f));
                     DrawCornerMark(Inset(r, 3f), c.mechanic.corner, Mathf.Max(2f, cell * 0.07f));
+                    if (c.mechanic.ambiguity != ClueAmbiguity.None)
+                        GUI.Label(new Rect(r.x + 3, r.yMax - r.height * 0.42f, r.width, r.height * 0.42f),
+                            AmbiguityRules.Describe(c.mechanic, c.value), CornerStyle(cell * 0.2f));
                 }
             }
 
@@ -529,6 +532,14 @@ namespace PawBlock.Features.Gameplay
             ClueCorner corner = (ClueCorner)EditorGUILayout.EnumPopup(new GUIContent("Góc / cạnh", "Ô số phải nằm ở góc / cạnh này của khối (dấu trên ô)"), c.mechanic.corner);
             int lockSteps = Mathf.Max(0, EditorGUILayout.IntField(new GUIContent("Khóa (bước)", "Mở sau khi đặt đủ số khối khác"), c.mechanic.lockSteps));
             bool hidden = EditorGUILayout.Toggle(new GUIContent("Ẩn số \"?\"", "Người chơi không thấy số tới khi đặt đúng"), c.mechanic.hidden);
+            ClueAmbiguity ambiguity = (ClueAmbiguity)EditorGUILayout.EnumPopup(
+                new GUIContent("Số mơ hồ", "Thay số đúng bằng điều kiện: ≥ / ≤ ngưỡng, chẵn, lẻ, hoặc 1 trong 2 giá trị. \"Giá trị\" vẫn là số ô thật"), c.mechanic.ambiguity);
+            int ambiguityValue = c.mechanic.ambiguityValue;
+            if (ambiguity == ClueAmbiguity.AtLeast || ambiguity == ClueAmbiguity.AtMost || ambiguity == ClueAmbiguity.Either)
+            {
+                string tip = ambiguity == ClueAmbiguity.Either ? "Giá trị thứ hai (khác Giá trị)" : "Ngưỡng (tính cả ngưỡng)";
+                ambiguityValue = Mathf.Max(1, EditorGUILayout.IntField(new GUIContent(ambiguity == ClueAmbiguity.Either ? "  Giá trị 2" : "  Ngưỡng", tip), ambiguityValue));
+            }
             int color = EditorGUILayout.IntField(new GUIContent("Màu", "Chỉ số màu (dữ liệu ShikaCat, game hiện chưa dùng)"), c.color);
             if (EditorGUI.EndChangeCheck())
             {
@@ -538,6 +549,8 @@ namespace PawBlock.Features.Gameplay
                 c.mechanic.corner = corner;
                 c.mechanic.lockSteps = lockSteps;
                 c.mechanic.hidden = hidden;
+                c.mechanic.ambiguity = ambiguity;
+                c.mechanic.ambiguityValue = ambiguityValue;
                 c.color = color;
                 _level.clues[_selectedClue] = c;
                 ClearReport();
@@ -904,7 +917,8 @@ namespace PawBlock.Features.Gameplay
         private int ClueCount() => _level.clues != null ? _level.clues.Length : 0;
 
         // [MECHANIC] Cơ chế giấu thông tin (như khóa / "?") thì thêm vào đây
-        private bool HasHiddenInfo() => _level.clues != null && _level.clues.Any(c => c.mechanic.hidden || c.mechanic.lockSteps > 0);
+        private bool HasHiddenInfo() => _level.clues != null
+            && _level.clues.Any(c => c.mechanic.hidden || c.mechanic.lockSteps > 0 || c.mechanic.ambiguity != ClueAmbiguity.None);
 
         private int ClueIndexAt(Vector2Int pos)
         {

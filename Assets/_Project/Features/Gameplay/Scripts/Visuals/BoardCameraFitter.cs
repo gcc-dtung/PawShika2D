@@ -33,8 +33,10 @@ namespace PawBlock.Features.Gameplay
         public void Fit(LevelDefinition level)
         {
             if (level == null) return;
-            float gridW = level.size * GridSpawner.CellSpacing;
-            float gridH = level.Height * GridSpawner.CellSpacing;
+            // Khung nền khay rộng hơn lưới một chút (BoardPadding)
+            Vector2 board = GridSpawner.BoardSize(level.size, level.Height);
+            float gridW = Mathf.Max(level.size * GridSpawner.CellSpacing, board.x);
+            float gridH = Mathf.Max(level.Height * GridSpawner.CellSpacing, board.y);
 
             if (playZone != null)
             {

@@ -24,8 +24,10 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Ease resizeEase = Ease.OutQuad;
         [SerializeField] private float fadeSpeed = 12f;          // tốc độ mờ / hiện khi bật tắt mèo xem trước
 
-        [Header("Ôm ô / bị chặn")]
-        [SerializeField] private float inset = 0.1f;          // bình thường mỗi mép thụt vào so với ranh giới ô
+        // Bình thường mỗi mép thụt vào so với ranh giới ô đúng nửa khe ô nền: khung phủ khít ô nền bên dưới
+        private static float Inset => GridSpawner.CellGap / 2f;
+
+        [Header("Bị chặn")]
         [SerializeField] private float blockedExtend = 0.1f;  // bị chặn: mép phía đó trượt ra thêm bao nhiêu (từ vị trí ôm ô)
 
         [Header("Thả tay ở vùng sai")]
@@ -183,10 +185,10 @@ namespace PawBlock.Features.Gameplay
         /// <summary>Vùng ô thụt vào inset mỗi mép; mép phía bị chặn trượt ra thêm blockedExtend.</summary>
         private void UpdateTarget()
         {
-            float left = -_rectSize.x / 2f + inset;
-            float right = _rectSize.x / 2f - inset;
-            float bottom = -_rectSize.y / 2f + inset;
-            float top = _rectSize.y / 2f - inset;
+            float left = -_rectSize.x / 2f + Inset;
+            float right = _rectSize.x / 2f - Inset;
+            float bottom = -_rectSize.y / 2f + Inset;
+            float top = _rectSize.y / 2f - Inset;
 
             if (_blockDir.x < 0) left -= blockedExtend;
             if (_blockDir.x > 0) right += blockedExtend;

@@ -18,43 +18,7 @@ MonoBehaviour:
     sourceIndex: 28
   size: 7
   height: 7
-  cellOverrides:
-  - x: 0
-    y: 3
-    type: 1
-  - x: 0
-    y: 4
-    type: 1
-  - x: 1
-    y: 3
-    type: 1
-  - x: 1
-    y: 4
-    type: 1
-  - x: 2
-    y: 3
-    type: 1
-  - x: 2
-    y: 4
-    type: 1
-  - x: 4
-    y: 1
-    type: 1
-  - x: 4
-    y: 2
-    type: 1
-  - x: 5
-    y: 1
-    type: 1
-  - x: 5
-    y: 2
-    type: 1
-  - x: 6
-    y: 1
-    type: 1
-  - x: 6
-    y: 2
-    type: 1
+  cellOverrides: []
   clues:
   - id: 0
     x: 1
@@ -66,6 +30,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 1
     x: 6
     y: 6
@@ -76,16 +42,32 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
+  - id: 2
+    x: 2
+    y: 3
+    value: 6
+    color: 2
+    mechanic:
+      constraint: 1
+      lockSteps: 0
+      hidden: 0
+      corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 3
     x: 4
     y: 3
     value: 6
     color: 3
     mechanic:
-      constraint: 0
+      constraint: 1
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 4
     x: 6
     y: 4
@@ -95,7 +77,9 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
-      corner: 1
+      corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 5
     x: 1
     y: 2
@@ -106,6 +90,20 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
+  - id: 6
+    x: 6
+    y: 1
+    value: 6
+    color: 6
+    mechanic:
+      constraint: 0
+      lockSteps: 0
+      hidden: 0
+      corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 7
     x: 1
     y: 0
@@ -115,7 +113,9 @@ MonoBehaviour:
       constraint: 0
       lockSteps: 0
       hidden: 0
-      corner: 5
+      corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   - id: 8
     x: 4
     y: 0
@@ -126,6 +126,8 @@ MonoBehaviour:
       lockSteps: 0
       hidden: 0
       corner: 0
+      ambiguity: 0
+      ambiguityValue: 0
   solution:
   - clueId: 0
     x: 0
@@ -135,6 +137,11 @@ MonoBehaviour:
   - clueId: 1
     x: 4
     y: 5
+    width: 3
+    height: 2
+  - clueId: 2
+    x: 0
+    y: 3
     width: 3
     height: 2
   - clueId: 3
@@ -152,6 +159,11 @@ MonoBehaviour:
     y: 1
     width: 4
     height: 2
+  - clueId: 6
+    x: 4
+    y: 1
+    width: 3
+    height: 2
   - clueId: 7
     x: 0
     y: 0
@@ -163,6 +175,7 @@ MonoBehaviour:
     width: 3
     height: 1
   walls: []
+  lineClues: []
   rules:
     timeLimit: 0
   difficulty: 0

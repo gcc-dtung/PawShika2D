@@ -55,6 +55,20 @@ namespace PawBlock.Features.Gameplay
         Right = 8
     }
 
+    /// <summary>
+    /// "Số mơ hồ": ô số không cho đúng số ô mà chỉ cho 1 điều kiện lên số ô của khối (AmbiguityRules.Accepts).
+    /// AtLeast / AtMost dùng ambiguityValue làm ngưỡng; Either: số ô là value hoặc ambiguityValue.
+    /// </summary>
+    public enum ClueAmbiguity
+    {
+        None = 0,
+        AtLeast = 1,
+        AtMost = 2,
+        Even = 3,
+        Odd = 4,
+        Either = 5
+    }
+
     [Serializable]
     public struct LevelSource
     {
@@ -90,6 +104,10 @@ namespace PawBlock.Features.Gameplay
         public bool hidden;
         [Tooltip("Ô số phải nằm ở góc / cạnh này của khối (dấu ngoặc góc / vạch cạnh trên ô)")]
         public ClueCorner corner;
+        [Tooltip("Số mơ hồ: khoảng / chẵn lẻ / 2 giá trị thay cho số đúng (value vẫn là số ô thật của lời giải)")]
+        public ClueAmbiguity ambiguity;
+        [Tooltip("Ngưỡng của ≥ / ≤, hoặc giá trị thứ hai của Either")]
+        public int ambiguityValue;
     }
 
     /// <summary>Tường nằm ở cạnh nào của ô (x, y): Right = giữa (x, y) và (x + 1, y); Top = giữa (x, y) và (x, y + 1).</summary>
