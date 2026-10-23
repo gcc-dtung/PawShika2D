@@ -7,7 +7,7 @@
 | Canvas (scene) | Prefab | sortingOrder | Bật khi | Chứa |
 | --- | --- | --- | --- | --- |
 | `Canvas_HUD` | `Features/Gameplay/Prefabs/GameplayHUD` | 0 | Trong ván | `UIZone` (safe area): `PlayZone`, `TopPanel` (LEVEL + đồng hồ + thanh sao, bánh răng), `DownPanel/Booster` (3 `BoosterButton`), `RevealBanner`, `TutorialPanel`; `FreezeOverlayFX`, `DifficultyIntro`, `BoosterTutorial` (Canvas con, order 5), `BoosterFx` |
-| `Canvas_Menu` | `Game/Prefabs/MainMenu` | 10 | Ở Menu | `Panels` (`ShopPanel` / `HomePanel` / `DailyPanel` trượt ngang), `AlwayOn` (`MenuTabBar`) |
+| `Canvas_Menu` | `Game/Prefabs/MainMenu` | 10 | Ở Menu | `Panels` (`ShopPanel` / `LeaderboardPanel` / `HomePanel` / `DailyPanel` / `CollectionPanel` trượt ngang), `AlwayOn` (`MenuTabBar`) |
 | `Canvas_Popup` | (trong scene) | 20 | Luôn bật | `Popups` (`GameFlowUI` + 12 instance popup prefab) – dùng chung cho Menu và ván |
 
 Mỗi popup / tab có Canvas con; phần đổi liên tục (đồng hồ, thanh sao, viền đỏ, nút booster) có Canvas riêng để không làm cả HUD dựng lại.
@@ -27,10 +27,14 @@ Mỗi lần đổi màn phát `ScreenChangedEvent`. Level vẫn được nạp s
 
 ## Main Menu (`Game/Scripts/Menu`)
 
-- `MainMenuNavigator`: giữ `MenuPanel[]` (Shop 0 / Home 1 / Daily 2), trượt ngang, vuốt chuyển tab (`MenuSwipe`), `onTabChanged`. Không biết nội dung tab.
+- `MainMenuNavigator`: giữ `MenuPanel[]` (Shop 0 / Rank 1 / Home 2 / Daily 3 / Collection 4), trượt ngang, vuốt chuyển tab (`MenuSwipe`), `onTabChanged`. Không biết nội dung tab.
 - Mỗi tab là 1 prefab có script gốc kế thừa `MenuPanel` (Shared), tự `Init` view con:
   - `ShopPanel` (Game): thẻ Shop, `CoinHUD`, `EnergyHUD`.
   - `HomePanel` (Game): `PlayButtonView` (Level n, mặt nút theo độ khó), `AvatarButton`, `DailyRewardButton`, `LuckyWheelButton`, `MenuShortcutButton` (Starter, No Ads), `CoinHUD`, `EnergyHUD`, `SettingsButton`.
+    Theme Halloween: prefab con `HomeScene` (trời, trăng, dơi `UISpriteSequence` (khung dựng từ Spine gốc), nhà ma / mây `UIFloat`, đèn / nến `UIFlicker`, sân, rào, bí ngô, chổi) nằm dưới cùng; giữa sân là prefab `GhostMascot` (bóng + hồn ma, chạm thì nhún), ma nhỏ đi qua lại; 5 nút khóa trang trí là instance của prefab `LockedMenuButton` ("Lv X", mỗi nút override icon / nhãn / vị trí). Prefab đều ở `Game/Prefabs/Menu/`.
+    Ảnh theme rip từ game khác nằm ở `Game/Art/UI/HalloweenRip/` (gitignore, chỉ có trên máy); hồn ma tự gen ở `Game/Art/UI/Halloween/`.
+  - `LeaderboardPanel` (Game): bảng xếp hạng tuần giả lập offline (đối thủ cố định, điểm sinh theo số tuần; người chơi = cấp hiện tại), bục top 3 + danh sách cuộn. Bootstrap `Init(profile)`.
+  - `LockedTabPanel` (Game): tab Bộ sưu tập, chỉ là màn khóa tĩnh.
   - `DailyChallengePanel` (DailyChallenge): lịch tháng ([16](16_DailyChallenge.md)).
 - `MenuTabBar`: thanh tab dưới (tab chọn rộng hơn, nền trượt theo, vạch ngăn), event `TabClicked`, chấm đỏ tab Daily.
 

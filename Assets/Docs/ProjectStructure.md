@@ -114,7 +114,7 @@ Ai cài / ai dùng từng interface: chú thích trong file và bảng "Phụ th
 | `ScreenFlow` (`IScreenNavigator`) | Menu ↔ màn chơi, phát `ScreenChangedEvent`, mở tab Shop khi có `ShopOpenRequestedEvent` |
 | `GameFlowUI` (`IMenuPopups`) | Nối `GameState` với popup, mở popup dùng chung, đóng popup khi đổi level |
 | `GameAudioEvents` | Nối âm thanh vào event của game |
-| `Menu/` | `MainMenuNavigator`, `MenuTabBar`, `MenuTabButton`, `MenuSwipe`, `ShopPanel`, `HomePanel`, `PlayButtonView` |
+| `Menu/` | `MainMenuNavigator`, `MenuTabBar`, `MenuTabButton`, `MenuSwipe`, `ShopPanel`, `HomePanel`, `PlayButtonView`, `LeaderboardPanel` + `LeaderboardRow`, `LockedTabPanel`, `GhostMascot`, `LockedMenuButton` |
 | `Save/` | `SaveMigrator`, `SaveDataV1` (save v1 → v2) |
 | `Cheats/` | `DebugCheats`, `CheatPanel` (trong bản build) |
 | `Editor/` | `GameBootstrapCollector` (tự điền tham chiếu Bootstrap), `DebugPanelWindow`, `GameConfigSetup`, `AudioSetup` |
@@ -137,7 +137,7 @@ Manager              GridManager, InputManager, DragAndDropController, LevelTime
 SelectionBox (tắt)   SelectionBoxView
 bg                   BackgroundFitter (+ Pattern)
 Canvas_HUD           [prefab GameplayHUD] HUD màn chơi, thanh booster, tutorial; LowTimeVignette, BoosterUseFx
-Canvas_Menu          [prefab MainMenu] MainMenuNavigator; lồng ShopPanel / HomePanel / DailyPanel / MenuTabBar
+Canvas_Menu          [prefab MainMenu] MainMenuNavigator; lồng ShopPanel / LeaderboardPanel / HomePanel / DailyPanel / CollectionPanel / MenuTabBar
 Canvas_Popup         luôn bật
 └── Popups           GameFlowUI; 12 instance popup prefab (tắt sẵn), mỗi popup Canvas + GraphicRaycaster riêng
 AudioManager         AudioManager, GameAudioEvents, GameHapticEvents; Music + Sfx_0..7 (AudioSource đặt sẵn)

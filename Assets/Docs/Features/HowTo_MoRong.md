@@ -116,7 +116,7 @@ Ví dụ có sẵn: tab **Daily** ([16](16_DailyChallenge.md)).
 
 1. Script gốc của tab kế thừa `MenuPanel` (Shared): giữ `[SerializeField]` view con, `Init(...)` nối dependency cho chúng, làm mới trong `OnShown()`. Tab của 1 feature đặt ở feature đó; tab ghép nhiều feature đặt ở `Game/Scripts/Menu`.
 2. Prefab tab (`Features/<F>/Prefabs` hoặc `Game/Prefabs/Menu`), gốc có `RectMask2D` + Canvas con. Lồng vào `Game/Prefabs/MainMenu/Panels` đúng thứ tự tab.
-3. Thêm vào `MainMenuNavigator.menuPanels` và 1 `MenuTabButton` trong prefab `MenuTabBar`. `MainMenuNavigator.ShopTab` / `HomeTab` / `DailyTab` (0 / 1 / 2) là chỉ số tab – chèn tab ở giữa thì sửa các hằng này.
+3. Thêm vào `MainMenuNavigator.menuPanels` và 1 `MenuTabButton` trong prefab `MenuTabBar`. `MainMenuNavigator.ShopTab` / `RankTab` / `HomeTab` / `DailyTab` / `CollectionTab` (0 / 1 / 2 / 3 / 4) là chỉ số tab – chèn tab ở giữa thì sửa các hằng này.
 4. `GameBootstrap`: thêm field tab + 1 dòng `Init`.
 
 ## Thêm hệ thống chạy theo ván (nhiệm vụ, chuỗi thắng, thống kê…)

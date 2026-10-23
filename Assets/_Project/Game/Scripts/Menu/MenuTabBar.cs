@@ -6,7 +6,7 @@ using PawBlock.Features.DailyChallenge;
 namespace PawBlock.Game
 {
     /// <summary>
-    /// Thanh tab dưới của Main Menu (MenuTabBar.prefab): Shop | Home | Daily.
+    /// Thanh tab dưới của Main Menu (MenuTabBar.prefab): Shop | Xếp hạng | Home | Daily | Bộ sưu tập.
     /// - Tab đang chọn rộng selectedWidth, nền tab chọn (selectedBackground) trượt theo; các tab còn lại chia đều phần còn lại.
     /// - Tab và nền neo bottom center (anchor + pivot (0.5, 0)); anchoredPosition.x là tâm tab so với giữa thanh.
     /// - Vạch ngăn chỉ hiện giữa 2 tab đều không được chọn.

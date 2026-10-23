@@ -93,6 +93,7 @@ namespace PawBlock.Game
         [SerializeField] private GameFlowUI gameFlowUI;
         [SerializeField] private ShopPanel shopPanel;
         [SerializeField] private HomePanel homePanel;
+        [SerializeField] private LeaderboardPanel leaderboardPanel;
         [SerializeField] private MenuTabBar menuTabBar;
         [SerializeField] private GameAudioEvents gameAudioEvents;
 
@@ -182,6 +183,7 @@ namespace PawBlock.Game
             // Main Menu: mỗi tab tự nối view con của nó
             Require(shopPanel)?.Init(s.Shop, s.Coins, energyManager, gameFlowUI);
             Require(homePanel)?.Init(screenFlow, levelManager, s.Profile, s.Stars, dailyRewardManager, s.Coins, energyManager, gameFlowUI);
+            Require(leaderboardPanel)?.Init(s.Profile);
             Require(menuTabBar)?.Init(dailyChallengeManager);
             Require(gameAudioEvents)?.Init(screenFlow, levelManager, gridManager, boosterManager, levelTimer, gridSpawner);
             DebugCheats.Init(s, new GameScene { Screens = screenFlow, Levels = levelManager, Grid = gridManager, Boosters = boosterManager, Timer = levelTimer, Energy = energyManager, DailyReward = dailyRewardManager, LivesEnergy = lives, MoreTime = moreTimePopup });

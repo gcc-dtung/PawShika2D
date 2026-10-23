@@ -20,13 +20,16 @@ namespace PawBlock.Game
         [SerializeField] private RectTransform panelRoot;
         [SerializeField] private MenuPanel[] menuPanels;   // cùng thứ tự với tab
         [SerializeField] private MenuTabBar menuTabBar;
-        [SerializeField] private int startIndex = 1;       // Home
+        [SerializeField] private int startIndex = HomeTab;
 
+        // Thứ tự 5 tab (theme Halloween): Shop | Xếp hạng | Home | Daily | Bộ sưu tập
         /// <summary>Thứ tự tab Shop trong thanh tab (CoinHUD, ScreenFlow mở Shop bằng số này).</summary>
         public const int ShopTab = 0;
-        public const int HomeTab = 1;
+        public const int RankTab = 1;
+        public const int HomeTab = 2;
         /// <summary>Tab Daily Challenge (về Menu sau ván Daily thì mở tab này).</summary>
-        public const int DailyTab = 2;
+        public const int DailyTab = 3;
+        public const int CollectionTab = 4;
 
         [Header("Chuyển động")]
         [SerializeField] private float duration = 0.3f;
