@@ -1,6 +1,6 @@
 # Hướng dẫn: thêm một cơ chế (mechanic) mới
 
-Đọc trước: [03 – Cơ chế](03_CoChe-Mechanic.md). Code runtime ở `Assets/_Project/Features/Gameplay/Scripts/`, tool ở `Features/Gameplay/Editor/Level/`. Mọi chỗ cần sửa trong code đều có chú thích **`// [MECHANIC]`** – tìm chữ này (Ctrl + Shift + F) để không sót.
+Đọc trước: [03 – Cơ chế](03_CoChe-Mechanic.md). Code runtime ở `Assets/_Project/Runtime/Gameplay/`, tool ở `Runtime/Editor/Gameplay/Level/`. Mọi chỗ cần sửa trong code đều có chú thích **`// [MECHANIC]`** – tìm chữ này (Ctrl + Shift + F) để không sót.
 
 ---
 
@@ -27,17 +27,17 @@ Loại: ô số (A), có luật vị trí (B), không đổi trạng thái (C = 
 
 | # | Bước | File | Bắt buộc |
 | --- | --- | --- | --- |
-| 1 | Dữ liệu | `Scripts/Level/LevelDefinition.cs` | ✔ |
-| 2 | Trạng thái lúc chơi | `Scripts/Board/ClueCell.cs` (+ `CellModel` nếu đổi trạng thái) | ✔ |
-| 3 | Luật đặt khối | `Scripts/Board/BoardModel.cs` | nếu B / C |
-| 4 | Solver | `Scripts/Solver/ShikakuSolver.cs` | nếu B |
-| 5 | Hiển thị trên ô | `Scripts/Board/CellView.cs` + `Prefabs/Cell.prefab` | ✔ |
+| 1 | Dữ liệu | `Runtime/Gameplay/Level/LevelDefinition.cs` | ✔ |
+| 2 | Trạng thái lúc chơi | `Runtime/Gameplay/Board/ClueCell.cs` (+ `CellModel` nếu đổi trạng thái) | ✔ |
+| 3 | Luật đặt khối | `Runtime/Gameplay/Board/BoardModel.cs` | nếu B / C |
+| 4 | Solver | `Runtime/Gameplay/Solver/ShikakuSolver.cs` | nếu B |
+| 5 | Hiển thị trên ô | `Runtime/Gameplay/Board/CellView.cs` + `Prefabs/InGame/Cell.prefab` | ✔ |
 | 6 | Khối mèo, booster | `PlacedBlockView`, `BoosterManager`, `HintBooster` | nếu che số / chặn chọn |
-| 7 | Popup giới thiệu | `Scripts/Tutorial/MechanicIntro.cs` (+ sprite gán trên component trong scene) | nên có |
+| 7 | Popup giới thiệu | `Runtime/Gameplay/Tutorial/MechanicIntro.cs` (+ sprite gán trên component trong scene) | nên có |
 | 8 | Level Editor + Validator | `LevelEditorWindow`, `LevelValidator` | ✔ |
 | 9 | Gắn tự động | `MechanicInjectorSettings`, `MechanicInjector` (+ asset) | nếu muốn tự xuất hiện |
 | 9b | Độ khó | `LevelDifficultyAnalyzer`, `LevelDifficultySettings` | nên có |
-| 11 | Docs + test | README, 03, Gameplay README, RoadMap; test trong `Features/Gameplay/Tests/Editor` | ✔ |
+| 11 | Docs + test | README, 03, Gameplay README, RoadMap; test trong `Runtime/Tests/Gameplay/Editor` | ✔ |
 
 ---
 
@@ -110,7 +110,7 @@ Cơ chế **giấu số** thì không lọc ở đây mà thêm clue vào `unkno
 
 ## Bước 5 – Hiển thị trên ô (`CellView` + `Cell.prefab`)
 
-1. Mở `Features/Gameplay/Prefabs/Cell.prefab` (Prefab Mode), thêm object con (vd. `EdgeMark`, SpriteRenderer, sortingOrder 5–6, **tắt sẵn**). Sprite đặt trong `GameplayVisuals` nếu dùng chung.
+1. Mở `Prefabs/InGame/Cell.prefab` (Prefab Mode), thêm object con (vd. `EdgeMark`, SpriteRenderer, sortingOrder 5–6, **tắt sẵn**). Sprite đặt trong `GameplayVisuals` nếu dùng chung.
 2. `CellView`:
 
 ```csharp
@@ -161,7 +161,7 @@ case Kind.Edge:
 
 > `ShowNext` hiện dùng `default:` cho Hidden – đổi thành `case Kind.Hidden:` để cơ chế mới không rơi vào nhánh sai.
 
-Ảnh minh họa: copy từ `ThirdParty/` vào `Features/Gameplay/Art/UI/...` (nằm trong atlas Gameplay), rồi gán vào field `edgeSprite` của component `MechanicIntro` trên object `Manager` trong scene. Builder cũ đã xóa ở P7.
+Ảnh minh họa: copy từ `ThirdParty/` vào `Source/Art/UI/Gameplay/...` (nằm trong atlas Gameplay), rồi gán vào field `edgeSprite` của component `MechanicIntro` trên object `Manager` trong scene. Builder cũ đã xóa ở P7.
 
 ## Bước 8 – Level Editor và Validator
 
@@ -186,7 +186,7 @@ if (m.edge && m.hidden) report.warnings.Add($"{name}: Mép + \"?\" khó đọc")
 ## Bước 9 – Gắn tự động (Mechanic Injector)
 
 1. `MechanicInjectorSettings.cs`: thêm `Edge = 4` vào **cuối** `MechanicKind` (thứ tự enum = thứ tự gắn; cơ chế đổi hình lưới như Void phải đứng đầu). Thêm `MechanicRule` mặc định vào list.
-2. **Mở `Features/Gameplay/Configs/Levels/MechanicInjectorSettings.asset` và thêm rule Edge bằng tay** – asset đã tạo không tự nhận giá trị mặc định mới.
+2. **Mở `Data/Levels/MechanicInjectorSettings.asset` và thêm rule Edge bằng tay** – asset đã tạo không tự nhận giá trị mặc định mới.
 3. `MechanicInjector`:
    - `TryKind`: thêm `case MechanicKind.Edge: part = TryEdge(ctx); break;` – lưu ý `default:` đang là Hidden, đổi thành `case MechanicKind.Hidden:` rồi để `default: part = null;`.
    - Viết `TryEdge(ctx)` theo mẫu `TryConstraint`: lấy `SolutionRects`, chọn clue mà khối lời giải chạm mép **và** có cách đặt khác không chạm mép (dấu Mép thực sự loại bớt lựa chọn), gắn, `LevelValidator.Validate`, sai thì `Snapshot.Restore`.
@@ -216,7 +216,7 @@ Ví dụ "ô Đá": ô không chơi được nhưng vẫn hiện trên lưới.
 2. Level Editor → tạo level nhỏ có cơ chế → **Kiểm tra** (Validator hợp lệ) → **Giải** → **▶ Chơi thử**.
 3. Trong ván: luật chặn đúng (thả sai luật thì khung co xám), đặt đúng được, hiển thị trên ô, popup giới thiệu lần đầu, Hint / Reveal vẫn đúng.
 4. **Validate Levels** cho cả database.
-5. Cập nhật docs: bảng "Ô đặc biệt" trong `../README.md`, bảng trong [03](03_CoChe-Mechanic.md), [Gameplay README](../../_Project/Features/Gameplay/Docs/README.md) (nếu thêm class), RoadMap.
+5. Cập nhật docs: bảng "Ô đặc biệt" trong `../README.md`, bảng trong [03](03_CoChe-Mechanic.md), [Gameplay README](../Modules/Gameplay.md) (nếu thêm class), RoadMap.
 
 ---
 

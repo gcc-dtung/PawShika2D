@@ -1,0 +1,227 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32772fabe9fb8824895576a0a39ecbaf, type: 3}
+  m_Name: ShopDatabase
+  m_EditorClassIdentifier: 
+  products:
+  - productId: com.phoenix.pawblock.puzzle.starterpack
+    title: Limited Pack
+    section: 6
+    priceVnd: 66000
+    icon: {fileID: 21300000, guid: c3039f93af2d11746beefcd2f04e3cb6, type: 3}
+    coin: 3000
+    hint: 1
+    shield: 1
+    reveal: 1
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 'X5
+
+      VALUE'
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.noad
+    title: No Ads
+    section: 1
+    priceVnd: 210000
+    icon: {fileID: 21300000, guid: f164cf01f43818242ac378769a9e2f97, type: 3}
+    coin: 0
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 1
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.noadbundle
+    title: No Ads Bundle
+    section: 2
+    priceVnd: 263000
+    icon: {fileID: 21300000, guid: 5c26cbecdfd1bcf478b2ad505ed16ef6, type: 3}
+    coin: 2500
+    hint: 1
+    shield: 1
+    reveal: 1
+    infiniteMinutes: 60
+    removeAds: 1
+    background: {fileID: 21300000, guid: b0d60b0353991204095b8ac3fbd334ab, type: 3}
+    itemsBackground: {fileID: 21300000, guid: 4ab85ef5efe379f4fb8cd0c769c96625, type: 3}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.failoffer
+    title: Big Pack
+    section: 3
+    priceVnd: 158000
+    icon: {fileID: 21300000, guid: 949f436eaeb0b174091acb3ad250c194, type: 3}
+    coin: 1000
+    hint: 1
+    shield: 1
+    reveal: 1
+    infiniteMinutes: 30
+    removeAds: 0
+    background: {fileID: 21300000, guid: 9efc6316b1ca7d949a53f8ef4d5cf75a, type: 3}
+    itemsBackground: {fileID: 21300000, guid: 5ef63ee4561a75943ad102b600bab308, type: 3}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.minibundle
+    title: Great Pack
+    section: 3
+    priceVnd: 158000
+    icon: {fileID: 21300000, guid: 005916d6fd1d2cf4cb1148577290a4ca, type: 3}
+    coin: 2000
+    hint: 1
+    shield: 1
+    reveal: 0
+    infiniteMinutes: 60
+    removeAds: 0
+    background: {fileID: 21300000, guid: 690805433f71c304b82555acfc8aa0eb, type: 3}
+    itemsBackground: {fileID: 21300000, guid: cd1ebc389113d8f48bb19d167ed08900, type: 3}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.superbundle
+    title: Super Pack
+    section: 3
+    priceVnd: 289000
+    icon: {fileID: 21300000, guid: 19100e9048fdf7849823dc9636ce4e38, type: 3}
+    coin: 6000
+    hint: 3
+    shield: 3
+    reveal: 1
+    infiniteMinutes: 60
+    removeAds: 0
+    background: {fileID: 21300000, guid: dfde6016976e4cc46871f5d29bc7b24b, type: 3}
+    itemsBackground: {fileID: 21300000, guid: be00b31a46e85794bb3dcba460614920, type: 3}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.megabundle
+    title: Premium Pack
+    section: 3
+    priceVnd: 553000
+    icon: {fileID: 21300000, guid: db867867e89d614468bf15b87492bb79, type: 3}
+    coin: 12000
+    hint: 6
+    shield: 6
+    reveal: 2
+    infiniteMinutes: 180
+    removeAds: 0
+    background: {fileID: 21300000, guid: ddc7447f080c2c5418a4a5f6f9bf1816, type: 3}
+    itemsBackground: {fileID: 21300000, guid: 17ae3d31322394140b2a995e10efae9c, type: 3}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.deluxebundle
+    title: Legendary Pack
+    section: 3
+    priceVnd: 816000
+    icon: {fileID: 21300000, guid: 1f85a3f17d218a74b95016841871164c, type: 3}
+    coin: 18000
+    hint: 9
+    shield: 9
+    reveal: 3
+    infiniteMinutes: 360
+    removeAds: 0
+    background: {fileID: 21300000, guid: 3abb1e35f7725fa4ab61c3e708ef57eb, type: 3}
+    itemsBackground: {fileID: 21300000, guid: 4e46b0ae3be70344ebf3df5772ba277c, type: 3}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.coin1
+    title: 1000
+    section: 4
+    priceVnd: 52000
+    icon: {fileID: 21300000, guid: 988bec4b89db8984295902da9f1e8c87, type: 3}
+    coin: 1000
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.coin2
+    title: 5000
+    section: 4
+    priceVnd: 237000
+    icon: {fileID: 21300000, guid: 2d24092bc10a1bd4595274489dcfd18a, type: 3}
+    coin: 5000
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.coin3
+    title: 10000
+    section: 4
+    priceVnd: 421000
+    icon: {fileID: 21300000, guid: e1bd0f674a97bf04dbe0ec377b51326b, type: 3}
+    coin: 10000
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.coin4
+    title: 25000
+    section: 4
+    priceVnd: 816000
+    icon: {fileID: 21300000, guid: c14fd636db18e9b4a8c4ae35c33f4ca0, type: 3}
+    coin: 25000
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.coin5
+    title: 50000
+    section: 4
+    priceVnd: 1600000
+    icon: {fileID: 21300000, guid: 005916d6fd1d2cf4cb1148577290a4ca, type: 3}
+    coin: 50000
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 
+  - productId: com.phoenix.pawblock.puzzle.coin6
+    title: 100000
+    section: 4
+    priceVnd: 2650000
+    icon: {fileID: 21300000, guid: 1f85a3f17d218a74b95016841871164c, type: 3}
+    coin: 100000
+    hint: 0
+    shield: 0
+    reveal: 0
+    infiniteMinutes: 0
+    removeAds: 0
+    background: {fileID: 0}
+    itemsBackground: {fileID: 0}
+    saleTag: 
+    endsAt: 

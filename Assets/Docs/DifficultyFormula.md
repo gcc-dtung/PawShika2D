@@ -1,7 +1,7 @@
 # Công thức độ khó lý thuyết của level
 
-Tool: **Tools → PawBlock → Level Difficulty** (`Features/Gameplay/Editor/Level/LevelDifficultyWindow`, `LevelDifficultyAnalyzer`).
-Trọng số: `Assets/_Project/Features/Gameplay/Configs/Levels/LevelDifficultySettings.asset`, sửa được ngay trong cửa sổ tool; đổi trọng số thì điểm tính lại tức thì.
+Tool: **Tools → PawBlock → Level Difficulty** (`Runtime/Editor/Gameplay/Level/LevelDifficultyWindow`, `LevelDifficultyAnalyzer`).
+Trọng số: `Assets/_Project/Data/Levels/LevelDifficultySettings.asset`, sửa được ngay trong cửa sổ tool; đổi trọng số thì điểm tính lại tức thì.
 
 Độ khó lý thuyết đo **lối suy luận** mà level bắt người chơi đi qua, không đo cảm giác hay độ "đẹp". Mục đích là so với số liệu thực tế (tỉ lệ thắng, thời gian, số lần sai) để chỉnh lại công thức.
 

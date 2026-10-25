@@ -1,6 +1,6 @@
 # 04 – Level: dữ liệu và công cụ
 
-> Asset level ở `Assets/_Project/Features/Gameplay/Configs/Levels/` (viết tắt `Levels/`); tool ở `Features/Gameplay/Editor/Level/`; code chạy ở `Features/Gameplay/Scripts/Level/`.
+> Asset level ở `Assets/_Project/Data/Levels/` (viết tắt `Levels/`); tool ở `Runtime/Editor/Gameplay/Level/`; code chạy ở `Runtime/Gameplay/Level/`.
 
 ## Dữ liệu
 
@@ -11,7 +11,7 @@
 | `Levels/Mechanic/Level_NNN` | Bản đã gắn cơ chế, thay bản gốc trong database |
 | `Levels/Custom/` | Level tự làm bằng Level Editor (Level 1 = `Level_Custom_Level01_4x4`) |
 | `Levels/Test/`, `Levels/Generated/` | Level thử; level do Level Generator lưu (tạo khi lưu lần đầu) |
-| `Features/Gameplay/Configs/DifficultyTheme.asset` | Giao diện level Hard / Very Hard |
+| `Data/Config/DifficultyTheme.asset` | Giao diện level Hard / Very Hard |
 
 `LevelDefinition`:
 
@@ -33,7 +33,7 @@
 | Menu | Việc | File |
 | --- | --- | --- |
 | Tools → PawBlock → **Level Editor** | Vẽ khối (số tự = diện tích), đặt số / Void / xóa; sửa hướng, khóa, "?", Hard; Kiểm tra; Giải; ▶ Chơi thử vào thẳng level; đổi thứ tự, nhân bản | `LevelEditorWindow` |
-| Tools → PawBlock → **Level Generator** | Sinh hàng loạt level theo seed (preset Easy / Normal / Hard / Daily, đúng 1 lời giải), xem độ khó, lưu vào `Levels/Generated` (+ cuối database). Chi tiết: [16_DailyChallenge.md](16_DailyChallenge.md) | `LevelGeneratorWindow`, `Scripts/Level/LevelGenerator` |
+| Tools → PawBlock → **Level Generator** | Sinh hàng loạt level theo seed (preset Easy / Normal / Hard / Daily, đúng 1 lời giải), xem độ khó, lưu vào `Levels/Generated` (+ cuối database). Chi tiết: [16_DailyChallenge.md](16_DailyChallenge.md) | `LevelGeneratorWindow`, `Runtime/Gameplay/Level/LevelGenerator` |
 | Tools → PawBlock → **Validate Levels** | Chạy `LevelValidator` cho cả database, log lỗi / cảnh báo | `LevelValidator` |
 | Tools → PawBlock → **Mechanic Injector** | Gắn cơ chế theo lịch: Xem trước → Áp dụng / Khôi phục bản gốc | `MechanicInjector*` |
 | Tools → PawBlock → **Level Difficulty** | Độ khó lý thuyết D, biểu đồ, tick Hard / Very Hard, xuất / nạp CSV | `LevelDifficulty*`, công thức: [../DifficultyFormula.md](../DifficultyFormula.md) |
@@ -78,7 +78,7 @@ Cùng settings + cùng seed = kết quả y hệt (hash FNV-1a). Đổi `seed` =
 | --- | --- |
 | Thêm level tay | Level Editor → Mới (vào `Levels/Custom`) → Kiểm tra → đặt vị trí trong database |
 | Đổi lịch cơ chế | Sửa `MechanicInjectorSettings.asset` → Mechanic Injector → Xem trước → Áp dụng |
-| Thêm mức khó mới (vd. Nightmare) | Thêm giá trị **cuối** `LevelDifficulty` (`Scripts/Level/DifficultyTheme.cs`), thêm 1 `DifficultyStyle` trong `DifficultyTheme.asset` (HUD, nút PLAY, băng intro đọc qua `theme.Get(difficulty)` nên tự nhận). Rồi xem các chỗ so sánh trực tiếp: `EconomyConfig.WinCoinReward` (coin thắng), `LevelOrderTool` (đánh dấu tự động), `MechanicInjector.MakeNormalPlan` (số cơ chế), `BoosterTutorial` (bỏ qua level khó) |
+| Thêm mức khó mới (vd. Nightmare) | Thêm giá trị **cuối** `LevelDifficulty` (`Runtime/Gameplay/Level/DifficultyTheme.cs`), thêm 1 `DifficultyStyle` trong `DifficultyTheme.asset` (HUD, nút PLAY, băng intro đọc qua `theme.Get(difficulty)` nên tự nhận). Rồi xem các chỗ so sánh trực tiếp: `EconomyConfig.WinCoinReward` (coin thắng), `LevelOrderTool` (đánh dấu tự động), `MechanicInjector.MakeNormalPlan` (số cơ chế), `BoosterTutorial` (bỏ qua level khó) |
 | Thêm trường cho level (vd. booster cấm dùng) | Thêm field vào `LevelDefinition` (giá trị mặc định = hành vi cũ), sửa Level Editor để chỉnh, đọc ở runtime |
 
 ## Lưu ý

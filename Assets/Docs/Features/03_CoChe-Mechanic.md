@@ -1,6 +1,6 @@
 # 03 – Cơ chế (Mechanic): Void, Hướng, Khóa, "?"
 
-> Code ở `Assets/_Project/Features/Gameplay/` (`Scripts/Board`, `Scripts/Solver`, `Scripts/Tutorial/MechanicIntro`, `Editor/Level`).
+> Code ở `Assets/_Project/Runtime/Gameplay/` (`Board`, `Solver`, `Tutorial/MechanicIntro`) và tool `Runtime/Editor/Gameplay/Level`.
 
 ## Tổng quan
 
@@ -64,7 +64,7 @@ Mechanic Injector chạy Validator sau mỗi lần gắn; sai thì hoàn tác v�
 
 ## Lịch xuất hiện (Mechanic Injector)
 
-`Assets/_Project/Features/Gameplay/Configs/Levels/MechanicInjectorSettings.asset`:
+`Assets/_Project/Data/Levels/MechanicInjectorSettings.asset`:
 
 | Cơ chế | Level giới thiệu | Số level giới thiệu | Số lượng / level |
 | --- | --- | --- | --- |

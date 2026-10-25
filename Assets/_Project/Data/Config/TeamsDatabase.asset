@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bfa0dcba9710ed542a961bbb2a076b93, type: 3}
+  m_Name: TeamsDatabase
+  m_EditorClassIdentifier: 
+  logos:
+  - {fileID: 21300000, guid: 74215e8b57b1b9a44ac4e70b2c5b7659, type: 3}
+  - {fileID: 21300000, guid: 4972fbe91b9560c45857582a8f1074ab, type: 3}
+  - {fileID: 21300000, guid: 3f7f379e5ac777e429f9b8c73f3548a4, type: 3}
+  - {fileID: 21300000, guid: 2f19ba2aba07fc34ba958d206c72a367, type: 3}
+  - {fileID: 21300000, guid: bca3f7b6b25adce4cb558d9ec200b625, type: 3}
+  - {fileID: 21300000, guid: cffc824400b887b478fbe6686f02feed, type: 3}
+  - {fileID: 21300000, guid: c6bc6508dcec91247b431d8e348ba1c6, type: 3}
+  - {fileID: 21300000, guid: 8fec2c63f47592549919ed617c9fd81d, type: 3}
+  - {fileID: 21300000, guid: 3ddbf0e07aadf1a4ab130d5b1d900e68, type: 3}
+  - {fileID: 21300000, guid: 7d37d1a96b3e998469340bb952adef77, type: 3}
+  - {fileID: 21300000, guid: dc685009b745a664593676254ec88877, type: 3}
+  - {fileID: 21300000, guid: bf306685edba94a40ba932e72441212e, type: 3}
+  - {fileID: 21300000, guid: 7bd5f379c2e55824f8273e19f448edcb, type: 3}
+  - {fileID: 21300000, guid: a612c7019e88a674cb53ed755e5ed1d4, type: 3}
+  - {fileID: 21300000, guid: bef5866ce4dcf6742aed8a7445837fc6, type: 3}
+  - {fileID: 21300000, guid: f56c14c3bc975e9429ef77698ea3d731, type: 3}
+  - {fileID: 21300000, guid: 10cd1ffca1c02bd42abfaee8e003f11e, type: 3}
+  - {fileID: 21300000, guid: 89fad1c56729f824c9d9527152bfc5bf, type: 3}
+  - {fileID: 21300000, guid: 5a9207c50bc457c44bf80adffb81b56d, type: 3}
+  - {fileID: 21300000, guid: 39d8d81a2d9fc8340882d9fca12fc0f1, type: 3}
+  capacity: 50
+  createCost: 3000
+  minRequiredLevel: 1
+  maxRequiredLevel: 200
+  requiredLevelStep: 5
+  defaultRequiredLevel: 1
+  seed: 2026
+  teamNames:
+  - Breizh
+  - Team Any Level
+  - Bradenburg
+  - ~~MARO~~
+  - Br para sempre
+  - SICARRIER
+  - Miray
+  - Just 2 of Us
+  - rosas
+  - Brianna
+  - Briau
+  - Briciola
+  - Bridgestone
+  - briella
+  - Ghost Busters
+  - Pumpkin Patch
+  - Spooky Cats
+  - Night Owls
+  - Moonlight
+  - Boo Crew
+  - Candy Corn
+  - Witchy Paws
+  - Haunted House
+  - Bat Squad
+  - Casper Club
+  - Midnight Snack
+  - Lucky Paws
+  - Meow Mansion
+  - Purrfect Team
+  - Shadow Puzzle
+  - Graveyard Gang
+  - Trick or Treat
+  - Cozy Cauldron
+  - Kitty Coven
+  - Zombie Kittens
+  - Spirit Squad
+  - Hocus Pocus
+  - Mystic Mews
+  - Pawsome
+  - Lantern Light
+  teamDescriptions:
+  - Active players, play every day!
+  - Friendly team, everyone welcome.
+  - Help each other and have fun!
+  - Top team, level 30+ please.
+  - Chill team, no pressure.
+  - Halloween lovers only!
+  - We love puzzles and cats.
+  - Daily players wanted!
+  memberNames:
+  - Luna
+  - Casper
+  - Pumpkin
+  - Boo
+  - Mochi
+  - Wicky
+  - Batty
+  - Nyx
+  - Toffee
+  - Spooky
+  - Ghosty
+  - Kitty
+  - Shadow
+  - Misty
+  - Salem
+  - Hazel
+  - Ember
+  - Willow
+  - Raven
+  - Olive
+  - Ziggy
+  - Maple
+  - Biscuit
+  - Pepper
+  avatarCount: 12

@@ -50,8 +50,8 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 ## 6. Test
 
-- Test của dự án ở `<module>/Tests/Editor/`, assembly `PawBlock.Core.Foundation.Tests`, `PawBlock.Gameplay.Tests`, `PawBlock.Meta.Tests`, `PawBlock.Game.Tests` (từ P6; trước đó `Assembly-CSharp-Editor`).
-- Chạy test **lọc theo 4 assembly trên**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
+- Test của dự án ở `Runtime/Tests/<mảng>/Editor/`, một assembly `PawBlock.Tests` (từ 2026-10-25; P6 → 2026-10-24 là 4 assembly `PawBlock.*.Tests`).
+- Chạy test **lọc theo assembly `PawBlock.Tests`**: Test Runner còn có ~890 test của package `com.besty.unity-skills` (vài test của package fail sẵn, không liên quan game).
 - Test đụng tới save (ví, kho booster, quà...) **bắt buộc** dùng `new JsonFileSaveService(null)` (chỉ bộ nhớ) truyền vào constructor / `Init`: save thật ở Edit mode ghi thẳng `save.json` của máy.
 - Test vào Play mode (`EnterPlayMode`): save bộ nhớ không giữ được (`ResetStatics` chạy lại, `TrustedClock` tự ghi giờ) → sao lưu byte các file save ở `[OneTimeSetUp]`, trả lại ở `[OneTimeTearDown]` (mẫu: `FeelPlayModeTests`, gồm cả `save.v1.bak`).
 
@@ -59,12 +59,12 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 | Quy tắc | Ví dụ | Lý do |
 | --- | --- | --- |
-| **Một namespace cho mỗi module / feature**, thư mục con không thêm cấp (khác ví dụ `Core.Foundation.Save` của guide 5) | `Core/Foundation/Save/JsonFileSaveService.cs` → `PawBlock.Core.Foundation`; `Features/Gameplay/Scripts/Board/BoardModel.cs` → `PawBlock.Features.Gameplay` | Ít `using`; thư mục con trong một module gọi thẳng nhau (guide 5) |
-| Code Editor dùng **cùng namespace** với module, không thêm `.Editor` | `Features/Gameplay/Editor/Level/LevelEditorWindow.cs` → `PawBlock.Features.Gameplay` | Namespace có đoạn `Editor` che mất class `UnityEditor.Editor` (`: Editor` báo lỗi) |
+| **Một namespace cho mỗi module / feature**, thư mục con không thêm cấp (khác ví dụ `Core.Foundation.Save` của guide 5) | `Runtime/Core/Foundation/Save/JsonFileSaveService.cs` → `PawBlock.Core.Foundation`; `Runtime/Gameplay/Board/BoardModel.cs` → `PawBlock.Features.Gameplay` | Ít `using`; thư mục con trong một module gọi thẳng nhau (guide 5) |
+| Code Editor dùng **cùng namespace** với module, không thêm `.Editor` | `Runtime/Editor/Gameplay/Level/LevelEditorWindow.cs` → `PawBlock.Features.Gameplay` | Namespace có đoạn `Editor` che mất class `UnityEditor.Editor` (`: Editor` báo lỗi) |
 | Test: namespace module + `.Tests` | `PawBlock.Features.LuckyWheel.Tests` | Tách khỏi code thật, vẫn thấy type của module |
 | Không đặt type trùng tên namespace (`Gameplay`, `Shop`, `Profile`, `Settings`, `Game`, `Core`…) | — | Trong `PawBlock.*`, tên đó sẽ trỏ vào namespace |
-| `Core` và `Shared` không có `Scripts/`; feature và `Game` có `Scripts/` | `Core/Foundation/Audio/`, `Features/Shop/Scripts/` | Theo cây thư mục guide 5 |
-| Tối đa 4 tầng từ `_Project/`: gộp `Booster/Effects` vào `Booster/`, `Level/Generator` vào `Level/` | `Features/Gameplay/Scripts/Booster/FreezeBooster.cs` | Guide 5 |
+| `Core` và `Shared` không có `Scripts/`; feature và `Game` có `Scripts/` | `Runtime/Core/Foundation/Audio/`, `Runtime/Shop/` | Theo cây thư mục guide 5 |
+| Tối đa 4 tầng từ `_Project/`: gộp `Booster/Effects` vào `Booster/`, `Level/Generator` vào `Level/` | `Runtime/Gameplay/Booster/FreezeBooster.cs` | Guide 5 |
 
 - P1 **không** sửa định dạng (`if` một dòng, `private` thiếu…) dù đụng mọi file: chỉ bọc namespace + thụt lề + `using`, để diff chỉ có thay đổi cơ học. Định dạng sửa dần khi sửa logic từng file (mục 3).
 - Phụ thuộc sai chiều lộ ra sau khi có namespace: xem [Dependencies.md](Dependencies.md).
@@ -73,13 +73,13 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 | Quy tắc | Cách làm |
 | --- | --- |
-| **GameBootstrap là nơi duy nhất tạo service** | `Game/Scripts/GameBootstrap.cs` (`[DefaultExecutionOrder(-1000)]`): save → migrate → settings, đồng hồ, quảng cáo, IAP → `GameServices` → `Init` từng component. Không `new` service ở chỗ khác |
+| **GameBootstrap là nơi duy nhất tạo service** | `Runtime/App/GameBootstrap.cs` (`[DefaultExecutionOrder(-1000)]`): save → migrate → settings, đồng hồ, quảng cáo, IAP → `GameServices` → `Init` từng component. Không `new` service ở chỗ khác |
 | Component cần dependency | Thêm `public void Init(...)`, giữ vào field, **không đọc dependency trong `Awake`** (đọc ở `Init` / `OnEnable` / `Start`). Bootstrap chạy trước `Awake` / `OnEnable` của mọi script khác |
 | Tham chiếu Bootstrap → component | Thêm `[SerializeField]` field (hoặc mảng) vào `GameBootstrap`; `GameBootstrapCollector` (Editor) tự điền khi **lưu scene / vào Play**. Thiếu thì Console báo `[GameBootstrap] Thiếu tham chiếu ...` |
 | Feature khác nhận **contract** | `ICurrencyWallet`, `IBoosterInventory`, `IEnergyService`, `IRewardGranter`; cùng feature được nhận class cụ thể (`CoinWallet` cho `CoinHUD`) |
 | Cần dữ liệu của feature khác (level hiện tại...) | Game truyền `Func<...>` qua `Init` / constructor; không đọc section của feature khác |
 | **Save** | Mỗi feature 1 class `[Serializable]` có `const string Key`, lấy bằng `save.Get<T>(T.Key)` (object sống), sửa rồi `save.MarkDirty()`. Field mới: đặt giá trị mặc định ngay tại khai báo |
-| Đổi cấu trúc save | Thêm bước vào `Game/Scripts/Save/SaveMigrator` + test với file mẫu (`Docs/Refactor/SaveSamples`). `JsonFileSaveService` không cho ghi file đời cũ chưa migrate |
+| Đổi cấu trúc save | Thêm bước vào `Runtime/Save/SaveMigrator` + test với file mẫu (`Docs/Refactor/SaveSamples`). `JsonFileSaveService` không cho ghi file đời cũ chưa migrate |
 | Công cụ Editor đọc save | `new JsonFileSaveService(JsonFileSaveService.DefaultPath)` ngoài Play mode; đang Play thì báo người dùng thoát Play trước khi ghi |
 | Test đụng save | `new JsonFileSaveService(null)` (chỉ bộ nhớ) truyền vào constructor / `Init` |
 | Quảng cáo / IAP / giờ | `IAdsService`, `IIAPService`, `IClock`; bản giả `FakeAdsService`, `FakeIAPService`. Tích hợp SDK: thêm class cài interface, đổi 1 dòng trong Bootstrap |
@@ -88,11 +88,11 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 | Quy tắc | Cách làm |
 | --- | --- |
-| Không `.Instance` trong `Features/` / `Game/` | Chỉ `AudioManager` (hạ tầng) kế thừa `Singleton<T>`. Script mới nhận dependency qua `Init` từ `GameBootstrap` |
+| Không `.Instance` trong code game (`Runtime/`, trừ `Core/Foundation`) | Chỉ `AudioManager` (hạ tầng) kế thừa `Singleton<T>`. Script mới nhận dependency qua `Init` từ `GameBootstrap` |
 | `Singleton<T>` bản an toàn | Đặt sẵn trong scene; không tự tìm / tự tạo; thiếu thì `Instance` báo `LogError`. Hỏi mà không muốn báo lỗi: `HasInstance` (vd lúc thoát Play, hủy object) |
-| Feature khác cần ra lệnh / hỏi Gameplay, màn hình | `IScreenNavigator` (ScreenFlow), `IGamePause` (LevelManager), `IBoosterCatalog`, `IRewardIcons` trong `Core/Contracts` |
+| Feature khác cần ra lệnh / hỏi Gameplay, màn hình | `IScreenNavigator` (ScreenFlow), `IGamePause` (LevelManager), `IBoosterCatalog`, `IRewardIcons` trong `Runtime/Core/Contracts` |
 | View tạo lúc chạy (pool, prefab) cần config | Bên tạo gọi `Init(...)` ngay khi tạo (vd `PlacedBlockView.Init(visuals)` trong `createFunc` của pool) |
-| Config | `GameConfig` ở `Game/Configs`, `GameplayVisuals` ở `Features/Gameplay/Configs` (từ P8), Bootstrap giữ `[SerializeField]`, truyền **config con** (`LivesEnergyConfig`, `EconomyConfig`...) qua `Init`. Không `Resources.Load` |
+| Config | `GameConfig` ở `Data/Config`, `GameplayVisuals` ở `Data/Config` (từ P8), Bootstrap giữ `[SerializeField]`, truyền **config con** (`LivesEnergyConfig`, `EconomyConfig`...) qua `Init`. Không `Resources.Load` |
 | Hàm tính dùng config | Nhận config làm tham số (`LevelTimer.ComputeSeconds(level, cells, cfg)`), không đọc static |
 | Cờ trạng thái | Thuộc tính instance (`TutorialController.IsActive` / `IsPending`), không `static bool` |
 | Cheat / Debug Panel | `DebugCheats` (Game) dùng `GameServices` + `GameScene` do Bootstrap điền; feature không dùng `GameScene` |
@@ -104,7 +104,7 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Component trên cùng object / con / cha | `[SerializeField]` + `OnValidate()` trong `#if UNITY_EDITOR` tự điền khi trống (chạy cả khi gắn component, mở scene). Script cũ chưa điền: gọi lại OnValidate rồi lưu scene / prefab |
 | Object khác trong scene dùng chung (GridSpawner, Camera, nút booster…) | Bootstrap truyền qua `Init`; field Inspector đã gán thì giữ, không thêm fallback Find |
 | Nút ở feature mở popup chung | `IMenuPopups` (GameFlowUI cài), không `[SerializeField] GameFlowUI` |
-| Danh sách con thay đổi theo hierarchy (ButtonPress, âm nút, nút xám) | Hàm `EditorCollect()` + `Shared/Editor/UIAutoSetup` chạy khi lưu scene / vào Play (menu `Tools/PawBlock/UI/Setup Buttons`). Nút mới dưới Canvas có `UIButtonPress` tự được gắn `ButtonPress` khi lưu scene |
+| Danh sách con thay đổi theo hierarchy (ButtonPress, âm nút, nút xám) | Hàm `EditorCollect()` + `Runtime/Editor/UI/UIAutoSetup` chạy khi lưu scene / vào Play (menu `Tools/PawBlock/UI/Setup Buttons`). Nút mới dưới Canvas có `UIButtonPress` tự được gắn `ButtonPress` khi lưu scene |
 | Object con UI / sprite trước đây dựng bằng code | `[ContextMenu("Dựng sẵn object con")] public void EditorBuild()` dùng `EditorChildren.Child / On / Rect` (có Undo, có rồi thì dùng lại) rồi lưu. Lúc chạy chỉ dùng field; thiếu thì `LogError` + tắt component |
 | Nhiều object cùng loại lúc chạy (pool) | `Instantiate(template)` với template là con tắt sẵn (component trả về trực tiếp, không GetComponent) |
 | Sprite sinh lúc chạy (`ProceduralSprites`) | Không lưu được vào scene: object có sẵn, sprite gán ở `Awake` |
@@ -112,29 +112,31 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 | Runner hạ tầng (ghi save, đồng bộ giờ, tick mặt mèo) | Component đặt sẵn trong scene; service nhận qua `AttachRunner` / constructor. Không có runner (công cụ Editor, test): save ghi ngay, đồng hồ dùng giờ máy |
 | Test dựng object bằng code | Tạo GameObject tắt, `AddComponent` các component cần, gán field qua `SerializedObject`, rồi bật (mẫu: `FeelPlayModeTests` với `SelectionBoxView`) |
 
-**Ngoại lệ:** `Game/Scripts/Cheats/CheatPanel` tự tạo lúc chạy (`RuntimeInitializeOnLoadMethod`, `AddComponent`, `GetComponent` cho Canvas chặn chạm). Lý do: chỉ là công cụ debug, cả file bọc `#if !DISABLE_CHEATS`; đặt vào scene thì bản build có `DISABLE_CHEATS` sẽ bị Missing Script.
+**Ngoại lệ:** `Runtime/Cheat/CheatPanel` tự tạo lúc chạy (`RuntimeInitializeOnLoadMethod`, `AddComponent`, `GetComponent` cho Canvas chặn chạm). Lý do: chỉ là công cụ debug, cả file bọc `#if !DISABLE_CHEATS`; đặt vào scene thì bản build có `DISABLE_CHEATS` sẽ bị Missing Script.
 
-## 11. Assembly Definition (từ P6)
+## 11. Thư mục và assembly (từ 2026-10-25, theo mẫu Snacky_Dash)
+
+Trước đó (P6 → 2026-10-24) chia theo module `Core/`, `Shared/`, `Features/<F>/`, `Game/`, mỗi module 1 asmdef (14 asmdef + 3 asmref). Nay chia theo **loại** như dự án mẫu Snacky_Dash, chi tiết cây thư mục ở [ProjectStructure](../ProjectStructure.md#thư-mục).
 
 | Quy tắc | Cách làm |
 | --- | --- |
-| Thêm script | Đặt đúng thư mục module là vào đúng assembly; không tạo asmdef mới cho thư mục con |
-| Lỗi "namespace không tồn tại / thiếu assembly reference" | Là phụ thuộc sai: sửa bằng event / contract (Core/Contracts) hoặc để Game nối; **không** thêm reference ngược |
-| Feature Meta | Chung `PawBlock.Meta` (Economy, Shop, DailyReward, DailyChallenge, LuckyWheel, Profile, Settings) nên compiler không chặn Meta ↔ Meta: vẫn theo guide (không `using` feature khác), soát bằng script đo trong [Dependencies.md](Dependencies.md) |
-| Code Editor | Thư mục `Editor/` có asmdef riêng (`includePlatforms: Editor`). Tool đụng nhiều feature cùng lúc đặt ở `Game/Editor` |
-| Test mới cho feature Meta | Đặt ở `Features/<Feature>/Tests/Editor/`; thư mục `Tests/` cần file `PawBlock.Meta.Tests.asmref` (như DailyChallenge / DailyReward / LuckyWheel) |
-| `using` thừa | Phải gỡ: `using` tới namespace của assembly không được tham chiếu cũng là lỗi compile |
-| Thư viện | DOTween core (`DOTween.dll`) tự tham chiếu; extension UI / Sprite cần `DOTween.Modules`. TMP: `Unity.TextMeshPro`, UI: `UnityEngine.UI`, Spine: `spine-unity` + `spine-csharp`, UIParticle: `Coffee.UIParticle`, Input: `Unity.InputSystem` |
+| Đặt file | Code `Runtime/<mảng>/` (sự kiện / liveops: `Runtime/LiveOps/<Tên>/`), config / level `Data/`, prefab `Prefabs/{InGame, UI/Popups, UI/Screens/<màn>, UI/Widgets}`, ảnh / âm / font / shader / material `Source/` |
+| Assembly | 3 asmdef: `PawBlock.Runtime` (`Runtime/`), `PawBlock.Editor` (`Runtime/Editor/`, `includePlatforms: Editor`), `PawBlock.Tests` (`Runtime/Tests/`, `UNITY_INCLUDE_TESTS`). **Không** tạo asmdef / asmref mới cho thư mục con |
+| Chiều phụ thuộc | Compiler không còn chặn (chung 1 assembly). Vẫn giữ luật: mảng tính năng không `using` mảng tính năng khác, chỉ qua `Runtime/Core/Contracts`; chỉ `App` / `UI/Home` biết mọi mảng. Soát khi review và bằng cách đo trong [Dependencies.md](Dependencies.md) |
+| Namespace | Giữ như cũ, không đổi theo thư mục mới: `PawBlock.Core.Contracts`, `PawBlock.Core.Foundation`, `PawBlock.Shared` (UI/Framework), `PawBlock.Features.<F>`, `PawBlock.Game` (App, UI/Home, Save, Cheat, LiveOps/WeeklyContest). Code mới dùng namespace của mảng chứa nó |
+| Code Editor | `Runtime/Editor/<mảng>/`; tool đụng nhiều mảng cùng lúc ở `Runtime/Editor/App` |
+| Test mới | `Runtime/Tests/<mảng>/Editor/` (tự vào `PawBlock.Tests`) |
+| Thư viện | DOTween core (`DOTween.dll`) tự tham chiếu; extension UI / Sprite cần `DOTween.Modules`. TMP: `Unity.TextMeshPro`, UI: `UnityEngine.UI`, Spine: `spine-unity` + `spine-csharp`, UIParticle: `Coffee.UIParticle`, Input: `Unity.InputSystem` (đã có trong cả 3 asmdef) |
 
 ## 12. Prefab và popup (từ P7)
 
 | Quy tắc | Cách làm |
 | --- | --- |
-| Sửa UI | Mở prefab trong Prefab Mode (`Features/<F>/Prefabs`, `Shared/Prefabs`, `Game/Prefabs`). Không sửa instance trong scene rồi Apply All. Không còn builder dựng UI (đã xóa ở P7) |
+| Sửa UI | Mở prefab trong Prefab Mode (`Prefabs/InGame`, `Prefabs/UI/{Popups, Screens, Widgets}`). Không sửa instance trong scene rồi Apply All. Không còn builder dựng UI (đã xóa ở P7) |
 | Popup mới | Kế thừa `PopupView` (abstract), hàm riêng nhận dữ liệu rồi gọi `Open()`; dùng `OnOpened` / `OnClosed`, không override `Open` / `Close`. Root có `CanvasGroup` + `Canvas` + `GraphicRaycaster`. Thêm instance tắt vào `Canvas_Popup/Popups`; Bootstrap tự thu vào danh sách popup (GameFlowUI đóng khi đổi level nếu `CloseOnLevelLoad`) |
-| Màn hình trộn nhiều feature | Ghép ở `Game/Prefabs` (MainMenu, tab Shop / Home); prefab của feature không lồng prefab feature khác |
+| Màn hình trộn nhiều mảng | Ghép ở `Prefabs/UI/Screens/<màn>` (MainMenu, tab Shop / Home, GameplayHUD); widget của một mảng không lồng widget mảng khác |
 | Script gốc của prefab | Mỗi prefab màn hình / tab có script View ở object gốc, trùng tên prefab (`ShopPanel`, `HomePanel`, `MenuTabBar`, `DailyChallengePanel`): tự giữ tham chiếu view con và nối `Init` cho chúng; Bootstrap chỉ gọi `Init` của gốc. Tab mới của Main Menu: kế thừa `MenuPanel`, thêm vào `MainMenuNavigator.menuPanels` và 1 tab trong `MenuTabBar` |
-| Widget | Dùng `Shared/Prefabs/Widgets` (`CloseButton`, `Button_Primary`, `SettingsButton`); widget có script của feature nằm ở prefab của feature đó (CoinHUD, SettingToggle...) |
+| Widget | Dùng chung ở `Prefabs/UI/Widgets` (`CloseButton`, `Button_Primary`, `SettingsButton`); widget của một mảng ở `Prefabs/UI/Widgets/<mảng>/` (CoinHUD, SettingToggle, thẻ Shop...). Popup nào cũng ở `Prefabs/UI/Popups` |
 | Gán từ ngoài | Tham chiếu tới object ngoài prefab: qua `Init` từ Bootstrap; nếu là override trên instance thì ghi Tooltip "Gán từ ngoài" (`LuckyWheelButton.popup`, `PlayZone.targetCamera`) |
 | Canvas con | Mỗi popup / tab có Canvas riêng; phần đổi liên tục (đồng hồ, thanh sao, viền đỏ, nút booster) Canvas riêng. Ẩn bằng `SetActive(false)`; **tắt Canvas component là ẩn luôn con** |
 | Danh sách nút / ButtonPress | `UIAutoSetup` chạy khi lưu scene, khi lưu prefab và trước Play; `Tools/PawBlock/UI/Setup Buttons` xử lý cả mọi prefab |
@@ -144,19 +146,19 @@ Dự án dùng DOTween cho mọi animation, không dùng coroutine (đã quen t�
 
 | Quy tắc | Cách làm |
 | --- | --- |
-| Bản gốc | `Assets/ThirdParty/PawBlock` (từ `GameAssets`), `Assets/ThirdParty/ShikaCat`: giữ nguyên cấu trúc, **không sửa, không tham chiếu trực tiếp**. Cần dùng ảnh nào thì `AssetDatabase.CopyAsset` sang `Art/` của module rồi tham chiếu bản copy |
-| Asset đang dùng | `<module>/Art/{UI,Grid,VFX,Cats,Praise_Badges,Materials,Shaders,Spine}` của module duy nhất dùng nó; ≥ 2 module dùng → `Shared/Art`. Âm thanh `Shared/Audio`, font `Shared/Fonts` |
-| Config | `Configs/` của feature sở hữu (`Features/Gameplay/Configs/Levels` cho level); `GameConfig` ở `Game/Configs`, `AudioDatabase` ở `Shared/Configs`. Tool Editor tìm config **theo kiểu** (`GameConfigSetup.Find<T>()`), không viết cứng đường dẫn |
+| Bản gốc | `Assets/ThirdParty/PawBlock` (từ `GameAssets`), `Assets/ThirdParty/ShikaCat`: giữ nguyên cấu trúc, **không sửa, không tham chiếu trực tiếp**. Cần dùng ảnh nào thì `AssetDatabase.CopyAsset` sang `Source/Art/` rồi tham chiếu bản copy |
+| Asset đang dùng | Ảnh UI `Source/Art/UI/<nhóm>/` (`Common` cho ≥ 2 mảng dùng, `Home`, `Gameplay`, …), ảnh trong màn chơi `Source/Art/InGame/<nhóm>/`, avatar `Source/Art/Avatars`, font `Source/Art/Fonts`, âm thanh `Source/Audio`, shader / material `Source/Effect` |
+| Config | Mọi config ở `Data/Config/`, level ở `Data/Levels/`. Tool Editor tìm config **theo kiểu** (`GameConfigSetup.Find<T>()`), không viết cứng đường dẫn |
 | Di chuyển / đổi tên | Chỉ qua Unity (`AssetDatabase.MoveAsset` / Project window) để giữ GUID. Sửa các hằng đường dẫn trong tool Editor (`AudioSetup`, `GameFontSetup`, `GameplayVisualsSetup`, tool Level) cùng lúc |
-| Sprite Atlas | Mỗi module có UI riêng 1 atlas V2 ở `<module>/Art/<Module>Atlas.spriteatlasv2`, trỏ tới thư mục `Art/UI` (+ `Grid`, `Cats`... nếu cần). Không Rotation, không Tight Packing, Padding 4, không mipmap, max 2048. Ảnh nền to, texture Spine, texture particle **không** vào atlas |
-| Nén texture | Preset `_Project/Settings/Presets` tự áp khi import ảnh mới trong `_Project`: `Backgrounds/` ASTC 8x8, `Art/UI/` ASTC 4x4, còn lại ASTC 6x6; tắt Read/Write, mipmap. Atlas: override Android ASTC 4x4. Ảnh có sẵn đổi thư mục thì preset **không** tự chạy lại: đặt override Android bằng tay theo bảng này |
+| Sprite Atlas | 7 atlas V2 ở `Source/Art/Atlases/` (`Shared`, `Game`, `Gameplay`, `DailyChallenge`, `Economy`, `Profile`, `Settings`), mỗi atlas trỏ tới thư mục ảnh của nhóm đó (theo GUID, dời thư mục không ảnh hưởng). Không Rotation, không Tight Packing, Padding 4, không mipmap, max 2048. Ảnh nền to, texture Spine, texture particle **không** vào atlas |
+| Nén texture | Preset `_Project/Settings/Presets` tự áp khi import ảnh mới trong `_Project`: `Backgrounds/` ASTC 8x8, `Art/UI/` ASTC 4x4 (ảnh UI phải nằm dưới `Source/Art/UI/`), còn lại ASTC 6x6; tắt Read/Write, mipmap. Atlas: override Android ASTC 4x4. Ảnh có sẵn đổi thư mục thì preset **không** tự chạy lại: đặt override Android bằng tay theo bảng này |
 | Kiểm tra sau khi đổi asset | Batches / SetPass 3 màn và Build Report so với [Baseline.md](Baseline.md); nhìn ảnh chụp có vỡ khối / lỗi viền không |
 
 ## 14. Tài liệu và checklist (từ P9)
 
 | Quy tắc | Cách làm |
 | --- | --- |
-| README feature | Feature có hơn vài script có `Features/<F>/Docs/README.md` (guide 5): tóm tắt, phụ thuộc (assembly, event phát / nghe, interface cài / dùng, section save, config), class chính, cách Bootstrap nối, ghi chú kiến trúc. Hiện có 7 (Settings 2 script: không cần) |
+| Tài liệu mảng | Mảng có hơn vài script có `Docs/Modules/<F>.md` (guide 5; trước 2026-10-25 nằm ở `Features/<F>/Docs/README.md`): tóm tắt, phụ thuộc (assembly, event phát / nghe, interface cài / dùng, section save, config), class chính, cách Bootstrap nối, ghi chú kiến trúc. Hiện có 7 (Settings 2 script: không cần) |
 | Tài liệu tổng | `Docs/ProjectStructure.md` (module, thư mục, scene, event), `Docs/Features/*` (hành vi từng tính năng, cách sửa), `HowTo_*` (mở rộng). Đổi class / đường dẫn / luồng thì sửa cùng commit |
 | Tài liệu lịch sử | `Docs/RoadMap/*`, `Docs/TaskBreakdown.md`, kết quả từng giai đoạn trong `RefactorPlan.md`: **không sửa** tên class / đường dẫn cũ (ghi đúng thời điểm đó) |
 | Scene | `_Project/Scenes/Main.unity` (đổi tên từ `SampleScene` ở P9, GUID giữ) |
@@ -169,7 +171,7 @@ Kiểm tự động bằng script trên toàn `Assets/_Project` (bỏ `Editor/`,
 | Mục checklist | Kết quả |
 | --- | --- |
 | Feature `using` / tham chiếu feature khác; Core / Shared dùng feature / Game | 0 trong code runtime / Editor. Còn 1 trong test: `RewardGranterTests` (DailyReward) dùng `CoinWallet` (Economy) để test tích hợp – chấp nhận, xem [Dependencies.md](Dependencies.md) |
-| `Core/Contracts` chỉ có định nghĩa | Đạt (không có logic) |
+| `Runtime/Core/Contracts` chỉ có định nghĩa | Đạt (không có logic) |
 | `.Instance` cho game logic | 0 (chỉ `AudioManager`, hạ tầng) |
 | `Find` / `GetComponent` / `AddComponent` / `Camera.main` lúc chạy | 4 chỗ, đều trong `CheatPanel` (ngoại lệ mục 10) |
 | Field Inspector `[SerializeField] private` | Đạt: không còn field `public` (trừ `UnityEvent`) trong MonoBehaviour |

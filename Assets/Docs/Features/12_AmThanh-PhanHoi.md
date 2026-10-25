@@ -10,15 +10,15 @@
 
 | File | Việc |
 | --- | --- |
-| `Core/Contracts/Types/SoundId` | Enum các âm (có số cố định, nhóm theo hàng chục) |
-| `Core/Foundation/Audio/AudioDatabase` (+ asset `Shared/Configs/AudioDatabase.asset`) | Mỗi `SoundId` → nhiều clip (phát ngẫu nhiên), âm lượng, cao độ, cooldown; nhạc nền |
-| `Core/Foundation/Audio/AudioManager` | `AudioManager.Play(id)`, `PlayPitched`, `PlayChance(id, p)`, `Vibrate(HapticType)`; `Music` + `Sfx_0..7` là AudioSource đặt sẵn trong scene; `MusicOn` / `SoundOn` / `VibrateOn`, event `SettingsChanged`. Singleton hạ tầng duy nhất ([ProjectConventions](../Refactor/ProjectConventions.md) mục 9) |
-| `Game/Scripts/GameAudioEvents` | **Nối âm vào event có sẵn** – không script luật game nào gọi âm trực tiếp (trừ UI chung) |
-| `Features/Gameplay/Scripts/Feedback/GameHapticEvents` | **Nối rung vào event có sẵn** (trên object `AudioManager`), đi qua `AudioManager.Vibrate` nên theo cài đặt Rung |
-| `Core/Foundation/Feedback/Haptics` (+ `Plugins/iOS/HapticsIOS.mm`) | Rung ngắn có cường độ: Android `Vibrator` + `VibrationEffect` (API 26+; máy cũ chỉ chỉnh thời gian), iOS `UIImpactFeedbackGenerator`; Editor không rung |
-| `Features/Gameplay/Scripts/Feedback/GameplayFeedback`, `BlockFeedback`, `DragFeedback` | Phản hồi hình ảnh |
-| `Shared/Scripts/UI/UIButtonSounds` | Âm Click + rung nhẹ cho mọi nút |
-| `Game/Editor/AudioSetup` | **Setup Audio**: tạo / bổ sung database (chỉ thêm âm thiếu, clip lấy từ `Shared/Audio`), gán vào `AudioManager` |
+| `Runtime/Core/Contracts/Types/SoundId` | Enum các âm (có số cố định, nhóm theo hàng chục) |
+| `Runtime/Core/Foundation/Audio/AudioDatabase` (+ asset `Data/Config/AudioDatabase.asset`) | Mỗi `SoundId` → nhiều clip (phát ngẫu nhiên), âm lượng, cao độ, cooldown; nhạc nền |
+| `Runtime/Core/Foundation/Audio/AudioManager` | `AudioManager.Play(id)`, `PlayPitched`, `PlayChance(id, p)`, `Vibrate(HapticType)`; `Music` + `Sfx_0..7` là AudioSource đặt sẵn trong scene; `MusicOn` / `SoundOn` / `VibrateOn`, event `SettingsChanged`. Singleton hạ tầng duy nhất ([ProjectConventions](../Refactor/ProjectConventions.md) mục 9) |
+| `Runtime/App/GameAudioEvents` | **Nối âm vào event có sẵn** – không script luật game nào gọi âm trực tiếp (trừ UI chung) |
+| `Runtime/Gameplay/Feedback/GameHapticEvents` | **Nối rung vào event có sẵn** (trên object `AudioManager`), đi qua `AudioManager.Vibrate` nên theo cài đặt Rung |
+| `Runtime/Core/Foundation/Feedback/Haptics` (+ `Plugins/iOS/HapticsIOS.mm`) | Rung ngắn có cường độ: Android `Vibrator` + `VibrationEffect` (API 26+; máy cũ chỉ chỉnh thời gian), iOS `UIImpactFeedbackGenerator`; Editor không rung |
+| `Runtime/Gameplay/Feedback/GameplayFeedback`, `BlockFeedback`, `DragFeedback` | Phản hồi hình ảnh |
+| `Runtime/UI/Framework/UIButtonSounds` | Âm Click + rung nhẹ cho mọi nút |
+| `Runtime/Editor/App/AudioSetup` | **Setup Audio**: tạo / bổ sung database (chỉ thêm âm thiếu, clip lấy từ `Source/Audio`), gán vào `AudioManager` |
 
 ## Âm được nối ở đâu (`GameAudioEvents`)
 
@@ -54,5 +54,5 @@
 ## Thêm âm mới
 
 1. Thêm giá trị vào `SoundId` (Contracts) với **số mới chưa dùng** (đừng đánh lại số cũ – asset lưu theo số).
-2. Đặt file âm vào `Shared/Audio`, **Tools → PawBlock → Builders → Setup Audio** (thêm mục còn thiếu vào database) → gán clip trong `AudioDatabase.asset`.
+2. Đặt file âm vào `Source/Audio`, **Tools → PawBlock → Builders → Setup Audio** (thêm mục còn thiếu vào database) → gán clip trong `AudioDatabase.asset`.
 3. Phát âm: thêm 1 handler trong `GameAudioEvents` nghe event có sẵn. Chưa có event phù hợp → thêm `UnityEvent` vào component liên quan (hoặc event contract nếu nguồn ở feature khác) rồi nghe nó, **đừng** gọi `AudioManager.Play` từ trong luật game.

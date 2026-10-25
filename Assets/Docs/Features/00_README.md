@@ -2,7 +2,7 @@
 
 Mỗi file dưới đây giải thích **một tính năng**: nó làm gì, chạy theo luồng nào, dữ liệu / cấu hình nằm đâu, sự kiện nào phát ra, và **muốn sửa / mở rộng thì đụng vào đâu**.
 
-- Module, thư mục, class, scene, event: [../ProjectStructure.md](../ProjectStructure.md); mỗi feature có `Assets/_Project/Features/<Tên>/Docs/README.md`
+- Module, thư mục, class, scene, event: [../ProjectStructure.md](../ProjectStructure.md); mỗi mảng có tài liệu riêng ở [../Modules/](../Modules/)
 - Luật chơi, cách chạy dự án: [../README.md](../README.md)
 - Nhật ký thay đổi theo lần push: [../RoadMap/00_README.md](../RoadMap/00_README.md)
 
@@ -25,7 +25,8 @@ Mỗi file dưới đây giải thích **một tính năng**: nó làm gì, ch�
 | [13](13_Editor-Builder-Debug.md) | Công cụ Editor (level, setup asset, tự điền tham chiếu), Debug Panel, Cheat Panel | tìm tool, test nhanh |
 | [14](14_GameFeel.md) | Game feel: hiệu ứng lúc kéo / đặt / gỡ khối, combo, tiến độ, đồng hồ, test | chỉnh / tắt 1 hiệu ứng, biết nó nằm ở đâu |
 | [15](15_Sao.md) | Sao theo thời gian: thanh 3 mốc trên HUD, tiêu đề + sao ở màn thắng, coin theo sao, ví sao + Vòng quay may mắn | đổi mốc sao, coin mỗi sao, giá / quà vòng quay |
-| [16](16_DailyChallenge.md) | Daily Challenge (lịch tháng, quà mốc 7 / 14 / 21) và Level Generator | đổi quà / độ khó Daily, sinh level mới hàng loạt |
+| [16](16_DailyChallenge.md) | Daily Challenge (lịch tháng, quà mốc 7 / 14 / 21) và Level Generator – tạm rút khỏi tab Menu | đổi quà / độ khó Daily, sinh level mới hàng loạt |
+| [17](17_Teams.md) | Đội (tab 4): danh sách, tìm, tạo, vào / rời đội (giả lập offline) | đổi giá tạo, sức chứa, tên đội giả |
 
 **Hướng dẫn mở rộng**
 
@@ -41,15 +42,15 @@ Mỗi file dưới đây giải thích **một tính năng**: nó làm gì, ch�
 Chi tiết: [../ProjectStructure.md](../ProjectStructure.md), quy tắc: [../Refactor/UnityCodingGuidelines.md](../Refactor/UnityCodingGuidelines.md) + [../Refactor/ProjectConventions.md](../Refactor/ProjectConventions.md).
 
 ```text
- Core/Contracts   event (EventBus<T>) · interface (ICurrencyWallet, IEnergyService, IRewardGranter…) · enum dùng chung
+ Runtime/Core/Contracts   event (EventBus<T>) · interface (ICurrencyWallet, IEnergyService, IRewardGranter…) · enum dùng chung
        ▲
- Core/Foundation  EventBus · Save (ISaveService, JSON theo section) · AudioManager · IClock · IAdsService / IIAPService · InputGate
+ Runtime/Core/Foundation  EventBus · Save (ISaveService, JSON theo section) · AudioManager · IClock · IAdsService / IIAPService · InputGate
        ▲
  Shared           PopupView · MenuPanel · widget UI (ButtonPress, SafeAreaZone…) · art / font / âm thanh dùng chung
        ▲
  Features/*       Gameplay (lưới, đồng hồ, booster, tutorial, level)   ┐ không tham chiếu nhau,
                   Economy · Shop · DailyReward · DailyChallenge ·       │ chỉ qua event / interface
-                  LuckyWheel · Profile · Settings                       ┘ của Core/Contracts
+                  LuckyWheel · Profile · Settings                       ┘ của Runtime/Core/Contracts
        ▲
  Game             GameBootstrap (tạo service, gọi Init cho mọi component) · ScreenFlow · GameFlowUI · Main Menu · SaveMigrator
 ```
@@ -66,11 +67,11 @@ Trong mỗi feature:
 
 ### Quy tắc của dự án (giữ để dễ mở rộng)
 
-1. **Module tách bạch.** Feature không `using` / tham chiếu / lồng prefab của feature khác; cần gì thì qua event / interface trong `Core/Contracts`. Assembly (`.asmdef`) bắt phần lớn lỗi sai chiều.
+1. **Module tách bạch.** Feature không `using` / tham chiếu / lồng prefab của feature khác; cần gì thì qua event / interface trong `Runtime/Core/Contracts`. Chung 1 assembly (`PawBlock.Runtime`) nên compiler không bắt: tự soát khi review ([Dependencies](../Refactor/Dependencies.md)).
 2. **Không Singleton cho game logic, không Find / GetComponent lúc chạy.** Dependency qua `Init(...)` do `GameBootstrap` gọi; tham chiếu `[SerializeField]`, Editor tự điền (`OnValidate`, Collector, `UIAutoSetup`).
 3. **Tách Model / View.** Luật nằm trong class C# thuần (`…Model`, `…Service`); MonoBehaviour View chỉ đọc model để vẽ.
 4. **Giao tiếp bằng event.** Thêm tính năng phụ (âm thanh, phân tích, hiệu ứng) = thêm 1 listener, không sửa luồng chính.
-5. **Số liệu để trong ScriptableObject** ở `Configs/` của feature (mở nhanh từ `Game/Configs/GameConfig`). Chỉnh cân bằng không cần sửa code.
+5. **Số liệu để trong ScriptableObject** ở `Configs/` của feature (mở nhanh từ `Data/Config/GameConfig`). Chỉnh cân bằng không cần sửa code.
 6. **Animation bằng DOTween**, giữ tween trong field, `SetLink(gameObject)`, `Kill()` trong `OnDisable`.
 7. **UI là prefab**, sửa trong Prefab Mode; mỗi popup / tab có script gốc riêng.
 

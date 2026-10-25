@@ -1,6 +1,6 @@
 # 09 – Tutorial và hướng dẫn trong game
 
-> Code ở `Assets/_Project/Features/Gameplay/Scripts/` (`Tutorial/`, `Intro/`, `Booster/BoosterTutorial`, `UI/`); đã xem lưu ở section save `"gameplay"`.
+> Code ở `Assets/_Project/Runtime/Gameplay/` (`Tutorial/`, `Intro/`, `Booster/BoosterTutorial`, `UI/`); đã xem lưu ở section save `"gameplay"`.
 
 Dự án có 3 loại hướng dẫn, chạy độc lập và **nhường nhau** (không bao giờ chồng lên nhau):
 

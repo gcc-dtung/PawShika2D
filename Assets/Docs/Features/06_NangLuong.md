@@ -1,6 +1,6 @@
 # 06 – Năng lượng (lượt chơi ngoài sảnh)
 
-> Code ở `Assets/_Project/Features/Economy/Scripts/` (feature Economy, [README](../../_Project/Features/Economy/Docs/README.md)); số liệu ở config của Gameplay.
+> Code ở `Assets/_Project/Runtime/Economy/` (feature Economy, [README](../Modules/Economy.md)); số liệu ở config của Gameplay.
 
 ## Tính năng làm gì
 
@@ -19,7 +19,7 @@
 | `EnergyManager` (`IEnergyService`) | Trên `Manager`; `Init(save, clock, maxEnergy, refillSeconds)`: Bootstrap lấy 5 / 1800 từ `LivesEnergyConfig` (Gameplay); nghe `GameStateChangedEvent` Lost → `ConsumeOne`; tick mỗi giây; lưu section `"economy"` (`EconomySave.energy`) |
 | `EnergyHUD` (prefab) | Tim + số + đồng hồ / FULL / ∞; bấm → popup nạp (`IMenuPopups.OpenEnergyRefill`) |
 | `RefillEnergyPopup` (prefab) | `ShowOptional` (từ nút tim) / `ShowRequired(onReady, onCancel)` (chặn PLAY / Retry); giá / số khi xem ads từ `EconomyConfig` (`refillCoinCost`, `refillAdsEnergy`) truyền qua `Init` |
-| `Game/Scripts/GameFlowUI.RequestPlay` | Cổng kiểm tra năng lượng trước khi vào ván |
+| `Runtime/App/GameFlowUI.RequestPlay` | Cổng kiểm tra năng lượng trước khi vào ván |
 
 ## Luồng
 
@@ -36,8 +36,8 @@ Lưu: `EconomySave.energy` (`EnergySave { energy, refillStart, infiniteUntil }`,
 
 | Muốn | Sửa ở |
 | --- | --- |
-| Số tối đa / thời gian hồi | `Features/Gameplay/Configs/LivesEnergyConfig` (`maxEnergy`, `refillSeconds`) |
-| Giá nạp đầy / số khi xem ads | `Features/Gameplay/Configs/EconomyConfig` (`refillCoinCost`, `refillAdsEnergy`) |
+| Số tối đa / thời gian hồi | `Data/Config/LivesEnergyConfig` (`maxEnergy`, `refillSeconds`) |
+| Giá nạp đầy / số khi xem ads | `Data/Config/EconomyConfig` (`refillCoinCost`, `refillAdsEnergy`) |
 | Trừ năng lượng khi **bắt đầu** ván thay vì khi thua | Bỏ nghe `Lost` trong `EnergyManager`, gọi `ConsumeOne` trong `ScreenFlow.Play` sau `RequestPlay` |
 | Test nhanh | Chuột phải component `EnergyManager` → Debug (Set 0 / Set Full / Skip 1 refill / Infinite 5 min), hoặc Debug Panel |
 

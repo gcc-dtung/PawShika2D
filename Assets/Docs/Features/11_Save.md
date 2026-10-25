@@ -1,6 +1,6 @@
 # 11 – Lưu dữ liệu người chơi
 
-> Hạ tầng ở `Assets/_Project/Core/Foundation/Save/`; mỗi feature giữ class section của mình; chuyển save cũ ở `Game/Scripts/Save/`. Quy tắc: [ProjectConventions](../Refactor/ProjectConventions.md) mục 8.
+> Hạ tầng ở `Assets/_Project/Runtime/Core/Foundation/Save/`; mỗi feature giữ class section của mình; chuyển save cũ ở `Runtime/Save/`. Quy tắc: [ProjectConventions](../Refactor/ProjectConventions.md) mục 8.
 
 ## Tính năng làm gì
 
@@ -15,9 +15,11 @@ Toàn bộ dữ liệu người chơi nằm trong **1 file JSON** `save.json` �
 | `"economy"` | `EconomySave` (Economy) | `coins`, `stars`, `energy { energy, refillStart, infiniteUntil }` | `CoinWallet`, `StarWallet`, `EnergyManager` |
 | `"gameplay"` | `GameplaySave` (Gameplay) | `currentLevel`, `boosters` (tên loại + số lượt), `unlockedBoosters`, `seenMechanics`, `tutorialDone`, `allLevelsCleared`, `levelStats` | `LevelManager`, `BoosterInventory`, `BoosterTutorial`, `MechanicIntro`, `TutorialController`, `LevelStatsRecorder` |
 | `"shop"` | `ShopSave` (Shop) | `noAds` | `ShopService` |
+| `"teams"` | `TeamSave` (Teams) | `joinedId`, `created` (đội tự tạo) | `TeamService` |
 | `"dailyReward"` | `DailyRewardSave` (DailyReward) | `cycleStart`, `claimedMask` | `DailyRewardManager` |
 | `"dailyChallenge"` | `DailyChallengeSave` (DailyChallenge) | `startDay`, `doneDays`, `claimedGifts` | `DailyChallengeManager` |
 | `"profile"` | `ProfileSave` (Profile) | ID, tên, avatar, ngày bắt đầu, chỉ số | `PlayerProfileService`, `ProfileStatsRecorder` |
+| `"weeklyContest"` | `WeeklyContestSave` (Game) | `week`, `score` (màn thắng trong tuần), `lastPlayUnix`, `debt` (hạng còn nợ bot) | `WeeklyContest` (do `LeaderboardPanel` giữ) |
 | `"settings"` | `SettingsSave` (Foundation) | `music`, `sound`, `vibrate` | `AudioManager` |
 | `"clock"` | `ClockSave` (Foundation) | `lastTrustedUtc` | `TrustedClockService` |
 
@@ -25,11 +27,11 @@ Toàn bộ dữ liệu người chơi nằm trong **1 file JSON** `save.json` �
 
 | File | Việc |
 | --- | --- |
-| `Core/Foundation/Save/ISaveService` | `Get<T>(key)` (object sống, cùng instance mỗi lần), `MarkDirty()`, `SaveNow()` |
-| `Core/Foundation/Save/JsonFileSaveService` | Cài đặt: đọc / ghi file, tách section bằng `JsonSections`, section chưa đọc giữ nguyên chữ (feature cũ / mới không làm mất dữ liệu của nhau) |
-| `Core/Foundation/Save/SaveRunner` | Đặt sẵn trong scene (cùng `GameBootstrap`): gom thay đổi, ghi sau 0.5 s; luôn ghi khi app vào nền / mất focus / thoát |
-| `Game/Scripts/Save/SaveMigrator`, `SaveDataV1` | Chuyển save v1 (1 class phẳng) / PlayerPrefs đời trước sang v2, giữ `save.v1.bak` |
-| `Core/Foundation/Editor/SaveDataMenu` | **Tools → PawBlock → Save Data**: Log Save, Open Save Folder, Delete Save |
+| `Runtime/Core/Foundation/Save/ISaveService` | `Get<T>(key)` (object sống, cùng instance mỗi lần), `MarkDirty()`, `SaveNow()` |
+| `Runtime/Core/Foundation/Save/JsonFileSaveService` | Cài đặt: đọc / ghi file, tách section bằng `JsonSections`, section chưa đọc giữ nguyên chữ (feature cũ / mới không làm mất dữ liệu của nhau) |
+| `Runtime/Core/Foundation/Save/SaveRunner` | Đặt sẵn trong scene (cùng `GameBootstrap`): gom thay đổi, ghi sau 0.5 s; luôn ghi khi app vào nền / mất focus / thoát |
+| `Runtime/Save/SaveMigrator`, `SaveDataV1` | Chuyển save v1 (1 class phẳng) / PlayerPrefs đời trước sang v2, giữ `save.v1.bak` |
+| `Runtime/Editor/Core/SaveDataMenu` | **Tools → PawBlock → Save Data**: Log Save, Open Save Folder, Delete Save |
 
 ## Cách dùng trong code
 
@@ -55,7 +57,7 @@ Xem [HowTo_MoRong.md → Thêm dữ liệu save](HowTo_MoRong.md#thêm-dữ-li�
 
 1. Field mới của feature có sẵn: thêm vào class section của feature **kèm giá trị mặc định ngay tại khai báo** (file cũ thiếu field thì giữ mặc định).
 2. Feature mới: tạo `class XxxSave` `[Serializable]` có `public const string Key = "xxx"`, đọc bằng `save.Get<XxxSave>(XxxSave.Key)`. Không cần sửa file chung.
-3. **Đổi ý nghĩa** field cũ → tăng `JsonFileSaveService.CurrentVersion`, thêm bước chuyển trong `SaveMigrator` + test (`Game/Tests/Editor/SaveMigratorTests`, 3 save mẫu ở `Docs/Refactor/SaveSamples`).
+3. **Đổi ý nghĩa** field cũ → tăng `JsonFileSaveService.CurrentVersion`, thêm bước chuyển trong `SaveMigrator` + test (`Runtime/Tests/App/Editor/SaveMigratorTests`, 3 save mẫu ở `Docs/Refactor/SaveSamples`).
 4. Lưu enum bằng **tên** (`ToString()`), không bằng số – như `boosters`, `seenMechanics`.
 
 ## Lưu ý khi test

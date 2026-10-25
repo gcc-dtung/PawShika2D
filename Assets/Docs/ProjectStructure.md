@@ -1,36 +1,40 @@
 # Cấu trúc dự án
 
-> Kiến trúc module theo [Refactor/UnityCodingGuidelines.md](Refactor/UnityCodingGuidelines.md) (mục 4, 5); quy ước riêng của dự án ở [Refactor/ProjectConventions.md](Refactor/ProjectConventions.md).
-> Chi tiết từng feature (phụ thuộc, class chính, cách nối): `Assets/_Project/Features/<Tên>/Docs/README.md` (bảng dưới).
+> Tổ chức theo mẫu dự án Snacky_Dash (2026-10-25): mọi thứ của game trong `Assets/_Project`, chia theo **loại** (code / dữ liệu / prefab / nguồn) rồi mới tới mảng tính năng; 3 assembly. Quy ước riêng: [Refactor/ProjectConventions.md](Refactor/ProjectConventions.md).
+> Chi tiết từng mảng (phụ thuộc, class chính, cách nối): [Modules/](Modules/) (bảng dưới).
 
-## Module và chiều phụ thuộc
+## Mảng code và chiều phụ thuộc
 
 ```text
-Core/Contracts  ←  Core/Foundation  ←  Shared  ←  Features/*  ←  Game
-(event, interface,   (EventBus, Save,     (PopupView,   (Gameplay; Economy,   (GameBootstrap, ScreenFlow,
- enum dùng chung)     Audio, Clock, Ads…)  widget UI)    Shop, Daily…)         GameFlowUI, Main Menu)
+Core/Contracts  ←  Core/Foundation  ←  UI/Framework  ←  Gameplay, Economy, Shop, Profile, Settings, LiveOps/*  ←  App, UI/Home
+(event, interface,   (EventBus, Save,     (PopupView,      (luật từng mảng)                                       (GameBootstrap, ScreenFlow,
+ enum dùng chung)     Audio, Clock, Ads…)  widget UI)                                                              GameFlowUI, Main Menu)
 ```
 
-- Mũi tên = "được dùng bởi". Feature **không** tham chiếu feature khác; giao tiếp qua event / interface trong `Core/Contracts`.
-- `Game` là nơi duy nhất biết mọi feature: tạo service, gọi `Init` cho từng component (`GameBootstrap`), ghép màn hình trộn nhiều feature (`Game/Prefabs`).
-- Mỗi module là 1 assembly (`.asmdef`); compiler chặn tham chiếu sai chiều. Feature meta dùng chung `PawBlock.Meta` nên phải tự kiểm (`Docs/Refactor/Dependencies.md`).
+- Mũi tên = "được dùng bởi". Mảng tính năng **không** tham chiếu mảng tính năng khác; giao tiếp qua event / interface trong `Runtime/Core/Contracts`.
+- `App` là nơi duy nhất biết mọi mảng: tạo service, gọi `Init` cho từng component (`GameBootstrap`); màn hình trộn nhiều mảng ở `Prefabs/UI/Screens`.
+- Toàn bộ code runtime chung 1 assembly (`PawBlock.Runtime`) nên compiler **không** còn chặn tham chiếu sai chiều: tự kiểm khi review. Namespace giữ như cũ (`PawBlock.Features.<F>`, `PawBlock.Shared`, `PawBlock.Game`…) để nhìn `using` là biết phụ thuộc; xem [Refactor/Dependencies.md](Refactor/Dependencies.md).
 
-| Module | Assembly | Nội dung | README |
+| Mảng (`Runtime/…`) | Namespace | Nội dung | Tài liệu |
 | --- | --- | --- | --- |
 | `Core/Contracts` | `PawBlock.Core.Contracts` | 13 event (`IGameEvent`), 10 interface, 5 type dùng chung | — (xem bảng dưới) |
 | `Core/Foundation` | `PawBlock.Core.Foundation` | Hạ tầng không dính luật game: EventBus, Save, Audio, Clock, Ads / IAP, InputGate, Haptics, Util | — |
-| `Shared` | `PawBlock.Shared` | `PopupView`, `MenuPanel`, widget / helper UI, art / font / âm thanh dùng ≥ 2 module | — |
-| `Features/Gameplay` | `PawBlock.Gameplay` | Lõi màn chơi | [README](../_Project/Features/Gameplay/Docs/README.md) |
-| `Features/Economy` | `PawBlock.Meta` | Ví coin / sao, năng lượng | [README](../_Project/Features/Economy/Docs/README.md) |
-| `Features/Shop` | `PawBlock.Meta` | Gói IAP | [README](../_Project/Features/Shop/Docs/README.md) |
-| `Features/DailyReward` | `PawBlock.Meta` | Điểm danh 7 ngày, trao quà / icon quà | [README](../_Project/Features/DailyReward/Docs/README.md) |
-| `Features/DailyChallenge` | `PawBlock.Meta` | Level mỗi ngày, lịch tháng, quà mốc | [README](../_Project/Features/DailyChallenge/Docs/README.md) |
-| `Features/LuckyWheel` | `PawBlock.Meta` | Vòng quay tiêu sao | [README](../_Project/Features/LuckyWheel/Docs/README.md) |
-| `Features/Profile` | `PawBlock.Meta` | Hồ sơ người chơi, chỉ số | [README](../_Project/Features/Profile/Docs/README.md) |
-| `Features/Settings` | `PawBlock.Meta` | Popup cài đặt (nhạc / âm / rung) — 2 script, không cần README | — |
-| `Game` | `PawBlock.Game` | Composition root, luồng màn hình, Main Menu, save migrate, cheat | — (mục Game dưới) |
+| `UI/Framework` | `PawBlock.Shared` | `PopupView`, `TutorialPopup`, `MenuPanel`, widget / helper UI | — |
+| `Gameplay` | `PawBlock.Features.Gameplay` | Lõi màn chơi | [Gameplay](Modules/Gameplay.md) |
+| `Economy` | `PawBlock.Features.Economy` | Ví coin / sao, năng lượng | [Economy](Modules/Economy.md) |
+| `Shop` | `PawBlock.Features.Shop` | Gói IAP | [Shop](Modules/Shop.md) |
+| `Profile` | `PawBlock.Features.Profile` | Hồ sơ người chơi, chỉ số | [Profile](Modules/Profile.md) |
+| `Settings` | `PawBlock.Features.Settings` | Popup cài đặt (nhạc / âm / rung) | — |
+| `Teams` | `PawBlock.Features.Teams` | Đội giả lập offline: danh sách, tìm, tạo, vào / rời | [Teams](Modules/Teams.md) |
+| `LiveOps/DailyReward` | `PawBlock.Features.DailyReward` | Điểm danh 7 ngày, trao quà / icon quà | [DailyReward](Modules/DailyReward.md) |
+| `LiveOps/DailyChallenge` | `PawBlock.Features.DailyChallenge` | Level mỗi ngày, lịch tháng, quà mốc | [DailyChallenge](Modules/DailyChallenge.md) |
+| `LiveOps/LuckyWheel` | `PawBlock.Features.LuckyWheel` | Vòng quay tiêu sao | [LuckyWheel](Modules/LuckyWheel.md) |
+| `LiveOps/WeeklyContest` | `PawBlock.Game` | Cuộc thi tuần (`WeeklyContest`, bot `WeeklyBots`) | [10](Features/10_UI-Menu-Popup.md) |
+| `UI/Home` | `PawBlock.Game` | Main Menu: tab, Home, Leaderboard, nút khóa, hồn ma | [10](Features/10_UI-Menu-Popup.md) |
+| `App` | `PawBlock.Game` | Composition root, luồng màn hình, popup flow, config gốc, âm thanh theo event | — (mục App dưới) |
+| `Save`, `Cheat` | `PawBlock.Game` | Migrate save v1 → v2; cheat trong bản build | — |
 
-Editor / Test: `PawBlock.Core.Foundation.Editor`, `Shared.Editor`, `Gameplay.Editor`, `Game.Editor`; test `PawBlock.Core.Foundation.Tests`, `Gameplay.Tests`, `Meta.Tests`, `Game.Tests` (160 test, chạy EditMode).
+Assembly: `PawBlock.Runtime` (`Runtime/`), `PawBlock.Editor` (`Runtime/Editor/`, chỉ Editor), `PawBlock.Tests` (`Runtime/Tests/`, EditMode, 192 test).
 
 ---
 
@@ -39,33 +43,51 @@ Editor / Test: `PawBlock.Core.Foundation.Editor`, `Shared.Editor`, `Gameplay.Edi
 ```text
 Assets/
 ├── _Project/
-│   ├── Core/
-│   │   ├── Contracts/   Events/ Interfaces/ Types/
-│   │   └── Foundation/  Audio/ Clock/ Events/ Feedback/ Input/ Save/ Services/ Util/ Editor/ Tests/
-│   ├── Shared/          Scripts/UI/  Prefabs/ (NoticePopup, Widgets/)  Art/ (SharedAtlas)  Audio/  Fonts/  Configs/ (AudioDatabase)  Editor/
-│   ├── Features/
-│   │   ├── Gameplay/    Scripts/ (Board, Block, Input, Level, Solver, Timer, Stars, Booster, Intro, Tutorial, Feedback, UI, Visuals, Analytics, Config, Save)
-│   │   │                Prefabs/  Art/  Configs/ (+ Levels/)  Editor/ (Level tools, Builders)  Tests/  Docs/
-│   │   ├── Economy/  Shop/  DailyReward/  DailyChallenge/  LuckyWheel/  Profile/  Settings/
-│   │   │                mỗi feature: Scripts/  Prefabs/  Art/  Configs/  Tests/  Docs/ (thư mục rỗng thì không tạo)
-│   │   └── PawBlock.Meta.asmdef
-│   ├── Game/            Scripts/ (GameBootstrap, ScreenFlow, GameFlowUI, Menu/, Save/, Cheats/)  Prefabs/ (MainMenu, Menu/)  Art/  Configs/ (GameConfig)  Editor/  Tests/
+│   ├── Data/
+│   │   ├── Config/      GameConfig, AudioDatabase, BoosterDatabase, DifficultyTheme, EconomyConfig, GameplayVisuals,
+│   │   │                LivesEnergyConfig, ShopDatabase, TeamsDatabase, AvatarDatabase, DailyRewardDatabase, DailyChallengeDatabase, LuckyWheelDatabase
+│   │   └── Levels/      LevelDatabase, LevelDifficultySettings, MechanicInjectorSettings; Custom/ ShikaCat/ Mechanic/ Test/ (Generated/ do tool tạo)
+│   ├── Prefabs/
+│   │   ├── InGame/      Cell, PlacedBlock, DragCountBubble, MistakeFlash, Praise, Wall, Freeze/
+│   │   └── UI/
+│   │       ├── Popups/  mọi popup (Win, Lose, MoreTime, QuitLevel, BuyBooster, MechanicIntro, Settings, Profile, DailyReward,
+│   │       │            RefillEnergy, LuckyWheel, Notice, TutorialPopup (base) + WeeklyTutorialPopup (variant))
+│   │       ├── Screens/ Home/ (MainMenu, các tab: Shop / Leaderboard / Home / TeamsPanel / Collection, HomeScene, GhostMascot, LockedMenuButton, MenuTabBar; DailyPanel giữ cho liveops)  Game/ (GameplayHUD)
+│   │       └── Widgets/ Button_Primary, CloseButton, SettingsButton; <Mảng>/ (CoinHUD, EnergyHUD, BoosterButton, thẻ Shop, ô Daily…)
+│   ├── Runtime/         PawBlock.Runtime.asmdef
+│   │   ├── Core/        Contracts/ (Events, Interfaces, Types)  Foundation/ (Audio, Clock, Events, Feedback, Input, Save, Services, Util)
+│   │   ├── Gameplay/    Analytics, Block, Board, Booster, Config, Feedback, Input, Intro, Level, Save, Solver, Stars, Timer, Tutorial, UI, Visuals
+│   │   ├── Economy/  Shop/  Profile/  Settings/  Teams/
+│   │   ├── LiveOps/     DailyReward/  DailyChallenge/  LuckyWheel/  WeeklyContest/
+│   │   ├── UI/          Framework/ (dùng chung)  Home/ (Main Menu)
+│   │   ├── App/         GameBootstrap, GameServices, GameScene, GameConfig, ScreenFlow, GameFlowUI, GameAudioEvents
+│   │   ├── Save/  Cheat/
+│   │   ├── Editor/      PawBlock.Editor.asmdef — App/ (Collector, DebugPanel, GameConfigSetup, AudioSetup)  Core/  Gameplay/ (Level tools, Builders)  UI/
+│   │   └── Tests/       PawBlock.Tests.asmdef — App/  Core/  Gameplay/  Economy/  DailyReward/  DailyChallenge/  LuckyWheel/  Teams/
 │   ├── Scenes/          Main.unity (scene duy nhất)
-│   └── Settings/        URP 2D, Presets/ (nén texture)
+│   ├── Settings/        URP 2D, Presets/ (nén texture)
+│   └── Source/          tài nguyên gốc
+│       ├── Art/
+│       │   ├── UI/      Common/ (SharedAtlas)  Home/ (GameAtlas; Backgrounds, Halloween, HalloweenRip (gitignore))  Gameplay/  DailyChallenge/  Economy/  Settings/  Shop/
+│       │   ├── InGame/  Common/ (Grid, Cats)  Gameplay/ (Grid, Praise_Badges, VFX, Spine)  DailyChallenge/ (Grid, VFX)
+│       │   ├── Avatars/ Fonts/
+│       │   └── Atlases/ 7 Sprite Atlas (mỗi atlas vẫn gói đúng các thư mục cũ của nó)
+│       ├── Audio/       BGM, Cat_Voices, Gameplay_SFX, UI_SFX, ShikaCat/
+│       └── Effect/      Shaders/  Materials/ (Common, Gameplay)
 ├── ThirdParty/
 │   ├── PawBlock/        Bản gốc Paw Block (01_Audio … 11_Original_Atlases_Textures, Texture2D): không sửa, không tham chiếu
 │   └── ShikaCat/        Bản gốc ShikaCat (gồm Level_Data/shikacat-levels.json)
 ├── Plugins/             DOTween (Demigiant), plugin rung iOS
 ├── TextMesh Pro/        Font mặc định TMP
 ├── Resources/           Chỉ DOTweenSettings
-└── Docs/                Tài liệu (file này, Features/, Refactor/, RoadMap/)
+└── Docs/                Tài liệu (file này, Features/, Modules/, Refactor/, RoadMap/)
 ```
 
-Đặt file mới ở đâu: bảng "Đặt file ở đâu" trong guide mục 5; asset / atlas / preset: [ProjectConventions](Refactor/ProjectConventions.md) mục 13.
+Đặt file mới: code vào `Runtime/<mảng>`, config / level vào `Data/`, prefab vào `Prefabs/`, ảnh / âm / font / shader vào `Source/` (ảnh UI phải nằm dưới `…/Art/UI/` để preset nén ASTC 4x4 tự áp). Asset / atlas / preset: [ProjectConventions](Refactor/ProjectConventions.md) mục 13.
 
 ---
 
-## Core
+## Runtime/Core
 
 ### Contracts
 
@@ -91,7 +113,7 @@ Ai cài / ai dùng từng interface: chú thích trong file và bảng "Phụ th
 | `Util/` | `Singleton<T>`, `DayNumber`, `TextColor`, `TweenSetup`, `FrameRateSetup`, `EditorChildren` | Tiện ích |
 | `Editor/` | `SaveDataMenu` | `Tools/PawBlock/Save Data/*` |
 
-## Shared
+## Runtime/UI/Framework
 
 | Class | Vai trò |
 | --- | --- |
@@ -104,47 +126,55 @@ Ai cài / ai dùng từng interface: chú thích trong file và bảng "Phụ th
 | `UIConfetti`, `TMPLetterPopIn`, `RewardText` | Hiệu ứng / chữ quà |
 | `Editor/UIAutoSetup`, `Editor/GameFontSetup` | Gắn sẵn ButtonPress / danh sách nút; áp font chung |
 
-## Game
+## Runtime/App, UI/Home, Save, Cheat
 
 | Class | Vai trò |
 | --- | --- |
 | `GameBootstrap` | Composition root: tạo `GameServices` (save, đồng hồ, ads, IAP, ví, kho, hồ sơ, Shop), gọi `Init` cho mọi component theo thứ tự |
 | `GameServices`, `GameScene` | Service dùng chung; object scene cho Cheat / Debug |
-| `GameConfig` | Config gốc (`Configs/GameConfig`) trỏ tới config của các feature |
+| `GameConfig` | Config gốc (`Data/Config/GameConfig`) trỏ tới config của các mảng |
 | `ScreenFlow` (`IScreenNavigator`) | Menu ↔ màn chơi, phát `ScreenChangedEvent`, mở tab Shop khi có `ShopOpenRequestedEvent` |
 | `GameFlowUI` (`IMenuPopups`) | Nối `GameState` với popup, mở popup dùng chung, đóng popup khi đổi level |
 | `GameAudioEvents` | Nối âm thanh vào event của game |
-| `Menu/` | `MainMenuNavigator`, `MenuTabBar`, `MenuTabButton`, `MenuSwipe`, `ShopPanel`, `HomePanel`, `PlayButtonView`, `LeaderboardPanel` + `LeaderboardRow`, `LockedTabPanel`, `GhostMascot`, `LockedMenuButton` |
+| `UI/Home/` | `MainMenuNavigator`, `MenuTabBar`, `MenuTabButton`, `MenuSwipe`, `ShopPanel`, `HomePanel`, `PlayButtonView`, `LeaderboardPanel` + `LeaderboardRow`, `LockedTabPanel`, `GhostMascot`, `LockedMenuButton` |
 | `Save/` | `SaveMigrator`, `SaveDataV1` (save v1 → v2) |
-| `Cheats/` | `DebugCheats`, `CheatPanel` (trong bản build) |
-| `Editor/` | `GameBootstrapCollector` (tự điền tham chiếu Bootstrap), `DebugPanelWindow`, `GameConfigSetup`, `AudioSetup` |
+| `Cheat/` | `DebugCheats`, `CheatPanel` (trong bản build) |
+| `Editor/App/` | `GameBootstrapCollector` (tự điền tham chiếu Bootstrap), `DebugPanelWindow`, `GameConfigSetup`, `AudioSetup` |
 
 ---
 
 ## Scene `Main`
 
+Sắp theo mẫu Snacky_Dash: nhóm `[Managers]` trên cùng, rồi các nhóm ngăn cách `---- … ----` (object rỗng ở gốc toạ độ, chỉ để gom). Chỉ đổi cha, không đổi component, nên mọi tham chiếu giữ nguyên.
+
 ```text
-GameBootstrap        GameBootstrap, SaveRunner, TrustedClockRunner
-Main Camera          Camera orthographic (BoardCameraFitter chỉnh size / vị trí)
-Global Light 2D
-SpawnGrid            GridSpawner
-Manager              GridManager, InputManager, DragAndDropController, LevelTimer, LevelManager, GameplayFeedback,
-                     BoosterManager, EnergyManager, ScreenFlow, DailyRewardManager, TutorialController, BoosterTutorial,
-                     MechanicIntro, LevelIntroSequencer, FreezeTutorialDemo, BoardCameraFitter, LevelStatsRecorder,
-                     ProfileStatsRecorder, DragFeedback, BlockFeedback, HintMarker, LevelStars, DailyChallengeManager,
-                     CatFaceTicker, DailyLevelLoader
-├── HintFrameTemplate, DustTemplate (tắt)   mẫu cho pool
-SelectionBox (tắt)   SelectionBoxView
-bg                   BackgroundFitter (+ Pattern)
-Canvas_HUD           [prefab GameplayHUD] HUD màn chơi, thanh booster, tutorial; LowTimeVignette, BoosterUseFx
-Canvas_Menu          [prefab MainMenu] MainMenuNavigator; lồng ShopPanel / LeaderboardPanel / HomePanel / DailyPanel / CollectionPanel / MenuTabBar
-Canvas_Popup         luôn bật
-└── Popups           GameFlowUI; 12 instance popup prefab (tắt sẵn), mỗi popup Canvas + GraphicRaycaster riêng
-AudioManager         AudioManager, GameAudioEvents, GameHapticEvents; Music + Sfx_0..7 (AudioSource đặt sẵn)
-EventSystem          InputSystemUIInputModule
-DragCountBubble      [prefab] tắt sẵn, bật khi kéo
-TutorialHand (tắt)   mẫu bàn tay (HintMarker nhân bản)
+[Managers]
+├── GameBootstrap        GameBootstrap, SaveRunner, TrustedClockRunner
+├── Manager              GridManager, InputManager, DragAndDropController, LevelTimer, LevelManager, GameplayFeedback,
+│                        BoosterManager, EnergyManager, ScreenFlow, DailyRewardManager, TutorialController, BoosterTutorial,
+│                        MechanicIntro, LevelIntroSequencer, FreezeTutorialDemo, BoardCameraFitter, LevelStatsRecorder,
+│                        ProfileStatsRecorder, DragFeedback, BlockFeedback, HintMarker, LevelStars, DailyChallengeManager,
+│                        CatFaceTicker, DailyLevelLoader
+│   └── HintFrameTemplate, DustTemplate (tắt)   mẫu cho pool
+└── AudioManager         AudioManager, GameAudioEvents, GameHapticEvents; Music + Sfx_0..7 (AudioSource đặt sẵn)
+---- MÀN CHƠI ----
+├── bg                   BackgroundFitter (+ Pattern)
+├── SpawnGrid            GridSpawner (+ BoardFrame)
+├── SelectionBox (tắt)   SelectionBoxView
+├── DragCountBubble      [prefab] tắt sẵn, bật khi kéo
+└── TutorialHand (tắt)   mẫu bàn tay (HintMarker nhân bản)
+---- ĐIỀU KHIỂN ----
+├── Main Camera          Camera orthographic (BoardCameraFitter chỉnh size / vị trí)
+└── Global Light 2D
+---- GIAO DIỆN ----
+├── Canvas_HUD           [prefab GameplayHUD] HUD màn chơi, thanh booster, tutorial; LowTimeVignette, BoosterUseFx
+├── Canvas_Menu          [prefab MainMenu] MainMenuNavigator; lồng ShopPanel / LeaderboardPanel / HomePanel / TeamsPanel / CollectionPanel / MenuTabBar
+└── Canvas_Popup         luôn bật
+    └── Popups           GameFlowUI; 13 instance popup prefab (tắt sẵn), mỗi popup Canvas + GraphicRaycaster riêng
+EventSystem              InputSystemUIInputModule
 ```
+
+Tool Editor tìm object theo tên trong **cả cây** (không chỉ gốc scene): `GameBootstrapCollector`, `AudioSetup`, `UIAutoSetup`.
 
 Khối mèo, chữ khen lấy từ prefab qua `ObjectPool` ở lần dùng đầu rồi tái sử dụng; ô lưới được `GridSpawner` dùng lại giữa các level. Lúc chạy không `Find` / `GetComponent` / `AddComponent`: mọi tham chiếu đặt sẵn trong scene / prefab (Editor tự điền).
 
@@ -179,7 +209,7 @@ LevelTimer hết giờ ─► LevelManager: OutOfTime ─► MoreTimePopup ─�
 
 ## Event
 
-**Giữa module** (`EventBus<T>`, struct trong `Core/Contracts/Events`):
+**Giữa các mảng** (`EventBus<T>`, struct trong `Runtime/Core/Contracts/Events`):
 
 | Event | Phát | Nghe (chính) |
 | --- | --- | --- |
@@ -194,7 +224,7 @@ LevelTimer hết giờ ─► LevelManager: OutOfTime ─► MoreTimePopup ─�
 | `ScreenChangedEvent` | `ScreenFlow` | (dành cho hệ thống mới) |
 | `ShopOpenRequestedEvent` | `CoinHUD`, `MenuShortcutButton`, `RefillEnergyPopup` | `ScreenFlow` |
 
-**Trong module** (`UnityEvent` / `event Action`, bên nghe cùng module hoặc Game):
+**Trong một mảng** (`UnityEvent` / `event Action`, bên nghe cùng mảng hoặc App):
 
 | Nguồn | Event | Nghe |
 | --- | --- | --- |

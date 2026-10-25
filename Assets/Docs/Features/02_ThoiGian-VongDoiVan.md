@@ -1,6 +1,6 @@
 # 02 – Đồng hồ, vòng đời 1 ván
 
-> Đường dẫn tính từ `Assets/_Project/Features/Gameplay/Scripts/` (trừ khi ghi rõ). Từ nhánh `Old-Core` (RoadMap 17) game bỏ 3 mạng / Khiên, quay lại đồng hồ đếm ngược như bản gốc.
+> Đường dẫn tính từ `Assets/_Project/Runtime/Gameplay/` (trừ khi ghi rõ). Từ nhánh `Old-Core` (RoadMap 17) game bỏ 3 mạng / Khiên, quay lại đồng hồ đếm ngược như bản gốc.
 
 ## Tính năng làm gì
 
@@ -14,11 +14,11 @@
 | File | Việc |
 | --- | --- |
 | `Timer/LevelTimer` | Tổng giờ = `rules.timeLimit` của level nếu > 0, không thì `baseSeconds + secondsPerCell × ô + (5.5–6.5 s) × khối`, tối thiểu `minSeconds`. Đứng ở tổng giờ tới khi người chơi chạm lần đầu; chỉ chạy khi thao tác được. Freeze dừng `freezeSeconds`. Event `onTimeChanged`, `onTimeWarning`, `onLowTick`, `onTimeAdded`, `onTimeUp`, `onFreezeChanged` |
-| `Core/Contracts/Types/GameState` | `Playing`, `Paused`, `Won`, `OutOfTime`, `Lost` |
+| `Runtime/Core/Contracts/Types/GameState` | `Playing`, `Paused`, `Won`, `OutOfTime`, `Lost` |
 | `Level/LevelManager` | Giữ `GameState`; `LoadLevel`, `LoadDaily`, `LoadTutorial`, `Retry`, `NextLevel`, `Pause` / `Resume` (`IGamePause`), `Revive(seconds)`, `GiveUp`; phát `LevelLoadedEvent`, `GameStateChangedEvent`, `LevelCompletedEvent`, `LevelFailedEvent`, `AllLevelsCompletedEvent`; ván không Playing thì khóa lưới (`InputGate.Set`) |
 | `Visuals/BoardCameraFitter` | Căn camera vừa lưới mỗi khi `GridSpawner` dựng lưới mới |
-| `Game/Scripts/GameFlowUI` | Nghe `GameStateChangedEvent` → mở popup; đặt `LevelManager.AutoAdvance = false` |
-| `UI/WinPopup`, `MoreTimePopup`, `LosePopup`, `QuitLevelPopup` | Popup cuối ván / thoát giữa ván (prefab ở `Features/Gameplay/Prefabs/Popups`) |
+| `Runtime/App/GameFlowUI` | Nghe `GameStateChangedEvent` → mở popup; đặt `LevelManager.AutoAdvance = false` |
+| `UI/WinPopup`, `MoreTimePopup`, `LosePopup`, `QuitLevelPopup` | Popup cuối ván / thoát giữa ván (prefab ở `Prefabs/UI/Popups`) |
 | `UI/TimerUI`, `TimeStarBar`, `LowTimeVignette`, `FreezeIndicator` | Đồng hồ trên HUD, thanh 3 mốc sao, viền đỏ sắp hết giờ, lớp băng khi Freeze |
 
 ## Máy trạng thái
@@ -43,9 +43,9 @@
 
 | Muốn | Sửa ở |
 | --- | --- |
-| Công thức thời gian, ngưỡng cảnh báo, giây Freeze | `Features/Gameplay/Configs/LivesEnergyConfig` (`baseSeconds`, `secondsPerCell`, `secondsPerBlockMin/Max`, `minSeconds`, `warningSeconds`, `freezeSeconds`) |
+| Công thức thời gian, ngưỡng cảnh báo, giây Freeze | `Data/Config/LivesEnergyConfig` (`baseSeconds`, `secondsPerCell`, `secondsPerBlockMin/Max`, `minSeconds`, `warningSeconds`, `freezeSeconds`) |
 | Thời gian riêng 1 level | Level Editor → `rules.timeLimit` |
-| Thêm giờ: giây / giá | `Features/Gameplay/Configs/EconomyConfig` (`moreTimeAdsSeconds`, `moreTimeCoinSeconds`, `moreTimeCoinCost`) |
+| Thêm giờ: giây / giá | `Data/Config/EconomyConfig` (`moreTimeAdsSeconds`, `moreTimeCoinSeconds`, `moreTimeCoinCost`) |
 | Coin thưởng khi thắng | `EconomyConfig` → `winCoinReward` (Normal 10) / `winCoinRewardHard` (20) / `winCoinRewardVeryHard` (30) + `coinsPerStar` (5) × sao, qua `WinCoinReward(difficulty, stars)` |
 | Giới hạn số lần thêm giờ | `LevelManager.HasRevived` đã có sẵn – kiểm tra trong `MoreTimePopup` |
 | Thêm trạng thái ván mới | Thêm giá trị vào `GameState` (Contracts), set trong `LevelManager`, thêm `case` trong `GameFlowUI`. Kiểm tra lại mọi chỗ so `== GameState.Playing` |

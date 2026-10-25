@@ -1,6 +1,6 @@
 # 05 – Booster: Hint, Đóng băng, Reveal
 
-> Đường dẫn tính từ `Assets/_Project/Features/Gameplay/` (`Scripts/Booster`, `Scripts/UI`). Khiên (bản có mạng) đã thay bằng Đóng băng như bản gốc từ nhánh `Old-Core`.
+> Đường dẫn tính từ `Assets/_Project/` (code `Runtime/Gameplay/Booster`, `Runtime/Gameplay/UI`). Khiên (bản có mạng) đã thay bằng Đóng băng như bản gốc từ nhánh `Old-Core`.
 
 ## Tính năng làm gì
 
@@ -18,18 +18,18 @@
 
 | File | Việc |
 | --- | --- |
-| `Scripts/Booster/BoosterDatabase` (+ asset `Configs/BoosterDatabase.asset`) | `BoosterType` (Contracts: Hint 0, Freeze 1, Reveal 2) + `BoosterData`: tên, mô tả, `levelUnlock`, `valueStart`, `valueOneBuy`, `priceOneBuy`, icon |
-| `Scripts/Booster/BoosterInventory` | Class C# thuần (Bootstrap tạo 1 instance): số lượt, lưu section `"gameplay"` (`GameplaySave.boosters`) theo **tên** loại, `Changed` |
-| `Scripts/Booster/BoosterManager` | Phần chung: `Press(type)`, `Buy(type)`, mở / khóa, đếm lượt, lượt miễn phí tutorial, `PlaceInSequence` (khóa lưới qua `InputGate`), `AfterEffect`. Cài `IBoosterHost`, và contract `IBoosterInventory` / `IBoosterCatalog` cho Shop / DailyReward |
-| `Scripts/Booster/BoosterEffect` | Lớp cha luật booster (Strategy) + `IBoosterHost` (những gì booster được dùng) |
-| `Scripts/Booster/HintBooster`, `FreezeBooster`, `RevealBooster` | Luật riêng từng booster; `HintMarker` vẽ gợi ý Hint |
-| `Scripts/Booster/BoosterEffectFactory` | Tạo luật theo `BoosterType` (Factory), chỗ duy nhất phải thêm dòng khi có booster mới |
-| `Scripts/Booster/BoosterTutorial` | Tutorial mở khóa (1 `ILevelIntro`, Order 20) |
-| `Scripts/Booster/FreezeTutorialDemo` | Bước 2 tutorial Đóng băng, nghe `BoosterTutorialCompletedEvent` |
-| `Scripts/UI/BoosterButton` (prefab `Prefabs/BoosterButton`) | 1 nút: icon, số lượt, "+", ổ khóa "LV n", quầng sáng |
-| `Scripts/UI/RevealBanner`, `FreezeIndicator`, `FreezeButtonCountdown`, `FreezeOverlayFX`, `BoosterTutorialView` | Banner chọn số, lớp băng trên đồng hồ, đếm ngược trên nút, hiệu ứng Spine Đóng băng, lớp tối tutorial |
-| `Scripts/UI/BuyBoosterPopup` (prefab `Prefabs/Popups/BuyBoosterPopup`) | Mua khi hết lượt |
-| `Prefabs/GameplayHUD` | Thanh dưới chứa 3 instance `BoosterButton`, banner Reveal (builder cũ đã xóa ở P7: sửa trong Prefab Mode) |
+| `Runtime/Gameplay/Booster/BoosterDatabase` (+ asset `Data/Config/BoosterDatabase.asset`) | `BoosterType` (Contracts: Hint 0, Freeze 1, Reveal 2) + `BoosterData`: tên, mô tả, `levelUnlock`, `valueStart`, `valueOneBuy`, `priceOneBuy`, icon |
+| `Runtime/Gameplay/Booster/BoosterInventory` | Class C# thuần (Bootstrap tạo 1 instance): số lượt, lưu section `"gameplay"` (`GameplaySave.boosters`) theo **tên** loại, `Changed` |
+| `Runtime/Gameplay/Booster/BoosterManager` | Phần chung: `Press(type)`, `Buy(type)`, mở / khóa, đếm lượt, lượt miễn phí tutorial, `PlaceInSequence` (khóa lưới qua `InputGate`), `AfterEffect`. Cài `IBoosterHost`, và contract `IBoosterInventory` / `IBoosterCatalog` cho Shop / DailyReward |
+| `Runtime/Gameplay/Booster/BoosterEffect` | Lớp cha luật booster (Strategy) + `IBoosterHost` (những gì booster được dùng) |
+| `Runtime/Gameplay/Booster/HintBooster`, `FreezeBooster`, `RevealBooster` | Luật riêng từng booster; `HintMarker` vẽ gợi ý Hint |
+| `Runtime/Gameplay/Booster/BoosterEffectFactory` | Tạo luật theo `BoosterType` (Factory), chỗ duy nhất phải thêm dòng khi có booster mới |
+| `Runtime/Gameplay/Booster/BoosterTutorial` | Tutorial mở khóa (1 `ILevelIntro`, Order 20) |
+| `Runtime/Gameplay/Booster/FreezeTutorialDemo` | Bước 2 tutorial Đóng băng, nghe `BoosterTutorialCompletedEvent` |
+| `Runtime/Gameplay/UI/BoosterButton` (prefab `Prefabs/BoosterButton`) | 1 nút: icon, số lượt, "+", ổ khóa "LV n", quầng sáng |
+| `Runtime/Gameplay/UI/RevealBanner`, `FreezeIndicator`, `FreezeButtonCountdown`, `FreezeOverlayFX`, `BoosterTutorialView` | Banner chọn số, lớp băng trên đồng hồ, đếm ngược trên nút, hiệu ứng Spine Đóng băng, lớp tối tutorial |
+| `Runtime/Gameplay/UI/BuyBoosterPopup` (prefab `Prefabs/UI/Popups/BuyBoosterPopup`) | Mua khi hết lượt |
+| `Prefabs/UI/Screens/Game/GameplayHUD` | Thanh dưới chứa 3 instance `BoosterButton`, banner Reveal (builder cũ đã xóa ở P7: sửa trong Prefab Mode) |
 
 ## Luồng `Press(type)`
 
@@ -73,8 +73,8 @@ Xem [HowTo_MoRong.md → Thêm booster](HowTo_MoRong.md#thêm-booster). Tóm t�
 - Booster chạy nhiều bước theo thời gian phải khóa lưới: dùng `Host.PlaceInSequence` (đã khóa qua `InputGate`), hoặc tự `InputGate.Lock(owner)` / `Unlock(owner)`.
 - Booster có bước hướng dẫn riêng sau khi mở khóa: viết component nghe `EventBus<BoosterTutorialCompletedEvent>` (như `FreezeTutorialDemo`), không sửa `BoosterTutorial`.
 
-## Phản hồi khi dùng booster (`Scripts/UI/BoosterUseFx`, từ 10/10/2026)
+## Phản hồi khi dùng booster (`Runtime/Gameplay/UI/BoosterUseFx`, từ 10/10/2026)
 
 Mỗi lần booster có tác dụng (`onBoosterUsed`): icon bay từ nút ra giữa màn hình, phóng to nảy trên chùm tia sáng xoay + chữ "HINT!" / "FREEZE!" / "REVEAL!", màn hình tối nhẹ; rồi lao tới mục tiêu (`IBoosterHost.Consume(type, target)`: Hint = tâm vùng gợi ý, Reveal = ô số vừa chạm, Freeze = đồng hồ) và lóe sáng. Khoảng 1.2 s = `BoosterManager.effectDelay`: tác dụng Hint (mèo mờ) và Reveal (khối rơi xuống) chờ icon tới nơi mới hiện; Trong lúc icon bay, thao tác bị khóa nên đồng hồ dừng.
 
-**Freeze** không dùng hiệu ứng chung mà chạy hiệu ứng như bản gốc (`Scripts/UI/FreezeOverlayFX`): Spine đồng hồ + bàn tay bấm nút (`Freeze.skel`, cần package spine-unity 4.1), sự kiện `Press` lúc 1.67 s nổ hạt và đóng băng thật (`freezeEffectDelay` 1.67), viền `ice_effect` + tuyết trong lúc đóng băng. Chi tiết: [14_GameFeel.md](14_GameFeel.md) mục 4.3.
+**Freeze** không dùng hiệu ứng chung mà chạy hiệu ứng như bản gốc (`Runtime/Gameplay/UI/FreezeOverlayFX`): Spine đồng hồ + bàn tay bấm nút (`Freeze.skel`, cần package spine-unity 4.1), sự kiện `Press` lúc 1.67 s nổ hạt và đóng băng thật (`freezeEffectDelay` 1.67), viền `ice_effect` + tuyết trong lúc đóng băng. Chi tiết: [14_GameFeel.md](14_GameFeel.md) mục 4.3.

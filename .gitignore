@@ -106,5 +106,5 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 /.idea/
 # Asset Halloween rip tu game khac (chi de hoc, khong push len repo public)
-/Assets/_Project/Game/Art/UI/HalloweenRip/
-/Assets/_Project/Game/Art/UI/HalloweenRip.meta
+/Assets/_Project/Source/Art/UI/Home/HalloweenRip/
+/Assets/_Project/Source/Art/UI/Home/HalloweenRip.meta

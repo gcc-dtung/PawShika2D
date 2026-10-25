@@ -5,7 +5,7 @@ Game giải đố Shikaku dựa trên [Paw Block Puzzle](https://play.google.com
 - Unity **2022.3.62f3**, URP 2D, TextMeshPro, uGUI, Input System, DOTween (`Assets/Plugins/Demigiant`), spine-unity 4.1, UI Particle
 - Scene: `Assets/_Project/Scenes/Main.unity`
 - Kiến trúc module, thư mục, class, scene, event: [ProjectStructure.md](ProjectStructure.md)
-- **Tài liệu theo tính năng + hướng dẫn mở rộng (thêm cơ chế, booster, popup…)**: [Features/](Features/00_README.md); mỗi feature có `Assets/_Project/Features/<Tên>/Docs/README.md`
+- **Tài liệu theo tính năng + hướng dẫn mở rộng (thêm cơ chế, booster, popup…)**: [Features/](Features/00_README.md); mỗi mảng có tài liệu riêng ở [Modules/](Modules/)
 - Quy tắc code: [Refactor/UnityCodingGuidelines.md](Refactor/UnityCodingGuidelines.md) (chung) + [Refactor/ProjectConventions.md](Refactor/ProjectConventions.md) (riêng dự án); kế hoạch refactor đã làm: [Refactor/RefactorPlan.md](Refactor/RefactorPlan.md)
 - Nhật ký thay đổi theo lần push: [RoadMap/](RoadMap/00_README.md)
 - Công thức độ khó level: [DifficultyFormula.md](DifficultyFormula.md); sửa / tạo tutorial: [TutorialGuide.md](TutorialGuide.md); kế hoạch tính năng ban đầu: [TaskBreakdown.md](TaskBreakdown.md)
@@ -49,12 +49,12 @@ Dữ liệu level ShikaCat gốc **không có** ô đặc biệt; cơ chế đư
 
 1. Mở `Assets/_Project/Scenes/Main.unity`, bấm Play. Scene, prefab, config đã có sẵn; không cần chạy builder nào.
    - Lần đầu (save mới, đang ở level 1): vào thẳng **tutorial** 4 bước (Skip để bỏ qua), xong thì vào Level 1.
-   - Các lần sau: Main Menu (Home) → **PLAY** để vào level đang chơi. Tab Shop bên trái, tab Daily Challenge bên phải (mở từ level 21).
+   - Các lần sau: Main Menu (Home) → **PLAY** để vào level đang chơi. Tab Shop, Xếp hạng bên trái; tab Đội, Bộ sưu tập bên phải.
 2. Công cụ (menu **Tools → PawBlock**, chi tiết [Features/13](Features/13_Editor-Builder-Debug.md)):
    - **Level Editor** (sửa / làm level, ▶ chơi thử), **Level Generator**, **Mechanic Injector**, **Level Difficulty**, **Validate Levels**.
    - **Debug Panel** (Ctrl + Shift + D khi Play): đổi level, thắng / hết giờ ngay, cộng coin / sao / năng lượng / booster, sang ngày mới, tốc độ game. Trong bản build: **Cheat Panel** (bấm nhanh 3 lần góc trên trái).
    - **Save Data** → Log Save / Open Save Folder / Delete Save.
-3. Test: **Window → General → Test Runner → EditMode**, chạy 4 assembly `PawBlock.*.Tests` (160 test).
+3. Test: **Window → General → Test Runner → EditMode**, chạy assembly `PawBlock.Tests` (185 test).
 4. Build Android: **File → Build Settings → Android** (IL2CPP, ARMv7 + ARM64; texture nén ASTC theo preset).
 
 Dữ liệu người chơi lưu trong 1 file JSON `save.json` ở `Application.persistentDataPath` (Windows: `%USERPROFILE%/AppData/LocalLow/DefaultCompany/PawShika/`), mỗi feature 1 section ([Features/11](Features/11_Save.md)). Save đời cũ (v1, PlayerPrefs) tự chuyển sang v2 lần đầu mở bản mới, giữ `save.v1.bak`.

@@ -1,6 +1,6 @@
 # 01 – Lưới, kéo thả, kiểm tra nước đi
 
-> Đường dẫn tính từ `Assets/_Project/Features/Gameplay/Scripts/`. Tổng quan feature: [Gameplay README](../../_Project/Features/Gameplay/Docs/README.md).
+> Đường dẫn tính từ `Assets/_Project/Runtime/Gameplay/`. Tổng quan feature: [Gameplay README](../Modules/Gameplay.md).
 
 ## Tính năng làm gì
 
@@ -56,7 +56,7 @@ Solver giới hạn `MaxNodes = 500000`; vượt giới hạn thì coi như còn
 
 ## Khi nào lưới bị khóa thao tác
 
-`GridManager.IsInputLocked` đúng khi: đã thắng, hết giờ, đang chờ khung giãn sau khi thả, lưới đang hiện, hoặc **`InputGate.IsLocked`** (`Core/Foundation/Input/InputGate`).
+`GridManager.IsInputLocked` đúng khi: đã thắng, hết giờ, đang chờ khung giãn sau khi thả, lưới đang hiện, hoặc **`InputGate.IsLocked`** (`Runtime/Core/Foundation/Input/InputGate`).
 
 `InputGate` là khóa theo "chủ khóa": ai cần chặn thì `InputGate.Lock(this)`, xong thì `Unlock(this)`. Đang khóa bởi:
 
@@ -95,7 +95,7 @@ Solver giới hạn `MaxNodes = 500000`; vượt giới hạn thì coi như còn
 | Ô "dính" dưới ngón tay, cửa sổ combo | Inspector `GridManager` (`cellStick`, `comboWindow`) |
 | Thêm phản hồi theo lý do sai luật | Nghe `GridManager.onInvalidMove` (có `PlacementResult`) |
 | Thêm luật đặt khối mới | `BoardModel.Check` + `ShikakuSolver` (phải khớp nhau) – xem [HowTo_ThemMechanic](HowTo_ThemMechanic.md) |
-| Đổi kích thước ô / khoảng cách | `GridSpawner.CellSpacing`, prefab `Features/Gameplay/Prefabs/Cell` |
+| Đổi kích thước ô / khoảng cách | `GridSpawner.CellSpacing`, prefab `Prefabs/InGame/Cell` |
 
 ## Lưu ý
 

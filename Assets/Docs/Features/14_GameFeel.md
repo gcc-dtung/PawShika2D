@@ -2,14 +2,14 @@
 
 Tổng hợp các hiệu ứng "feel" đã làm cho gameplay (nhánh `Day-7`, 10/10/2026): hiệu ứng làm gì, nằm ở script nào, số mặc định, chỉnh / tắt ở đâu, test nào kiểm tra.
 
-> Đường dẫn tính từ `Assets/_Project/Features/Gameplay/Scripts/` (trừ khi ghi rõ). Hàm thuần / sprite vẽ bằng code / DOTween setup ở `Core/Foundation` vì không dính luật game.
+> Đường dẫn tính từ `Assets/_Project/Runtime/Gameplay/` (trừ khi ghi rõ). Hàm thuần / sprite vẽ bằng code / DOTween setup ở `Runtime/Core/Foundation` vì không dính luật game.
 
 Nguyên tắc chung:
 
-- Công thức (đường cong squash, sóng ô, cao độ, combo…) là **hàm thuần** trong `Core/Foundation/Feedback/FeelCurves.cs` (ô "dính": `GridGeometry.StickyCell`). View chỉ gọi các hàm này trong tween, nên test được mà không cần Play mode.
+- Công thức (đường cong squash, sóng ô, cao độ, combo…) là **hàm thuần** trong `Runtime/Core/Foundation/Feedback/FeelCurves.cs` (ô "dính": `GridGeometry.StickyCell`). View chỉ gọi các hàm này trong tween, nên test được mà không cần Play mode.
 - Hiệu ứng nghe **event có sẵn** (`GridManager`, `LevelTimer`, `EventBus`) và không sửa luật chơi. Tắt một component là tắt cả nhóm hiệu ứng của nó.
-- Không thêm ảnh mới: chấm tròn, thanh viên thuốc, viền đỏ, tấm băng đều vẽ bằng code (`Core/Foundation/Feedback/ProceduralSprites.cs`).
-- DOTween được khởi tạo sẵn 500 tween / 150 sequence lúc mở game (`Core/Foundation/Util/TweenSetup.cs`), tránh tự nới sức chứa giữa lúc chơi.
+- Không thêm ảnh mới: chấm tròn, thanh viên thuốc, viền đỏ, tấm băng đều vẽ bằng code (`Runtime/Core/Foundation/Feedback/ProceduralSprites.cs`).
+- DOTween được khởi tạo sẵn 500 tween / 150 sequence lúc mở game (`Runtime/Core/Foundation/Util/TweenSetup.cs`), tránh tự nới sức chứa giữa lúc chơi.
 - Số liệu chỉnh trong Inspector. Bảng dưới ghi **giá trị mặc định**.
 
 ## Tổng quan
@@ -19,7 +19,7 @@ Nguyên tắc chung:
 | 1 | Kéo | Bong bóng số phóng to khi hiện, thu nhỏ khi ẩn, chữ nảy khi đổi số | `Input/DragCountBubble` |
 | 2 | Kéo | Bong bóng đổi màu: tím (đang kéo) / xanh (đủ) / đỏ (sai) | `DragCountBubble`, `Board/BoardModel` (`PlacementCheck.Hint`) |
 | 3 | Kéo | Bong bóng bám ngón tay mượt | `DragCountBubble` |
-| 4 | Kéo | Tick cao dần theo số ô + "ding" khi đủ | `Game/Scripts/GameAudioEvents` |
+| 4 | Kéo | Tick cao dần theo số ô + "ding" khi đủ | `Runtime/App/GameAudioEvents` |
 | 5 | Kéo | Ô số trong vùng kéo phóng to; phủ ≥ 2 ô số thì lắc | `Feedback/DragFeedback`, `Board/CellView` |
 | 6 | Kéo | Ô dưới ngón tay "dính" ở ranh giới 2 ô | `Board/GridManager`, `GridGeometry.StickyCell` |
 | 7 | Thả tay | Vùng sai: khung xám, co lại, mờ dần + tiếng "bụp" + rung mềm | `Input/SelectionBoxView`, `GameAudioEvents`, `GameHapticEvents` |
@@ -57,7 +57,7 @@ Nguyên tắc chung:
   - **Invalid**: chắc chắn sai (thừa ô, ≥ 2 ô số, ô số còn khóa, vùng chứa ô bị chặn, sai hướng mà đã đủ ô).
   - **Neutral**: kéo tiếp còn có thể đúng (thiếu ô, chưa có ô số, ô "?").
 
-### 1.2 Âm tick khi kéo (`Game/Scripts/GameAudioEvents.cs`)
+### 1.2 Âm tick khi kéo (`Runtime/App/GameAudioEvents.cs`)
 
 | Âm | Khi nào | Clip | Field |
 | --- | --- | --- | --- |
@@ -183,7 +183,7 @@ Dựng theo cấu trúc `FreezeOverlayFX` của game gốc (đọc từ `E:\PawB
 | Object (`GameplayHUD/FreezeOverlayFX`) | Nội dung |
 | --- | --- |
 | `HandStartFreeze` | Spine `SkeletonGraphic` – `Spine_Freeze/Freeze_SkeletonData` (Spine 4.1.24), animation `Start` 2.37 s: đồng hồ mèo hiện ra, bàn tay bấm nút; giữa màn hình, lệch xuống 26; chạy thời gian thực |
-| `Booster_FreezeFX` | Prefab `Features/Gameplay/Prefabs/Freeze/Booster_FreezeFX` (`UIParticle` + 4 hệ hạt gốc: `Twinkle`, `Spark_Blue`, `snowflake`, `Circle_Blue`) – nổ lúc bàn tay bấm |
+| `Booster_FreezeFX` | Prefab `Prefabs/InGame/Freeze/Booster_FreezeFX` (`UIParticle` + 4 hệ hạt gốc: `Twinkle`, `Spark_Blue`, `snowflake`, `Circle_Blue`) – nổ lúc bàn tay bấm |
 | `FreezeBorders` | CanvasGroup mờ vào / ra 0.4 s: `Snow` (prefab `FreezeSnow`: 2 `Spark_White` + `snowflake` rơi lặp) + `Border` (ảnh `ice_effect` phủ toàn màn) |
 
 - Bấm Freeze → animation `Start`, khóa thao tác. Sự kiện Spine **`Press` (1.67 s)** → nổ `Booster_FreezeFX`, mở thao tác; cùng lúc đồng hồ đóng băng (`BoosterManager.freezeEffectDelay` = 1.67) → `FreezeBorders` hiện. Hết animation → ẩn đồng hồ.
@@ -242,14 +242,14 @@ Viền đỏ, chữ "+Ns", tấm băng, lớp hiệu ứng booster được **d�
 
 ## Test
 
-Mở **Window → General → Test Runner → tab EditMode**, chạy 4 assembly `PawBlock.*.Tests` (160 test toàn dự án). Test game feel:
+Mở **Window → General → Test Runner → tab EditMode**, chạy assembly `PawBlock.Tests` (185 test toàn dự án). Test game feel:
 
 | File | Kiểm tra |
 | --- | --- |
-| `Core/Foundation/Tests/Editor/FeelCurvesTests` | Squash: dẹt trước, không vượt biên độ, tắt dần, đáy đứng yên. Ô nảy, vòng ô, độ nảy / độ trễ sóng. Cao độ tick. Combo (cửa sổ, reset), cao độ combo, bậc lời khen. |
-| `Features/Gameplay/Tests/Editor/GridGeometryTests` | Ô "dính" ở ranh giới 2 ô (`GridGeometry.StickyCell`). |
-| `Features/Gameplay/Tests/Editor/SelectionHintTests` | Neutral / Ready / Invalid qua `BoardModel.Check`: thiếu / đủ / thừa ô, ô số 1, chưa có ô số, 2 ô số, ô khóa, ô Void, sai hướng, ô "?". |
-| `Features/Gameplay/Tests/Editor/FeelPlayModeTests` (7 `[UnityTest]`) | Chạy Play mode thật, mỗi frame cố định 1/60 s: sóng ô (trễ, nhẹ dần, về 1); ô tắt giữa lúc nảy; squash khối từ prefab thật; khung co xám rồi tắt và lượt kéo mới hết xám; ô số phóng to / về / lắc xong về chỗ; bong bóng trượt mượt tới ngón tay; gỡ khối nhảy lên rồi rơi, mờ dần, gọi `onDone`. |
+| `Runtime/Tests/Core/Editor/FeelCurvesTests` | Squash: dẹt trước, không vượt biên độ, tắt dần, đáy đứng yên. Ô nảy, vòng ô, độ nảy / độ trễ sóng. Cao độ tick. Combo (cửa sổ, reset), cao độ combo, bậc lời khen. |
+| `Runtime/Tests/Gameplay/Editor/GridGeometryTests` | Ô "dính" ở ranh giới 2 ô (`GridGeometry.StickyCell`). |
+| `Runtime/Tests/Gameplay/Editor/SelectionHintTests` | Neutral / Ready / Invalid qua `BoardModel.Check`: thiếu / đủ / thừa ô, ô số 1, chưa có ô số, 2 ô số, ô khóa, ô Void, sai hướng, ô "?". |
+| `Runtime/Tests/Gameplay/Editor/FeelPlayModeTests` (7 `[UnityTest]`) | Chạy Play mode thật, mỗi frame cố định 1/60 s: sóng ô (trễ, nhẹ dần, về 1); ô tắt giữa lúc nảy; squash khối từ prefab thật; khung co xám rồi tắt và lượt kéo mới hết xám; ô số phóng to / về / lắc xong về chỗ; bong bóng trượt mượt tới ngón tay; gỡ khối nhảy lên rồi rơi, mờ dần, gọi `onDone`. |
 
 - Test Play mode mở scene trống riêng rồi trả lại scene cũ. Nếu scene đang có thay đổi chưa lưu, 3 test này tự bỏ qua để không làm mất thay đổi.
 - Đã thử cố tình làm sai công thức squash (đảo dẹt ↔ dài): test công thức và test Play mode đều báo đỏ.

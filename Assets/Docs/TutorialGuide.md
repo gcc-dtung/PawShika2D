@@ -1,6 +1,6 @@
 # Hướng dẫn làm tutorial
 
-> Code ở `Assets/_Project/Features/Gameplay/Scripts/` (`Tutorial/`, `Booster/`, `Intro/`, `UI/`); UI trong prefab `Features/Gameplay/Prefabs/GameplayHUD` (sửa trong Prefab Mode, builder cũ đã xóa ở P7); đã xem lưu ở section save `"gameplay"`.
+> Code ở `Assets/_Project/Runtime/Gameplay/` (`Tutorial/`, `Booster/`, `Intro/`, `UI/`); UI trong prefab `Prefabs/UI/Screens/Game/GameplayHUD` (sửa trong Prefab Mode, builder cũ đã xóa ở P7); đã xem lưu ở section save `"gameplay"`.
 
 Tài liệu này mô tả tutorial lần đầu mở game (4 bước, làm theo video bản gốc), tutorial mở khóa booster (mục 7) và các bước để **sửa** hoặc **tạo** tutorial mới (vd. giới thiệu cơ chế Khóa / "?" / Hướng).
 
@@ -120,7 +120,7 @@ Có Void thì nhớ tổng số = số ô **trừ** ô Void.
 | Tốc độ bàn tay (trượt, mờ, nghỉ, độ nhấn) | Inspector `TutorialHand` (`moveDuration`, `fadeDuration`, `loopDelay`, `pressScale`) |
 | Bàn tay to / nhỏ, đầu ngón lệch tâm ô | Object `TutorialHand` trong scene: `localScale` (0.75), vị trí con `Sprite` (đầu ngón ở gốc object) |
 | Thời gian chờ sang bước kế | Inspector `Manager` → `TutorialController.nextStepDelay` (1.1 s) |
-| Sprite | `tutorial_hand` (`Shared/Art/Grid/Grid_Cells`), `tutorial_dot` (`Features/Gameplay/Art/Grid/Grid_Cells`), `popup_tutorial` (9-slice viền 70, `Features/Gameplay/Art/UI/Popups_Dialogs`) |
+| Sprite | `tutorial_hand` (`Source/Art/InGame/Common/Grid/Grid_Cells`), `tutorial_dot` (`Source/Art/InGame/Gameplay/Grid/Grid_Cells`), `popup_tutorial` (9-slice viền 70, `Source/Art/UI/Gameplay/Popups_Dialogs`) |
 
 ## 5. Kiểm tra
 
@@ -156,7 +156,7 @@ Tutorial lần đầu là trường hợp "chạy trước mọi thứ". Tutoria
 Hợp với cơ chế nhìn là hiểu. Project đã có sẵn ảnh minh họa: `popup_tutorial_2` (Khóa), `popup_tutorial_3` ("?"), `popup_tutorial_4` (Hướng: Vertical / Square / Horizontal).
 
 1. **Đã xem**: lưu tên cơ chế (`Kind.ToString()`) vào `GameplaySave.seenMechanics` (danh sách có sẵn; thêm cơ chế không cần field mới).
-2. **Popup**: class kế thừa `PopupView` (như `NoticePopup`): ảnh minh họa, 1 dòng giải thích, nút OK. Prefab trong `Features/Gameplay/Prefabs/Popups`, instance tắt sẵn trong `Canvas_Popup/Popups`.
+2. **Popup**: class kế thừa `PopupView` (như `NoticePopup`): ảnh minh họa, 1 dòng giải thích, nút OK. Prefab trong `Prefabs/UI/Popups`, instance tắt sẵn trong `Canvas_Popup/Popups`.
 3. **Điểm kích hoạt**: `MechanicIntro` là 1 `ILevelIntro` (Order 10); `ShouldPlay` xem level vừa nạp có cơ chế nào mà chưa xem:
 
    ```csharp
@@ -198,7 +198,7 @@ Hợp với cơ chế cần thao tác mới dạy được, vd. khóa phải đ�
 - [ ] Trong lúc tutorial: không chạy đồng hồ, không trừ năng lượng, không hiện WinPopup, HUD thừa bị ẩn.
 - [ ] Debug Panel có nút chơi lại / bỏ cờ để test nhanh.
 - [ ] UI sửa trong prefab, đã lưu prefab / scene.
-- [ ] Cập nhật [Gameplay README](../_Project/Features/Gameplay/Docs/README.md), `Features/09_Tutorial.md`, RoadMap.
+- [ ] Cập nhật [Gameplay README](Modules/Gameplay.md), `Features/09_Tutorial.md`, RoadMap.
 
 ## 7. Tutorial mở khóa booster
 
@@ -212,7 +212,7 @@ Booster (Hint, Đóng băng, Reveal) **khóa** tới khi người chơi qua tuto
 | `UI/BoosterTutorialView.cs` | `GameplayHUD/BoosterTutorial` (Canvas con, order 5): nền tối, lời nhắc, bàn tay; nhấc nút booster lên trên nền tối (Canvas có sẵn trên nút) |
 | `BoosterManager` | `IsUnlocked` đọc save (hoặc `TutorialTarget`); `BeginTutorial(type)` / `EndTutorial`; `Press` trong lúc tutorial chỉ nhận đúng nút, phát `TutorialPressed`, lần dùng miễn phí |
 | `BoosterButton.SetHighlight` | Bật quầng sáng xoay cho nút đang được chỉ |
-| `Features/Gameplay/Configs/BoosterDatabase.asset` | `levelUnlock` (level mở), `detail` (lời nhắc), `valueStart` (lượt tặng) |
+| `Data/Config/BoosterDatabase.asset` | `levelUnlock` (level mở), `detail` (lời nhắc), `valueStart` (lượt tặng) |
 
 **Khi nào hiện:** sau mỗi lần nạp level, `LevelIntroSequencer` chờ tới khi đang chơi thật (không ở Menu, không popup, không tutorial lần đầu), lưới đã hiện xong và băng HARD đã chạy xong, thêm 0.3 s. Lúc đó nó chọn booster **chưa mở** có `levelUnlock` nhỏ nhất mà level hiện tại đã tới. Mỗi lần nạp level chỉ hiện **1** tutorial. Người chơi cũ đã qua nhiều level sẽ được giới thiệu lần lượt ở các lần vào level kế tiếp.
 

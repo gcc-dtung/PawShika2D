@@ -5,7 +5,7 @@
 | Trạng thái | Chưa push |
 | Commit | |
 | Thời gian push | |
-| Cập nhật lần cuối | 2026-10-24 07:20 |
+| Cập nhật lần cuối | 2026-10-25 06:40 |
 
 ## 05:20 – Dựng lại Home theo video mẫu, đổi theme mèo → Halloween
 
@@ -109,3 +109,268 @@
 **Sửa**: `HomeScene.prefab` → `Top`: bỏ `Bat1..3` (`UIFlyAcross`), thêm `Bats` (gốc 450, −600) với 3 con `doi1..3` dùng `UISpriteSequence` (vòng 190 khung). `UIFlyAcross` vẫn dùng cho ma nhỏ đi dạo.
 
 **Kiểm tra**: ghép offline khung 55–155 lên nền mock: đàn bay vòng cung, cánh vỗ, to / nhỏ dần như video; console không lỗi. Người dùng xem trong Play: bay ổn.
+
+## 08:00 – Bảng xếp hạng đủ như bản gốc; sửa SafeAreaZone khi mở Device Simulator
+
+**Phản hồi**: phần Leaderboard thiếu nhiều so với video.
+
+**Sửa**
+- `LeaderboardPanel.cs`: 3 tab con Weekly / Players / Teams (nút + lớp `Active`); Weekly có bục, Players chỉ danh sách từ hạng 1 (điểm toàn thời gian), Teams hiện màn khóa; avatar đối thủ / người chơi lấy từ `Profile/Configs/AvatarDatabase`; đồng hồ "Xd Yh" tới hết tuần.
+- `LeaderboardRow.cs`: thêm avatar, viền `highlight` cho dòng người chơi (thay cho đổi màu nền).
+- `LeaderboardPanel.prefab` dựng lại theo `ModalLeaderBoard` gốc: header cao + 3 nút tab (nút phải lật ngang) + ô đồng hồ có kim lắc; card tuần (rèm, khăn tiêu đề, nút i, tia sáng xoay, 3 trụ `Rank 1..3 W` có rương trôi, avatar khung, ruy băng `Tag 1..3`, tên, ô điểm); dòng 182 px (ô hạng, avatar, tên, logo đội + "---", ô `Score`, viền `Current Player Detect`); màn khóa Teams.
+- Ảnh thêm (HalloweenRip/Panels): `SelectedTabButtonMiddle`, `CurrentPlayerDetect`, `CurrentPlayerPointer`, `RankFrame`, `TeamDetailSlot`, `NoTeams`, `ClockArrow`.
+- `Shared/Scripts/UI/SafeAreaZone.cs`: khi `Screen.safeArea` vượt kích thước `Screen` (Device Simulator mở cạnh Game view: safe area theo máy giả lập, Screen theo Game view) thì coi như cả màn hình – trước đó anchor ra 2.7 và đẩy cả `UIZone` ra ngoài (Leaderboard trống).
+
+**Kiểm tra**: Play, tab Rank: Weekly / Players / Teams đúng; console không lỗi.
+
+## 08:40 – Nền khung avatar; bảng tuần dùng bot bám đuổi
+
+**Phản hồi**: khung avatar mất nền; muốn bảng xếp hạng kiểu bot như game thật (chơi nhiều lên top 1 nhưng không bỏ xa top 2; bỏ chơi thì bị đẩy xuống nhưng không quá xa).
+
+**Thêm**
+- `Game/Art/UI/Halloween/AvatarBg.png`: nền hồng có tia (tự vẽ bằng script, giống nền của avatar gốc) – đặt dưới ảnh mèo trong mọi khung avatar của bảng.
+- `Game/Scripts/Menu/WeeklyBots.cs`: hàm thuần tính điểm bot – điểm thô = tốc độ (theo seed tuần) x giờ đã qua; chỉ `above` bot được đứng trên người chơi (trần `maxAhead` giảm dần theo hạng), còn lại giữ dưới; 2 bot ngay dưới bám trong `maxLead` / 2 x `maxLead`; `AboveCount(debt, idleHours)` = nợ + 1 hạng mỗi `hoursPerRank` giờ bỏ chơi, tối đa `maxDrop`.
+- `Game/Scripts/Menu/WeeklyContest.cs` + section save `"weeklyContest"`: đếm màn thắng trong tuần (`LevelCompletedEvent`), sang tuần mới về 0; khi thắng: nợ = số bot đang đứng trên − 1 (quay lại leo từng hạng).
+- `Game/Tests/Editor/WeeklyBotsTests.cs`: 6 test (đang chơi là top 1 và top 2 bám sát; bỏ 1 ngày bị 3 bot vượt, không quá `maxAhead`; tối đa `maxDrop`; điểm 0; bot vượt không trùng điểm; cùng đầu vào cùng kết quả).
+
+**Sửa**
+- `LeaderboardPanel.cs`: `Init(profile, save, clock)`, tab Weekly dùng `WeeklyContest`; đồng hồ theo tuần của contest. `GameBootstrap` truyền `save`, `clock`.
+- `LeaderboardPanel.prefab`: dựng lại (lần trước bị Prefab Mode đang mở của người dùng tự lưu đè – Auto Save), thêm `Bg` vào khung avatar, điền sẵn `weeklyBots` (3 / 12 / 8 h / 5 / 0.1–0.8).
+
+**Kiểm tra**: 6/6 test `WeeklyBotsTests` đạt. Play, tuần chưa thắng màn nào: 5 bot đứng trên (12, 10, 8, 6, 4 điểm), người chơi hạng 6; console không lỗi.
+
+## 23:00 – Base popup hướng dẫn sự kiện (nút i), áp cho Weekly Contest
+
+**Phản hồi**: video mẫu bấm nút i xanh của cuộc thi tuần; popup hướng dẫn mọi liveops / sự kiện đều có dạng này nên làm 1 base.
+
+**Thêm**
+- `Shared/Scripts/UI/TutorialPopup.cs` (kế thừa `PopupView`): băng-rôn tiêu đề treo dây rơi từ trên xuống, đung đưa (OutBack + OutElastic); mảng `steps` (`content` bật lên, `arrow` vẽ dần nếu Image Filled, không thì bật lên) hiện lần lượt; cuối cùng "Tap to continue" hiện rồi nhịp. Chạm `Dim` khi đang chạy = hiện hết, chạm lần nữa = đóng. `Show(onClose)`.
+- `Shared/Scripts/UI/TutorialButton.cs`: nút i mở popup (`popup` gán từ ngoài, như `LuckyWheelButton`).
+- `Shared/Prefabs/TutorialPopup.prefab` (base: Dim, Banner (2 dây, mặt 9-slice, Title), Steps trống, TapHint).
+- `Shared/Art/UI/Tutorial/`: `TutorialBanner` (băng-rôn vàng, viền cam, 2 đinh), `TutorialRope` (dây thừng tiled), `TutorialArrow` (mũi tên cong) – tự vẽ bằng script.
+- `Game/Prefabs/Menu/WeeklyTutorialPopup.prefab` (variant): "Weekly Contest", 3 bước Beat the levels! (`popup_tutorial_2`) → Take the lead! (`IconRank`) → Win rewards! (`GoldChest` + `GlowRays`), 2 mũi tên.
+
+**Sửa**
+- `LeaderboardPanel.prefab`: nút `Info` thêm `TutorialButton`.
+- `Main.unity`: instance `WeeklyTutorialPopup` (tắt) trong `Canvas_Popup/Popups`, override `popup` của nút Info.
+- Docs: [10](../Features/10_UI-Menu-Popup.md), [HowTo_MoRong](../Features/HowTo_MoRong.md) (cách thêm popup hướng dẫn cho sự kiện mới).
+
+**Kiểm tra**: Play: bấm Info → popup mở, băng-rôn rơi, 3 bước hiện lần lượt; chạm 1 lần hiện hết (bước 3 scale 1, mũi tên fill 1, TapHint alpha 1), chạm lần 2 đóng; console không lỗi. Ảnh chụp từ MCP không thấy lớp tối (NoticePopup cũng vậy) – chưa nhìn bằng mắt trong Game view.
+
+## 23:15 – Popup hướng dẫn: hiệu ứng pop thay cho trượt
+
+**Phản hồi**: dùng hiệu ứng pop thay vì trượt.
+
+**Sửa**
+- `TutorialPopup.cs`: băng-rôn bật lên tại chỗ (scale 0 → 1, OutBack) thay cho rơi từ trên xuống + đung đưa (bỏ `bannerDrop`); mũi tên luôn bật lên (bỏ nhánh vẽ dần kiểu Filled). Gộp chung hàm `AppendPop`.
+- `WeeklyTutorialPopup.prefab`: 2 mũi tên về Image Simple.
+- Docs: [HowTo_MoRong](../Features/HowTo_MoRong.md).
+
+**Kiểm tra**: Play, bấm Info: băng-rôn bắt đầu scale 0 đúng vị trí rồi bật lên, bước 1 + mũi tên bật lên lần lượt; console không lỗi.
+
+## 23:30 – Mũi tên hướng dẫn theo mẫu
+
+**Phản hồi**: dùng mũi tên giống ảnh mẫu (Foodie Sizzle).
+
+**Sửa**
+- `Shared/Art/UI/Tutorial/TutorialArrow.png` vẽ lại: thân cong dày kiểu quả chuối, đuôi tròn, đầu tam giác to, ruột vàng sáng, viền cam đậm mảnh (240x220).
+- `WeeklyTutorialPopup.prefab`: 2 mũi tên 190x174, `preserveAspect`; Arrow2 bỏ nghiêng Z, dời xuống (40, -125) trỏ vào rương.
+
+**Kiểm tra**: Play, mở popup (bản trong scene Main) và chạm hiện hết: 2 mũi tên mới đúng chiều (bước 1 → bục, bục → rương), nền tối hiện; console không lỗi.
+
+## 23:45 – Dim của popup hướng dẫn không nhún khi chạm
+
+**Phản hồi**: chạm vào nền tối thì nó nhún như nút.
+
+**Nguyên nhân**: `Dim` có `Button` (vùng chạm) nên `UIAutoSetup` tự gắn `ButtonPress` khi lưu scene / vào Play.
+
+**Sửa**
+- `Shared/Prefabs/TutorialPopup.prefab`: `Dim` có sẵn `ButtonPress` **bỏ tick** (quy ước của `UIButtonPress`: nút đã có ButtonPress thì giữ nguyên, bỏ tick để tắt) → mọi variant thừa hưởng.
+- `Main.unity`: gỡ `ButtonPress` tự gắn trên instance `WeeklyTutorialPopup` (revert override).
+
+**Kiểm tra**: Play, mở popup, giả lập nhấn Dim: chỉ còn 1 `ButtonPress` (tắt), Dim giữ scale 1; vẫn chạm để hiện hết / đóng được.
+
+## 23:59 – Dim vẫn lún khi nhấn: bỏ hẳn Button khỏi Dim
+
+**Phản hồi**: nhấn vào Dim vẫn bị co lại (ảnh: vùng tối thu vào ~7% mỗi cạnh = `pressScale` 0.93 của `ButtonPress`).
+
+**Nguyên nhân**: cách bỏ tick `ButtonPress` (23:45) không bền – instance trong scene vẫn bị gắn thêm 1 `ButtonPress` **bật** (added override), vì Dim còn `Button` nên `UIAutoSetup` coi là nút.
+
+**Sửa**
+- `TutorialPopup.cs`: cài `IPointerClickHandler` trên gốc (chạm vào Dim nổi lên tới gốc), bỏ trường `tapArea`.
+- `Shared/Prefabs/TutorialPopup.prefab`: `Dim` bỏ `Button` và `ButtonPress`, chỉ còn Image chặn raycast → `UIAutoSetup` không gắn gì nữa.
+- `Main.unity`: gỡ `ButtonPress` added trên Dim của `WeeklyTutorialPopup`.
+- Docs: [HowTo_MoRong](../Features/HowTo_MoRong.md) ghi rõ không thêm Button vào Dim.
+
+**Kiểm tra**: Play, mở popup: Dim không có handler `pointerDown` nào (không thể lún), handler click là `WeeklyTutorialPopup`; chạm sau khi hiện hết thì đóng; lưu scene lại không bị gắn thêm component; console không lỗi.
+
+## 00:10 – Nút tab Weekly / Teams bị lật ngược
+
+**Phản hồi**: hình nút Weekly và Teams đang bị ngược.
+
+**Nguyên nhân**: sprite `TabButtonSide` / `SelectedTabButtonSide` bo tròn ở mép **phải**, nhưng prefab lại lật nút phải (Teams) và để nguyên nút trái (Weekly).
+
+**Sửa**
+- `LeaderboardPanel.prefab`: `BtnWeekly` scale X −1 (con `Label`, `Timer` lật lại −1 để chữ / đồng hồ không ngược); `BtnTeams` và `Label` về scale 1.
+
+**Kiểm tra**: Play, tab Rank: Weekly bo tròn mép trái, Teams bo tròn mép phải, chữ và đồng hồ đúng chiều; Prefab Mode đang mở đã nạp bản mới (không dirty).
+
+## 00:35 – Anim rương rau (nút Lv 50) theo video
+
+**Phản hồi**: làm lại anim các liveops, trước tiên là rương ở Home cho giống video (dùng anim / spine có sẵn trong bản rip nếu có).
+
+**Tìm trong `E:\FoodleSizzle`**: không có `.anim` cho nút này; spine `Chest` là rương thưởng (bronze … epic, có khóa) – không phải icon. Đúng icon là spine **`iconHomeLab`** (Spine 4.2.43: `chest`, `chest2`, `nap`, `carot`, `ngo`, `ngo2`, slot clipping `clip`), 2 animation `idle` (1 s) và `start` (2 s). Video: `idle` liên tục, khoảng 12 s một lần `start` (~1.7 s: rương giãn, nắp đóng sập, rương đóng nảy, nắp bật mở, rau trồi ra).
+
+**Thêm**
+- Tool dump Spine 4.2 (dotnet, ngoài project) thêm `SkeletonClipping` để cắt rau theo slot `clip` khi nắp đóng.
+- `Game/Art/UI/HalloweenRip/Side/ChestAnim.png` (gitignore): 90 khung 167x149 (`idle` 0–29, `start` 30–89, 30 fps), lưới 10 cột, Multiple, Full Rect, không vào atlas. Khung đầu trùng khít `Chest.png` cũ (lệch 13, 14 px).
+
+**Sửa**
+- `HomePanel.prefab` → `Locked_Chest/Content/Chest`: `UISpriteSequence` 360 bước (`idle` x10 rồi `start`, 12 s/vòng), cùng vị trí; rect 175x156, pivot (0.5, 0), (−1, −55.8) để khung đầu đè đúng chỗ ảnh tĩnh cũ (tỉ lệ 150/143). Lắc khi bấm của `LockedMenuButton` vẫn dùng (chỉ xoay, không đụng vị trí).
+- Docs: [10](../Features/10_UI-Menu-Popup.md).
+
+**Kiểm tra**: ảnh render 90 khung so cạnh video (`Temp/TutorialShots/chest_compare.gif`): cùng nhịp đóng / mở. Play: `Chest` đổi khung theo thời gian (t = 12.2 s → khung `idle` 5), vị trí giữ nguyên; console không lỗi. Chưa xem bằng mắt trên Home (Game view đang ở tỉ lệ ngang).
+
+## 00:50 – Anim vạc hotpot (nút Lv 20)
+
+**Phản hồi**: làm tiếp anim hotpot.
+
+**Nguồn**: spine `BaseGame/icon_hotpotHLW` (Spine 4.2, binary: `1_hotpot`, `water` (mesh), `1_ma`, `1_thia`), animation `idle` (4 s) và `click` (1.33 s). Video chỉ phát `idle` lặp liên tục (không thấy `click`).
+
+**Thêm**
+- `Game/Art/UI/HalloweenRip/Side/CauldronAnim.png` (gitignore): 120 khung 162x143 (`idle`, 30 fps), lưới 11 cột, Multiple, Full Rect. Khung đầu khớp `Cauldron.png` cũ (tỉ lệ 0.99, lệch 0, 4 px).
+
+**Sửa**
+- `HomePanel.prefab` → `Locked_Cauldron/Content/Chest`: `UISpriteSequence` 120 khung lặp; rect 150.6x132.9, pivot (0.5, 0), (0.3, −49.8) để khung đầu đè đúng ảnh tĩnh cũ.
+- Docs: [10](../Features/10_UI-Menu-Popup.md).
+
+**Kiểm tra**: ảnh render so cạnh video (`Temp/TutorialShots/hotpot_compare.gif`); Play: t = 5.1 s → khung 33, vị trí giữ nguyên; console không lỗi. Chưa xem bằng mắt trên Home.
+
+## 01:10 – Anim icon Daily (lịch)
+
+**Phản hồi**: làm tương tự cho Daily.
+
+**Nguồn**: spine `TextAsset/Quest` (Spine 4.2, atlas PMA: `quest`, `paper1`, `paper_fly`, `shadow`, `tick`), animation `idle` (0.67 s) và `click` (1.63 s: dấu tích xanh đóng lên, tờ lịch bị xé rơi xuống, lộ tờ mới). File `Quest.png` cùng thư mục là ảnh khác trùng tên (bảng kẹp giấy); texture đúng là `01_Images_2D/Texture2D/Quest_0.png` (224x224). Video: `idle` lặp, khoảng 15.7 s một lần `click`.
+
+**Thêm**
+- `raster.py` (ngoài project) thêm `--pma`: bỏ premultiply texture trước khi dựng.
+- `Game/Art/UI/HalloweenRip/Side/CalendarAnim.png` (gitignore): 69 khung 170x267 (cao vì tờ lịch rơi xuống dưới), lưới 12 cột, Multiple, Full Rect. Khung đầu khớp `Calendar.png` cũ (tỉ lệ 1, lệch 24, 18 px).
+
+**Sửa**
+- `HomePanel.prefab` → `Daily/Content/Calendar`: `UISpriteSequence` 469 bước (`idle` x21 rồi `click`, ~15.6 s/vòng); rect 183.5x288.1, pivot (0.5, 0), (−9.15, −179.2) để khung đầu đè đúng ảnh tĩnh cũ; Image không nhận raycast nên rect cao không chặn bấm.
+- `MenuShortcutButton` của `Daily`: bỏ `icon` (trước là `Calendar`) – kiểu nhấc + lắc mời bấm sẽ ghi đè vị trí mà `UISpriteSequence` đặt mỗi khung; video gốc cũng chỉ có anim spine. Chấm đỏ (`badge`) giữ nguyên.
+- Docs: [10](../Features/10_UI-Menu-Popup.md).
+
+**Kiểm tra**: ảnh render so cạnh video (`Temp/TutorialShots/daily_compare.gif`); prefab đã lưu đúng (469 khung, khung 420 = `click` đầu, 468 = `click` cuối); console không lỗi. Chưa xem trong Play (Unity đang ở Play mode từ trước, bản đang chạy dùng prefab cũ – cần dừng rồi Play lại).
+
+## 01:30 – Anim icon No Ads và hộp quà Starter
+
+**Phản hồi**: làm tương tự cho No Ads và hộp quà.
+
+**Nguồn**: spine `TextAsset/No Ads` (PMA: vòng đỏ, gạch chéo, chữ A / D / S) và `TextAsset/Gift_box` (PMA: `giftbox`, `blink`), đều có `idle` (0.67 s) và `click` (No Ads 1.37 s: chữ ADS phồng lên nảy, gạch chéo vẽ lại; Gift 0.6 s: hộp nhún nảy + lấp lánh). Texture cùng thư mục khớp atlas. Video: No Ads ~11.5 s một lần, hộp quà ~11.8 s một lần.
+
+**Thêm** (gitignore, `HalloweenRip/Side/`)
+- `NoAdsAnim.png`: 61 khung 204x204, lưới 10 cột. Khung đầu khớp `NoAds.png` (tỉ lệ 1, lệch 31, 33).
+- `GiftAnim.png`: 38 khung 157x158, lưới 12 cột. Khung đầu khớp `Gift.png` (tỉ lệ 0.995, lệch 14, 15).
+
+**Sửa**
+- `HomePanel.prefab`:
+  - `NoAds/Content/Tv`: `UISpriteSequence` 341 bước (`idle` x15 rồi `click`), `startOffset` 3 s; rect 218.6x218.6, pivot (0.5, 0), (1.07, −94.82).
+  - `Starter/Content/Chest`: 358 bước (`idle` x17 rồi `click`), `startOffset` 7 s; rect 164.4x165.4, (−6.43, −59.71).
+  - `MenuShortcutButton` của `NoAds`, `Starter`: bỏ `icon` (lý do như Daily).
+- Docs: [10](../Features/10_UI-Menu-Popup.md).
+
+**Kiểm tra**: GIF so cạnh video (`Temp/TutorialShots/noads_gift_compare.gif`); Play: cả 5 icon (rương, vạc, Daily, No Ads, quà) đổi khung theo thời gian, vị trí giữ nguyên; console không lỗi.
+
+## 02:30 – Tổ chức lại dự án theo mẫu Snacky_Dash
+
+**Yêu cầu**: tổ chức cấu trúc thư mục và cách dựng scene giống dự án `E:\Git\Snacky_Dash`. Người dùng chọn: theo hẳn Snacky (gộp asmdef), giữ 1 scene sắp kiểu Snacky, giữ tên gốc `_Project`.
+
+**Thư mục** (mọi di chuyển bằng `AssetDatabase.MoveAsset`, 125 lượt, giữ GUID):
+- `Core/*`, `Features/*/Scripts`, `Game/Scripts`, `Shared/Scripts/UI` → `Runtime/{Core, Gameplay, Economy, Shop, Profile, Settings, LiveOps/{DailyReward, DailyChallenge, LuckyWheel, WeeklyContest}, UI/{Framework, Home}, App, Save, Cheat}`; mọi `Editor/` → `Runtime/Editor/<nguồn>`, mọi `Tests/` → `Runtime/Tests/<nguồn>`.
+- Mọi `Configs/` → `Data/Config/`, level → `Data/Levels/`.
+- Prefab → `Prefabs/InGame/`, `Prefabs/UI/{Popups, Screens/Home, Screens/Game, Widgets(/<mảng>)}`.
+- Ảnh / font / âm / shader → `Source/Art/{UI/<nhóm>, InGame/<nhóm>, Avatars, Fonts, Atlases}`, `Source/Audio`, `Source/Effect/{Shaders, Materials}`. Mỗi thư mục được atlas gói dời nguyên khối nên 7 atlas vẫn gói đúng; ảnh UI vẫn dưới `…/Art/UI/` cho preset ASTC 4x4.
+- README từng feature → `Assets/Docs/Modules/<F>.md`. Xóa 4 thư mục rỗng `Core`, `Features`, `Game`, `Shared`.
+
+**Assembly**: 14 asmdef + 3 asmref → `PawBlock.Runtime` (`Runtime/`), `PawBlock.Editor` (`Runtime/Editor/`), `PawBlock.Tests` (`Runtime/Tests/`). Không asset nào lưu tên assembly (SerializeReference / UnityEvent) nên không vỡ dữ liệu. Namespace giữ nguyên. Đánh đổi: compiler không còn chặn phụ thuộc sai chiều (ghi ở ProjectConventions 11, Dependencies).
+
+**Sửa code**
+- Hằng đường dẫn trong 12 tool Editor + `FeelPlayModeTests` (Level tools, `GameplayVisualsSetup`, `AudioSetup`, `GameConfigSetup`, `GameFontSetup`) → đường dẫn mới; đã soát mọi hằng `Assets/_Project/…` đều trỏ tới chỗ có thật (`Data/Levels/Generated` do tool tự tạo).
+- `AudioSetup.FindRoot`: tìm theo tên trong cả cây scene (AudioManager, 3 Canvas không còn ở gốc).
+- `.gitignore`: thư mục rip → `/Assets/_Project/Source/Art/UI/Home/HalloweenRip/`.
+
+**Scene `Main`**: `[Managers]` (GameBootstrap, Manager, AudioManager) · `---- MÀN CHƠI ----` (bg, SpawnGrid, SelectionBox, DragCountBubble, TutorialHand) · `---- ĐIỀU KHIỂN ----` (Main Camera, Global Light 2D) · `---- GIAO DIỆN ----` (Canvas_HUD, Canvas_Menu, Canvas_Popup) · EventSystem. Chỉ đổi cha (nhóm ở gốc toạ độ), không đổi component.
+
+**Docs**: viết lại [ProjectStructure](../ProjectStructure.md) (mảng code, thư mục, scene), [ProjectConventions](../Refactor/ProjectConventions.md) mục 6, 11–14, [Dependencies](../Refactor/Dependencies.md); đổi đường dẫn trong 25 tài liệu Features / Modules (RoadMap, RefactorPlan, TaskBreakdown giữ nguyên vì là lịch sử). Dò link nội bộ: 0 link hỏng.
+
+**Kiểm tra**: biên dịch sạch (3 assembly); 185/185 test `PawBlock.Tests` đạt (3 test hỏng sẵn của package `UnitySkills`, không liên quan); quét mọi prefab + scene: 0 missing script, 0 missing reference; 7 atlas gói đúng thư mục; Play: Menu chạy, 5 icon anim đúng khung, bấm PLAY vào màn chơi (HUD bật, level chạy), console không lỗi.
+
+## 04:50 – Shop theo video Foodie Sizzle
+
+**Phản hồi**: cập nhật Shop panel giống video (vd3).
+
+**Nguồn**: prefab `ModalShop` của bản rip (dump cây + cắt 43 sprite từ atlas `UIShop` / `_NewUI2`): mái sọc `UITop`, ruy băng `Frame1/2/3`, khung gói Halloween `shop_2` + bí ngô + hồn ma + nhãn `tag` (X5 VALUE), khung gói giới hạn `UIMain` + `PatternTile` + đầu bếp `Char` + nhãn `TagSale`, nền 6 hạng gói (`BigBundle`, `GreatBundle`, `UltraBundle`, `SuperiorBundle`, `Legendary Bundle`, `NoAds` + ô vật phẩm), ảnh gói, `CoinLV1..6`, ô coin `CoinUIFix`, nút giá `NewBtnGreen`, đồng hồ. Ảnh nằm ở `Source/Art/UI/Home/HalloweenRip/Shop/` (gitignore), viền 9-slice giữ như gốc. Bố cục / kích thước lấy từ `ModalShop` (cùng canvas 1080).
+
+**Sửa code**
+- `ShopDatabase.cs`: `ShopSection` thêm cuối `Event`, `Limited`; `ShopProduct` thêm `itemsBackground`, `endsAt` + `EndsAt(now)`; `PriceText` → `289.000 ₫` (vi-VN).
+- `ShopCardView.cs`: `itemsBackground`, `coinItem` (ẩn khi không có coin), `timerText` + `timerFormat` đếm ngược mỗi giây (`FormatLeft`: `1D2H` / `11H14M` / `5M30S`, theo giờ máy, chỉ hiển thị).
+
+**Prefab**
+- Dựng lại `ShopBundleCard`, `ShopRemoveAdsCard`, `ShopCoinCard`; thêm `ShopEventCard`, `ShopLimitedCard` (thẻ có ruy băng + đồng hồ, cả thẻ là nút mua). Font `VN-Lilita-One` (rip).
+- `ShopPanel.prefab`: nền tối, header `UITop` + "SHOP" thay 4 tấm mái cũ, tắt thanh coin / năng lượng (video không có), bỏ header Remove Ads, ruy băng `BUNDLES` / `COINS`, Content padding 40 / 300 / 400 spacing 60, lưới coin 300x400 3 cột; `slots` 6 section (Event, Limited, RemoveAds ở đầu; NoAdsBundle, Bundle sau `BUNDLES`; Coin trong `CoinGrid`).
+
+**Dữ liệu** (`ShopDatabase.asset`): thêm gói `X2 Halloween` (Event, 289.000 ₫, 2000 coin + 2 mỗi booster + 2h vô hạn, hết 2026-11-01); Starter Pack → `Limited Pack` (section Limited, nhãn X5 VALUE); đổi tên / nền / ảnh: No Ads, No Ads Bundle, Big / Great / Super / Premium / Legendary Pack; icon 6 gói coin `CoinLV1..6`. Số coin / booster / giá các gói cũ giữ nguyên.
+
+**Kiểm tra**: render `Canvas_Menu` ra ảnh dọc 1080x1920 (camera tạm, Game view người dùng đang ngang): đủ các mục như video; bấm mua ô coin → popup Purchase Failed (IAP giả); 185/185 test đạt; console không lỗi.
+
+## 05:10 – Shop: gộp gói Halloween vào Special Pack, thay ảnh đầu bếp
+
+**Phản hồi**: theme chính đã là ma nên không cần mục Halloween Pack, cho thẻ đó làm Special Pack; ảnh đầu bếp thay bằng ảnh hợp Halloween (tìm trong rip, không có thì gen bằng Gemini).
+
+**Sửa**
+- Prefab `ShopEventCard` → đổi tên `ShopSpecialCard` (giữ GUID): ruy băng cam `Frame3` "SPECIAL PACK", bỏ chữ "x2" ở bí ngô. Xóa `ShopLimitedCard` (thẻ đầu bếp). `ShopPanel.slots`: Limited và Event đều dùng `ShopSpecialCard` (Event để dành cho sự kiện sau).
+- `ShopDatabase.asset`: bỏ gói `X2 Halloween`; `Limited Pack` (66.000 ₫) hiện trên thẻ Special.
+- Ảnh đầu bếp còn lại là `SuperiorBundle3` của Premium Pack. Atlas Halloween của rip không có nhân vật cầm coin hợp (chỉ có capybara phù thủy – không phải linh vật game) → gen bằng Gemini (3.6 Flash; mô hình Argon bị khóa, cần nâng cấp gói nên không dùng): đính kèm `GhostMascot.png`, yêu cầu giữ nguyên nét / màu / mũ, hồn ma ôm đống coin, nền trắng. Tách nền bằng loang từ mép (giữ trắng bên trong), cắt sát, 512 px → `Source/Art/UI/Home/Halloween/GhostCoins.png` (tự gen nên commit như `GhostMascot`). Premium Pack `icon` = `GhostCoins`.
+
+**Kiểm tra**: không còn prefab / asset nào dùng `Char`, `SuperiorBundle3`; render Shop: Special Pack (bí ngô, hồn ma, X5 VALUE, đồng hồ) đứng đầu, Premium Pack là hồn ma ôm coin; console không lỗi.
+
+## 05:40 – Shop: sao lấp lánh, icon tiền, bỏ đồng hồ, thẻ No Ads, thẻ gói 2 ô
+
+**Phản hồi** (so với game gốc): quanh icon mỗi gói có sao lấp lánh; ký hiệu ₫ lỗi font; bỏ "TIME LEFT"; thẻ No Ads thiếu vầng sáng sau icon và icon đè lên phần nền dưới; thẻ gói chia 2 ô: booster + số lượng (sau này thêm booster) và lượng vàng.
+
+**Sửa code**
+- `ShopDatabase.cs`: bỏ `endsAt` / `EndsAt`; `PriceText` chỉ còn số (`289.000`).
+- `ShopCardView.cs`: bỏ đồng hồ (`timerText`, `Update`); `itemsBackground` → `itemsBackgrounds[]` (tô cả ô booster và ô vàng); số booster hiện trơn "2" như bản gốc.
+
+**Thêm**: `Source/Art/UI/Common/Icons/icon_money.png` (tờ tiền trắng tự vẽ, thay ₫ – font VN-Lilita tự tạo dùng glyph đ gạch, khác bản gốc); `HalloweenRip/Shop/0_Coin.png` (đồng coin vàng cho ô vàng).
+
+**Prefab**
+- `ShopBundleCard` dựng lại: icon chính bên trái (vầng sáng + sao), `BoosterPanel` 280x280 (GridLayout 2 cột 115 px: Hint, Freeze, Reveal, Infinite), `CoinPanel` 170x280 (coin + số); giá = `PriceRow` (HorizontalLayout: số + icon tiền).
+- `ShopRemoveAdsCard`: icon ADS 220 px nằm trong vùng trên (không đè dải dưới / tiêu đề) + `LightEffect` phía sau + sao.
+- `ShopCoinCard`: giá + icon tiền, sao quanh đống coin.
+- `ShopSpecialCard`: bỏ hàng đồng hồ (thẻ cao 700), giá + icon tiền, sao quanh bí ngô.
+- `UISparkles` (có sẵn): sao `fx_sparkle`, nghỉ 0.1–0.7 s, hiện 0.8 s; `ShopPanel.slots` gán lại prefab sau khi dựng lại.
+
+**Kiểm tra**: render Shop 1080x1920 đúng bố cục 2 ô, giá + icon tiền, không còn đồng hồ; Play: 14 cụm sao, cụm trên thẻ đang thấy chạy (4/4 sao hiện lúc đo); 185/185 test đạt; console không lỗi.
+
+## 06:40 – Tab 4: Daily Challenge → Teams (Đội, giống guild)
+
+**Yêu cầu**: tab thứ 4 thay Daily Challenge bằng Teams (giống guild, theo video bản gốc: Các đội / Tìm kiếm / Tạo); Daily Challenge để sau làm liveops.
+
+**Nguồn**: `ModalTeam`, `ClanCell`, `PopupTeamInfo` của rip (dump cây + cắt sprite); 20 logo `logo__1..20` (`TeamLogoData` của rip rỗng, logo nạp kiểu Addressables). Video chỉ có chuyển 3 tab con (mờ dần, dòng hiện lần lượt); màn thông tin đội / My Team / Join–Leave làm theo `ModalTeam` (phần TeamInfo). Bỏ chat, quà đội, kho báu đội.
+
+**Thêm**
+- `Runtime/Teams/` (`PawBlock.Features.Teams`): `TeamsDatabase` (SO), `TeamInfo` / `TeamMember` / kết quả, `TeamSave` (section `"teams"`), `TeamService` (đội giả cố định theo seed, `Top`, `Search`, `Join` / `Leave`, `Create` trừ coin, `FakeMembers` theo hash ổn định của id), `TeamRow`, `TeamMemberRow`.
+- `Runtime/UI/Home/TeamsPanel.cs`: 4 trang (Teams / Search / Create / Info), tab 3 thành My Team khi đã vào đội, nút Join xanh / Leave đỏ, chuyển trang mờ dần + dòng hiện lần lượt (DOTween, thời gian thật), thông báo lỗi qua `GameFlowUI.ShowNotice`.
+- `Runtime/Tests/Teams/Editor/TeamServiceTests.cs`: 7 test (seed cố định, tìm kiếm, vào / rời, đầy / thiếu cấp, tạo trừ coin + lưu, thiếu coin, bước cấp).
+- `Data/Config/TeamsDatabase.asset` (40 tên đội, 8 mô tả, 24 tên thành viên, 20 logo, giá 3000, sức chứa 50, cấp 1–200 bước 5); `GameConfig.teams`.
+- `Prefabs/UI/Screens/Home/TeamsPanel.prefab`: chép header + 3 nút tab từ `LeaderboardPanel` (cùng bộ ảnh), các trang dựng bằng ảnh rip `HalloweenRip/Teams/` (gitignore).
+
+**Sửa**
+- `MainMenu.prefab`: `Panels` thay instance `DailyPanel` bằng `TeamsPanel` (cùng vị trí), `MainMenuNavigator.menuPanels[3]`.
+- `MenuTabBar.prefab`: `Tab_Daily` → `Tab_Teams` (icon `IconTeam`, nhãn "Teams"), gỡ `DailyTabBadge`, tắt khóa / chấm đỏ.
+- `GameBootstrap`: tạo `TeamService`, `teamsPanel.Init(...)`; `dailyChallengePanel` thành tùy chọn (có thì Init). `MainMenuNavigator.DailyTab` → `TeamsTab`; `ScreenFlow.ShowMenu` luôn về Home.
+- Docs: [17_Teams](../Features/17_Teams.md), [Modules/Teams](../Modules/Teams.md), 00, 10, 11, 16, [Modules/DailyChallenge](../Modules/DailyChallenge.md), README, ProjectStructure.
+
+**Kiểm tra**: 192/192 test đạt; quét prefab + scene 0 missing; Play: danh sách 30 đội, tìm "bri" ra 5 đội, View → Join (sĩ số +1, nút Leave đỏ, tab My Team), Leave, tạo "Ghost Squad" (trừ 3000 coin, cấp 5, người chơi là đội trưởng có viền); sau thử đã trả save về (rời đội, coin về 1715); console không lỗi.

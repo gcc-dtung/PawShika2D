@@ -1,6 +1,6 @@
 # 08 – Điểm danh 7 ngày (Daily Reward)
 
-> Code ở `Assets/_Project/Features/DailyReward/Scripts/` ([README](../../_Project/Features/DailyReward/Docs/README.md)).
+> Code ở `Assets/_Project/Runtime/LiveOps/DailyReward/` ([README](../Modules/DailyReward.md)).
 
 ## Tính năng làm gì
 
@@ -17,14 +17,14 @@
 | `DailyRewardModel` | **Model** C# thuần: trạng thái từng ô, `MarkClaimed`, `Refresh(today)`; lưu section `"dailyReward"` (`DailyRewardSave { cycleStart, claimedMask }`) |
 | `DailyRewardManager` | Trên `Manager`: `Claim(day)`, trao quà (`GrantItem`; cài `IRewardGranter` / `IRewardIcons` cho DailyChallenge, LuckyWheel), kiểm tra sang ngày mỗi 5 s và khi quay lại app; `onChanged`, `onClaimed` |
 | `DailyRewardPopup`, `DailyRewardSlot` (prefab) | Popup 7 ô, CLAIM / "Next reward in" |
-| `DailyRewardButton` | Nút Daily trên Home (nằm trong prefab `Game/Prefabs/Menu/HomePanel`) |
+| `DailyRewardButton` | Nút Daily trên Home (nằm trong prefab `Prefabs/UI/Screens/Home/HomePanel`) |
 
 ## Sửa / mở rộng
 
 | Muốn | Làm |
 | --- | --- |
 | Đổi quà | Sửa `DailyRewardDatabase.asset` trong Inspector (UI tự đọc) |
-| Thêm loại quà (vd. "Thêm giờ") | 1. Thêm giá trị **cuối** `DailyRewardKind` (`Core/Contracts/Types`). 2. `case` trong `DailyRewardManager.GrantItem` / `IconOf`. 3. Icon + chữ trong `DailyRewardSlot` (2 `switch`: icon, số). 4. Icon mới thì thêm field vào database |
+| Thêm loại quà (vd. "Thêm giờ") | 1. Thêm giá trị **cuối** `DailyRewardKind` (`Runtime/Core/Contracts/Types`). 2. `case` trong `DailyRewardManager.GrantItem` / `IconOf`. 3. Icon + chữ trong `DailyRewardSlot` (2 `switch`: icon, số). 4. Icon mới thì thêm field vào database |
 | Chu kỳ dài hơn 7 ngày | `DailyRewardDatabase.CycleDays` + thêm ô `DailyRewardSlot` trong prefab `DailyRewardPopup` (đang 3 hàng: 3 + 3 + 1) |
 | Test | `DailyRewardManager` → chuột phải → Next Day / Reset, hoặc Debug Panel |
 
