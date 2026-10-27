@@ -2,10 +2,10 @@
 
 | | |
 | --- | --- |
-| Trạng thái | Chưa push |
-| Commit | |
-| Thời gian push | |
-| Cập nhật lần cuối | 2026-10-27 12:00 |
+| Trạng thái | Đã push |
+| Commit | `be61fce` "Teams đầy đủ, màn chơi Halloween, hiệu ứng thẻ Limited Pack, sửa vuốt tab" (nhánh `RefactorProjectStructure`) |
+| Thời gian push | 2026-10-27 09:32 |
+| Cập nhật lần cuối | 2026-10-27 09:33 |
 
 ## 05:20 – Dựng lại Home theo video mẫu, đổi theme mèo → Halloween
 
