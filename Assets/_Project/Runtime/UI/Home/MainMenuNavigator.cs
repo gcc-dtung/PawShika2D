@@ -117,6 +117,9 @@ namespace PawBlock.Game
             // Không còn tab phía đó: không cho kéo ra ngoài (kéo dương = lộ tab bên trái)
             if (_current == 0) offset = Mathf.Min(offset, 0f);
             if (_current == TabCount - 1) offset = Mathf.Max(offset, 0f);
+            // Tối đa 1 tab mỗi lần vuốt: chỉ 2 panel kề bên được bật, kéo quá (chuột kéo dài) sẽ lộ màn chơi phía sau
+            float width = PanelWidth();
+            offset = Mathf.Clamp(offset, -width, width);
             SetPanelOffset(offset);
         }
 

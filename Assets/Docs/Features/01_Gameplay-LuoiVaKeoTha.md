@@ -19,7 +19,7 @@ Người chơi kéo 1 hình chữ nhật trên lưới. Vùng hợp luật thì 
 | | `Solver/ShikakuSolver` | Backtracking (clue ít lựa chọn nhất trước – MRV); dùng cho Hint / Reveal / kiểm tra level |
 | Sinh lưới | `Board/GridSpawner` | Tạo / tái sử dụng `CellView`, bỏ ô Void, hiệu ứng xuất hiện, phát `gridCellEvent` |
 | | `Board/GridGeometry` | Ô ↔ world (`CellSpacing` 1.2), ô "dính" dưới ngón tay |
-| View | `Board/CellView` | Số, ổ khóa, ô nền hướng; `HitBox` cho raycast |
+| View | `Board/CellView` | Số, ổ khóa, ô nền hướng; ô nền đổi theo loại (`clueSprite` ô số, `mysterySprite` "?", `fuzzySprite` số mơ hồ, trống = sprite prefab); `HitBox` cho raycast |
 | | `Input/SelectionBoxView` | Khung màu theo ngón tay, giãn mượt (DOTween), co xám khi thả sai |
 | | `Block/PlacedBlockView` | Khối mèo: xem trước → `Confirm` / `PlayWrong` / `PlayRemove` / `PlayWinFlash` |
 | | `Input/DragCountBubble` | Bong bóng đếm số ô |

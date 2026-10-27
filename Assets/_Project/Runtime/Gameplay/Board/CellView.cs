@@ -31,6 +31,11 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private SpriteRenderer[] lockSprites;
         [SerializeField] private Collider2D hitBox;
 
+        [Header("Ô nền theo loại ô số (theme Halloween). Để trống thì giữ ô nền của prefab")]
+        [SerializeField] private Sprite clueSprite;    // ô có số (sáng hơn ô trống)
+        [SerializeField] private Sprite mysterySprite; // số ẩn "?" (tím)
+        [SerializeField] private Sprite fuzzySprite;   // số mơ hồ: E / O / > / < / a/b (cam)
+
         // Kích thước ô nền (đơn vị world). Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
         private static readonly Vector2 BadgeTall = new Vector2(0.5f, 0.74f);
         private static readonly Vector2 BadgeSquare = new Vector2(0.64f, 0.64f);
@@ -59,13 +64,18 @@ namespace PawBlock.Features.Gameplay
         private Transform _clueRoot;      // số đang hiện, hoặc ổ khóa khi ô còn khóa
         private Vector3 _valueScale, _valuePos, _lockScale, _lockPos, _badgePos, _cornerPos;
         private Color _bodyColor = Color.white;
+        private Sprite _blankSprite;
         private readonly List<TMP_Text> _contentTexts = new List<TMP_Text>();
         private readonly List<SpriteRenderer> _contentSprites = new List<SpriteRenderer>();
         private readonly List<float> _contentAlpha = new List<float>(); // alpha gốc: chữ trước, sprite sau
 
         private void Awake()
         {
-            if (spriteRenderer != null) _bodyColor = spriteRenderer.color;
+            if (spriteRenderer != null)
+            {
+                _bodyColor = spriteRenderer.color;
+                _blankSprite = spriteRenderer.sprite;
+            }
             if (lockText != null) lockText.color = TextColor.Display(lockText.color); // số trên khóa không bị nhạt (Linear)
             // Nội dung hiện sau ô nền: số, khóa (chữ + hình), ô hướng
             if (valueText != null) _contentTexts.Add(valueText);
@@ -315,6 +325,13 @@ namespace PawBlock.Features.Gameplay
             ClueCell clue = Model != null ? Model.Clue : null;
             bool hasClue = clue != null;
             bool locked = hasClue && clue.IsLocked;
+
+            if (spriteRenderer != null)
+            {
+                Sprite body = null;
+                if (hasClue && !locked) body = clue.IsHidden ? mysterySprite : clue.IsAmbiguous ? fuzzySprite : clueSprite;
+                spriteRenderer.sprite = body != null ? body : _blankSprite;
+            }
 
             if (valueText != null)
             {

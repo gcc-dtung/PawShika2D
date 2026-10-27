@@ -120,6 +120,7 @@ Ai cài / ai dùng từng interface: chú thích trong file và bảng "Phụ th
 | `PopupView` (abstract) | Base popup: mở / đóng có hiệu ứng, `OnOpened` / `OnClosed`, event `Closed`, `CloseOnLevelLoad` |
 | `MenuPanel` (abstract) | Gốc 1 tab Main Menu: `Rect`, `SetSelected`, `OnShown` / `OnHidden` |
 | `NoticePopup` | Popup thông báo chung |
+| `ConfirmPopup` | Popup hỏi lại Có / Không (khung Halloween) |
 | `ButtonPress`, `UIButtonPress`, `UIButtonSounds`, `NoClickSound`, `NoClickVibrate`, `ButtonPressIgnore`, `UIGrayscaleWhenDisabled` | Cảm giác bấm, âm / rung khi bấm, nút xám khi tắt |
 | `SafeAreaZone`, `BackgroundCover`, `BackgroundFitter`, `NestedScrollRect` | Bố cục theo màn hình |
 | `MenuShortcutButton`, `SettingsButton` | Nút phụ trên Home (mời bấm, mở Shop), nút bánh răng |
@@ -136,7 +137,7 @@ Ai cài / ai dùng từng interface: chú thích trong file và bảng "Phụ th
 | `ScreenFlow` (`IScreenNavigator`) | Menu ↔ màn chơi, phát `ScreenChangedEvent`, mở tab Shop khi có `ShopOpenRequestedEvent` |
 | `GameFlowUI` (`IMenuPopups`) | Nối `GameState` với popup, mở popup dùng chung, đóng popup khi đổi level |
 | `GameAudioEvents` | Nối âm thanh vào event của game |
-| `UI/Home/` | `MainMenuNavigator`, `MenuTabBar`, `MenuTabButton`, `MenuSwipe`, `ShopPanel`, `HomePanel`, `PlayButtonView`, `LeaderboardPanel` + `LeaderboardRow`, `LockedTabPanel`, `GhostMascot`, `LockedMenuButton` |
+| `UI/Home/` | `MainMenuNavigator`, `MenuTabBar`, `MenuTabButton`, `MenuSwipe`, `ShopPanel`, `HomePanel`, `PlayButtonView`, `LeaderboardPanel` + `LeaderboardRow`, `LockedTabPanel`, `LockedMenuButton` |
 | `Save/` | `SaveMigrator`, `SaveDataV1` (save v1 → v2) |
 | `Cheat/` | `DebugCheats`, `CheatPanel` (trong bản build) |
 | `Editor/App/` | `GameBootstrapCollector` (tự điền tham chiếu Bootstrap), `DebugPanelWindow`, `GameConfigSetup`, `AudioSetup` |
@@ -158,8 +159,9 @@ Sắp theo mẫu Snacky_Dash: nhóm `[Managers]` trên cùng, rồi các nhóm n
 │   └── HintFrameTemplate, DustTemplate (tắt)   mẫu cho pool
 └── AudioManager         AudioManager, GameAudioEvents, GameHapticEvents; Music + Sfx_0..7 (AudioSource đặt sẵn)
 ---- MÀN CHƠI ----
-├── bg                   BackgroundFitter (+ Pattern)
+├── bg                   BackgroundFitter (nền Halloween `GameBG`; Pattern tắt)
 ├── SpawnGrid            GridSpawner (+ BoardFrame)
+├── BoardDecor           BoardDecor: hồn ma ló sau góc trái, mạng nhện góc phải (bám góc khung theo cỡ lưới)
 ├── SelectionBox (tắt)   SelectionBoxView
 ├── DragCountBubble      [prefab] tắt sẵn, bật khi kéo
 └── TutorialHand (tắt)   mẫu bàn tay (HintMarker nhân bản)

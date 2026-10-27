@@ -1596,7 +1596,6 @@ MonoBehaviour:
   fill: {fileID: 2405806161543037574}
   hardFrame: {fileID: 4105918167207489304}
   tabText: {fileID: 3950090423438027873}
-  playText: {fileID: 395624789606784237}
   hardFillSize: {x: 490, y: 190}
   button: {fileID: 1287152076514777140}
 --- !u!114 &4277942781184602476
@@ -2139,7 +2138,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

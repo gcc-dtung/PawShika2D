@@ -189,7 +189,9 @@ namespace PawBlock.Game
             Require(leaderboardPanel)?.Init(s.Profile, save, clock);
             if (config != null && config.teams != null)
             {
-                var teams = new TeamService(save, s.Coins, () => s.Profile.Local().Level, config.teams);
+                var teams = new TeamService(save, s.Coins, () => s.Profile.Local().Level, config.teams, clock,
+                    () => { PlayerProfile me = s.Profile.Local(); return (me.Name, me.AvatarId); },
+                    lives => { if (energyManager != null) energyManager.Add(lives); });
                 Require(teamsPanel)?.Init(teams, s.Coins, s.Profile, gameFlowUI);
             }
             else Debug.LogError("[GameBootstrap] Thiếu TeamsDatabase trong GameConfig", this);

@@ -70,7 +70,7 @@ Cùng settings + cùng seed = kết quả y hệt (hash FNV-1a). Đổi `seed` =
 
 ## Level Hard / Very Hard
 
-`LevelDefinition.difficulty` khác `Normal` thì: nút PLAY đổi mặt + tab mức khó, khung LEVEL trên HUD có tab, băng "HARD / EXTREME LEVEL" chạy khi vào ván (`DifficultyIntro`), Mechanic Injector gắn 2–3 cơ chế khó. Giao diện mỗi mức lấy từ `DifficultyTheme.asset`.
+`LevelDefinition.difficulty` khác `Normal` thì: nút PLAY đổi mặt + tab mức khó, chữ "Level n" trắng đổi viền (đỏ / tím, `playLevelOutline`), khung LEVEL trên HUD có tab, băng "HARD / EXTREME LEVEL" chạy khi vào ván (`DifficultyIntro`), Mechanic Injector gắn 2–3 cơ chế khó. Giao diện mỗi mức lấy từ `DifficultyTheme.asset`.
 
 ## Sửa / mở rộng
 

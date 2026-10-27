@@ -109,6 +109,73 @@ namespace PawBlock.Features.Teams.Tests
             Assert.IsNull(sut.MyTeam);
         }
 
+        private sealed class FakeClock : IClock
+        {
+            public long Now = 1_800_000_000;
+            public long UtcNowSeconds => Now;
+            public System.DateTime LocalNow => System.DateTimeOffset.FromUnixTimeSeconds(Now).LocalDateTime;
+            public event System.Action Synced { add { } remove { } }
+        }
+
+        [Test]
+        public void Join_SeedsFeed_EndsWithPlayerJoined()
+        {
+            var clock = new FakeClock();
+            var sut = new TeamService(_save, _coins, () => _level, _db, clock, () => ("Me", 3));
+            sut.Find("t0").members = 10;
+            sut.Join("t0");
+            Assert.Greater(sut.Feed.Count, 1);
+            TeamFeedItem last = sut.Feed[sut.Feed.Count - 1];
+            Assert.AreEqual(TeamFeedType.Joined, last.Type);
+            Assert.IsTrue(last.mine);
+            Assert.AreEqual("Me", last.name);
+            sut.Leave();
+            Assert.AreEqual(0, sut.Feed.Count);
+        }
+
+        [Test]
+        public void SendMessage_TrimsAndRequiresTeam()
+        {
+            var sut = new TeamService(_save, _coins, () => _level, _db, new FakeClock(), () => ("Me", 0));
+            Assert.IsFalse(sut.SendMessage("hi")); // chưa vào đội
+            sut.Find("t1").members = 5;
+            sut.Join("t1");
+            Assert.IsFalse(sut.SendMessage("   "));
+            Assert.IsTrue(sut.SendMessage("  hello  "));
+            Assert.AreEqual("hello", sut.Feed[sut.Feed.Count - 1].text);
+        }
+
+        [Test]
+        public void RequestLives_CooldownAndHelpsGrantLives()
+        {
+            var clock = new FakeClock();
+            int granted = 0;
+            var sut = new TeamService(_save, _coins, () => _level, _db, clock, () => ("Me", 0), n => granted += n);
+            sut.Find("t2").members = 3;
+            sut.Join("t2");
+            Assert.IsTrue(sut.RequestLives());
+            Assert.IsFalse(sut.RequestLives()); // đang chờ
+            Assert.AreEqual(_db.lifeRequestCooldownHours * 3600L, sut.LifeRequestCooldownLeft());
+
+            clock.Now += _db.lifeHelpMinutes * 60L * 2;
+            sut.UpdateLifeHelps();
+            Assert.AreEqual(2, granted);
+
+            clock.Now += _db.lifeHelpMinutes * 60L * 10;
+            sut.UpdateLifeHelps();
+            Assert.AreEqual(3, granted); // không quá số đồng đội
+
+            clock.Now += _db.lifeRequestCooldownHours * 3600L;
+            Assert.AreEqual(0, sut.LifeRequestCooldownLeft());
+        }
+
+        [Test]
+        public void RankOf_HighestScoreIsOne()
+        {
+            TeamService sut = Create();
+            Assert.AreEqual(1, sut.RankOf(sut.Top(1)[0]));
+        }
+
         [Test]
         public void StepRequiredLevel_ClampsAndSteps()
         {

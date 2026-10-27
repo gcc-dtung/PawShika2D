@@ -5,7 +5,7 @@
 | Trạng thái | Chưa push |
 | Commit | |
 | Thời gian push | |
-| Cập nhật lần cuối | 2026-10-25 06:40 |
+| Cập nhật lần cuối | 2026-10-27 12:00 |
 
 ## 05:20 – Dựng lại Home theo video mẫu, đổi theme mèo → Halloween
 
@@ -374,3 +374,157 @@
 - Docs: [17_Teams](../Features/17_Teams.md), [Modules/Teams](../Modules/Teams.md), 00, 10, 11, 16, [Modules/DailyChallenge](../Modules/DailyChallenge.md), README, ProjectStructure.
 
 **Kiểm tra**: 192/192 test đạt; quét prefab + scene 0 missing; Play: danh sách 30 đội, tìm "bri" ra 5 đội, View → Join (sĩ số +1, nút Leave đỏ, tab My Team), Leave, tạo "Ghost Squad" (trừ 3000 coin, cấp 5, người chơi là đội trưởng có viền); sau thử đã trả save về (rời đội, coin về 1715); console không lỗi.
+
+## 2026-10-26 09:30 – Teams: Team Info đầy đủ, My Team (bảng tin, chat, xin mạng); sửa nút mũi tên
+
+**Phản hồi**: bổ sung theo ảnh bản gốc (Thông tin đội có điểm / hoạt động / hạng, huy chương top 3; Đội của tôi có bảng tin, Tin nhắn, Yêu cầu mạng); nút prev của Teams không bấm được.
+
+**Lỗi nút**: `LevelPrev` và nút quay lại cũ xoay 180° trục Y để quay đầu mũi tên; `GraphicRaycaster` bật *Ignore Reversed Graphics* nên bỏ qua hình bị lật → không nhận chạm. Sửa: nút đứng thẳng (Image trong suốt nhận chạm), hình mũi tên là con được lật. Kiểm bằng raycast thật qua EventSystem: Next 1 → 5 → 10, Prev 10 → 5.
+
+**Sửa code**
+- `TeamInfo.cs`: `activity` (`TeamActivity`), `TeamMember.LastSeenDays`, `TeamFeedItem` / `TeamFeedType`.
+- `TeamSave.cs`: `feed`, `lastLifeRequest`. `TeamsDatabase.cs`: `feedMax`, `messageMaxLength`, `lifeRequestMax` 5, `lifeRequestCooldownHours` 4, `lifeHelpMinutes` 20, `greetings`.
+- `TeamService.cs`: nhận `IClock`, tên / avatar người chơi, `grantLives`; `ScoreOf`, `RankOf`, bảng tin tạo sẵn khi vào đội, `SendMessage`, `RequestLives`, `UpdateLifeHelps` (đồng đội giả giúp theo thời gian, cộng mạng), `FormatAgo`, `FormatCooldown`; thành viên giả xếp theo cấp, đội trưởng là 1 trong 3 người đầu.
+- `TeamMemberRow.cs` (huy chương, Leader / "1d ago"), `TeamFeedRow.cs` (mới).
+- `TeamsPanel.cs`: trang My Team; Team Info / My Team thay 3 tab bằng thanh tiêu đề (+ X ở Team Info); đã vào đội thì tab mở thẳng My Team; bật trang trước khi nạp để layout / cuộn đúng; bảng tin cuộn xuống cuối (lặp 3 frame vì chữ tự co giãn đổi chiều cao), dòng cũ tắt ngay trước khi Destroy.
+- `GameBootstrap`: truyền `clock`, profile, `energyManager.Add` cho `TeamService`.
+- `TeamServiceTests`: +4 test (bảng tin vào / rời, gửi tin, xin mạng + chờ + giúp không quá số thành viên, hạng). Tổng 196 test.
+
+**Prefab / ảnh**: thêm ảnh rip `HalloweenRip/Teams/` (Chat Box, My Chat, Time Stamp, Time Bar, GreenProcess, Header Team a, NewBtnYellow / Green / Gray, Pos 1–3, i_message, i_heart, 7_Time, X) với viền 9-slice như gốc; `Source/Art/UI/Common/Icons/icon_dot.png` (tự vẽ, tô màu Activity / Online). `TeamsPanel.prefab`: nhóm `Tabs`, `TitlePlate`, `CloseButton`; dựng lại `InfoPage`, thêm `MyTeamPage`.
+
+**Kiểm tra**: 196/196 test; Play: đội đầy hiện Full; vào "Zombie Kittens" → Leave đỏ, 50/50, hạng 2; X → My Team; gửi "Hi team! Boo :)" (bong bóng phải); Request → nút xám 3h59m; tua 40 phút → 2/5 mạng; đáy bảng tin trùng đáy khung. Sau thử đã trả save (rời đội, xoá bảng tin, mốc xin mạng); console không lỗi.
+
+## 2026-10-26 11:00 – Teams: thanh tiêu đề như bản gốc, viền dòng mỏng
+
+**Phản hồi** (video bản gốc): Team Info không to như vậy, chỉ có dải nâu bo tròn phía trên + tấm "Team Info", không có phần sáng; viền dòng thành viên / bảng tin quá dày.
+
+**Sửa**
+- `TeamsPanel.cs`: `headerTitle` → `listHeader` (`FormerlySerializedAs`) trỏ cả khung `Header` của 3 tab, ẩn ở Team Info / My Team; `joinLabelMaterial` / `leaveLabelMaterial` đổi viền chữ nút.
+- `TeamsPanel.prefab`: `TitlePlate` = dải `Header_Team` (top +277, cao 411, như `ModalTeam` gốc) + con `Plate` (`Header_Team_a`, rộng 580) + `Title`; X đặt (-100, -64). `InfoPage` / `MyTeamPage` bắt đầu cách đỉnh 225 (trước 400). Dòng đội / thành viên dùng `PosBar_Thin`, dòng thông báo `Time_Stamp_Thin` cao 110.
+- Ảnh (rip, gitignore): `HalloweenRip/Teams/Header_Team.png`; `PosBar_Thin.png`, `Time_Stamp_Thin.png` vẽ lại viền mỏng từ ảnh gốc (giữ hình ngoài, tô lại vành theo khoảng cách tới mép). Material `Font/VN-Lilita-One SDF - Outline Red.mat`.
+
+**Kiểm tra**: 196/196 test; Play: Team Info (Join / Leave), My Team chụp so với video; không còn tham chiếu rỗng trong `TeamsPanel`. Save đã trả lại sau khi thử.
+
+## 2026-10-26 12:30 – Teams: menu thành viên, hỏi lại khi rời đội
+
+**Yêu cầu**: như video bản gốc – bấm thành viên hiện menu Xem hồ sơ / Xoá thành viên; Rời đi hỏi "Rời đội?" Có / Không.
+
+**Sửa code**
+- `UI/Framework/ConfirmPopup.cs` (mới, dùng chung): tiêu đề, câu hỏi, Yes / No / X; chỉ Yes gọi `onYes`. `GameFlowUI.ShowConfirm` (thiếu popup thì làm luôn).
+- `TeamMemberRow`: `Button` + event `Clicked`, `Member`, `AvatarRect`.
+- `TeamsPanel`: Leave → `ShowConfirm` rồi mới rời; menu thành viên (lớp chặn trong suốt + khung `Detail_Popup` bật ra OutBack dưới avatar, không tràn khỏi trang), View Profile (`OpenProfile` cho mình, hồ sơ giả theo tên cho thành viên giả), Remove Member mờ 45 % và không bấm được (đội giả). Đổi trang / tắt panel thì đóng menu.
+
+**Prefab / ảnh**: `Prefabs/UI/Popups/ConfirmPopup.prefab` (từ NoticePopup: giữ Dim, khung `Team_Infor_Bar` ppum 1.45, X `icon_close`, nút `Green_Button_Small` / `Red_Button_Small`), đặt trong `Canvas_Popup/Popups` cạnh NoticePopup, `GameFlowUI.confirmPopup` trỏ tới. `TeamsPanel.prefab`: `InfoPage/MemberMenuBlocker`, `InfoPage/MemberMenu`; `MemberTemplate` nhận chạm (Image raycast + Button). Ảnh rip mới: `HalloweenRip/Teams/Detail_Popup.png`, `icon_close.png`.
+
+**Lỗi gặp**: chữ tạo bằng code có `m_fontSize: -99` → TMP coi là chưa khởi tạo, lúc chạy nạp mặc định (cỡ tối đa 72, bật xuống dòng) nên "Remove Member" xuống 2 dòng. Sửa: đặt `fontSize` cụ thể. (`GameplayHUD.prefab` có 2 chữ cũng như vậy từ trước, chưa đụng.)
+
+**Kiểm tra**: 196/196 test; Play bằng raycast thật qua EventSystem: bấm thành viên → menu dưới avatar; View Profile → hồ sơ "Ember" cấp 411; bấm ra ngoài → đóng; Leave → popup; No / X giữ đội; Yes rời đội về tab Teams. Không tham chiếu rỗng; save đã trả lại.
+
+## 2026-10-26 13:00 – Teams: bảng tin My Team chạy lên dưới banner
+
+**Yêu cầu**: cho khung bảng tin (Viewport) cao lên, chạy lên dưới banner như bản gốc.
+
+**Sửa** (`TeamsPanel.prefab`, `MyTeamPage`): `Feed` Top 205 → 100 (chui dưới banner 90 px; Viewport / Scroll giãn theo Feed); `Banner` chuyển xuống sau `Feed` trong Hierarchy để vẽ đè lên bảng tin; `Feed/.../Content` padding trên 10 → 100 để cuộn lên đầu thì dòng đầu nằm ngay dưới banner.
+
+**Kiểm tra**: Play – cuộn cuối: dòng cũ trượt xuống dưới banner như bản gốc; cuộn đầu: dòng đầu không bị che.
+
+## 2026-10-26 13:30 – Hồn ma Home không còn là Button
+
+**Yêu cầu**: hồn ma giữa Home không phải nút.
+
+**Sửa**: `GhostMascot.prefab` (`Ghost/Mascot`) bỏ component `Button`; `GhostMascot.cs` nhận chạm bằng `IPointerClickHandler` (qua Image Raycast Target của chính object), bỏ trường `button` / `RequireComponent(Button)`. Chạm vẫn nhún bẹp + lắc như cũ, nhưng không còn là nút (UIAutoSetup không gắn ButtonPress / tiếng nút).
+
+**Kiểm tra**: Play – raycast thật trúng `Mascot`, chạy hiệu ứng 0.5 s; console sạch.
+
+## 2026-10-26 14:00 – Sửa chữ "Level n" trên nút Play ở level Hard / Very Hard
+
+**Lỗi**: level khó, chữ "Level n" vẫn viền xanh lá của nút thường mà mặt chữ lại đổi sang đỏ / tím tối (`playLevelTextColor` – kiểu cũ khi nút còn chữ PLAY to, "Level n" là dòng phụ) → chữ tối, viền xanh trên nền đỏ / tím.
+
+**Sửa**: `DifficultyStyle.playTitleOutline` → `playLevelOutline` (`FormerlySerializedAs`), bỏ `playLevelTextColor`; `PlayButtonView` đổi material viền của `levelText` (mặt chữ giữ trắng), bỏ trường `playText` (chữ PLAY đã ẩn). `Data/Config/DifficultyTheme`: Hard = `VN-Lilita-One SDF - Outline Red`, Very Hard = `Outline Purple` (cùng font với chữ Level; material nằm trong HalloweenRip như `Outline Green` đang dùng).
+
+**Kiểm tra**: Play – Level 38 (Hard) chữ trắng viền đỏ, Level 48 (Very Hard) chữ trắng viền tím; trả lại level đang chơi, không đụng save.
+
+## 2026-10-26 16:00 – Màn chơi theo theme Halloween (theo mockup đã duyệt)
+
+**Yêu cầu**: màn chơi không hợp theme Halloween; đổi asset (trừ booster) theo mockup đã duyệt.
+
+**Asset tự vẽ** (script Python, commit được):
+- `Source/Art/InGame/Gameplay/Halloween/`: `Cell_Stone` (ô trống, đá tím đậm), `Cell_Clue` (ô số, sáng hơn), `Cell_Mystery` ("?", tím), `Cell_Fuzzy` (số mơ hồ E / O / > / <, cam) – 169 px, ppu 150 như `CellBG`; `BoardFrame_HLW` (viền nâu – kem, lòng tím, 9-slice 40, ppu 80).
+- `Source/Art/UI/Gameplay/Halloween/`: `LevelFrame_HLW` (kem, lòng tím), `LevelFrame_Hard` / `LevelFrame_VeryHard` (thêm tab đỏ / tím), `PumpkinClock`, `SoftGlow` (quầng nến).
+
+**Asset từ rip** (`HalloweenRip/Gameplay/`, chỉ local): `GameBG` (render sân nhà ma của `HomeScene` bỏ hồn ma / ma nhỏ / chổi, mờ nhẹ, ám tím, tối 4 góc, sương đáy, dơi), `TimeBarFrame` (`HLWHomeProcess`, viền 66/52), `TimeBarFill` (`LvProgress2` xoay ngang), `WebCorner`; dùng thêm `Play/Spider`, `Top/Setting`, `Bg/candleL/R`, font Lilita.
+
+**Sửa**:
+- Code: `CellView` thêm `clueSprite` / `mysterySprite` / `fuzzySprite`, đổi ô nền theo loại ô số (ô khóa giữ ô trống); `BoardDecor` mới (đồ trang trí bám góc `BoardFrame`, đặt lại khi cỡ khung đổi, nhấp nhô nhẹ).
+- Scene: `bg` → `GameBG` (order -5), tắt `Pattern`; `BoardFrame` → `BoardFrame_HLW`; thêm `---- MÀN CHƠI ----/BoardDecor` (`Ghost` = `GhostMascot` order -2 ló sau góc trái trên; `Web` order 30 góc phải trên). Bỏ override sprite nút cài đặt của `Canvas_HUD` (khung3 / btn_setting) để nhận nút kem mới.
+- `Cell.prefab`: ô nền `Cell_Stone` + 3 sprite ô số. `Fredoka-Bold SDF - Cell Number.mat`: viền / bóng chữ số đen → tím đậm.
+- `GameplayHUD.prefab`: khung LEVEL `LevelFrame_HLW`; `HardFrame` 420x270 (khung + tab), tab chữ 34; `LevelHUD.roundedBackground` bỏ (khung khó vẫn dùng nền thường); "LEVEL n" + giờ font Lilita viền tím, giờ màu vàng cam (`TimerUI.normalColor`), icon `PumpkinClock`; thanh sao khung `TimeBarFrame` (Sliced, ppum 1.3, 640x86), ruột `TimeBarFill`, FillArea 588x36; nút cài đặt `Setting` (kem, ẩn `Gear`); `TopPanel/Spider` (tơ + nhện, `UIFloat`); `DownPanel/CandleL/R` (nến + `SoftGlow` vàng, `UIFlicker`).
+- `DifficultyTheme.hudFrame`: Hard → `LevelFrame_Hard`, Very Hard → `LevelFrame_VeryHard`.
+
+**Kiểm tra**: Play – level 38 (Hard), level 7 (thường), level 48 (Very Hard) khớp mockup; băng HARD LEVEL vẫn chạy; trả lại level đang chơi. Test 196/196.
+
+## 2026-10-26 16:20 – Hồn ma Home không nhận chạm nữa
+
+**Yêu cầu**: chạm vào hồn ma ở sảnh vẫn có phản ứng (nhún); hồn ma chỉ để trang trí.
+
+**Sửa**: `GhostMascot.prefab` bỏ component `GhostMascot`, tắt Raycast Target của `Mascot`; xoá `Runtime/UI/Home/GhostMascot.cs` (không còn chỗ nào dùng). Gỡ thêm `ButtonPress` còn gắn trên `Mascot` (do `UIAutoSetup` thêm hồi còn là Button, nằm ở override của `HomePanel` / `MainMenu` / scene) – đây là thứ làm con ma vẫn nhún khi nhấn. Hồn ma vẫn trôi lơ lửng (`UIFloat`), chạm xuyên qua.
+
+## 2026-10-27 09:00 – Sửa chữ "Level n" trên nút Play bị tối sau khi chơi xong ván
+
+**Lỗi**: bấm Play → chơi xong → về Home: chữ "Level n" tối màu.
+
+**Nguyên nhân** (`ButtonPress`): nhấn thì tô tối các hình con (CrossFadeColor 0.07 s), thả tay thì sáng lại dần và xoá danh sách `_tinted`. Nút Play làm ẩn màn Menu ngay trong frame click nên CrossFade sáng lại bị dừng giữa chừng (coroutine dừng theo object); `OnDisable` gọi `Tint(false)` nhưng danh sách đã rỗng → chữ kẹt màu tối (0.78) tới lần sau.
+
+**Sửa**: `ButtonPress.OnDisable` gọi `ClearTint()` – trả màu trắng ngay (giữ alpha) cho mọi `tintTargets` (trừ hình Button tự tô). Áp dụng cho mọi nút làm ẩn màn khi bấm.
+
+**Kiểm tra**: Play – nhấn giữ nút Play (chữ 0.78) → thả → vào ván → về Menu: chữ "Level 43" màu 1.0.
+
+## 2026-10-27 09:40 – Vuốt tab Main Menu: không kéo quá 1 tab, Home vuốt được ở mọi chỗ
+
+**Lỗi 1**: kéo chuột dài ở tab giữa thì trượt quá tab bên cạnh, lộ màn chơi phía sau (chỉ 2 panel kề bên được bật). **Sửa**: `MainMenuNavigator.Swipe` kẹp độ lệch trong ±1 bề rộng panel.
+
+**Lỗi 2**: ở Home phải đặt tay lên nút Play mới vuốt được – nền Home toàn hình trang trí không nhận chạm (trước đây hồn ma là nút nên nhận thay). **Sửa**: `HomePanel.prefab` bật Raycast Target cho Image trong suốt ở gốc panel (như các panel khác) → kéo ở chỗ trống tới được `MenuSwipe`.
+
+**Kiểm tra**: Play – 3 điểm trống trên Home đều tới `MenuSwipe` (Panels); ở tab Teams `Swipe(-3000)` dừng ở Collection (x = 0), `Swipe(+3000)` dừng ở Home.
+
+## 2026-10-27 10:30 – Shop: thẻ Limited Pack sống động như video; sao lấp lánh thành Particle System
+
+**Yêu cầu** (video4): bí ngô nhún, 2 hồn ma lắc qua lại, vầng sáng bung ra từ bí ngô, dơi bay qua lại; sao lấp lánh đổi sang Particle System (lo `Update` nặng).
+
+**Sửa `ShopSpecialCard.prefab`**:
+- `Pumpkin`: pivot đáy (giữ nguyên vị trí hiển thị), `UIFloat` squash (0.06, 0.08) chu kỳ 0.9 s → nhún bẹp – giãn quanh đáy. `Sparkles` chuyển ra ngoài `Pumpkin` (không bị co giãn theo).
+- `GhostLeft` / `GhostRight`: `UIFloat` lắc ±9° (2.2 / 2.6 s), trôi nhẹ, lệch pha.
+- `Main/PumpkinRings` (sau bí ngô): `UIParticle` + 1 hạt / 1.1 s, vòng sáng kem (`fx_ring.png` tự vẽ) to dần 35 % → 100 % (440 px), mờ dần.
+- `Body/Bats` (trên cùng): 2 hệ hạt trái → phải / phải → trái, texture sheet `doi1_sheet` (12x12, 134 khung, vỗ cánh), noise cho bay lượn, ≤ 3 con mỗi chiều. Material `HalloweenRip/Shop/FX_Bat_UI` (chỉ local).
+
+**Sao lấp lánh → Particle System** (5 thẻ: Special, Bundle, Coin, RemoveAds, Starter): bỏ `UISparkles` + 3–4 Image con, thay bằng `UIParticle` (scale 100) + `ParticleSystem` (vùng chữ nhật = rect cũ, cỡ / màu / thời gian sống / tốc độ xoay giữ như cũ, mật độ = số sao / (nghỉ TB + sống), to – nhỏ theo `sizeOverLifetime`, thời gian thật). Xoá `UISparkles.cs`. Material `Source/Art/UI/Shop/Effects/FX_Sparkle_UI` (UI/Default).
+
+**Kiểm tra**: Play tab Shop – chụp 3 khung: bí ngô bẹp / giãn, vầng sáng, ma nghiêng 2 phía, dơi bay, sao lấp lánh; console sạch.
+
+## 2026-10-27 11:00 – Bí ngô Limited Pack nhún nhẹ lại theo Spine gốc
+
+**Phản hồi**: bí ngô lắc mạnh quá; kiểm tra bản rip có Spine của các anim này không.
+
+**Tìm thấy**: `BaseGame/Sprite/_NewUI2/FoodieStreakHLW/packshopHLW/` (Spine 4.2.43, 1 animation `idle` 4 s mỗi file):
+- `packshopHLW_right`: `s_bi` (bí ngô), `s_glow1..4` (4 vầng sáng to dần + mờ), `s_shadow`, `maL` (hồn ma, mesh), `doi1..3` (dơi bay qua).
+- `packshopHLW_left`: `maR` (hồn ma còn lại, mesh).
+Đọc bằng spine-csharp 4.2 (dotnet, ngoài project): bí ngô co giãn ±2.4 % ngang / ±2.6 % dọc, nghiêng ±2.4°, chu kỳ 1.33 s (3 nhịp / 4 s). Hồn ma không chỉ lắc: vươn cao lên rồi mờ biến mất, sau đó mọc lại từ nhỏ (mesh deform).
+
+**Sửa**: `Pumpkin` `UIFloat` squash (0.06, 0.08) / 0.9 s → (0.024, 0.026) / 1.333 s, thêm tilt 2.4° / 1.333 s.
+
+## 2026-10-27 12:00 – Limited Pack: hồn ma, vầng sáng, dơi dựng từ Spine gốc
+
+**Yêu cầu**: dựng hồn ma, vầng sáng và dơi của thẻ Limited Pack từ Spine `packshopHLW` cho giống video.
+
+**Cách làm** (như rương / vạc ở Home): spine-csharp 4.2 (dotnet, ngoài project) dump `idle` 4 s ở 30 fps → script Python vẽ từng khung (tam giác mesh, alpha slot) thành sheet lưới + file `.txt` (ô, số khung, tâm từng khung theo toạ độ skeleton):
+- `Pack_ghostR` (`maL` của `packshopHLW_right`, 0.62x, 14x9) và `Pack_ghostL` (`maR` của `packshopHLW_left`, 0.7x, 12x10): hồn ma vươn cao, mờ biến mất rồi mọc lại.
+- `Pack_glow` (`s_glow1..4`, 0.4x, 15 fps, 60 khung): 4 vầng sáng đồng tâm co giãn, mờ dần.
+- `Pack_doi1..3` (cắt quanh từng con mỗi khung, 1x): dơi vỗ cánh bay qua; vị trí từng khung đi theo đường bay gốc.
+Sheet ở `HalloweenRip/Shop/PackFX/` (chỉ local), Sprite Multiple cắt bằng `ISpriteEditorDataProvider`. Android đang giới hạn ảnh 2048 px nên sheet giữ ≤ 2048.
+
+**Ghép vào `ShopSpecialCard.prefab`** (`UISpriteSequence` – sprite + vị trí từng khung, cùng đồng hồ nên khớp nhịp như Spine):
+- Toạ độ skeleton → thẻ: lấy `s_bi` (cùng cỡ 330x314 với ảnh bí ngô) làm mốc: `Main` neo phải dưới = skeleton + (-284, 247); `Body` = skeleton + (-294, 247). Hồn ma trái (skeleton riêng) đặt sao cho khung đầu trùng chỗ hồn ma cũ (+107, +243, neo trái dưới).
+- `Main/PumpkinGlow` (sau bí ngô), `GhostRight` / `GhostLeft` (bỏ `UIFloat`), `Body/Bats/doi1..3` (trên cùng).
+- Bỏ bản làm tay: `PumpkinRings` (hạt + `fx_ring.png`, `FX_Ring_UI.mat`), `Bats` (hạt + `FX_Bat_UI.mat`). Bí ngô giữ `UIFloat` theo số liệu Spine; sao lấp lánh giữ Particle System.
+
+**Kiểm tra**: Play tab Shop, 4 thời điểm trong vòng 4 s: vầng sáng sau bí ngô, 2 hồn ma ở các pha khác nhau (đứng / vươn / mờ), dơi bay ngang; console sạch.

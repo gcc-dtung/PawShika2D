@@ -17,10 +17,9 @@ MonoBehaviour:
     label: Hard
     playFace: {fileID: 21300000, guid: cd9a25908dff57d48a864fcb530f7205, type: 3}
     playBacker: {fileID: 21300000, guid: 5ad24c8053bce644aa8c70d7ef7d1e26, type: 3}
-    playLevelTextColor: {r: 0.47843137, g: 0.10980392, b: 0.05490196, a: 1}
     playTabTextColor: {r: 0.7019608, g: 0.16470589, b: 0.101960786, a: 1}
-    playTitleOutline: {fileID: 2100000, guid: a28ebb8173ee1a5468d85447df6a3a0c, type: 2}
-    hudFrame: {fileID: 21300000, guid: f92b3dd456be9be4ab9dd2c7d1d2ab44, type: 3}
+    playLevelOutline: {fileID: 2100000, guid: 054894d6d1b099545adb1c7154297f04, type: 2}
+    hudFrame: {fileID: 21300000, guid: 669c13079699e0841937ec0b30d595d9, type: 3}
     hudTabOutline: {fileID: 2100000, guid: a28ebb8173ee1a5468d85447df6a3a0c, type: 2}
     skull: {fileID: 21300000, guid: 59e4a1ae7e52a584c9e5eac76ce3d538, type: 3}
     banner: {fileID: 21300000, guid: 11b966650919f4843bca0cabf52798ba, type: 3}
@@ -28,10 +27,9 @@ MonoBehaviour:
     label: Very Hard
     playFace: {fileID: 21300000, guid: cee5a4258c111514f9960dd2117d4846, type: 3}
     playBacker: {fileID: 21300000, guid: b585b26fe0677664cb1287ae39bda998, type: 3}
-    playLevelTextColor: {r: 0.22745098, g: 0.101960786, b: 0.47843137, a: 1}
     playTabTextColor: {r: 0.2901961, g: 0.13333334, b: 0.6039216, a: 1}
-    playTitleOutline: {fileID: 2100000, guid: 7d0e42db65ad0e949bfb41d0c04f1caf, type: 2}
-    hudFrame: {fileID: 21300000, guid: 79b4a2d0137aa3f4fa0dd8c3b98c645e, type: 3}
+    playLevelOutline: {fileID: 2100000, guid: 0d54e989883224b4f90e0376601c3a01, type: 2}
+    hudFrame: {fileID: 21300000, guid: 9461131d8db876e409c1a374739d4e07, type: 3}
     hudTabOutline: {fileID: 2100000, guid: 7d0e42db65ad0e949bfb41d0c04f1caf, type: 2}
     skull: {fileID: 21300000, guid: 5969249575ba295478275d53c4f48e9a, type: 3}
     banner: {fileID: 21300000, guid: 675916375863cbf4586cc16346cb3af9, type: 3}

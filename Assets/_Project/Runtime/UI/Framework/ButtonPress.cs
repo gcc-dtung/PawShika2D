@@ -74,7 +74,7 @@ namespace PawBlock.Shared
         private void OnDisable()
         {
             _pressed = false;
-            Tint(false, true);
+            ClearTint();
             if (!_active) return;
             _tween?.Kill();
             RestoreInstant();
@@ -253,6 +253,25 @@ namespace PawBlock.Shared
                 if (g != null) g.CrossFadeColor(c, d, true, true);
             }
             if (!on) _tinted.Clear();
+        }
+
+        /// <summary>
+        /// Trả màu ngay cho mọi hình có thể đã bị tô. Bấm nút làm ẩn màn (vd PLAY) thì nút tắt giữa lúc đang sáng lại dần
+        /// (CrossFade dừng theo object) mà danh sách _tinted đã xoá lúc thả tay -> chữ kẹt màu tối khi quay lại.
+        /// </summary>
+        private void ClearTint()
+        {
+            _tinted.Clear();
+            if (!darken || tintTargets == null) return;
+            Graphic selfTinted = selectable != null && selectable.transition == Selectable.Transition.ColorTint
+                ? selectable.targetGraphic : null;
+            foreach (Graphic g in tintTargets)
+            {
+                if (g == null || g == selfTinted) continue;
+                Color c = Color.white;
+                c.a = g.canvasRenderer.GetAlpha(); // chỉ trả màu, giữ alpha (hình có thể đang mờ dần vì lý do khác)
+                g.canvasRenderer.SetColor(c);
+            }
         }
 
         /// <summary>Thả tay còn trên nút (giống điều kiện Button nhận click).</summary>

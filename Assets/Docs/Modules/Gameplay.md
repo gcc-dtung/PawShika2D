@@ -34,7 +34,7 @@ Chi tiết hành vi: [Docs/Features](../Features/00_README.md) (01 lưới, 03 c
 | `Tutorial/` | `TutorialController`, `TutorialLevels`, `TutorialHand`, `MechanicIntro` | Tutorial lần đầu, popup cơ chế lần đầu gặp |
 | `Feedback/` | `GameplayFeedback`, `BlockFeedback`, `DragFeedback`, `GameHapticEvents` | Game feel: chữ khen, combo, hạt bụi, rung |
 | `UI/` | HUD (`LevelHUD`, `TimerUI`, `TimeStarBar`, `BoosterButton`...), popup (`WinPopup`, `LosePopup`, `MoreTimePopup`, `QuitLevelPopup`, `BuyBoosterPopup`, `MechanicIntroPopup`) | Giao diện màn chơi |
-| `Visuals/` | `PlayZone`, `BoardCameraFitter`, `GameplayVisuals` | Camera vừa lưới, sprite màn chơi |
+| `Visuals/` | `PlayZone`, `BoardCameraFitter`, `GameplayVisuals`, `BoardDecor` | Camera vừa lưới, sprite màn chơi, đồ trang trí bám góc khung bảng |
 | `Analytics/` | `LevelStatsRecorder` | Ghi số liệu chơi thật từng level (xuất CSV trong Editor) |
 
 Prefab: `Prefabs/UI/Screens/Game/GameplayHUD` (HUD + thanh booster), `Popups/*`, `Cell`, `PlacedBlock`, `DragCountBubble`, `BoosterButton`, `Praise`, `MistakeFlash`, `Freeze/`.

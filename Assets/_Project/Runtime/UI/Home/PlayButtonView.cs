@@ -11,7 +11,7 @@ namespace PawBlock.Game
     /// <summary>
     /// Nút PLAY trên Home: "Level n" theo level đang chơi, thở nhẹ để mời bấm; bấm -> ScreenFlow.Play.
     /// Level Hard / Very Hard (DifficultyTheme): khung viền kem có tab ghi mức khó (hardFrame) thay khung thường,
-    /// mặt nút đổi màu (đỏ / tím), màu chữ "Level n" theo mức khó.
+    /// mặt nút đổi màu (đỏ / tím), viền chữ "Level n" theo mức khó (mặt chữ vẫn trắng).
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class PlayButtonView : MonoBehaviour
@@ -36,17 +36,15 @@ namespace PawBlock.Game
         [SerializeField] private Image fill;         // mặt nút
         [SerializeField] private GameObject hardFrame; // khung kem có tab (khung_home_hard)
         [SerializeField] private TMP_Text tabText;
-        [SerializeField] private TMP_Text playText;  // chữ "PLAY" (đổi viền theo mức khó)
         [SerializeField] private Vector2 hardFillSize = new Vector2(490f, 190f);
         [SerializeField] private Button button;
 
         private Sprite _normalFill;
         private Vector2 _normalFillSize;
-        private Color _normalLevelColor;
         private Color _normalFrameColor;
         private Sprite _normalFrameSprite;
         private Vector2 _normalRootSize;
-        private Material _normalPlayMaterial;
+        private Material _normalLevelMaterial;
         private bool _cached;
 
         private Tween _breath;
@@ -66,14 +64,13 @@ namespace PawBlock.Game
                 _normalFill = fill.sprite;
                 _normalFillSize = fill.rectTransform.sizeDelta;
             }
-            if (levelText != null) _normalLevelColor = levelText.color;
+            if (levelText != null) _normalLevelMaterial = levelText.fontSharedMaterial;
             if (frame != null)
             {
                 _normalFrameColor = frame.color;
                 _normalFrameSprite = frame.sprite;
             }
             _normalRootSize = ((RectTransform)transform).sizeDelta;
-            if (playText != null) _normalPlayMaterial = playText.fontSharedMaterial;
         }
 
         private void OnEnable()
@@ -142,8 +139,7 @@ namespace PawBlock.Game
                 fill.sprite = hard ? style.playFace : _normalFill;
                 fill.rectTransform.sizeDelta = hard ? hardFillSize : _normalFillSize;
             }
-            if (levelText != null) levelText.color = hard ? style.playLevelTextColor : _normalLevelColor;
-            if (playText != null) playText.fontSharedMaterial = hard && style.playTitleOutline != null ? style.playTitleOutline : _normalPlayMaterial;
+            if (levelText != null) levelText.fontSharedMaterial = hard && style.playLevelOutline != null ? style.playLevelOutline : _normalLevelMaterial;
             if (tabText != null && hard)
             {
                 tabText.SetText(style.label);

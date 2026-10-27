@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace PawBlock.Features.Gameplay
 {
@@ -19,9 +20,9 @@ namespace PawBlock.Features.Gameplay
         [Header("Nút PLAY (Main Menu)")]
         public Sprite playFace;                        // mặt nút (btn_hard_1 / btn_very_hard_1)
         public Sprite playBacker;                      // nền tối sau mặt nút, lộ ra khi nhấn (btn_hard_2 / btn_very_hard_2)
-        public Color playLevelTextColor = Color.white; // "Level n" trên mặt nút
         public Color playTabTextColor = Color.white;   // chữ trên tab kem
-        public Material playTitleOutline;              // viền chữ "PLAY" (TMP preset)
+        [FormerlySerializedAs("playTitleOutline")]
+        public Material playLevelOutline;              // viền chữ "Level n" (TMP preset cùng font với chữ, mặt chữ giữ trắng)
         [Header("HUD")]
         public Sprite hudFrame;                        // khung có tab bao ô LEVEL (khung_hard1 / khung_expert1)
         public Material hudTabOutline;                 // viền chữ trên tab (TMP preset)

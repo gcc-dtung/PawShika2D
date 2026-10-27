@@ -19,6 +19,17 @@ namespace PawBlock.Features.Teams
         public int requiredLevelStep = 5;
         public int defaultRequiredLevel = 1;
 
+        [Header("Bảng tin My Team")]
+        public int feedMax = 40;
+        public int messageMaxLength = 80;
+        [Tooltip("Mỗi lần xin được tối đa bao nhiêu mạng")]
+        public int lifeRequestMax = 5;
+        public int lifeRequestCooldownHours = 4;
+        [Tooltip("Đồng đội giả giúp 1 mạng sau mỗi chừng này phút")]
+        public int lifeHelpMinutes = 20;
+        [Tooltip("Tin nhắn đồng đội giả gửi khi người chơi vào đội")]
+        public string[] greetings = { "Hi", "Welcome!", "Hello :)" };
+
         [Header("Đội giả")]
         public int seed = 2026;
         public string[] teamNames = new string[0];

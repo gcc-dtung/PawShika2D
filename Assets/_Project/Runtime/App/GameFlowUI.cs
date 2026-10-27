@@ -45,6 +45,7 @@ namespace PawBlock.Game
         [SerializeField] private SettingsPopup settingsPopup;
         [SerializeField] private QuitLevelPopup quitLevelPopup;
         [SerializeField] private NoticePopup noticePopup;
+        [SerializeField] private ConfirmPopup confirmPopup;
         [SerializeField] private DailyRewardPopup dailyRewardPopup;
         [SerializeField] private BuyBoosterPopup buyBoosterPopup;
         [SerializeField] private RefillEnergyPopup refillEnergyPopup;
@@ -118,6 +119,13 @@ namespace PawBlock.Game
         {
             if (noticePopup != null) noticePopup.Show(message, title, onClose);
             else Debug.Log($"[GameFlowUI] {title}: {message}");
+        }
+
+        /// <summary>Hỏi lại (popup Có / Không); chỉ nút Có gọi onYes. Thiếu popup thì làm luôn.</summary>
+        public void ShowConfirm(string message, string title, Action onYes, string yes = "Yes", string no = "No")
+        {
+            if (confirmPopup != null) confirmPopup.Show(message, title, onYes, yes, no);
+            else onYes?.Invoke();
         }
 
         private void OnLevelLoaded(LevelLoadedEvent _)

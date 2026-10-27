@@ -496,7 +496,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b83b520959e014248ad9480a4201f530, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 74a96a1eaf29e7447b7e671135fa742f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -862,6 +862,9 @@ MonoBehaviour:
   - {fileID: 2592657854179920581}
   - {fileID: 4849550683927795928}
   hitBox: {fileID: 751636190205843187}
+  clueSprite: {fileID: 21300000, guid: 3b40ecc9c9bdd8a4695d85ea882440e2, type: 3}
+  mysterySprite: {fileID: 21300000, guid: fd3a4413b69d39944a6410e250aeb22a, type: 3}
+  fuzzySprite: {fileID: 21300000, guid: 756a4de573f020c4eb6109c0f09ee128, type: 3}
 --- !u!61 &751636190205843187
 BoxCollider2D:
   m_ObjectHideFlags: 0
