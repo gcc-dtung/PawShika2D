@@ -4,7 +4,8 @@ namespace PawBlock.Shared
 {
     /// <summary>
     /// Giữ sprite nền luôn phủ kín camera khi camera zoom / dời theo lưới (PlayZone, LevelManager).
-    /// Scale đặt trong scene là mức tối thiểu: đã phủ kín thì giữ nguyên, chưa kín thì phóng đều vừa đủ để phủ kín.
+    /// Nền co giãn theo đúng khung camera (vừa đủ phủ kín, giữ tỉ lệ ảnh) nên trông như nhau trên màn hình
+    /// dù lưới to hay nhỏ: lưới nhỏ camera zoom vào thì nền thu nhỏ theo, không bị phóng to vỡ hình.
     /// Nền luôn đi theo tâm camera.
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
@@ -13,16 +14,10 @@ namespace PawBlock.Shared
         [SerializeField] private Camera targetCamera;
         [SerializeField] private SpriteRenderer background;
 
-        private float _baseScale;
         private float _lastOrtho = -1f;
         private float _lastAspect;
         private Vector3 _lastCamPos;
         private Sprite _lastSprite;
-
-        private void Awake()
-        {
-            _baseScale = Mathf.Max(transform.localScale.x, transform.localScale.y);
-        }
 
         private void LateUpdate()
         {
@@ -41,9 +36,8 @@ namespace PawBlock.Shared
             float viewW = viewH * targetCamera.aspect;
             Vector2 spriteSize = background.sprite.bounds.size; // kích thước chưa scale
             float cover = Mathf.Max(viewW / spriteSize.x, viewH / spriteSize.y);
-            float k = Mathf.Max(_baseScale, cover); // chỉ phóng to khi chưa phủ kín
-
-            transform.localScale = new Vector3(k, k, 1f);
+            // Không giữ scale cố định trong scene: scale cố định to hơn khung camera (lưới nhỏ) sẽ trông như nền bị zoom
+            transform.localScale = new Vector3(cover, cover, 1f);
             transform.position = new Vector3(camPos.x, camPos.y, transform.position.z);
         }
 

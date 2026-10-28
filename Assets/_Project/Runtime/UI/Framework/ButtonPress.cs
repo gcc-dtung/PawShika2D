@@ -50,6 +50,8 @@ namespace PawBlock.Shared
         private readonly List<Vector2> _partPos = new List<Vector2>();
         private readonly List<Vector3> _partScale = new List<Vector3>();
         private readonly List<Graphic> _tinted = new List<Graphic>();
+        private Tween _tintTween;
+        private float _tintT; // 0 = trắng, 1 = pressedTint
         private Sequence _tween;
         private Vector3 _baseScale;
         private List<Tween> _paused; // tween scale khác trên nút, tạm dừng trong lúc nhấn
@@ -226,6 +228,8 @@ namespace PawBlock.Shared
         /// <summary>
         /// Tô / bỏ tô. Khung đứng yên: chỉ tô phần bên trong. Nút 1 ảnh: tô cả nút.
         /// Hình mà Button tự tô (targetGraphic, ColorTint) thì để Button lo.
+        /// Tween chạy trên nút (không dùng Graphic.CrossFadeColor): CrossFade là coroutine trên chính hình con, hình con bị tắt / bật lại
+        /// giữa lúc đang sáng dần (vd bấm booster: icon đổi sang đếm giây, ô số vẽ lại) thì dừng giữa chừng -> kẹt màu tối.
         /// </summary>
         private void Tint(bool on, bool instant = false)
         {
@@ -246,13 +250,31 @@ namespace PawBlock.Shared
                 }
             }
 
-            Color c = on ? pressedTint : Color.white;
-            float d = instant ? 0f : pressDuration;
+            _tintTween?.Kill();
+            _tintTween = null;
+            float to = on ? 1f : 0f;
+            if (instant)
+            {
+                ApplyTint(to);
+                if (!on) _tinted.Clear();
+                return;
+            }
+            _tintTween = DOTween.To(() => _tintT, ApplyTint, to, pressDuration)
+                .SetUpdate(true)
+                .SetLink(gameObject)
+                .OnComplete(() => { if (!on) _tinted.Clear(); });
+        }
+
+        private void ApplyTint(float t)
+        {
+            _tintT = t;
+            Color c = Color.Lerp(Color.white, pressedTint, t);
             foreach (Graphic g in _tinted)
             {
-                if (g != null) g.CrossFadeColor(c, d, true, true);
+                if (g == null) continue;
+                c.a = g.canvasRenderer.GetAlpha(); // chỉ tô màu, giữ alpha
+                g.canvasRenderer.SetColor(c);
             }
-            if (!on) _tinted.Clear();
         }
 
         /// <summary>
@@ -261,6 +283,9 @@ namespace PawBlock.Shared
         /// </summary>
         private void ClearTint()
         {
+            _tintTween?.Kill();
+            _tintTween = null;
+            _tintT = 0f;
             _tinted.Clear();
             if (!darken || tintTargets == null) return;
             Graphic selfTinted = selectable != null && selectable.transition == Selectable.Transition.ColorTint

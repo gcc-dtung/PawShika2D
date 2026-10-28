@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 using PawBlock.Core.Foundation;
@@ -12,7 +13,7 @@ namespace PawBlock.Features.Settings
     }
 
     /// <summary>
-    /// 1 nút tròn trong popup cài đặt: bật = nền xanh, tắt = nền xám + gạch đỏ. Bấm -> đảo cài đặt trong AudioManager
+    /// 1 công tắc trong popup cài đặt: bật = nền xanh + núm bên phải, tắt = nền xám + núm bên trái. Bấm -> đảo cài đặt trong AudioManager
     /// (lưu section save "settings"). Cài đặt đổi ở đâu cũng vẽ lại theo AudioManager.SettingsChanged.
     /// </summary>
     [RequireComponent(typeof(Button))]
@@ -23,6 +24,8 @@ namespace PawBlock.Features.Settings
         [SerializeField] private Sprite onSprite;
         [SerializeField] private Sprite offSprite;
         [SerializeField] private GameObject offMark;
+        [SerializeField] private RectTransform knob;     // núm công tắc (có thể trống): bật ở phải, tắt ở trái
+        [SerializeField] private float knobOffset = 50f;
         [SerializeField] private Button button;
 
         private void Awake()
@@ -78,6 +81,13 @@ namespace PawBlock.Features.Settings
                 if (s != null) background.sprite = s;
             }
             if (offMark != null) offMark.SetActive(!on);
+            if (knob != null)
+            {
+                knob.DOKill();
+                float x = on ? knobOffset : -knobOffset;
+                if (isActiveAndEnabled && knob.anchoredPosition.x != x) knob.DOAnchorPosX(x, 0.15f).SetEase(Ease.OutQuad).SetUpdate(true).SetLink(gameObject);
+                else knob.anchoredPosition = new Vector2(x, knob.anchoredPosition.y);
+            }
         }
 
 #if UNITY_EDITOR

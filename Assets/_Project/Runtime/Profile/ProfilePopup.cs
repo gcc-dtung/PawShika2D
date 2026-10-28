@@ -7,8 +7,8 @@ using PawBlock.Core.Contracts;
 namespace PawBlock.Features.Profile
 {
     /// <summary>
-    /// Popup hồ sơ: avatar, tên, ID, tháng bắt đầu chơi, LVL, lưới ô thống kê.
-    /// Show(profile) nhận bất kỳ PlayerProfile nào: hồ sơ của mình (IsLocal) thì có nút sửa tên + bấm avatar để đổi;
+    /// Popup hồ sơ: avatar + khung, tên (kiểu tên), huy hiệu, ID, tháng bắt đầu chơi, LVL, lưới ô thống kê.
+    /// Show(profile) nhận bất kỳ PlayerProfile nào: hồ sơ của mình (IsLocal) thì bút sửa / bấm avatar mở EditProfilePanel;
     /// hồ sơ người khác (sau này mở từ bảng xếp hạng) chỉ xem.
     /// Mở giữa ván thì ván tạm dừng.
     /// </summary>
@@ -28,12 +28,14 @@ namespace PawBlock.Features.Profile
 
         [Header("Thẻ người chơi")]
         [SerializeField] private AvatarDatabase avatars;
-        [SerializeField] private Image avatarImage;
+        [SerializeField] private ProfileAvatarView avatarView;
         [SerializeField] private Button avatarButton;
-        [SerializeField] private GameObject avatarEditBadge;  // bút nhỏ trên avatar (chỉ hồ sơ của mình)
         [SerializeField] private TMP_Text nameText;
-        [SerializeField] private Button editNameButton;
-        [SerializeField] private TMP_InputField nameInput;
+        [SerializeField] private Button editButton;  // bút cạnh tên (chỉ hồ sơ của mình)
+        [SerializeField] private Image badgeImage;
+        [SerializeField] private TMP_Text badgeText;
+        [SerializeField] private Sprite noBadgeIcon;  // khiên trống khi chưa đeo huy hiệu
+        [SerializeField] private string noBadgeText = "---";
         [SerializeField] private TMP_Text idText;
         [SerializeField] private TMP_Text joinedText;
         [SerializeField] private TMP_Text levelText;
@@ -42,11 +44,7 @@ namespace PawBlock.Features.Profile
         [SerializeField] private ProfileStatTile[] tiles;
         [SerializeField] private Sprite[] statIcons;
 
-        [Header("Chọn avatar")]
-        [SerializeField] private GameObject avatarPicker;
-        [SerializeField] private Button[] pickerButtons;     // nút i = avatar i
-        [SerializeField] private GameObject[] pickerSelected; // viền chọn của nút i
-        [SerializeField] private Button pickerCloseButton;
+        [SerializeField] private EditProfilePanel editPanel;
 
         [SerializeField] private Button closeButton;
 
@@ -59,19 +57,8 @@ namespace PawBlock.Features.Profile
         {
             base.Awake();
             if (closeButton != null) closeButton.onClick.AddListener(OnCloseClicked);
-            if (editNameButton != null) editNameButton.onClick.AddListener(BeginEditName);
-            if (avatarButton != null) avatarButton.onClick.AddListener(OpenPicker);
-            if (pickerCloseButton != null) pickerCloseButton.onClick.AddListener(ClosePicker);
-            if (nameInput != null)
-            {
-                nameInput.characterLimit = PlayerProfileService.NameMaxLength;
-                nameInput.onEndEdit.AddListener(EndEditName);
-            }
-            for (int i = 0; pickerButtons != null && i < pickerButtons.Length; i++)
-            {
-                int id = i;
-                if (pickerButtons[i] != null) pickerButtons[i].onClick.AddListener(() => PickAvatar(id));
-            }
+            if (editButton != null) editButton.onClick.AddListener(OpenEditor);
+            if (avatarButton != null) avatarButton.onClick.AddListener(OpenEditor);
         }
 
         protected override void OnEnable()
@@ -98,8 +85,7 @@ namespace PawBlock.Features.Profile
 
         protected override void OnOpened()
         {
-            if (avatarPicker != null) avatarPicker.SetActive(false);
-            SetEditing(false);
+            if (editPanel != null) editPanel.gameObject.SetActive(false);
             IGamePause lm = _pause;
             _pausedGame = lm != null && lm.IsPlaying && (_screens == null || !_screens.IsMenu);
             if (_pausedGame) lm.Pause();
@@ -108,7 +94,6 @@ namespace PawBlock.Features.Profile
         private void OnCloseClicked()
         {
             if (!IsOpen) return;
-            if (nameInput != null && nameInput.gameObject.activeSelf) EndEditName(nameInput.text); // đang sửa tên: lưu luôn
             Close();
             ResumeGame();
         }
@@ -127,12 +112,22 @@ namespace PawBlock.Features.Profile
             if (_profile == null) return;
             bool mine = _profile.IsLocal;
 
-            if (avatarImage != null && avatars != null) avatarImage.sprite = avatars.Get(_profile.AvatarId);
+            if (avatarView != null) avatarView.Set(avatars, _profile.AvatarId, _profile.FrameId);
             if (avatarButton != null) avatarButton.interactable = mine;
-            if (avatarEditBadge != null) avatarEditBadge.SetActive(mine);
-            if (editNameButton != null) editNameButton.gameObject.SetActive(mine);
-            if (nameText != null) nameText.SetText(_profile.Name);
-            if (idText != null) idText.SetText("ID: " + _profile.PlayerId);
+            if (editButton != null) editButton.gameObject.SetActive(mine);
+            if (nameText != null)
+            {
+                nameText.SetText(_profile.Name);
+                if (avatars != null) avatars.Style(_profile.NameStyleId).ApplyTo(nameText);
+            }
+            Sprite badge = avatars != null ? avatars.Badge(_profile.BadgeId) : null;
+            if (badgeImage != null)
+            {
+                badgeImage.sprite = badge != null ? badge : noBadgeIcon;
+                badgeImage.enabled = badgeImage.sprite != null;
+            }
+            if (badgeText != null) badgeText.SetText(badge != null ? avatars.BadgeTitle(_profile.BadgeId) : noBadgeText);
+            if (idText != null) idText.SetText("PLAYER ID: " + _profile.PlayerId);
             if (joinedText != null) joinedText.SetText(_profile.JoinedText);
             if (levelText != null) levelText.SetText("{0}", _profile.Level);
 
@@ -149,7 +144,6 @@ namespace PawBlock.Features.Profile
                 Sprite icon = statIcons != null && iconIndex < statIcons.Length ? statIcons[iconIndex] : null;
                 tiles[i].Set(icon, ProfileStats.Label(stat.Type), ProfileStats.Format(stat.Value));
             }
-            RefreshPicker();
         }
 
         // Hồ sơ của mình đang mở mà tên / avatar / chỉ số đổi: lấy lại bản mới
@@ -160,58 +154,12 @@ namespace PawBlock.Features.Profile
             Refresh();
         }
 
-        // ---------- Sửa tên ----------
+        // ---------- Sửa hồ sơ ----------
 
-        private void BeginEditName()
+        private void OpenEditor()
         {
-            if (_profile == null || !_profile.IsLocal || nameInput == null) return;
-            SetEditing(true);
-            nameInput.text = _profile.Name;
-            nameInput.Select();
-            nameInput.ActivateInputField();
-        }
-
-        private void EndEditName(string text)
-        {
-            if (nameInput == null || !nameInput.gameObject.activeSelf) return;
-            SetEditing(false);
-            if (!_service.Rename(text)) Refresh(); // tên không hợp lệ: giữ tên cũ
-        }
-
-        private void SetEditing(bool editing)
-        {
-            if (nameInput != null) nameInput.gameObject.SetActive(editing);
-            if (nameText != null) nameText.gameObject.SetActive(!editing);
-            if (editNameButton != null && _profile != null) editNameButton.gameObject.SetActive(!editing && _profile.IsLocal);
-        }
-
-        // ---------- Chọn avatar ----------
-
-        private void OpenPicker()
-        {
-            if (_profile == null || !_profile.IsLocal || avatarPicker == null) return;
-            RefreshPicker();
-            avatarPicker.SetActive(true);
-        }
-
-        private void ClosePicker()
-        {
-            if (avatarPicker != null) avatarPicker.SetActive(false);
-        }
-
-        private void PickAvatar(int id)
-        {
-            _service.SetAvatar(id);
-            ClosePicker();
-        }
-
-        private void RefreshPicker()
-        {
-            int current = _profile != null ? _profile.AvatarId : -1;
-            for (int i = 0; pickerSelected != null && i < pickerSelected.Length; i++)
-            {
-                if (pickerSelected[i] != null) pickerSelected[i].SetActive(i == current);
-            }
+            if (_profile == null || !_profile.IsLocal || editPanel == null) return;
+            editPanel.Show(_service);
         }
     }
 }

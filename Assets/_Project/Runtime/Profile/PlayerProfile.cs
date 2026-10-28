@@ -36,6 +36,9 @@ namespace PawBlock.Features.Profile
         public string PlayerId { get; }
         public string Name { get; }
         public int AvatarId { get; }
+        public int FrameId { get; }
+        public int NameStyleId { get; }
+        public int BadgeId { get; }  // -1 = chưa đeo
         public long JoinedUnix { get; }
         public int Level { get; }
         public IReadOnlyList<ProfileStat> Stats { get; }
@@ -43,7 +46,8 @@ namespace PawBlock.Features.Profile
         /// <summary>Hồ sơ của chính người chơi máy này: được đổi tên / avatar.</summary>
         public bool IsLocal { get; }
 
-        public PlayerProfile(string playerId, string name, int avatarId, long joinedUnix, int level, IReadOnlyList<ProfileStat> stats, bool isLocal)
+        public PlayerProfile(string playerId, string name, int avatarId, long joinedUnix, int level, IReadOnlyList<ProfileStat> stats, bool isLocal,
+            int frameId = 0, int nameStyleId = 0, int badgeId = -1)
         {
             PlayerId = playerId;
             Name = name;
@@ -52,6 +56,9 @@ namespace PawBlock.Features.Profile
             Level = level;
             Stats = stats ?? Array.Empty<ProfileStat>();
             IsLocal = isLocal;
+            FrameId = frameId;
+            NameStyleId = nameStyleId;
+            BadgeId = badgeId;
         }
 
         /// <summary>Tháng / năm bắt đầu chơi, vd "10/2026".</summary>

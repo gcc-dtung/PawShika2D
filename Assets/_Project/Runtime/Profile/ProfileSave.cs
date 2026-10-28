@@ -11,6 +11,9 @@ namespace PawBlock.Features.Profile
         public string playerId;    // 8 số ngẫu nhiên, tạo lần đầu
         public string name;        // tên hiển thị (đổi được)
         public int avatar;         // chỉ số trong AvatarDatabase
+        public int frame;          // khung avatar (AvatarDatabase.frames)
+        public int nameStyle;      // kiểu tên (AvatarDatabase.nameStyles)
+        public int badge = -1;     // huy hiệu đang đeo, -1 = chưa đeo
         public long createdAt;     // unix giây, lần đầu mở game (từ lúc có hồ sơ)
         public int firstTryWins;
         public long coinsEarned;

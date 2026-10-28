@@ -53,6 +53,6 @@ MonoBehaviour:
     - kind: 2
       booster: 0
       amount: 30
-  coinIcon: {fileID: 21300000, guid: eda8dc998b4d94349a0629528e6ff8fb, type: 3}
+  coinIcon: {fileID: 21300000, guid: 04c8cc41398a0214cb592a3028f708cf, type: 3}
   infiniteEnergyIcon: {fileID: 21300000, guid: 12f202aae2158204580577ab6f9e678a, type: 3}
   recoverMissedWithAd: 1

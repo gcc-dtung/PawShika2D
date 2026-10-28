@@ -86,7 +86,7 @@ namespace PawBlock.Features.DailyReward
             if (today && highlight != null && isActiveAndEnabled)
             {
                 highlight.localScale = Vector3.one;
-                _pulse = highlight.DOScale(1.04f, 0.5f).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo)
+                _pulse = highlight.DOScale(1.03f, 0.5f) // viền + nhịp nằm trong khe 12px giữa các ô, không đè ô bên cạnh.SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo)
                     .SetUpdate(true).SetLink(gameObject);
             }
         }

@@ -4,7 +4,7 @@ using PawBlock.Core.Contracts;
 
 namespace PawBlock.Features.Profile
 {
-    /// <summary>Avatar góc trên trái Main Menu: hiện avatar đang chọn, bấm mở popup hồ sơ của mình.</summary>
+    /// <summary>Avatar góc trên trái Main Menu: hiện avatar + khung đang chọn, bấm mở popup hồ sơ của mình.</summary>
     [RequireComponent(typeof(Button))]
     public class AvatarButton : MonoBehaviour
     {
@@ -20,7 +20,7 @@ namespace PawBlock.Features.Profile
         private IMenuPopups _popups;
 
         [SerializeField] private AvatarDatabase avatars;
-        [SerializeField] private Image avatarImage;
+        [SerializeField] private ProfileAvatarView avatarView;
         [SerializeField] private Button button;
 
         private void Awake()
@@ -46,7 +46,7 @@ namespace PawBlock.Features.Profile
 
         private void Refresh()
         {
-            if (avatarImage != null && avatars != null && _service != null) avatarImage.sprite = avatars.Get(_service.Save.avatar);
+            if (avatarView != null && _service != null) avatarView.Set(avatars, _service.Save.avatar, _service.Save.frame);
         }
 
 #if UNITY_EDITOR

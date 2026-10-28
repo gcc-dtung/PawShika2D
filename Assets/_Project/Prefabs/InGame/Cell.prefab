@@ -855,9 +855,9 @@ MonoBehaviour:
   cornerMark: {fileID: 7960258166940332116}
   cornerSprite: {fileID: 21300000, guid: 4c51300d802e62b41b2036268dfc8545, type: 3}
   edgeSprite: {fileID: 21300000, guid: 8dda9dc6430de4346aa853a038690be8, type: 3}
-  badgeSquareSprite: {fileID: 21300000, guid: 99135026b687f194fb66006c315fbaee, type: 3}
-  badgeTallSprite: {fileID: 21300000, guid: d9c32d60a7977b7438f503973331d54a, type: 3}
-  badgeWideSprite: {fileID: 21300000, guid: 97b272c4917373745b7070fbbc3fd95b, type: 3}
+  badgeSquareSprite: {fileID: 21300000, guid: acb408b2410d41d9bce69ce2f2f031b7, type: 3}
+  badgeTallSprite: {fileID: 21300000, guid: 06707870bc84475a976b9b164f7d8502, type: 3}
+  badgeWideSprite: {fileID: 21300000, guid: 133f9e79887948b9be1200f8779569c4, type: 3}
   lockSprites:
   - {fileID: 2592657854179920581}
   - {fileID: 4849550683927795928}
@@ -865,6 +865,7 @@ MonoBehaviour:
   clueSprite: {fileID: 21300000, guid: 3b40ecc9c9bdd8a4695d85ea882440e2, type: 3}
   mysterySprite: {fileID: 21300000, guid: fd3a4413b69d39944a6410e250aeb22a, type: 3}
   fuzzySprite: {fileID: 21300000, guid: 756a4de573f020c4eb6109c0f09ee128, type: 3}
+  orientationSprite: {fileID: 21300000, guid: 3895a2b019f24bd6b8e66ad4287f9468, type: 3}
 --- !u!61 &751636190205843187
 BoxCollider2D:
   m_ObjectHideFlags: 0

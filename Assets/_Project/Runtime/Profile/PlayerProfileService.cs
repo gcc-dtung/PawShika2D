@@ -6,7 +6,7 @@ namespace PawBlock.Features.Profile
 {
     /// <summary>
     /// Hồ sơ người chơi máy này (section "profile"): tạo lần đầu (ID 8 số ngẫu nhiên, tên mặc định, ngày bắt đầu),
-    /// đổi tên / avatar, dựng PlayerProfile để hiển thị. Chỉ số do ProfileStatsRecorder ghi.
+    /// đổi tên / avatar / khung / kiểu tên / huy hiệu, dựng PlayerProfile để hiển thị. Chỉ số do ProfileStatsRecorder ghi.
     /// GameBootstrap tạo 1 instance; level hiện tại (của Gameplay) do Game truyền vào qua <c>currentLevel</c>.
     /// </summary>
     public sealed class PlayerProfileService
@@ -48,7 +48,7 @@ namespace PawBlock.Features.Profile
                 new ProfileStat(ProfileStatType.BoostersUsed, p.boostersUsed),
                 new ProfileStat(ProfileStatType.BestWinStreak, p.bestWinStreak)
             };
-            return new PlayerProfile(p.playerId, p.name, p.avatar, p.createdAt, currentLevel + 1, stats, true);
+            return new PlayerProfile(p.playerId, p.name, p.avatar, p.createdAt, currentLevel + 1, stats, true, p.frame, p.nameStyle, p.badge);
         }
 
         /// <summary>Đổi tên (cắt khoảng trắng, bỏ ký tự điều khiển, 2..16 ký tự; ô tên tắt rich text). Trả về false nếu tên không hợp lệ.</summary>
@@ -64,11 +64,19 @@ namespace PawBlock.Features.Profile
             return true;
         }
 
-        public void SetAvatar(int avatarId)
+        /// <summary>Lưu bộ trang trí đã chọn ở popup sửa hồ sơ (avatar, khung, kiểu tên, huy hiệu -1 = bỏ đeo).</summary>
+        public void SetLook(int avatarId, int frameId, int nameStyleId, int badgeId)
         {
             ProfileSave p = _data;
-            if (avatarId < 0 || p.avatar == avatarId) return;
+            avatarId = Math.Max(0, avatarId);
+            frameId = Math.Max(0, frameId);
+            nameStyleId = Math.Max(0, nameStyleId);
+            badgeId = Math.Max(-1, badgeId);
+            if (p.avatar == avatarId && p.frame == frameId && p.nameStyle == nameStyleId && p.badge == badgeId) return;
             p.avatar = avatarId;
+            p.frame = frameId;
+            p.nameStyle = nameStyleId;
+            p.badge = badgeId;
             _save.MarkDirty();
             Changed?.Invoke();
         }

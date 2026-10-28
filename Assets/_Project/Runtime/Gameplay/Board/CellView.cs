@@ -24,7 +24,7 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Sprite cornerSprite;
         [SerializeField] private Sprite edgeSprite;
 
-        [Header("Art ô hướng (bản gốc khung_direc_1/2/3). Để trống thì dùng sprite 9-slice có sẵn của badge")]
+        [Header("Art ô hướng (Badge_Dir_*: viền kem + mũi tên 2 đầu). Để trống thì dùng sprite 9-slice có sẵn của badge")]
         [SerializeField] private Sprite badgeSquareSprite;
         [SerializeField] private Sprite badgeTallSprite;
         [SerializeField] private Sprite badgeWideSprite;
@@ -35,11 +35,12 @@ namespace PawBlock.Features.Gameplay
         [SerializeField] private Sprite clueSprite;    // ô có số (sáng hơn ô trống)
         [SerializeField] private Sprite mysterySprite; // số ẩn "?" (tím)
         [SerializeField] private Sprite fuzzySprite;   // số mơ hồ: E / O / > / < / a/b (cam)
+        [SerializeField] private Sprite orientationSprite; // số có hướng: dọc / vuông / ngang (xanh ngọc)
 
-        // Kích thước ô nền (đơn vị world). Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
-        private static readonly Vector2 BadgeTall = new Vector2(0.5f, 0.74f);
-        private static readonly Vector2 BadgeSquare = new Vector2(0.64f, 0.64f);
-        private static readonly Vector2 BadgeWide = new Vector2(0.74f, 0.5f);
+        // Kích thước ô hướng (đơn vị world), tính cả mũi tên 2 đầu. Sprite 9-slice có viền lớn nên vẽ to rồi thu nhỏ transform.
+        private static readonly Vector2 BadgeTall = new Vector2(0.56f, 0.96f);
+        private static readonly Vector2 BadgeSquare = new Vector2(0.68f, 0.68f);
+        private static readonly Vector2 BadgeWide = new Vector2(0.96f, 0.56f);
         private const float BadgeScale = 0.25f;
 
         // Ô số nằm trong vùng đang kéo: số phóng to; kéo / thả sai: số lắc (DragFeedback chọn trục, độ mạnh)
@@ -329,7 +330,11 @@ namespace PawBlock.Features.Gameplay
             if (spriteRenderer != null)
             {
                 Sprite body = null;
-                if (hasClue && !locked) body = clue.IsHidden ? mysterySprite : clue.IsAmbiguous ? fuzzySprite : clueSprite;
+                if (hasClue && !locked)
+                    body = clue.IsHidden ? mysterySprite
+                        : clue.IsAmbiguous ? fuzzySprite
+                        : clue.Constraint != ClueConstraint.None && orientationSprite != null ? orientationSprite
+                        : clueSprite;
                 spriteRenderer.sprite = body != null ? body : _blankSprite;
             }
 

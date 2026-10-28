@@ -13,15 +13,120 @@ MonoBehaviour:
   m_Name: AvatarDatabase
   m_EditorClassIdentifier: 
   avatars:
-  - {fileID: 21300000, guid: 015200e9241d55a43a390e8efbf51e72, type: 3}
-  - {fileID: 21300000, guid: 87c99819e2c71e74cb9161075247087d, type: 3}
-  - {fileID: 21300000, guid: 0abf9a6b88bdc464298ca7f4542792e2, type: 3}
-  - {fileID: 21300000, guid: 702b62927697de4439c1166d7b775710, type: 3}
-  - {fileID: 21300000, guid: 863460a4f2619654991ff099ecdf651b, type: 3}
-  - {fileID: 21300000, guid: 474d96b7e7bda4f479f484df58cc5043, type: 3}
-  - {fileID: 21300000, guid: 38387496d183e384bb993ef50a443ffc, type: 3}
-  - {fileID: 21300000, guid: 3bb062efe9f9aef4690fe1cd68754ef9, type: 3}
-  - {fileID: 21300000, guid: a71127a0dc4dcdf43904997cefc9e417, type: 3}
-  - {fileID: 21300000, guid: 1f8c9d2868bd5304fb51026d255813c5, type: 3}
-  - {fileID: 21300000, guid: 3add8e222ea095f49b21a36e3ad07e45, type: 3}
-  - {fileID: 21300000, guid: 6f5edbbdb1e4b85419550c3be2c2357e, type: 3}
+  - sprite: {fileID: 21300000, guid: 2958011566ceb2344a3c1c2db7670c7f, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 4bb7eb8e58607be46aa19b72c8c0c9eb, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 6f0630fcb46bf4842ad2db4589c08501, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 5013bd3451fe95c4c9afbd412c665a96, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 61112291078ca254c8b0b80b4e79b59c, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 368a40add5de9b24a8829bd4717be0a2, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: bf9ad63a8333c584f9f4dc16b6bbc61e, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: a051bcb9cce8b7b41acf63326d9b27d4, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: c569cf92cedb1234e8d95931aad0fd50, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 9d6078c1bbb90214b995b8dacf567230, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 1780b58901c076b47bb8856c5e2770b2, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 2a3b5378e799bd44f92a499f6ef3e3cd, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 7e0bb29f21b007e4c98ce640f0c2476c, type: 3}
+    title: 
+    unlockLevel: 10
+  - sprite: {fileID: 21300000, guid: dd87f79c5326db246a28137f66caca73, type: 3}
+    title: 
+    unlockLevel: 20
+  - sprite: {fileID: 21300000, guid: b6e1330252bacf948a42552e4b2baa32, type: 3}
+    title: 
+    unlockLevel: 30
+  - sprite: {fileID: 21300000, guid: dc331904290d07d44b32d4553f249c61, type: 3}
+    title: 
+    unlockLevel: 40
+  frames:
+  - sprite: {fileID: 21300000, guid: 5bd25a1c0b3057b4887726983141c1da, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 11d7c2a01e14f364d939b1509cdad318, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: f9a89dbb023493a49823de988039d486, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 43131cdfc3cc7094f9befcb7516de241, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 73b2a080142f9814495151f47c97c7ae, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 16eeef5006fc30a45a5830f413cf222e, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 68f240ba0da52ac4086b5f186f2bd426, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 06cb7005c81233747a5d03051009bfb6, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 7881059a2e4e3784d94e37d390752bdd, type: 3}
+    title: 
+    unlockLevel: 0
+  - sprite: {fileID: 21300000, guid: 70bff8a71460ad548ad186c7ab02ec7c, type: 3}
+    title: 
+    unlockLevel: 5
+  - sprite: {fileID: 21300000, guid: 9d498bc3d9f7fbe4c89f4f710f916dd2, type: 3}
+    title: 
+    unlockLevel: 15
+  - sprite: {fileID: 21300000, guid: c10b7a64e8c9b6c4c8deba01c4c5f430, type: 3}
+    title: 
+    unlockLevel: 25
+  - sprite: {fileID: 21300000, guid: 4acc1790552eb68419b11f522333c7e7, type: 3}
+    title: 
+    unlockLevel: 40
+  nameStyles:
+  - top: {r: 1, g: 1, b: 1, a: 1}
+    bottom: {r: 0.89411765, g: 0.8627451, b: 1, a: 1}
+    unlockLevel: 0
+  - top: {r: 1, g: 0.9490196, b: 0.47843137, a: 1}
+    bottom: {r: 1, g: 0.62352943, b: 0.10980392, a: 1}
+    unlockLevel: 0
+  - top: {r: 1, g: 0.6039216, b: 0.8352941, a: 1}
+    bottom: {r: 0.49803922, g: 0.84705883, b: 1, a: 1}
+    unlockLevel: 0
+  - top: {r: 0.7764706, g: 1, b: 0.47843137, a: 1}
+    bottom: {r: 0.18039216, g: 0.76862746, b: 0.7137255, a: 1}
+    unlockLevel: 3
+  - top: {r: 1, g: 0.81960785, b: 0.4, a: 1}
+    bottom: {r: 0.9529412, g: 0.44705883, b: 0.17254902, a: 1}
+    unlockLevel: 8
+  - top: {r: 0.8784314, g: 0.6666667, b: 1, a: 1}
+    bottom: {r: 0.6156863, g: 0.30588236, b: 0.8666667, a: 1}
+    unlockLevel: 15
+  - top: {r: 1, g: 1, b: 1, a: 1}
+    bottom: {r: 0.49019608, g: 0.9764706, b: 1, a: 1}
+    unlockLevel: 25
+  badges:
+  - sprite: {fileID: 21300000, guid: 9dbd499517cb5a44a9c4f2d59b13de1d, type: 3}
+    title: Golden Leaf
+    unlockLevel: 30
+  - sprite: {fileID: 21300000, guid: f03aac8d00c7c2542a6d6a07234b2284, type: 3}
+    title: Frost Leaf
+    unlockLevel: 60
